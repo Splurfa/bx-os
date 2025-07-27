@@ -415,6 +415,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      reassign_waiting_students: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       update_session_activity: {
         Args: { p_session_id: string }
         Returns: undefined

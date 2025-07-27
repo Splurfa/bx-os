@@ -141,7 +141,22 @@ export const useSupabaseQueue = () => {
     };
   }, []);
 
-  // Add student to queue with smart kiosk assignment
+  // Call new database function to reassign all waiting students
+  const reassignWaitingStudents = async (): Promise<void> => {
+    try {
+      const { error } = await supabase.rpc('reassign_waiting_students');
+      if (error) {
+        console.error('Error reassigning waiting students:', error);
+        throw error;
+      }
+      console.log('Successfully reassigned waiting students');
+    } catch (error) {
+      console.error('Failed to reassign waiting students:', error);
+      throw error;
+    }
+  };
+
+  // Add student to queue with enhanced FIFO assignment
   const addToQueue = async (data: {
     studentName: string;
     behaviors: string[];
@@ -182,10 +197,7 @@ export const useSupabaseQueue = () => {
       const { data: { user } } = await supabase.auth.getUser();
       let teacherId = user?.id || '00000000-0000-0000-0000-000000000000';
 
-      // Determine kiosk assignment using smart distribution
-      const assignedKioskId = await assignStudentToKiosk();
-
-      // Create behavior request with kiosk assignment
+      // Create behavior request without kiosk assignment first to ensure FIFO
       const { error: requestError } = await supabase
         .from('behavior_requests')
         .insert([{
@@ -196,13 +208,21 @@ export const useSupabaseQueue = () => {
           status: 'waiting',
           urgent: data.urgent || false,
           notes: data.notes || null,
-          assigned_kiosk_id: assignedKioskId
+          assigned_kiosk_id: null, // Start unassigned for proper FIFO
+          kiosk_status: 'waiting'
         }]);
 
       if (requestError) throw requestError;
 
+      // Immediately trigger reassignment to ensure FIFO order
+      await reassignWaitingStudents();
 
       await fetchQueue(true);
+      
+      toast({
+        title: "Added to Queue",
+        description: `${data.studentName} has been added to the queue`,
+      });
     } catch (error) {
       console.error('Error adding to queue:', error);
       toast({
@@ -474,79 +494,32 @@ export const useSupabaseQueue = () => {
     }
   };
 
-  // Smart kiosk assignment logic - only assign if kiosks are active
+  // Legacy kiosk assignment - replaced by database function
   const assignStudentToKiosk = async (): Promise<number | null> => {
     try {
-      // Get active kiosks
+      // Get active kiosks count for return value
       const { data: activeKiosks, error: kioskError } = await supabase
         .from('kiosks')
         .select('id')
         .eq('is_active', true)
-        .order('id', { ascending: true });
+        .limit(1);
 
       if (kioskError) throw kioskError;
       
-      // Return null if no active kiosks - students will stay in waiting
-      if (!activeKiosks || activeKiosks.length === 0) {
-        
-        return null;
-      }
-
-      // Count students assigned to each active kiosk
-      const kioskAssignments: Record<number, number> = {};
-      activeKiosks.forEach(kiosk => {
-        kioskAssignments[kiosk.id] = 0;
-      });
-
-      // Get current queue from database to ensure accurate counts
-      const { data: currentQueue } = await supabase
-        .from('behavior_requests')
-        .select('assigned_kiosk_id')
-        .eq('status', 'waiting');
-
-      // Count current assignments
-      currentQueue?.forEach(request => {
-        if (request.assigned_kiosk_id && kioskAssignments.hasOwnProperty(request.assigned_kiosk_id)) {
-          kioskAssignments[request.assigned_kiosk_id]++;
-        }
-      });
-
-      // Find kiosk with fewest students (FIFO + load balancing)
-      let selectedKioskId = activeKiosks[0].id;
-      let minCount = kioskAssignments[selectedKioskId];
-
-      for (const kiosk of activeKiosks) {
-        if (kioskAssignments[kiosk.id] < minCount) {
-          selectedKioskId = kiosk.id;
-          minCount = kioskAssignments[kiosk.id];
-        }
-      }
-
-      
-      return selectedKioskId;
+      return activeKiosks && activeKiosks.length > 0 ? activeKiosks[0].id : null;
     } catch (error) {
       console.error('Error in kiosk assignment:', error);
       return null;
     }
   };
 
-  // Reassign students when kiosks are activated/deactivated
+  // Enhanced reassign students using database RPC
   const reassignStudents = async () => {
     try {
-      const waitingStudents = items.filter(item => item.status === 'waiting');
-      
-      for (const student of waitingStudents) {
-        const newKioskId = await assignStudentToKiosk();
-        
-        if (newKioskId !== student.assigned_kiosk_id) {
-          await supabase
-            .from('behavior_requests')
-            .update({ assigned_kiosk_id: newKioskId })
-            .eq('id', student.id);
-        }
-      }
-      
-      await fetchQueue();
+      // Use the enhanced database function for proper FIFO reassignment
+      await reassignWaitingStudents();
+      await fetchQueue(true);
+      console.log('Reassigned waiting students using enhanced database function');
     } catch (error) {
       console.error('Error reassigning students:', error);
     }
@@ -572,7 +545,7 @@ export const useSupabaseQueue = () => {
     return remainingMins > 0 ? `${diffHours}h ${remainingMins}m` : `${diffHours} hours`;
   };
 
-  // Update student kiosk status
+  // Update student kiosk status with local state optimization
   const updateStudentKioskStatus = async (behaviorRequestId: string, newStatus: 'waiting' | 'ready' | 'in_progress') => {
     try {
       const { error } = await supabase.rpc('update_student_kiosk_status', {
@@ -582,23 +555,32 @@ export const useSupabaseQueue = () => {
 
       if (error) throw error;
       
+      // Update local state immediately to prevent flickering
+      setItems(prev => prev.map(item => 
+        item.id === behaviorRequestId 
+          ? { ...item, kiosk_status: newStatus }
+          : item
+      ));
       
-      await fetchQueue(true);
+      console.log(`Updated kiosk status for ${behaviorRequestId} to ${newStatus}`);
     } catch (error) {
       console.error('Error updating student kiosk status:', error);
     }
   };
 
-  // Assign waiting students to newly activated kiosk
+  // Enhanced assign waiting students to newly activated kiosk with FIFO
   const assignWaitingStudentsToKiosk = async (kioskId: number) => {
     try {
+      // Use enhanced database function that handles FIFO assignment and load balancing
       const { error } = await supabase.rpc('assign_waiting_students_to_kiosk', {
         p_kiosk_id: kioskId
       });
 
       if (error) throw error;
       
+      console.log(`Assigned waiting students to kiosk ${kioskId} using FIFO`);
       
+      // Refresh queue to show updates
       await fetchQueue(true);
     } catch (error) {
       console.error('Error assigning students to kiosk:', error);
@@ -620,6 +602,7 @@ export const useSupabaseQueue = () => {
     formatTimeElapsed,
     updateStudentKioskStatus,
     assignWaitingStudentsToKiosk,
+    reassignWaitingStudents,
     refreshQueue: fetchQueue
   };
 };
