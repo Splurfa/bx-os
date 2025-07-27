@@ -260,16 +260,19 @@ export const useSupabaseQueue = () => {
 
       console.log('Reflection submitted successfully, triggering kiosk reassignment');
       
+      // Force immediate queue refresh to reflect status change
+      await fetchQueue(true);
+      
       // Immediately reassign waiting students to available kiosks
       try {
         await reassignWaitingStudents();
         console.log('Kiosk reassignment triggered successfully after reflection completion');
+        // Force another queue refresh after reassignment
+        await fetchQueue(true);
       } catch (reassignError) {
         console.warn('Kiosk reassignment failed after reflection completion:', reassignError);
         // Don't throw - reflection submission should succeed even if reassignment fails
       }
-
-      await fetchQueue(true);
     } catch (error) {
       console.error('Error submitting reflection:', error);
     }

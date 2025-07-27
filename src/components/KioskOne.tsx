@@ -94,9 +94,9 @@ const KioskOne = () => {
     }
   }, [kioskState, activateKiosk, user, session, authLoading]);
 
-  // Reset state when student changes or completes
+  // Reset state when student changes or completes - but preserve completed state
   useEffect(() => {
-    if (!firstWaitingStudent && kioskState !== 'setup') {
+    if (!firstWaitingStudent && kioskState !== 'setup' && kioskState !== 'completed') {
       setKioskState('welcome');
       setStudentPassword('');
       setPasswordError('');
@@ -127,16 +127,20 @@ const KioskOne = () => {
     if (kioskState === 'completed') {
       setCountdown(10); // Reset countdown when entering completed state
       const resetTimer = setTimeout(() => {
+        // Reset all states and go back to welcome screen
         setKioskState('welcome');
         setStudentPassword('');
         setPasswordError('');
         setCurrentQuestion(0);
         setAnswers({});
         setTimeElapsed(0);
+        setCountdown(10);
+        // Clear kiosk assignment to allow next student
+        updateKioskStudent(KIOSK_ID, undefined, undefined);
       }, 10000); // 10 seconds
       return () => clearTimeout(resetTimer);
     }
-  }, [kioskState]);
+  }, [kioskState, updateKioskStudent]);
 
   // Countdown timer effect
   useEffect(() => {
@@ -206,8 +210,13 @@ const KioskOne = () => {
         question4: answers.question4 || ''
       };
       
+      console.log('Submitting reflection and transitioning to completed state');
       await submitReflection(firstWaitingStudent.id, reflection);
+      
+      // Set completion state to show splash screen
       setKioskState('completed');
+      
+      console.log('Reflection submitted, showing completion screen');
     } catch (error) {
       console.error('Error submitting reflection:', error);
     } finally {
@@ -447,7 +456,7 @@ const KioskOne = () => {
                 <div className="space-y-4">
                   <div className="p-4 bg-muted/50 rounded-lg">
                     <p className="text-sm text-muted-foreground">
-                      Your reflection has been submitted for teacher review. Please return to class when instructed.
+                      Your reflection has been submitted for teacher review. Please return to class now.
                     </p>
                   </div>
                   
