@@ -106,8 +106,7 @@ const KioskOne = () => {
       // Clear kiosk assignment
       updateKioskStudent(KIOSK_ID, undefined, undefined);
     } else if (firstWaitingStudent && kioskState === 'welcome') {
-      // Update student status to 'ready' when showing welcome screen
-      updateStudentKioskStatus(firstWaitingStudent.id, 'ready');
+      // Only update kiosk assignment, keep status as 'waiting' until user interacts
       updateKioskStudent(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
     }
   }, [firstWaitingStudent?.id, kioskState, updateKioskStudent, updateStudentKioskStatus]);
@@ -146,9 +145,13 @@ const KioskOne = () => {
   const handlePasswordSubmit = () => {
     // For demo purposes, accept "password123" for any student
     if (studentPassword === 'password123') {
-      // Update student status to 'in_progress' when starting reflection
+      // Update student status to 'ready' first (showing as "At Kiosk"), then to 'in_progress'
       if (firstWaitingStudent) {
-        updateStudentKioskStatus(firstWaitingStudent.id, 'in_progress');
+        updateStudentKioskStatus(firstWaitingStudent.id, 'ready');
+        // Immediately follow with 'in_progress' to show active reflection
+        setTimeout(() => {
+          updateStudentKioskStatus(firstWaitingStudent.id, 'in_progress');
+        }, 100);
       }
       setKioskState('reflection');
       setPasswordError('');

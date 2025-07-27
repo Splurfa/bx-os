@@ -26,6 +26,7 @@ const AdminDashboard = () => {
   const { 
     items, 
     loading: queueLoading, 
+    clearQueueLoading,
     approveReflection, 
     requestRevision, 
     clearQueue,
@@ -302,10 +303,10 @@ const AdminDashboard = () => {
                       variant="destructive" 
                       size="sm"
                       onClick={handleClearQueue}
-                      disabled={queueLoading}
+                      disabled={queueLoading || clearQueueLoading}
                       className={isMobile ? "text-xs px-2" : ""}
                     >
-                      {isMobile ? 'Clear Queue' : 'Clear Entire Queue'}
+                      {clearQueueLoading ? 'Clearing...' : (isMobile ? 'Clear Queue' : 'Clear Entire Queue')}
                     </Button>
                   </div>
                 </CardHeader>

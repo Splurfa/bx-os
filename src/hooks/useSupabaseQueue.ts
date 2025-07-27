@@ -46,12 +46,15 @@ export interface Reflection {
 export const useSupabaseQueue = () => {
   const [items, setItems] = useState<BehaviorRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [clearQueueLoading, setClearQueueLoading] = useState(false);
   const { toast } = useToast();
 
   // Fetch queue items with student and reflection data
-  const fetchQueue = async () => {
+  const fetchQueue = async (skipLoadingState = false) => {
     try {
-      setLoading(true);
+      if (!skipLoadingState && !clearQueueLoading) {
+        setLoading(true);
+      }
       const { data, error } = await supabase
         .from('behavior_requests')
         .select(`
@@ -102,9 +105,20 @@ export const useSupabaseQueue = () => {
         variant: "destructive"
       });
     } finally {
-      setLoading(false);
+      if (!skipLoadingState) {
+        setLoading(false);
+      }
     }
   };
+
+  // Debounced fetch function for real-time updates
+  const debouncedFetch = (() => {
+    let timeoutId: NodeJS.Timeout;
+    return () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => fetchQueue(true), 300);
+    };
+  })();
 
   // Subscribe to real-time updates
   useEffect(() => {
@@ -114,11 +128,11 @@ export const useSupabaseQueue = () => {
       .channel('queue-changes')
       .on('postgres_changes', 
         { event: '*', schema: 'public', table: 'behavior_requests' },
-        () => fetchQueue()
+        () => debouncedFetch()
       )
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'reflections' },
-        () => fetchQueue()
+        () => debouncedFetch()
       )
       .subscribe();
 
@@ -188,7 +202,7 @@ export const useSupabaseQueue = () => {
       if (requestError) throw requestError;
 
 
-      await fetchQueue();
+      await fetchQueue(true);
     } catch (error) {
       console.error('Error adding to queue:', error);
       toast({
@@ -230,7 +244,7 @@ export const useSupabaseQueue = () => {
       if (updateError) throw updateError;
 
 
-      await fetchQueue();
+      await fetchQueue(true);
     } catch (error) {
       console.error('Error submitting reflection:', error);
       toast({
@@ -357,7 +371,7 @@ export const useSupabaseQueue = () => {
       if (deleteError) throw deleteError;
 
 
-      await fetchQueue();
+      await fetchQueue(true);
     } catch (error) {
       console.error('Error approving reflection:', error);
       toast({
@@ -391,7 +405,7 @@ export const useSupabaseQueue = () => {
       if (updateError) throw updateError;
 
 
-      await fetchQueue();
+      await fetchQueue(true);
     } catch (error) {
       console.error('Error requesting revision:', error);
       toast({
@@ -432,7 +446,7 @@ export const useSupabaseQueue = () => {
   // Clear entire queue
   const clearQueue = async () => {
     try {
-      
+      setClearQueueLoading(true);
       
       const { error } = await supabase
         .from('behavior_requests')
@@ -443,7 +457,11 @@ export const useSupabaseQueue = () => {
         throw error;
       }
 
-      await fetchQueue();
+      // Immediately update local state to prevent flickering
+      setItems([]);
+      
+      // Fetch fresh data without showing loading spinner
+      await fetchQueue(true);
     } catch (error) {
       console.error('💥 CLEAR QUEUE ERROR:', error);
       toast({
@@ -451,6 +469,8 @@ export const useSupabaseQueue = () => {
         description: "Failed to clear queue",
         variant: "destructive"
       });
+    } finally {
+      setClearQueueLoading(false);
     }
   };
 
@@ -563,7 +583,7 @@ export const useSupabaseQueue = () => {
       if (error) throw error;
       
       
-      await fetchQueue();
+      await fetchQueue(true);
     } catch (error) {
       console.error('Error updating student kiosk status:', error);
     }
@@ -579,7 +599,7 @@ export const useSupabaseQueue = () => {
       if (error) throw error;
       
       
-      await fetchQueue();
+      await fetchQueue(true);
     } catch (error) {
       console.error('Error assigning students to kiosk:', error);
     }
@@ -588,6 +608,7 @@ export const useSupabaseQueue = () => {
   return {
     items,
     loading,
+    clearQueueLoading,
     addToQueue,
     submitReflection,
     approveReflection,

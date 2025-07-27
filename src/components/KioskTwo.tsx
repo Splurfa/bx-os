@@ -41,7 +41,8 @@ const KioskTwo = () => {
   const { 
     loading, 
     getFirstWaitingStudentForKiosk, 
-    submitReflection 
+    submitReflection,
+    updateStudentKioskStatus
   } = useSupabaseQueue();
   
   const [kioskState, setKioskState] = useState<'setup' | 'welcome' | 'password' | 'reflection' | 'completed'>('setup');
@@ -144,6 +145,14 @@ const KioskTwo = () => {
   const handlePasswordSubmit = () => {
     // For demo purposes, accept "password123" for any student
     if (studentPassword === 'password123') {
+      // Update student status to 'ready' first (showing as "At Kiosk"), then to 'in_progress'
+      if (firstWaitingStudent) {
+        updateStudentKioskStatus(firstWaitingStudent.id, 'ready');
+        // Immediately follow with 'in_progress' to show active reflection
+        setTimeout(() => {
+          updateStudentKioskStatus(firstWaitingStudent.id, 'in_progress');
+        }, 100);
+      }
       setKioskState('reflection');
       setPasswordError('');
     } else {

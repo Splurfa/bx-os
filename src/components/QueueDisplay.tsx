@@ -1,4 +1,5 @@
 
+import React, { useMemo } from "react";
 import { User, CheckCircle, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +34,7 @@ const getBehaviorColor = (behavior: string) => {
   return behaviorMap[behavior] || 'bg-primary';
 };
 
-const QueueDisplay = ({ items, onSelectReflection, formatTimeElapsed }: QueueDisplayProps) => {
+const QueueDisplay = React.memo(({ items, onSelectReflection, formatTimeElapsed }: QueueDisplayProps) => {
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full py-16">
@@ -45,14 +46,16 @@ const QueueDisplay = ({ items, onSelectReflection, formatTimeElapsed }: QueueDis
     );
   }
 
-  // Sort items: completed first, then by timestamp
-  const sortedItems = [...items].sort((a, b) => {
-    if (a.status === 'completed' && b.status !== 'completed') return -1;
-    if (a.status !== 'completed' && b.status === 'completed') return 1;
-    const aTime = a.timestamp?.getTime() || new Date(a.created_at).getTime();
-    const bTime = b.timestamp?.getTime() || new Date(b.created_at).getTime();
-    return aTime - bTime;
-  });
+  // Sort items: completed first, then by timestamp - memoized for performance
+  const sortedItems = useMemo(() => {
+    return [...items].sort((a, b) => {
+      if (a.status === 'completed' && b.status !== 'completed') return -1;
+      if (a.status !== 'completed' && b.status === 'completed') return 1;
+      const aTime = a.timestamp?.getTime() || new Date(a.created_at).getTime();
+      const bTime = b.timestamp?.getTime() || new Date(b.created_at).getTime();
+      return aTime - bTime;
+    });
+  }, [items]);
 
   return (
     <div className="space-y-1">
@@ -107,7 +110,7 @@ const QueueDisplay = ({ items, onSelectReflection, formatTimeElapsed }: QueueDis
                 <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs">
                   In Progress
                 </Badge>
-              ) : 'kiosk_status' in item && item.kiosk_status === 'ready' && item.assigned_kiosk_id ? (
+              ) : 'kiosk_status' in item && item.kiosk_status === 'ready' ? (
                 <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
                   At Kiosk
                 </Badge>
@@ -126,6 +129,6 @@ const QueueDisplay = ({ items, onSelectReflection, formatTimeElapsed }: QueueDis
       })}
     </div>
   );
-};
+});
 
 export default QueueDisplay;
