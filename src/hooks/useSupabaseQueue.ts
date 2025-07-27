@@ -109,7 +109,7 @@ export const useSupabaseQueue = () => {
     };
   }, []);
 
-  // Add student to queue
+  // Add student to queue with smart kiosk assignment
   const addToQueue = async (data: {
     studentName: string;
     behaviors: string[];
@@ -150,7 +150,10 @@ export const useSupabaseQueue = () => {
       const { data: { user } } = await supabase.auth.getUser();
       let teacherId = user?.id || '00000000-0000-0000-0000-000000000000';
 
-      // Create behavior request
+      // Determine kiosk assignment using smart distribution
+      const assignedKioskId = await assignStudentToKiosk();
+
+      // Create behavior request with kiosk assignment
       const { error: requestError } = await supabase
         .from('behavior_requests')
         .insert([{
@@ -160,7 +163,8 @@ export const useSupabaseQueue = () => {
           mood: data.mood,
           status: 'waiting',
           urgent: data.urgent || false,
-          notes: data.notes || null
+          notes: data.notes || null,
+          assigned_kiosk_id: assignedKioskId
         }]);
 
       if (requestError) throw requestError;
@@ -300,7 +304,20 @@ export const useSupabaseQueue = () => {
     }
   };
 
-  // Get first waiting student for kiosk
+  // Get first waiting student for specific kiosk
+  const getFirstWaitingStudentForKiosk = (kioskId: number) => {
+    // First check if there's a student already assigned to this kiosk
+    const assignedStudent = items.find(item => 
+      item.assigned_kiosk_id === kioskId && item.status === 'waiting'
+    );
+    if (assignedStudent) return assignedStudent;
+
+    // If no student assigned to this kiosk, return undefined
+    // Assignment happens when students are added to queue or kiosks are activated
+    return undefined;
+  };
+
+  // Get first waiting student (legacy function for compatibility)
   const getFirstWaitingStudent = () => {
     const waitingItems = items.filter(item => item.status === 'waiting');
     return waitingItems.length > 0 ? waitingItems[0] : undefined;
@@ -338,6 +355,73 @@ export const useSupabaseQueue = () => {
     }
   };
 
+  // Smart kiosk assignment logic
+  const assignStudentToKiosk = async (): Promise<number | null> => {
+    try {
+      // Get active kiosks
+      const { data: activeKiosks, error: kioskError } = await supabase
+        .from('kiosks')
+        .select('id')
+        .eq('is_active', true)
+        .order('id', { ascending: true });
+
+      if (kioskError) throw kioskError;
+      if (!activeKiosks || activeKiosks.length === 0) return null;
+
+      // Count students assigned to each active kiosk
+      const kioskAssignments: Record<number, number> = {};
+      activeKiosks.forEach(kiosk => {
+        kioskAssignments[kiosk.id] = 0;
+      });
+
+      // Count current assignments
+      const waitingStudents = items.filter(item => item.status === 'waiting');
+      waitingStudents.forEach(student => {
+        if (student.assigned_kiosk_id && kioskAssignments.hasOwnProperty(student.assigned_kiosk_id)) {
+          kioskAssignments[student.assigned_kiosk_id]++;
+        }
+      });
+
+      // Find kiosk with fewest students (FIFO + load balancing)
+      let selectedKioskId = activeKiosks[0].id;
+      let minCount = kioskAssignments[selectedKioskId];
+
+      for (const kiosk of activeKiosks) {
+        if (kioskAssignments[kiosk.id] < minCount) {
+          selectedKioskId = kiosk.id;
+          minCount = kioskAssignments[kiosk.id];
+        }
+      }
+
+      return selectedKioskId;
+    } catch (error) {
+      console.error('Error in kiosk assignment:', error);
+      return null;
+    }
+  };
+
+  // Reassign students when kiosks are activated/deactivated
+  const reassignStudents = async () => {
+    try {
+      const waitingStudents = items.filter(item => item.status === 'waiting');
+      
+      for (const student of waitingStudents) {
+        const newKioskId = await assignStudentToKiosk();
+        
+        if (newKioskId !== student.assigned_kiosk_id) {
+          await supabase
+            .from('behavior_requests')
+            .update({ assigned_kiosk_id: newKioskId })
+            .eq('id', student.id);
+        }
+      }
+      
+      await fetchQueue();
+    } catch (error) {
+      console.error('Error reassigning students:', error);
+    }
+  };
+
   // Format time elapsed
   const formatTimeElapsed = (timestamp: Date) => {
     const now = new Date();
@@ -366,6 +450,8 @@ export const useSupabaseQueue = () => {
     approveReflection,
     requestRevision,
     getFirstWaitingStudent,
+    getFirstWaitingStudentForKiosk,
+    reassignStudents,
     clearQueue,
     formatTimeElapsed,
     refreshQueue: fetchQueue

@@ -40,7 +40,7 @@ const KioskThree = () => {
   const { activateKiosk, getKioskById, updateKioskStudent } = useKiosks();
   const { 
     loading, 
-    getFirstWaitingStudent, 
+    getFirstWaitingStudentForKiosk, 
     submitReflection 
   } = useSupabaseQueue();
   
@@ -54,7 +54,7 @@ const KioskThree = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activationError, setActivationError] = useState<string | null>(null);
   
-  const firstWaitingStudent = getFirstWaitingStudent();
+  const firstWaitingStudent = getFirstWaitingStudentForKiosk(KIOSK_ID);
   const hasTeacherFeedback = firstWaitingStudent?.reflection?.teacher_feedback;
 
   // Initialize kiosk on mount - ONLY when authenticated
