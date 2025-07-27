@@ -156,13 +156,13 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <AppHeader />
       
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="container mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
         {/* Header */}
         <div className="flex flex-col space-y-2">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
-              <p className="text-muted-foreground">Unified kiosk management and system monitoring</p>
+              <h1 className="text-xl sm:text-3xl font-bold text-foreground">Admin Dashboard</h1>
+              <p className="text-sm sm:text-base text-muted-foreground">Unified kiosk management and system monitoring</p>
             </div>
             <div className="flex items-center space-x-2">
               <Activity className="w-5 h-5 text-primary" />
@@ -174,7 +174,7 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-3 text-xs sm:text-sm">
             <TabsTrigger value="overview">System Overview</TabsTrigger>
             <TabsTrigger value="sessions">Session Monitor</TabsTrigger>
             <TabsTrigger value="users">User Management</TabsTrigger>
@@ -205,7 +205,7 @@ const AdminDashboard = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {kiosks.map((kiosk) => (
                     <Card key={kiosk.id} className="relative">
                       <CardContent className="p-4">
@@ -264,7 +264,7 @@ const AdminDashboard = () => {
             </Card>
 
             {/* Queue Summary */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center space-x-2">

@@ -97,14 +97,14 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-3 sm:p-4">
+      <div className="w-full max-w-sm sm:max-w-md">
         <div className="text-center mb-8">
           <div className="w-16 h-16 mx-auto bg-blue-600 rounded-2xl flex items-center justify-center mb-4">
             <GraduationCap className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Behavior Support</h1>
-          <p className="text-gray-600">Teachers: Access dashboard • Admins: Manage kiosks & dashboard</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Behavior Support</h1>
+          <p className="text-sm sm:text-base text-gray-600 px-2">Teachers: Access dashboard • Admins: Manage kiosks & dashboard</p>
         </div>
 
         <Card>
@@ -167,7 +167,7 @@ const AuthPage = () => {
 
               <TabsContent value="signup" className="space-y-4">
                 <form onSubmit={handleSignUp} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">First Name</Label>
                       <Input
