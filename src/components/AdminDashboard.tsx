@@ -17,7 +17,6 @@ import QueueDisplay from './QueueDisplay';
 import UserManagement from './UserManagement';
 import ReviewReflection from './ReviewReflection';
 import { SessionMonitor } from './SessionMonitor';
-import RealTimeStatus from './RealTimeStatus';
 import { useToast } from '@/hooks/use-toast';
 import { BehaviorRequest } from '@/hooks/useSupabaseQueue';
 
@@ -140,17 +139,6 @@ const AdminDashboard = () => {
       <AppHeader />
       
       <div className="container-page spacing-section">
-        {/* Mobile RealTime Status */}
-        {isMobile && (
-          <div className="flex justify-end mb-4">
-            <RealTimeStatus isConnected={true} lastUpdate={new Date()} />
-          </div>
-        )}
-        {!isMobile && (
-          <div className="flex justify-end mb-6">
-            <RealTimeStatus isConnected={true} lastUpdate={new Date()} />
-          </div>
-        )}
 
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className={`grid w-full grid-cols-2 ${isMobile ? 'text-xs' : 'text-xs sm:text-sm'}`}>
