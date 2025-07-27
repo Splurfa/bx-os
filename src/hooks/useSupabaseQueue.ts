@@ -231,9 +231,105 @@ export const useSupabaseQueue = () => {
     }
   };
 
-  // Approve reflection
+  // Approve reflection and save to behavior history
   const approveReflection = async (behaviorRequestId: string) => {
     try {
+      // Get complete behavior request data with related information
+      const { data: behaviorData, error: behaviorError } = await supabase
+        .from('behavior_requests')
+        .select(`
+          *,
+          student:students(*),
+          reflection:reflections(*)
+        `)
+        .eq('id', behaviorRequestId)
+        .single();
+
+      if (behaviorError) throw behaviorError;
+      if (!behaviorData) throw new Error('Behavior request not found');
+
+      // Extract reflection data (it comes as an array from the join)
+      const reflectionData = Array.isArray(behaviorData.reflection) 
+        ? behaviorData.reflection[0] 
+        : behaviorData.reflection;
+
+      // Get teacher data
+      const { data: teacherData } = await supabase
+        .from('profiles')
+        .select('full_name, email')
+        .eq('id', behaviorData.teacher_id)
+        .single();
+
+      // Get kiosk data if assigned
+      let kioskData = null;
+      if (behaviorData.assigned_kiosk_id) {
+        const { data: kiosk } = await supabase
+          .from('kiosks')
+          .select('name, location')
+          .eq('id', behaviorData.assigned_kiosk_id)
+          .single();
+        kioskData = kiosk;
+      }
+
+      // Calculate time in queue
+      const queueTime = Math.floor(
+        (new Date().getTime() - new Date(behaviorData.created_at).getTime()) / (1000 * 60)
+      );
+
+      // Calculate queue position when created
+      const queuePosition = items.findIndex(item => item.id === behaviorRequestId) + 1;
+
+      // Create comprehensive behavior history record
+      const historyRecord = {
+        original_request_id: behaviorData.id,
+        student_id: behaviorData.student_id,
+        teacher_id: behaviorData.teacher_id,
+        behaviors: behaviorData.behaviors,
+        mood: behaviorData.mood,
+        urgent: behaviorData.urgent,
+        notes: behaviorData.notes,
+        assigned_kiosk_id: behaviorData.assigned_kiosk_id,
+        
+        // Student snapshot
+        student_name: behaviorData.student?.name || 'Unknown',
+        student_grade: behaviorData.student?.grade,
+        student_class_name: behaviorData.student?.class_name,
+        
+        // Teacher snapshot
+        teacher_name: teacherData?.full_name,
+        teacher_email: teacherData?.email,
+        
+        // Kiosk snapshot
+        kiosk_name: kioskData?.name,
+        kiosk_location: kioskData?.location,
+        
+        // Reflection data
+        reflection_id: reflectionData?.id,
+        question1: reflectionData?.question1,
+        question2: reflectionData?.question2,
+        question3: reflectionData?.question3,
+        question4: reflectionData?.question4,
+        teacher_feedback: reflectionData?.teacher_feedback,
+        
+        // Workflow metadata
+        queue_position: queuePosition,
+        time_in_queue_minutes: queueTime,
+        completion_status: 'completed',
+        intervention_outcome: 'approved',
+        
+        // Timestamps
+        queue_created_at: behaviorData.created_at,
+        queue_started_at: behaviorData.updated_at,
+        completed_at: new Date().toISOString()
+      };
+
+      // Save to behavior history
+      const { error: historyError } = await supabase
+        .from('behavior_history')
+        .insert([historyRecord]);
+
+      if (historyError) throw historyError;
+
       // Update reflection status
       const { error: reflectionError } = await supabase
         .from('reflections')
@@ -252,7 +348,7 @@ export const useSupabaseQueue = () => {
 
       toast({
         title: "Reflection Approved",
-        description: "Student has been removed from the queue."
+        description: "Student intervention saved to history and removed from queue."
       });
 
       await fetchQueue();

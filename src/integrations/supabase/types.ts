@@ -14,6 +14,117 @@ export type Database = {
   }
   public: {
     Tables: {
+      behavior_history: {
+        Row: {
+          assigned_kiosk_id: number | null
+          behaviors: string[]
+          completed_at: string
+          completion_status: string
+          created_at: string
+          device_location: string | null
+          device_type: string | null
+          id: string
+          intervention_outcome: string
+          kiosk_location: string | null
+          kiosk_name: string | null
+          mood: string
+          notes: string | null
+          original_request_id: string
+          question1: string | null
+          question2: string | null
+          question3: string | null
+          question4: string | null
+          queue_created_at: string
+          queue_position: number | null
+          queue_started_at: string | null
+          reflection_id: string | null
+          session_id: string | null
+          student_class_name: string | null
+          student_grade: string | null
+          student_id: string
+          student_name: string
+          teacher_email: string | null
+          teacher_feedback: string | null
+          teacher_id: string
+          teacher_name: string | null
+          time_in_queue_minutes: number | null
+          updated_at: string
+          urgent: boolean
+        }
+        Insert: {
+          assigned_kiosk_id?: number | null
+          behaviors?: string[]
+          completed_at?: string
+          completion_status?: string
+          created_at?: string
+          device_location?: string | null
+          device_type?: string | null
+          id?: string
+          intervention_outcome?: string
+          kiosk_location?: string | null
+          kiosk_name?: string | null
+          mood: string
+          notes?: string | null
+          original_request_id: string
+          question1?: string | null
+          question2?: string | null
+          question3?: string | null
+          question4?: string | null
+          queue_created_at: string
+          queue_position?: number | null
+          queue_started_at?: string | null
+          reflection_id?: string | null
+          session_id?: string | null
+          student_class_name?: string | null
+          student_grade?: string | null
+          student_id: string
+          student_name: string
+          teacher_email?: string | null
+          teacher_feedback?: string | null
+          teacher_id: string
+          teacher_name?: string | null
+          time_in_queue_minutes?: number | null
+          updated_at?: string
+          urgent?: boolean
+        }
+        Update: {
+          assigned_kiosk_id?: number | null
+          behaviors?: string[]
+          completed_at?: string
+          completion_status?: string
+          created_at?: string
+          device_location?: string | null
+          device_type?: string | null
+          id?: string
+          intervention_outcome?: string
+          kiosk_location?: string | null
+          kiosk_name?: string | null
+          mood?: string
+          notes?: string | null
+          original_request_id?: string
+          question1?: string | null
+          question2?: string | null
+          question3?: string | null
+          question4?: string | null
+          queue_created_at?: string
+          queue_position?: number | null
+          queue_started_at?: string | null
+          reflection_id?: string | null
+          session_id?: string | null
+          student_class_name?: string | null
+          student_grade?: string | null
+          student_id?: string
+          student_name?: string
+          teacher_email?: string | null
+          teacher_feedback?: string | null
+          teacher_id?: string
+          teacher_name?: string | null
+          time_in_queue_minutes?: number | null
+          updated_at?: string
+          urgent?: boolean
+        }
+        Relationships: []
+      }
       behavior_requests: {
         Row: {
           assigned_kiosk_id: number | null
