@@ -40,8 +40,7 @@ const QueueDisplay = ({ items, onSelectReflection, formatTimeElapsed }: QueueDis
         <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
           <User className="h-8 w-8 text-muted-foreground" />
         </div>
-        <h3 className="text-lg font-semibold text-foreground mb-2">Queue is Empty</h3>
-        <p className="text-sm text-muted-foreground">No students currently in the behavior support queue</p>
+        <h3 className="text-lg font-semibold text-foreground">Queue is Empty</h3>
       </div>
     );
   }

@@ -188,8 +188,7 @@ export const useSupabaseQueue = () => {
       if (requestError) throw requestError;
 
       toast({
-        title: "Student Added",
-        description: `${data.studentName} has been added to the queue.`
+        description: "Student added",
       });
 
       await fetchQueue();
@@ -234,8 +233,7 @@ export const useSupabaseQueue = () => {
       if (updateError) throw updateError;
 
       toast({
-        title: "Reflection Submitted",
-        description: "Your reflection has been submitted for review."
+        description: "Reflection submitted",
       });
 
       await fetchQueue();
@@ -365,8 +363,7 @@ export const useSupabaseQueue = () => {
       if (deleteError) throw deleteError;
 
       toast({
-        title: "Reflection Approved",
-        description: "Student intervention saved to history and removed from queue."
+        description: "Reflection approved",
       });
 
       await fetchQueue();
@@ -403,8 +400,7 @@ export const useSupabaseQueue = () => {
       if (updateError) throw updateError;
 
       toast({
-        title: "Revision Requested",
-        description: "Student will receive feedback and can revise their reflection."
+        description: "Revision requested",
       });
 
       await fetchQueue();
@@ -462,8 +458,7 @@ export const useSupabaseQueue = () => {
 
       console.log('✅ QUEUE CLEARED SUCCESSFULLY');
       toast({
-        title: "Queue Cleared",
-        description: "All students have been removed from the queue."
+        description: "Queue cleared",
       });
 
       await fetchQueue();

@@ -52,14 +52,12 @@ const AdminDashboard = () => {
       if (isActive) {
         await deactivateKiosk(kioskId);
         toast({
-          title: "Kiosk Deactivated",
-          description: `Kiosk ${kioskId} has been deactivated successfully.`,
+          description: `Kiosk ${kioskId} deactivated`,
         });
       } else {
         await activateKiosk(kioskId);
         toast({
-          title: "Kiosk Activated", 
-          description: `Kiosk ${kioskId} has been activated successfully.`,
+          description: `Kiosk ${kioskId} activated`,
         });
       }
       await refreshKiosks(); // Add UI refresh fix
@@ -78,8 +76,7 @@ const AdminDashboard = () => {
     try {
       await deactivateAllKiosks();
       toast({
-        title: "All Kiosks Deactivated",
-        description: "All kiosks have been deactivated successfully.",
+        description: "All kiosks deactivated",
       });
     } catch (error) {
       console.error('Error deactivating all kiosks:', error);
@@ -102,8 +99,7 @@ const AdminDashboard = () => {
         await approveReflection(selectedReflection.id);
         setSelectedReflection(null);
         toast({
-          title: "Reflection Approved",
-          description: "The student's reflection has been approved.",
+          description: "Reflection approved",
         });
       } catch (error) {
         console.error('Error approving reflection:', error);
@@ -122,8 +118,7 @@ const AdminDashboard = () => {
         await requestRevision(selectedReflection.id, feedback);
         setSelectedReflection(null);
         toast({
-          title: "Revision Requested",
-          description: "The student has been asked to revise their reflection.",
+          description: "Revision requested",
         });
       } catch (error) {
         console.error('Error requesting revision:', error);
@@ -141,8 +136,7 @@ const AdminDashboard = () => {
     try {
       await clearQueue();
       toast({
-        title: "Queue Cleared",
-        description: "All behavior requests have been removed from the queue.",
+        description: "Queue cleared",
       });
     } catch (error) {
       console.error('Error clearing queue:', error);

@@ -50,8 +50,7 @@ export default function UserManagement() {
       setUsers(data || []);
     } catch (error) {
       toast({
-        title: "Error fetching users",
-        description: error instanceof Error ? error.message : "Unknown error occurred",
+        description: "Failed to fetch users",
         variant: "destructive",
       });
     } finally {
@@ -62,8 +61,7 @@ export default function UserManagement() {
   const createUser = async () => {
     if (!newUser.email || !newUser.password || !newUser.fullName) {
       toast({
-        title: "Missing fields",
-        description: "Please fill in all required fields",
+        description: "Missing required fields",
         variant: "destructive",
       });
       return;
@@ -84,8 +82,7 @@ export default function UserManagement() {
 
       if (data.success) {
         toast({
-          title: "User created successfully",
-          description: `${newUser.fullName} has been added as a ${newUser.role}`,
+          description: "User created",
         });
         
         setNewUser({ email: "", password: "", fullName: "", role: "teacher" });
@@ -115,8 +112,7 @@ export default function UserManagement() {
       if (error) throw error;
 
       toast({
-        title: "Role updated",
-        description: `User role has been updated to ${newRole}`,
+        description: "Role updated",
       });
       
       fetchUsers();
@@ -139,8 +135,7 @@ export default function UserManagement() {
 
       if (data.success) {
         toast({
-          title: "User deleted",
-          description: "User has been successfully deleted",
+          description: "User deleted",
         });
         fetchUsers();
       } else {
