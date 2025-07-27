@@ -63,14 +63,6 @@ const KioskOne = () => {
     if (kioskState === 'setup' && !authLoading) {
       const setupKiosk = async () => {
         try {
-          console.log('=== KIOSK 1 ACTIVATION DEBUG ===');
-          console.log('Auth Loading:', authLoading);
-          console.log('User:', user);
-          console.log('Session:', session);
-          console.log('User ID:', user?.id);
-          console.log('Session User ID:', session?.user?.id);
-          console.log('Is Authenticated:', !!user && !!session);
-          console.log('===============================');
           
           setActivationError(null);
           
@@ -81,11 +73,11 @@ const KioskOne = () => {
             return;
           }
           
-          console.log('Proceeding with kiosk 1 activation for authenticated user...');
+          
           const id = await activateKiosk(KIOSK_ID);
           
           if (id) {
-            console.log('Kiosk 1 activated successfully with ID:', id);
+            
             setKioskState('welcome');
           } else {
             console.error('Failed to activate kiosk 1: No ID returned');

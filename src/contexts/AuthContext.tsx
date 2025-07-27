@@ -54,12 +54,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       if (!error && data) {
         setUserSessionId(data);
-        console.log('Session created successfully:', data);
-      } else {
-        console.error('Error creating session:', error);
       }
     } catch (error) {
-      console.error('Error creating user session:', error);
+      // Session creation is optional - don't block user flow
     }
   }, []);
 

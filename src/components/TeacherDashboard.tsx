@@ -78,8 +78,7 @@ const TeacherDashboard = () => {
     <div className="h-screen bg-background flex flex-col overflow-hidden">
       <AppHeader />
       
-      
-      <main className="flex-1 overflow-hidden p-6 pt-2 flex items-center justify-center">
+      <main className="flex-1 overflow-hidden spacing-page flex items-center justify-center">
         {loading ? (
           <div className="flex items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />

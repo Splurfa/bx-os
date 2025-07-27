@@ -290,7 +290,7 @@ export const useEnhancedQueue = () => {
         .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
       
       if (orphanedStudents.length > 0) {
-        console.log(`Auto-assigning orphaned student to kiosk ${kioskId}`);
+        
         const studentToAssign = orphanedStudents[0];
         
         // Auto-assign the first orphaned student to this kiosk
@@ -366,7 +366,7 @@ export const useEnhancedQueue = () => {
       );
       
       if (orphanedStudents.length > 0) {
-        console.log(`Found ${orphanedStudents.length} orphaned students, reassigning...`);
+        
         return updatePositions(prev);
       }
       

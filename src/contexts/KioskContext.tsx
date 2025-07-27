@@ -103,22 +103,16 @@ export const KioskProvider = ({ children }: { children: React.ReactNode }) => {
 
   const activateKiosk = async (kioskId?: number): Promise<number | null> => {
     try {
-      console.log('🚀 ATTEMPTING KIOSK ACTIVATION:', { 
-        kioskId, 
-        userId: user?.id, 
-        localKiosksCount: kiosks.length,
-        timestamp: new Date().toISOString()
-      });
       
       // CRITICAL FIX: Skip local validation - go straight to database
       // Previous code failed because local kiosks array was empty due to RLS
       if (!kioskId) {
         // If no specific kiosk requested, try to activate kiosk 1 by default
         kioskId = 1;
-        console.log('⚡ No kiosk ID provided, defaulting to kiosk 1');
+        
       }
 
-      console.log('💾 WRITING TO DATABASE - Kiosk ID:', kioskId);
+      
 
       const { data, error } = await supabase
         .from('kiosks')
@@ -132,38 +126,27 @@ export const KioskProvider = ({ children }: { children: React.ReactNode }) => {
         .single();
 
       if (error) {
-        console.error('❌ DATABASE ERROR:', error);
         throw new Error(`Failed to activate kiosk: ${error.message}`);
       }
-
-      console.log('✅ KIOSK ACTIVATED SUCCESSFULLY:', data);
-      console.log('🔍 Database response shows is_active:', data.is_active);
       
       // NEW: Assign waiting students to newly activated kiosk
       try {
         await supabase.rpc('assign_waiting_students_to_kiosk', {
           p_kiosk_id: kioskId
         });
-        console.log('📝 Assigned waiting students to activated kiosk');
       } catch (assignError) {
-        console.error('⚠️ Error assigning students to kiosk:', assignError);
+        // Don't fail the activation if student assignment fails
         // Don't fail the activation if student assignment fails
       }
       
       return kioskId;
     } catch (error) {
-      console.error('💥 ACTIVATION ERROR:', error);
       throw error;
     }
   };
 
   const deactivateKiosk = async (kioskId: number): Promise<void> => {
     try {
-      console.log('🔄 INDIVIDUAL KIOSK DEACTIVATION - START:', { 
-        kioskId, 
-        userId: user?.id, 
-        timestamp: new Date().toISOString()
-      });
 
       const { data, error } = await supabase
         .from('kiosks')
@@ -179,27 +162,18 @@ export const KioskProvider = ({ children }: { children: React.ReactNode }) => {
         .single();
 
       if (error) {
-        console.error('❌ DEACTIVATION DATABASE ERROR:', error);
         throw new Error(`Failed to deactivate kiosk: ${error.message}`);
       }
-
-      console.log('✅ INDIVIDUAL KIOSK DEACTIVATED SUCCESSFULLY:', data);
-      console.log('🔍 Database response shows is_active:', data.is_active);
       
       // Refresh kiosks data to update UI - same pattern as clearQueue
       await refreshKiosks();
     } catch (error) {
-      console.error('💥 DEACTIVATION ERROR:', error);
       throw error;
     }
   };
 
   const deactivateAllKiosks = async (): Promise<void> => {
     try {
-      console.log('🔄 ATTEMPTING ALL KIOSKS DEACTIVATION:', { 
-        userId: user?.id, 
-        timestamp: new Date().toISOString()
-      });
 
       const { data, error } = await supabase
         .from('kiosks')
@@ -214,16 +188,12 @@ export const KioskProvider = ({ children }: { children: React.ReactNode }) => {
         .select();
 
       if (error) {
-        console.error('❌ DEACTIVATE ALL DATABASE ERROR:', error);
         throw new Error(`Failed to deactivate all kiosks: ${error.message}`);
       }
-
-      console.log('✅ ALL KIOSKS DEACTIVATED SUCCESSFULLY:', data);
       
       // Refresh kiosks data to update UI - same pattern as individual deactivateKiosk
       await refreshKiosks();
     } catch (error) {
-      console.error('💥 DEACTIVATE ALL ERROR:', error);
       throw error;
     }
   };

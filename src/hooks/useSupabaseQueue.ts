@@ -432,7 +432,7 @@ export const useSupabaseQueue = () => {
   // Clear entire queue
   const clearQueue = async () => {
     try {
-      console.log('🔄 CLEARING ENTIRE QUEUE');
+      
       
       const { error } = await supabase
         .from('behavior_requests')
@@ -440,11 +440,8 @@ export const useSupabaseQueue = () => {
         .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all records
 
       if (error) {
-        console.error('❌ CLEAR QUEUE ERROR:', error);
         throw error;
       }
-
-      console.log('✅ QUEUE CLEARED SUCCESSFULLY');
 
       await fetchQueue();
     } catch (error) {
@@ -471,7 +468,7 @@ export const useSupabaseQueue = () => {
       
       // Return null if no active kiosks - students will stay in waiting
       if (!activeKiosks || activeKiosks.length === 0) {
-        console.log('No active kiosks available for assignment');
+        
         return null;
       }
 
@@ -505,7 +502,7 @@ export const useSupabaseQueue = () => {
         }
       }
 
-      console.log('Assigned student to kiosk:', selectedKioskId, 'with current load:', minCount);
+      
       return selectedKioskId;
     } catch (error) {
       console.error('Error in kiosk assignment:', error);
@@ -565,7 +562,7 @@ export const useSupabaseQueue = () => {
 
       if (error) throw error;
       
-      console.log(`Updated student ${behaviorRequestId} to status: ${newStatus}`);
+      
       await fetchQueue();
     } catch (error) {
       console.error('Error updating student kiosk status:', error);
@@ -581,7 +578,7 @@ export const useSupabaseQueue = () => {
 
       if (error) throw error;
       
-      console.log(`Assigned waiting students to kiosk ${kioskId}`);
+      
       await fetchQueue();
     } catch (error) {
       console.error('Error assigning students to kiosk:', error);

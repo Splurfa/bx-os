@@ -77,7 +77,7 @@ const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
       {currentStep === 1 && (
         <div className="h-full bg-background flex flex-col">
           <div className="flex items-center justify-between p-4 border-b border-border bg-background">
-            <h2 className="text-lg font-semibold text-foreground">Select Student</h2>
+            <h2 className="text-h4">Select Student</h2>
             <Button variant="ghost" size="sm" onClick={handleClose}>
               <X className="h-4 w-4" />
             </Button>
@@ -110,8 +110,8 @@ const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
                 <ArrowLeft className="h-4 w-4" />
               </Button>
               <div>
-                <h2 className="text-lg font-semibold text-foreground">Log Behavior</h2>
-                <p className="text-xs text-muted-foreground">{selectedStudent?.name}</p>
+                <h2 className="text-h4">Log Behavior</h2>
+                <p className="text-caption">{selectedStudent?.name}</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
@@ -125,7 +125,7 @@ const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
                     : "hover:bg-muted/50"
                 }`}
               >
-                <AlertTriangle className="h-4 w-4" />
+                <AlertTriangle className="icon-inline" />
                 {isUrgent && <span className="ml-1 text-xs font-medium">URGENT</span>}
               </Button>
               <Button variant="ghost" size="sm" onClick={handleClose}>
@@ -137,14 +137,14 @@ const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
           <div className={`flex-1 flex flex-col transition-colors duration-300 ${isUrgent ? "bg-gradient-to-br from-queue-urgent/5 via-orange-50/10 to-red-50/5" : "bg-background"}`}>
             {/* Teacher Mood - Fixed height */}
             <div className="p-4 border-b border-border bg-background shrink-0">
-              <h3 className="text-sm font-medium text-foreground text-center mb-3">Teacher Mood</h3>
+              <h3 className="text-h5 text-center mb-3">Teacher Mood</h3>
               <MoodSlider value={teacherMood} onChange={setTeacherMood} />
             </div>
 
             {/* Behavior Selection - Takes remaining space */}
             <div className="flex-1 flex flex-col bg-background">
               <div className="p-4 pb-2 shrink-0">
-                <h3 className="text-sm font-medium text-foreground text-center">Select Behaviors</h3>
+                <h3 className="text-h5 text-center">Select Behaviors</h3>
               </div>
               <div className="flex-1">
                 <BehaviorSelection 
@@ -161,7 +161,7 @@ const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
               onClick={() => setShowNotesModal(true)}
               className="w-full h-10 text-sm"
             >
-              <Edit3 className="w-3 h-3 mr-2" />
+              <Edit3 className="icon-small mr-2" />
               {notes ? 'Edit Notes' : 'Add Notes'}
             </Button>
             <StickyFooter
@@ -181,7 +181,7 @@ const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
         <div className="fixed inset-0 z-[70] bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-background rounded-lg max-w-md w-full shadow-xl">
             <div className="flex items-center justify-between p-4 border-b border-border">
-              <h3 className="text-sm font-semibold text-foreground">Additional Notes</h3>
+              <h3 className="text-h5">Additional Notes</h3>
               <Button variant="ghost" size="sm" onClick={() => setShowNotesModal(false)}>
                 <X className="h-4 w-4" />
               </Button>

@@ -139,14 +139,17 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <AppHeader />
       
-      <div className={`container mx-auto ${isMobile ? 'p-2 space-y-3' : 'p-3 sm:p-6 space-y-4 sm:space-y-6'}`}>
+      <div className="container-page spacing-section">
         {/* Header */}
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col spacing-tight">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className={`${isMobile ? 'text-lg' : 'text-xl sm:text-3xl'} font-bold text-foreground`}>Admin Dashboard</h1>
-              <p className={`${isMobile ? 'text-xs' : 'text-sm sm:text-base'} text-muted-foreground`}>
-                {isMobile ? 'Kiosk management & monitoring' : 'Unified kiosk management and system monitoring'}
+              <h1 className="text-h1 flex items-center gap-3">
+                <Monitor className="icon-h1 text-primary" />
+                Admin Dashboard
+              </h1>
+              <p className="text-body-small">
+                Unified kiosk management and system monitoring
               </p>
             </div>
             {!isMobile && <RealTimeStatus isConnected={true} lastUpdate={new Date()} />}
@@ -163,28 +166,25 @@ const AdminDashboard = () => {
           <TabsContent value="overview" className={isMobile ? "space-y-3" : "space-y-6"}>
             {/* Unified Kiosk Management */}
             <Card>
-              <CardHeader className={isMobile ? "p-3 pb-2" : ""}>
-                <div className={`flex items-center ${isMobile ? 'flex-col space-y-2' : 'justify-between'}`}>
-                  <div className="flex items-center space-x-2">
-                    <Monitor className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-primary`} />
-                    <CardTitle className={isMobile ? "text-base" : ""}>Kiosk Management</CardTitle>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Monitor className="icon-h2 text-primary" />
+                    <CardTitle className="text-h3">Kiosk Management</CardTitle>
                   </div>
                   <Button 
                     variant="outline" 
-                    size={isMobile ? "sm" : "sm"}
+                    size="sm"
                     onClick={handleDeactivateAll}
                     disabled={kioskLoading || activeKioskCount === 0}
-                    className={isMobile ? "text-xs px-2" : ""}
                   >
-                    <PowerOff className={`${isMobile ? 'w-3 h-3 mr-1' : 'w-4 h-4 mr-2'}`} />
-                    {isMobile ? 'Deactivate All' : 'Deactivate All'}
+                    <PowerOff className="icon-inline mr-2" />
+                    Deactivate All
                   </Button>
                 </div>
-                {!isMobile && (
-                  <CardDescription>
-                    Manage kiosk activation status and monitor real-time usage
-                  </CardDescription>
-                )}
+                <CardDescription className="text-body-small">
+                  Manage kiosk activation status and monitor real-time usage
+                </CardDescription>
               </CardHeader>
               <CardContent className={`space-y-4 ${isMobile ? 'p-3 pt-0' : ''}`}>
                 <div className={`grid grid-cols-1 ${isMobile ? 'gap-2' : 'sm:grid-cols-2 lg:grid-cols-3 gap-4'}`}>
