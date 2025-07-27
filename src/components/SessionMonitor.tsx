@@ -1,4 +1,5 @@
 import { useActiveSessions } from '@/hooks/useActiveSessions';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -29,13 +30,16 @@ const getStatusColor = (status: string) => {
 
 export const SessionMonitor = () => {
   const { sessions, loading } = useActiveSessions();
+  const isMobile = useIsMobile();
 
   if (loading) {
     return (
       <Card>
-        <CardContent className="flex items-center justify-center p-8">
-          <Loader2 className="h-8 w-8 animate-spin" />
-          <span className="ml-2">Loading active sessions...</span>
+        <CardContent className={`flex items-center justify-center ${isMobile ? 'p-4' : 'p-8'}`}>
+          <Loader2 className={`${isMobile ? 'h-4 w-4' : 'h-8 w-8'} animate-spin`} />
+          <span className={`ml-2 ${isMobile ? 'text-sm' : ''}`}>
+            {isMobile ? 'Loading...' : 'Loading active sessions...'}
+          </span>
         </CardContent>
       </Card>
     );
@@ -43,60 +47,90 @@ export const SessionMonitor = () => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Active Sessions</CardTitle>
-        <CardDescription>
-          Currently active user sessions across the system ({sessions.length} total)
-        </CardDescription>
+      <CardHeader className={isMobile ? "p-3 pb-2" : ""}>
+        <CardTitle className={isMobile ? "text-base" : ""}>Active Sessions</CardTitle>
+        {!isMobile && (
+          <CardDescription>
+            Currently active user sessions across the system ({sessions.length} total)
+          </CardDescription>
+        )}
+        {isMobile && (
+          <CardDescription className="text-xs">
+            {sessions.length} active session{sessions.length !== 1 ? 's' : ''}
+          </CardDescription>
+        )}
       </CardHeader>
-      <CardContent>
+      <CardContent className={isMobile ? "p-3 pt-0" : ""}>
         {sessions.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
+          <div className={`text-center ${isMobile ? 'py-4 text-sm' : 'py-8'} text-muted-foreground`}>
             No active sessions found
           </div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>User</TableHead>
-                <TableHead>Device</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Login Time</TableHead>
-                <TableHead>Last Activity</TableHead>
-                <TableHead>Location</TableHead>
+                <TableHead className={isMobile ? "text-xs" : ""}>
+                  User
+                </TableHead>
+                <TableHead className={isMobile ? "text-xs" : ""}>
+                  {isMobile ? 'Device' : 'Device'}
+                </TableHead>
+                <TableHead className={isMobile ? "text-xs" : ""}>
+                  Status
+                </TableHead>
+                {!isMobile && <TableHead>Login Time</TableHead>}
+                {!isMobile && <TableHead>Last Activity</TableHead>}
+                {!isMobile && <TableHead>Location</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
               {sessions.map((session) => (
                 <TableRow key={session.id}>
-                  <TableCell>
+                  <TableCell className={isMobile ? "text-sm" : ""}>
                     <div>
-                      <div className="font-medium">{session.user_name}</div>
-                      <div className="text-sm text-muted-foreground">{session.user_email}</div>
+                      <div className={`font-medium ${isMobile ? 'text-sm' : ''}`}>
+                        {isMobile ? session.user_name?.split(' ')[0] : session.user_name}
+                      </div>
+                      {!isMobile && (
+                        <div className="text-sm text-muted-foreground">{session.user_email}</div>
+                      )}
+                      {isMobile && (
+                        <div className="text-xs text-muted-foreground">
+                          {formatDistanceToNow(new Date(session.last_activity), { addSuffix: true })}
+                        </div>
+                      )}
                     </div>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
+                  <TableCell className={isMobile ? "text-sm" : ""}>
+                    <div className={`flex items-center ${isMobile ? 'gap-1' : 'gap-2'}`}>
                       {getDeviceIcon(session.device_type)}
-                      <span className="capitalize">{session.device_type}</span>
+                      {!isMobile && (
+                        <span className="capitalize">{session.device_type}</span>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge className={getStatusColor(session.session_status)}>
+                    <Badge className={`${getStatusColor(session.session_status)} ${isMobile ? 'text-xs px-1.5 py-0.5' : ''}`}>
                       {session.session_status}
                     </Badge>
                   </TableCell>
-                  <TableCell>
-                    {formatDistanceToNow(new Date(session.login_time), { addSuffix: true })}
-                  </TableCell>
-                  <TableCell>
-                    {formatDistanceToNow(new Date(session.last_activity), { addSuffix: true })}
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-sm text-muted-foreground">
-                      {session.location || 'Unknown'}
-                    </span>
-                  </TableCell>
+                  {!isMobile && (
+                    <TableCell className="text-sm">
+                      {formatDistanceToNow(new Date(session.login_time), { addSuffix: true })}
+                    </TableCell>
+                  )}
+                  {!isMobile && (
+                    <TableCell className="text-sm">
+                      {formatDistanceToNow(new Date(session.last_activity), { addSuffix: true })}
+                    </TableCell>
+                  )}
+                  {!isMobile && (
+                    <TableCell>
+                      <span className="text-sm text-muted-foreground">
+                        {session.location || 'Unknown'}
+                      </span>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>

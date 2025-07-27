@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 import { UserPlus, Search, MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -28,6 +29,7 @@ export default function UserManagement() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   // Form state
   const [newUser, setNewUser] = useState({
@@ -175,19 +177,21 @@ export default function UserManagement() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className={isMobile ? "space-y-3" : "space-y-6"}>
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'justify-between items-center'}`}>
         <div>
-          <h2 className="text-2xl font-bold">User Management</h2>
-          <p className="text-muted-foreground">Manage teachers and administrators</p>
+          <h2 className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>User Management</h2>
+          <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
+            {isMobile ? 'Manage users' : 'Manage teachers and administrators'}
+          </p>
         </div>
         
         <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
           <DialogTrigger asChild>
-            <Button>
-              <UserPlus className="h-4 w-4 mr-2" />
-              Add User
+            <Button size={isMobile ? "sm" : "default"} className={isMobile ? "text-xs px-2" : ""}>
+              <UserPlus className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
+              {isMobile ? 'Add' : 'Add User'}
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -254,43 +258,47 @@ export default function UserManagement() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className={`grid grid-cols-3 ${isMobile ? 'gap-2' : 'md:grid-cols-3 gap-4'}`}>
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Users</CardTitle>
+          <CardHeader className={`pb-1 ${isMobile ? 'p-2' : 'pb-2'}`}>
+            <CardTitle className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-muted-foreground`}>
+              {isMobile ? 'Total' : 'Total Users'}
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{users.length}</div>
+          <CardContent className={isMobile ? "p-2 pt-0" : ""}>
+            <div className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{users.length}</div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Teachers</CardTitle>
+          <CardHeader className={`pb-1 ${isMobile ? 'p-2' : 'pb-2'}`}>
+            <CardTitle className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-muted-foreground`}>Teachers</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{users.filter(u => u.role === 'teacher').length}</div>
+          <CardContent className={isMobile ? "p-2 pt-0" : ""}>
+            <div className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{users.filter(u => u.role === 'teacher').length}</div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Administrators</CardTitle>
+          <CardHeader className={`pb-1 ${isMobile ? 'p-2' : 'pb-2'}`}>
+            <CardTitle className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-muted-foreground`}>
+              {isMobile ? 'Admins' : 'Administrators'}
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{users.filter(u => u.role === 'admin').length}</div>
+          <CardContent className={isMobile ? "p-2 pt-0" : ""}>
+            <div className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{users.filter(u => u.role === 'admin').length}</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Search */}
       <div className="flex items-center space-x-2">
-        <Search className="h-4 w-4 text-muted-foreground" />
+        <Search className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'} text-muted-foreground`} />
         <Input
-          placeholder="Search users..."
+          placeholder={isMobile ? "Search..." : "Search users..."}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-sm"
+          className={isMobile ? "text-sm" : "max-w-sm"}
         />
       </div>
 
@@ -300,56 +308,69 @@ export default function UserManagement() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Created</TableHead>
+                <TableHead className={isMobile ? "text-xs" : ""}>
+                  {isMobile ? 'User' : 'Name'}
+                </TableHead>
+                {!isMobile && <TableHead>Email</TableHead>}
+                <TableHead className={isMobile ? "text-xs" : ""}>Role</TableHead>
+                {!isMobile && <TableHead>Created</TableHead>}
                 <TableHead className="w-12"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8">
+                  <TableCell colSpan={isMobile ? 3 : 5} className={`text-center ${isMobile ? 'py-4 text-sm' : 'py-8'}`}>
                     Loading users...
                   </TableCell>
                 </TableRow>
               ) : filteredUsers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8">
+                  <TableCell colSpan={isMobile ? 3 : 5} className={`text-center ${isMobile ? 'py-4 text-sm' : 'py-8'}`}>
                     No users found
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredUsers.map((user) => (
                   <TableRow key={user.id}>
-                    <TableCell className="font-medium">{user.full_name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
+                    <TableCell className={`font-medium ${isMobile ? 'text-sm' : ''}`}>
+                      <div>
+                        <div>{user.full_name}</div>
+                        {isMobile && (
+                          <div className="text-xs text-muted-foreground">{user.email}</div>
+                        )}
+                      </div>
+                    </TableCell>
+                    {!isMobile && <TableCell className="text-sm">{user.email}</TableCell>}
                     <TableCell>
-                      <Badge variant={getRoleColor(user.role)}>
+                      <Badge variant={getRoleColor(user.role)} className={isMobile ? "text-xs px-1.5 py-0.5" : ""}>
                         {user.role}
                       </Badge>
                     </TableCell>
-                    <TableCell>
-                      {new Date(user.created_at).toLocaleDateString()}
-                    </TableCell>
+                    {!isMobile && (
+                      <TableCell className="text-sm">
+                        {new Date(user.created_at).toLocaleDateString()}
+                      </TableCell>
+                    )}
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreHorizontal className="h-4 w-4" />
+                          <Button variant="ghost" size={isMobile ? "sm" : "sm"}>
+                            <MoreHorizontal className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent align="end" className="bg-background border shadow-md">
                           <DropdownMenuItem onClick={() => updateUserRole(user.id, user.role === 'teacher' ? 'admin' : 'teacher')}>
-                            <Edit className="h-4 w-4 mr-2" />
-                            Change to {user.role === 'teacher' ? 'Admin' : 'Teacher'}
+                            <Edit className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
+                            <span className={isMobile ? "text-xs" : ""}>
+                              Change to {user.role === 'teacher' ? 'Admin' : 'Teacher'}
+                            </span>
                           </DropdownMenuItem>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                <Trash2 className="h-4 w-4 mr-2" />
-                                Delete User
+                                <Trash2 className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
+                                <span className={isMobile ? "text-xs" : ""}>Delete User</span>
                               </DropdownMenuItem>
                             </AlertDialogTrigger>
                             <AlertDialogContent>

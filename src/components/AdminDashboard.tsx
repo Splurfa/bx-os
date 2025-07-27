@@ -4,6 +4,7 @@ import { useKiosks } from '@/contexts/KioskContext';
 import { useSupabaseQueue } from '@/hooks/useSupabaseQueue';
 import { useBehaviorHistory } from '@/hooks/useBehaviorHistory';
 import { useStudents } from '@/hooks/useStudents';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -34,6 +35,7 @@ const AdminDashboard = () => {
   const { history: behaviorHistory, loading: historyLoading } = useBehaviorHistory();
   const { students, loading: studentsLoading } = useStudents();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [selectedReflection, setSelectedReflection] = useState<BehaviorRequest | null>(null);
 
   // Filter queue items
@@ -161,58 +163,62 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <AppHeader />
       
-      <div className="container mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
+      <div className={`container mx-auto ${isMobile ? 'p-2 space-y-3' : 'p-3 sm:p-6 space-y-4 sm:space-y-6'}`}>
         {/* Header */}
         <div className="flex flex-col space-y-2">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl sm:text-3xl font-bold text-foreground">Admin Dashboard</h1>
-              <p className="text-sm sm:text-base text-muted-foreground">Unified kiosk management and system monitoring</p>
+              <h1 className={`${isMobile ? 'text-lg' : 'text-xl sm:text-3xl'} font-bold text-foreground`}>Admin Dashboard</h1>
+              <p className={`${isMobile ? 'text-xs' : 'text-sm sm:text-base'} text-muted-foreground`}>
+                {isMobile ? 'Kiosk management & monitoring' : 'Unified kiosk management and system monitoring'}
+              </p>
             </div>
-            <RealTimeStatus isConnected={true} lastUpdate={new Date()} />
+            {!isMobile && <RealTimeStatus isConnected={true} lastUpdate={new Date()} />}
           </div>
         </div>
 
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 text-xs sm:text-sm">
+          <TabsList className={`grid w-full grid-cols-2 ${isMobile ? 'text-xs' : 'text-xs sm:text-sm'}`}>
             <TabsTrigger value="overview">System Overview</TabsTrigger>
-            <TabsTrigger value="sessions">Session Monitor</TabsTrigger>
-            <TabsTrigger value="users">User Management</TabsTrigger>
+            <TabsTrigger value="users">Users & Sessions</TabsTrigger>
           </TabsList>
 
           {/* System Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
+          <TabsContent value="overview" className={isMobile ? "space-y-3" : "space-y-6"}>
             {/* Unified Kiosk Management */}
             <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
+              <CardHeader className={isMobile ? "p-3 pb-2" : ""}>
+                <div className={`flex items-center ${isMobile ? 'flex-col space-y-2' : 'justify-between'}`}>
                   <div className="flex items-center space-x-2">
-                    <Monitor className="w-5 h-5 text-primary" />
-                    <CardTitle>Kiosk Management</CardTitle>
+                    <Monitor className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-primary`} />
+                    <CardTitle className={isMobile ? "text-base" : ""}>Kiosk Management</CardTitle>
                   </div>
                   <Button 
                     variant="outline" 
-                    size="sm"
+                    size={isMobile ? "sm" : "sm"}
                     onClick={handleDeactivateAll}
                     disabled={kioskLoading || activeKioskCount === 0}
+                    className={isMobile ? "text-xs px-2" : ""}
                   >
-                    <PowerOff className="w-4 h-4 mr-2" />
-                    Deactivate All
+                    <PowerOff className={`${isMobile ? 'w-3 h-3 mr-1' : 'w-4 h-4 mr-2'}`} />
+                    {isMobile ? 'Deactivate All' : 'Deactivate All'}
                   </Button>
                 </div>
-                <CardDescription>
-                  Manage kiosk activation status and monitor real-time usage
-                </CardDescription>
+                {!isMobile && (
+                  <CardDescription>
+                    Manage kiosk activation status and monitor real-time usage
+                  </CardDescription>
+                )}
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <CardContent className={`space-y-4 ${isMobile ? 'p-3 pt-0' : ''}`}>
+                <div className={`grid grid-cols-1 ${isMobile ? 'gap-2' : 'sm:grid-cols-2 lg:grid-cols-3 gap-4'}`}>
                   {kiosks.map((kiosk) => (
                     <Card key={kiosk.id} className="relative">
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between mb-3">
+                      <CardContent className={isMobile ? "p-3" : "p-4"}>
+                        <div className={`flex items-center justify-between ${isMobile ? 'mb-2' : 'mb-3'}`}>
                           <div className="flex items-center space-x-2">
-                            <Monitor className="w-4 h-4" />
-                            <span className="font-medium">{kiosk.name}</span>
+                            <Monitor className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
+                            <span className={`font-medium ${isMobile ? 'text-sm' : ''}`}>{kiosk.name}</span>
                           </div>
                           <Switch
                             checked={kiosk.isActive}
@@ -221,17 +227,17 @@ const AdminDashboard = () => {
                           />
                         </div>
                         
-                        <div className="space-y-2">
+                        <div className={`space-y-${isMobile ? '1' : '2'}`}>
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-muted-foreground">Status</span>
-                            <Badge variant={kiosk.isActive ? "default" : "secondary"}>
+                            <span className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>Status</span>
+                            <Badge variant={kiosk.isActive ? "default" : "secondary"} className={isMobile ? "text-xs px-1.5 py-0.5" : ""}>
                               {kiosk.isActive ? (
                                 kiosk.currentStudentId ? "In Use" : "Active"
                               ) : "Inactive"}
                             </Badge>
                           </div>
                           
-                          {kiosk.location && (
+                          {kiosk.location && !isMobile && (
                             <div className="flex items-center justify-between">
                               <span className="text-sm text-muted-foreground">Location</span>
                               <span className="text-sm">{kiosk.location}</span>
@@ -240,14 +246,16 @@ const AdminDashboard = () => {
                           
                           {kiosk.currentStudentId && (
                             <div className="flex items-center justify-between">
-                              <span className="text-sm text-muted-foreground">Current Student</span>
-                              <Badge variant="outline" className="text-xs">
-                                Active Session
+                              <span className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
+                                {isMobile ? 'Student' : 'Current Student'}
+                              </span>
+                              <Badge variant="outline" className={`${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs'}`}>
+                                {isMobile ? 'Active' : 'Active Session'}
                               </Badge>
                             </div>
                           )}
                           
-                          {kiosk.isActive && kiosk.activatedAt && (
+                          {kiosk.isActive && kiosk.activatedAt && !isMobile && (
                             <div className="flex items-center justify-between">
                               <span className="text-sm text-muted-foreground">Activated</span>
                               <span className="text-xs">
@@ -264,50 +272,58 @@ const AdminDashboard = () => {
             </Card>
 
             {/* Queue Summary */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className={`grid grid-cols-2 ${isMobile ? 'gap-2' : 'md:grid-cols-4 gap-3'}`}>
               <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center space-x-2">
-                    <Clock className="w-4 h-4 text-orange-500" />
+                <CardContent className={isMobile ? "p-2" : "p-4"}>
+                  <div className={`flex items-center ${isMobile ? 'space-x-1' : 'space-x-2'}`}>
+                    <Clock className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-orange-500`} />
                     <div>
-                      <p className="text-2xl font-bold">{waitingInQueue.length}</p>
-                      <p className="text-sm text-muted-foreground">Waiting in Queue</p>
+                      <p className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{waitingInQueue.length}</p>
+                      <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
+                        {isMobile ? 'Waiting' : 'Waiting in Queue'}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center space-x-2">
-                    <AlertTriangle className="w-4 h-4 text-red-500" />
+                <CardContent className={isMobile ? "p-2" : "p-4"}>
+                  <div className={`flex items-center ${isMobile ? 'space-x-1' : 'space-x-2'}`}>
+                    <AlertTriangle className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-red-500`} />
                     <div>
-                      <p className="text-2xl font-bold">{completedReflections.length}</p>
-                      <p className="text-sm text-muted-foreground">Pending Review</p>
+                      <p className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{completedReflections.length}</p>
+                      <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
+                        {isMobile ? 'Review' : 'Pending Review'}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center space-x-2">
-                    <Monitor className="w-4 h-4 text-blue-500" />
+                <CardContent className={isMobile ? "p-2" : "p-4"}>
+                  <div className={`flex items-center ${isMobile ? 'space-x-1' : 'space-x-2'}`}>
+                    <Monitor className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-blue-500`} />
                     <div>
-                      <p className="text-2xl font-bold">{assignedStudents.length}</p>
-                      <p className="text-sm text-muted-foreground">At Kiosks</p>
+                      <p className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{assignedStudents.length}</p>
+                      <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
+                        {isMobile ? 'At Kiosks' : 'At Kiosks'}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center space-x-2">
-                    <Power className="w-4 h-4 text-green-500" />
+                <CardContent className={isMobile ? "p-2" : "p-4"}>
+                  <div className={`flex items-center ${isMobile ? 'space-x-1' : 'space-x-2'}`}>
+                    <Power className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-green-500`} />
                     <div>
-                      <p className="text-2xl font-bold">{activeKioskCount}</p>
-                      <p className="text-sm text-muted-foreground">Active Kiosks</p>
+                      <p className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{activeKioskCount}</p>
+                      <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
+                        {isMobile ? 'Active' : 'Active Kiosks'}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -317,16 +333,17 @@ const AdminDashboard = () => {
             {/* Queue Actions */}
             {items.length > 0 && (
               <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle>Queue Actions</CardTitle>
+                <CardHeader className={isMobile ? "p-3 pb-2" : ""}>
+                  <div className={`flex items-center ${isMobile ? 'flex-col space-y-2' : 'justify-between'}`}>
+                    <CardTitle className={isMobile ? "text-base" : ""}>Queue Actions</CardTitle>
                     <Button 
                       variant="destructive" 
                       size="sm"
                       onClick={handleClearQueue}
                       disabled={queueLoading}
+                      className={isMobile ? "text-xs px-2" : ""}
                     >
-                      Clear Entire Queue
+                      {isMobile ? 'Clear Queue' : 'Clear Entire Queue'}
                     </Button>
                   </div>
                 </CardHeader>
@@ -335,13 +352,15 @@ const AdminDashboard = () => {
 
             {/* Queue Display */}
             <Card>
-              <CardHeader>
-                <CardTitle>Behavior Queue</CardTitle>
-                <CardDescription>
-                  Real-time view of all behavior requests and reflections
-                </CardDescription>
+              <CardHeader className={isMobile ? "p-3 pb-2" : ""}>
+                <CardTitle className={isMobile ? "text-base" : ""}>Behavior Queue</CardTitle>
+                {!isMobile && (
+                  <CardDescription>
+                    Real-time view of all behavior requests and reflections
+                  </CardDescription>
+                )}
               </CardHeader>
-              <CardContent>
+              <CardContent className={isMobile ? "p-3 pt-0" : ""}>
                 <QueueDisplay
                   items={items}
                   onSelectReflection={handleSelectReflection}
@@ -351,14 +370,14 @@ const AdminDashboard = () => {
             </Card>
           </TabsContent>
 
-          {/* Session Monitor Tab */}
-          <TabsContent value="sessions" className="space-y-6">
-            <SessionMonitor />
-          </TabsContent>
-
-          {/* User Management Tab */}
-          <TabsContent value="users" className="space-y-6">
+          {/* User Management Tab with Session Monitor */}
+          <TabsContent value="users" className={isMobile ? "space-y-3" : "space-y-6"}>
             <UserManagement />
+            
+            {/* Session Monitor Section */}
+            <div className={isMobile ? "mt-4" : "mt-8"}>
+              <SessionMonitor />
+            </div>
           </TabsContent>
         </Tabs>
       </div>
