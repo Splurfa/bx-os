@@ -1,0 +1,22 @@
+/* Custom styles for the Behavior Support Application */
+
+.behavior-selection-grid {
+  @apply grid grid-cols-2 md:grid-cols-3 gap-4;
+}
+
+.queue-position-indicator {
+  @apply relative overflow-hidden;
+}
+
+.queue-position-indicator::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent;
+  transform: translateX(-100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
