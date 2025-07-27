@@ -41,7 +41,8 @@ const KioskOne = () => {
   const { 
     loading, 
     getFirstWaitingStudentForKiosk, 
-    submitReflection 
+    submitReflection,
+    updateStudentKioskStatus
   } = useSupabaseQueue();
   
   const [kioskState, setKioskState] = useState<'setup' | 'welcome' | 'password' | 'reflection' | 'completed'>('setup');
@@ -113,10 +114,11 @@ const KioskOne = () => {
       // Clear kiosk assignment
       updateKioskStudent(KIOSK_ID, undefined, undefined);
     } else if (firstWaitingStudent && kioskState === 'welcome') {
-      // Assign student to kiosk 1
+      // Update student status to 'ready' when showing welcome screen
+      updateStudentKioskStatus(firstWaitingStudent.id, 'ready');
       updateKioskStudent(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
     }
-  }, [firstWaitingStudent?.id, kioskState, updateKioskStudent]);
+  }, [firstWaitingStudent?.id, kioskState, updateKioskStudent, updateStudentKioskStatus]);
 
   // Timer for reflection process
   useEffect(() => {
@@ -152,6 +154,10 @@ const KioskOne = () => {
   const handlePasswordSubmit = () => {
     // For demo purposes, accept "password123" for any student
     if (studentPassword === 'password123') {
+      // Update student status to 'in_progress' when starting reflection
+      if (firstWaitingStudent) {
+        updateStudentKioskStatus(firstWaitingStudent.id, 'in_progress');
+      }
       setKioskState('reflection');
       setPasswordError('');
     } else {

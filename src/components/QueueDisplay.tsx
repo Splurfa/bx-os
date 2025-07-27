@@ -107,10 +107,22 @@ const QueueDisplay = ({ items, onSelectReflection, formatTimeElapsed }: QueueDis
                   <CheckCircle className="h-3 w-3 mr-1" />
                   Review
                 </Button>
-              ) : isActive ? (
-                <span className="text-xs text-primary font-medium">At Kiosk</span>
+              ) : 'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
+                <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs">
+                  In Progress
+                </Badge>
+              ) : 'kiosk_status' in item && item.kiosk_status === 'ready' && item.assigned_kiosk_id ? (
+                <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
+                  At Kiosk
+                </Badge>
+              ) : item.assigned_kiosk_id ? (
+                <Badge variant="outline" className="text-orange-600 border-orange-200 text-xs">
+                  Assigned
+                </Badge>
               ) : (
-                <span className="text-xs text-muted-foreground">Waiting</span>
+                <Badge variant="outline" className="text-muted-foreground text-xs">
+                  Waiting
+                </Badge>
               )}
             </div>
           </div>

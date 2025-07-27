@@ -138,6 +138,18 @@ export const KioskProvider = ({ children }: { children: React.ReactNode }) => {
 
       console.log('✅ KIOSK ACTIVATED SUCCESSFULLY:', data);
       console.log('🔍 Database response shows is_active:', data.is_active);
+      
+      // NEW: Assign waiting students to newly activated kiosk
+      try {
+        await supabase.rpc('assign_waiting_students_to_kiosk', {
+          p_kiosk_id: kioskId
+        });
+        console.log('📝 Assigned waiting students to activated kiosk');
+      } catch (assignError) {
+        console.error('⚠️ Error assigning students to kiosk:', assignError);
+        // Don't fail the activation if student assignment fails
+      }
+      
       return kioskId;
     } catch (error) {
       console.error('💥 ACTIVATION ERROR:', error);
