@@ -66,6 +66,7 @@ Admin: admin@school.edu / admin123
 - **Frontend**: React + TypeScript + Tailwind
 - **Real-time**: WebSocket subscriptions active
 - **Authentication**: JWT-based with role management
+- **PWA**: Progressive Web App with offline capabilities and install prompt
 
 ## Netlify-Specific Verification
 - [ ] Application loads successfully
@@ -75,11 +76,21 @@ Admin: admin@school.edu / admin123
 - [ ] Admin dashboard accessible
 - [ ] Real-time updates working
 - [ ] Kiosk interface functional
+- [ ] PWA install button appears on compatible browsers
+- [ ] App installs correctly and opens in standalone mode
+- [ ] Service worker loads and enables offline functionality
+
+## Progressive Web App (PWA) Features
+- **Install Prompt**: Users can install the app directly from their browser
+- **Offline Support**: Service worker provides basic offline functionality
+- **App Icons**: Custom icons for home screen installation
+- **Standalone Mode**: App opens without browser UI when installed
 
 ## Important Notes
 - **SPA Routing**: The `_redirects` file is crucial for React Router to work properly
 - **Environment Variables**: Must be set in Netlify dashboard for Supabase connection
 - **Auto-Deploy**: Netlify will automatically redeploy when you push to GitHub
+- **PWA Install**: Install button appears on Chrome/Edge browsers when accessing via HTTPS
 
 ## Support
 All systems are production-ready. For custom domains or advanced configuration, see the full deployment guide.

@@ -6,13 +6,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, GraduationCap } from 'lucide-react';
+import { Loader2, GraduationCap, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { usePWAInstall } from '@/hooks/usePWAInstall';
 
 const AuthPage = () => {
   const navigate = useNavigate();
   const { signIn, user } = useAuth();
   const { toast } = useToast();
+  const { isInstallable, installApp } = usePWAInstall();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -51,6 +53,22 @@ const AuthPage = () => {
     }
 
     setLoading(false);
+  };
+
+  const handleInstallApp = async () => {
+    const success = await installApp();
+    if (success) {
+      toast({
+        title: "App installed successfully",
+        description: "BSR System has been added to your home screen",
+      });
+    } else {
+      toast({
+        title: "Installation failed",
+        description: "Unable to install the app. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
 
@@ -106,6 +124,23 @@ const AuthPage = () => {
                 Sign In
               </Button>
             </form>
+
+            {isInstallable && (
+              <div className="mt-4 pt-4 border-t">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={handleInstallApp}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Install App
+                </Button>
+                <p className="text-xs text-center text-gray-500 mt-2">
+                  Install BSR System on your device for quick access
+                </p>
+              </div>
+            )}
 
             <div className="mt-4 p-4 bg-blue-50 rounded-lg">
               <p className="text-sm font-medium text-blue-900 mb-2">Demo Accounts:</p>
