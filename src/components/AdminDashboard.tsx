@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useKiosks } from '@/contexts/KioskContext';
 import { useSupabaseQueue } from '@/hooks/useSupabaseQueue';
+import { useBehaviorHistory } from '@/hooks/useBehaviorHistory';
+import { useStudents } from '@/hooks/useStudents';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,6 +16,7 @@ import QueueDisplay from './QueueDisplay';
 import UserManagement from './UserManagement';
 import ReviewReflection from './ReviewReflection';
 import { SessionMonitor } from './SessionMonitor';
+import RealTimeStatus from './RealTimeStatus';
 import { useToast } from '@/hooks/use-toast';
 import { BehaviorRequest } from '@/hooks/useSupabaseQueue';
 
@@ -28,6 +31,8 @@ const AdminDashboard = () => {
     clearQueue,
     formatTimeElapsed 
   } = useSupabaseQueue();
+  const { history: behaviorHistory, loading: historyLoading } = useBehaviorHistory();
+  const { students, loading: studentsLoading } = useStudents();
   const { toast } = useToast();
   const [selectedReflection, setSelectedReflection] = useState<BehaviorRequest | null>(null);
 
@@ -164,12 +169,7 @@ const AdminDashboard = () => {
               <h1 className="text-xl sm:text-3xl font-bold text-foreground">Admin Dashboard</h1>
               <p className="text-sm sm:text-base text-muted-foreground">Unified kiosk management and system monitoring</p>
             </div>
-            <div className="flex items-center space-x-2">
-              <Activity className="w-5 h-5 text-primary" />
-              <span className="text-sm font-medium">
-                {activeKioskCount} of {kioskCount} kiosks active
-              </span>
-            </div>
+            <RealTimeStatus isConnected={true} lastUpdate={new Date()} />
           </div>
         </div>
 

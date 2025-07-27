@@ -89,6 +89,29 @@ export const useProfile = () => {
 
   useEffect(() => {
     fetchProfile();
+
+    // Set up real-time subscription for profile changes
+    if (user?.id) {
+      const channel = supabase
+        .channel('profile_changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'profiles',
+            filter: `id=eq.${user.id}`
+          },
+          () => {
+            fetchProfile();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
   }, [user]);
 
   const getDisplayName = () => {

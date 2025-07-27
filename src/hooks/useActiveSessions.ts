@@ -71,6 +71,26 @@ export const useActiveSessions = () => {
 
   useEffect(() => {
     fetchActiveSessions();
+
+    // Set up real-time subscription for user sessions
+    const channel = supabase
+      .channel('user_sessions_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'user_sessions'
+        },
+        () => {
+          fetchActiveSessions();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   return { sessions, loading, refetch: fetchActiveSessions };
