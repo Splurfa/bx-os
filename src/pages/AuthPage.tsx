@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, GraduationCap, Download } from 'lucide-react';
+import { Loader2, GraduationCap, Download, Share, Smartphone } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 
@@ -14,7 +14,7 @@ const AuthPage = () => {
   const navigate = useNavigate();
   const { signIn, user } = useAuth();
   const { toast } = useToast();
-  const { isInstallable, installApp } = usePWAInstall();
+  const { isInstallable, installApp, debugInfo, isIOSSafari } = usePWAInstall();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -56,8 +56,15 @@ const AuthPage = () => {
   };
 
   const handleInstallApp = async () => {
-    const success = await installApp();
-    if (success) {
+    const result = await installApp();
+    
+    if (result === 'ios-instructions') {
+      // Show iOS-specific instructions
+      toast({
+        title: "Install Instructions",
+        description: "Tap the Share button, then 'Add to Home Screen' to install",
+      });
+    } else if (result) {
       toast({
         title: "App installed successfully",
         description: "BSR System has been added to your home screen",
@@ -133,12 +140,43 @@ const AuthPage = () => {
                   className="w-full"
                   onClick={handleInstallApp}
                 >
-                  <Download className="mr-2 h-4 w-4" />
-                  Install App
+                  {isIOSSafari ? <Share className="mr-2 h-4 w-4" /> : <Download className="mr-2 h-4 w-4" />}
+                  {isIOSSafari ? 'Add to Home Screen' : 'Install App'}
                 </Button>
                 <p className="text-xs text-center text-gray-500 mt-2">
-                  Install BSR System on your device for quick access
+                  {isIOSSafari 
+                    ? 'Tap the button above, then use Share → "Add to Home Screen"'
+                    : 'Install BSR System on your device for quick access'
+                  }
                 </p>
+                {isIOSSafari && (
+                  <div className="mt-2 p-2 bg-blue-50 rounded text-xs text-blue-700">
+                    <div className="flex items-center gap-1 mb-1">
+                      <Smartphone className="h-3 w-3" />
+                      <span className="font-medium">iOS Installation:</span>
+                    </div>
+                    <ol className="list-decimal list-inside space-y-1 text-xs">
+                      <li>Tap the Share button <Share className="inline h-3 w-3" /> in Safari</li>
+                      <li>Scroll down and tap "Add to Home Screen"</li>
+                      <li>Tap "Add" to confirm</li>
+                    </ol>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Debug Information - Remove after testing */}
+            {process.env.NODE_ENV === 'development' && (
+              <div className="mt-4 p-3 bg-gray-100 rounded text-xs">
+                <strong>PWA Debug Info:</strong>
+                <div>Installable: {isInstallable.toString()}</div>
+                <div>iOS Safari: {debugInfo.isIOSSafari.toString()}</div>
+                <div>Standalone: {debugInfo.isStandalone.toString()}</div>
+                <div>Prompt Event: {debugInfo.promptEventFired.toString()}</div>
+                <div>Supports Prompt: {debugInfo.supportsInstallPrompt.toString()}</div>
+                <div className="mt-1 text-xs text-gray-600 break-all">
+                  UA: {debugInfo.userAgent.substring(0, 50)}...
+                </div>
               </div>
             )}
 
