@@ -46,31 +46,42 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
       
       {/* Student List */}
       <div className="flex-1 overflow-y-auto bg-background">
-        {filteredStudents.map((student) => (
-          <div
-            key={student.id}
-            onClick={() => handleStudentClick(student)}
-            className={`flex items-center justify-between p-3 border-b border-border cursor-pointer transition-colors ${
-              selectedStudentId === student.id 
-                ? 'bg-primary/10' 
-                : 'hover:bg-muted/50'
-            }`}
-          >
-            <div>
-              <h4 className="font-medium text-foreground text-sm">{student.name}</h4>
-              <p className="text-xs text-muted-foreground">{student.grade} Grade • Class {student.class_name}</p>
+        {selectedStudentId ? (
+          // Show only selected student
+          filteredStudents
+            .filter(student => student.id === selectedStudentId)
+            .map((student) => (
+              <div
+                key={student.id}
+                onClick={() => handleStudentClick(student)}
+                className="flex items-center justify-between p-3 border-b border-border cursor-pointer transition-colors bg-primary/10"
+              >
+                <div>
+                  <h4 className="font-medium text-foreground text-sm">{student.name}</h4>
+                  <p className="text-xs text-muted-foreground">{student.grade} Grade • Class {student.class_name}</p>
+                </div>
+                <div className="w-5 h-5 rounded-full border-2 bg-primary border-primary flex items-center justify-center transition-all">
+                  <Check className="w-3 h-3 text-white" strokeWidth={2.5} />
+                </div>
+              </div>
+            ))
+        ) : (
+          // Show all filtered students
+          filteredStudents.map((student) => (
+            <div
+              key={student.id}
+              onClick={() => handleStudentClick(student)}
+              className="flex items-center justify-between p-3 border-b border-border cursor-pointer transition-colors hover:bg-muted/50"
+            >
+              <div>
+                <h4 className="font-medium text-foreground text-sm">{student.name}</h4>
+                <p className="text-xs text-muted-foreground">{student.grade} Grade • Class {student.class_name}</p>
+              </div>
+              <div className="w-5 h-5 rounded-full border-2 border-muted-foreground flex items-center justify-center transition-all">
+              </div>
             </div>
-            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-              selectedStudentId === student.id 
-                ? 'bg-primary border-primary' 
-                : 'border-muted-foreground'
-            }`}>
-              {selectedStudentId === student.id && (
-                <Check className="w-3 h-3 text-white" strokeWidth={2.5} />
-              )}
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

@@ -79,18 +79,15 @@ const QueueDisplay = ({ items, onSelectReflection, formatTimeElapsed }: QueueDis
                       />
                     ))}
                   </div>
+                </div>
+                <div className="flex items-center space-x-3 text-xs text-muted-foreground">
+                  <LiveTimer startTime={item.timestamp || new Date(item.created_at)} />
                   {/* Show kiosk assignment for mock data */}
                   {'assigned_kiosk_id' in item && item.assigned_kiosk_id && (
                     <Badge variant="outline" className="text-xs">
                       <Monitor className="h-3 w-3 mr-1" />
                       Kiosk {item.assigned_kiosk_id}
                     </Badge>
-                  )}
-                </div>
-                <div className="flex items-center space-x-3 text-xs text-muted-foreground">
-                  <LiveTimer startTime={item.timestamp || new Date(item.created_at)} />
-                  {item.position && item.position > 0 && (
-                    <span>Position: {item.position}</span>
                   )}
                 </div>
               </div>
