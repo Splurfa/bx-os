@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
 
 export interface Student {
   id: string;
@@ -47,7 +46,6 @@ export const useSupabaseQueue = () => {
   const [items, setItems] = useState<BehaviorRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [clearQueueLoading, setClearQueueLoading] = useState(false);
-  const { toast } = useToast();
 
   // Fetch queue items with student and reflection data
   const fetchQueue = async (skipLoadingState = false) => {
@@ -99,11 +97,6 @@ export const useSupabaseQueue = () => {
       setItems(transformedData);
     } catch (error) {
       console.error('Error fetching queue:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load queue data",
-        variant: "destructive"
-      });
     } finally {
       if (!skipLoadingState) {
         setLoading(false);
@@ -218,18 +211,8 @@ export const useSupabaseQueue = () => {
       await reassignWaitingStudents();
 
       await fetchQueue(true);
-      
-      toast({
-        title: "Added to Queue",
-        description: `${data.studentName} has been added to the queue`,
-      });
     } catch (error) {
       console.error('Error adding to queue:', error);
-      toast({
-        title: "Error",
-        description: "Failed to add student to queue",
-        variant: "destructive"
-      });
     }
   };
 
@@ -267,11 +250,6 @@ export const useSupabaseQueue = () => {
       await fetchQueue(true);
     } catch (error) {
       console.error('Error submitting reflection:', error);
-      toast({
-        title: "Error",
-        description: "Failed to submit reflection",
-        variant: "destructive"
-      });
     }
   };
 
@@ -394,11 +372,6 @@ export const useSupabaseQueue = () => {
       await fetchQueue(true);
     } catch (error) {
       console.error('Error approving reflection:', error);
-      toast({
-        title: "Error",
-        description: "Failed to approve reflection",
-        variant: "destructive"
-      });
     }
   };
 
@@ -428,11 +401,6 @@ export const useSupabaseQueue = () => {
       await fetchQueue(true);
     } catch (error) {
       console.error('Error requesting revision:', error);
-      toast({
-        title: "Error",
-        description: "Failed to request revision",
-        variant: "destructive"
-      });
     }
   };
 
@@ -484,11 +452,6 @@ export const useSupabaseQueue = () => {
       await fetchQueue(true);
     } catch (error) {
       console.error('💥 CLEAR QUEUE ERROR:', error);
-      toast({
-        title: "Error",
-        description: "Failed to clear queue",
-        variant: "destructive"
-      });
     } finally {
       setClearQueueLoading(false);
     }
