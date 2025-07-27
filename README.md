@@ -18,7 +18,7 @@ Our system creates a simple **3-step workflow** that turns behavioral incidents 
 
 ### **Step 1: Teacher Reports** 📝
 - Teacher notices a behavioral issue
-- Creates a digital behavior report in 2 minutes
+- Creates a digital behavior report quickly
 - Selects student, behavior type, and adds context
 - System immediately notifies relevant parties
 
@@ -103,17 +103,7 @@ Our system creates a simple **3-step workflow** that turns behavioral incidents 
 - **Computer or tablet** for teacher dashboard
 - **Dedicated device(s)** for student kiosk stations
 - **Internet connection** for real-time syncing
-- **5 minutes** for initial setup
-
-### **🔑 Demo Accounts (Try It Now!)**
-
-**For Teachers:**
-- Username: `teacher@school.edu`
-- Password: `teacher123`
-
-**For Administrators:**
-- Username: `admin@school.edu` 
-- Password: `admin123`
+- **Quick setup** - minimal configuration required
 
 ### **🎯 Quick Start Guide**
 
@@ -121,17 +111,17 @@ Our system creates a simple **3-step workflow** that turns behavioral incidents 
 2. **Admins:** Log in → Monitor all kiosks → Manage system settings
 3. **Students:** Use any kiosk → Enter your name → Complete the 4-question reflection
 
-### **📱 Access Your System**
-- **Live Demo**: [Try it now](https://lovable.dev/projects/bd6ecf7c-45c6-4dab-a039-a7ccd3c1fe18)
-- **Your Custom URL**: Available after deployment
-- **Mobile Friendly**: Works on phones and tablets too
+### **📱 Device Compatibility**
+- **Desktop & Tablet Friendly**: Optimized for all screen sizes
+- **Mobile Responsive**: Works on phones and tablets
+- **Cross-Platform**: Runs in any modern web browser
 
 ---
 
 ## 📈 Why Schools Choose Our BSR System
 
 ### **⏰ Saves Time**
-- **2-minute report creation** vs 15+ minutes of paperwork
+- **Quick report creation** replaces lengthy paperwork
 - **Instant notifications** eliminate communication delays
 - **Automated tracking** reduces administrative burden
 
@@ -141,9 +131,9 @@ Our system creates a simple **3-step workflow** that turns behavioral incidents 
 - **Data-driven decisions** improve school climate
 
 ### **🎯 Easy Implementation**
-- **No training required** - intuitive design for all users
+- **Intuitive design** - minimal training required
 - **Works with existing devices** - no special hardware
-- **Quick setup** - operational in under an hour
+- **Simple setup** - straightforward configuration
 
 ---
 
@@ -157,15 +147,10 @@ Our system creates a simple **3-step workflow** that turns behavioral incidents 
 - ✅ **Mobile responsiveness** for all devices
 - ✅ **Security features** and data protection
 
-### **🚀 Deployment Options:**
-1. **One-Click Deploy**: Use our hosting platform (recommended)
-2. **Custom Domain**: Connect your school's domain
-3. **Self-Hosted**: Deploy on your own servers
-
-### **📞 Need Help?**
-- **Technical Setup**: See `TECHNICAL_README.md` for developer details
-- **Custom Configuration**: Contact support for school-specific needs
-- **Training & Support**: Implementation assistance available
+### **📞 Technical Details**
+- **Technical Setup**: See `TECHNICAL_README.md` for developer information
+- **Built with Modern Technology**: React, TypeScript, and Supabase
+- **Secure & Reliable**: Industry-standard security practices
 
 ---
 
