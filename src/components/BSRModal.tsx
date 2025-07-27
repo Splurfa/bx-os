@@ -164,14 +164,15 @@ const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
               <Edit3 className="icon-small mr-2" />
               {notes ? 'Edit Notes' : 'Add Notes'}
             </Button>
-            <StickyFooter
-              primaryAction={{
-                label: "Submit Behavior Report",
-                onClick: handleSubmit,
-                disabled: !canSubmit
-              }}
-              className={`border-0 shadow-none p-0 bg-transparent ${isUrgent ? "[&_button]:!bg-queue-urgent [&_button]:!hover:bg-queue-urgent/90 [&_button]:!text-white [&_button]:!shadow-lg" : ""}`}
-            />
+            <Button
+              onClick={handleSubmit}
+              disabled={!canSubmit}
+              className={`w-full h-11 bg-gradient-primary text-white shadow-button hover:shadow-elevated transition-all duration-200 ${
+                isUrgent ? "!bg-queue-urgent !hover:bg-queue-urgent/90 !text-white !shadow-lg" : ""
+              }`}
+            >
+              Submit Behavior Report
+            </Button>
           </div>
         </div>
       )}
