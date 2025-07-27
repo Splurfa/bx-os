@@ -168,15 +168,17 @@ const AdminDashboard = () => {
                     <Monitor className="icon-h2 text-primary" />
                     <CardTitle className="text-h3">Kiosk Management</CardTitle>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={handleDeactivateAll}
-                    disabled={kioskLoading || activeKioskCount === 0}
-                  >
-                    <PowerOff className="icon-inline mr-2" />
-                    Deactivate All
-                  </Button>
+                  {!isMobile && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleDeactivateAll}
+                      disabled={kioskLoading || activeKioskCount === 0}
+                    >
+                      <PowerOff className="icon-inline mr-2" />
+                      Deactivate All
+                    </Button>
+                  )}
                 </div>
                 <CardDescription className="text-body-small">
                   Manage kiosk activation status and monitor real-time usage
