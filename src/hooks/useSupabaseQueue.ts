@@ -119,12 +119,15 @@ export const useSupabaseQueue = () => {
 
     const subscription = supabase
       .channel('queue-changes')
-      .on('postgres_changes', 
+        .on('postgres_changes', 
         { event: '*', schema: 'public', table: 'behavior_requests' },
         (payload) => {
-          // Only trigger updates for meaningful changes, not just any modification
+          // Trigger updates for meaningful changes including status changes to completed
           if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE' || 
-              (payload.eventType === 'UPDATE' && payload.new?.kiosk_status !== payload.old?.kiosk_status)) {
+              (payload.eventType === 'UPDATE' && (
+                payload.new?.kiosk_status !== payload.old?.kiosk_status ||
+                payload.new?.status !== payload.old?.status
+              ))) {
             debouncedFetch();
           }
         }
@@ -244,14 +247,27 @@ export const useSupabaseQueue = () => {
 
       if (reflectionError) throw reflectionError;
 
-      // Update behavior request status
+      // Update behavior request status to completed and kiosk_status to completed
       const { error: updateError } = await supabase
         .from('behavior_requests')
-        .update({ status: 'completed' })
+        .update({ 
+          status: 'completed',
+          kiosk_status: 'completed'
+        })
         .eq('id', behaviorRequestId);
 
       if (updateError) throw updateError;
 
+      console.log('Reflection submitted successfully, triggering kiosk reassignment');
+      
+      // Immediately reassign waiting students to available kiosks
+      try {
+        await reassignWaitingStudents();
+        console.log('Kiosk reassignment triggered successfully after reflection completion');
+      } catch (reassignError) {
+        console.warn('Kiosk reassignment failed after reflection completion:', reassignError);
+        // Don't throw - reflection submission should succeed even if reassignment fails
+      }
 
       await fetchQueue(true);
     } catch (error) {
