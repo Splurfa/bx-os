@@ -39,11 +39,6 @@ const AuthPage = () => {
 
     if (error) {
       setError(error.message);
-      toast({
-        title: "Sign in failed",
-        description: error.message,
-        variant: "destructive",
-      });
     } else {
       // Route based on user role after successful sign in
       const isAdmin = email === 'admin@school.edu';
@@ -58,18 +53,7 @@ const AuthPage = () => {
   const handleInstallApp = async () => {
     const result = await installApp();
     
-    if (result === 'ios-instructions') {
-      // Show iOS-specific instructions
-      toast({
-        title: "Install Instructions",
-        description: "Tap the Share button, then 'Add to Home Screen' to install",
-      });
-    } else if (result) {
-      toast({
-        title: "App installed successfully",
-        description: "BSR System has been added to your home screen",
-      });
-    } else {
+    if (!result && result !== 'ios-instructions') {
       toast({
         title: "Installation failed",
         description: "Unable to install the app. Please try again.",
@@ -145,23 +129,10 @@ const AuthPage = () => {
                 </Button>
                 <p className="text-xs text-center text-gray-500 mt-2">
                   {isIOSSafari 
-                    ? 'Tap the button above, then use Share → "Add to Home Screen"'
+                    ? 'Use Safari Share button → "Add to Home Screen" to install'
                     : 'Install BSR System on your device for quick access'
                   }
                 </p>
-                {isIOSSafari && (
-                  <div className="mt-2 p-2 bg-blue-50 rounded text-xs text-blue-700">
-                    <div className="flex items-center gap-1 mb-1">
-                      <Smartphone className="h-3 w-3" />
-                      <span className="font-medium">iOS Installation:</span>
-                    </div>
-                    <ol className="list-decimal list-inside space-y-1 text-xs">
-                      <li>Tap the Share button <Share className="inline h-3 w-3" /> in Safari</li>
-                      <li>Scroll down and tap "Add to Home Screen"</li>
-                      <li>Tap "Add" to confirm</li>
-                    </ol>
-                  </div>
-                )}
               </div>
             )}
 
