@@ -49,10 +49,6 @@ const AuthPage = () => {
       const isAdmin = email === 'admin@school.edu';
       const destination = isAdmin ? '/admin-dashboard' : '/teacher';
       
-      toast({
-        title: "Welcome back!",
-        description: `Redirecting to ${isAdmin ? 'admin dashboard' : 'teacher dashboard'}...`,
-      });
       navigate(destination);
     }
 

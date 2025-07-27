@@ -81,10 +81,6 @@ export default function UserManagement() {
       if (error) throw error;
 
       if (data.success) {
-        toast({
-          description: "User created",
-        });
-        
         setNewUser({ email: "", password: "", fullName: "", role: "teacher" });
         setIsCreateModalOpen(false);
         fetchUsers();
@@ -110,10 +106,6 @@ export default function UserManagement() {
         .eq('id', userId);
 
       if (error) throw error;
-
-      toast({
-        description: "Role updated",
-      });
       
       fetchUsers();
     } catch (error) {
@@ -134,9 +126,6 @@ export default function UserManagement() {
       if (error) throw error;
 
       if (data.success) {
-        toast({
-          description: "User deleted",
-        });
         fetchUsers();
       } else {
         throw new Error(data.error || 'Failed to delete user');

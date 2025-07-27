@@ -51,14 +51,8 @@ const AdminDashboard = () => {
     try {
       if (isActive) {
         await deactivateKiosk(kioskId);
-        toast({
-          description: `Kiosk ${kioskId} deactivated`,
-        });
       } else {
         await activateKiosk(kioskId);
-        toast({
-          description: `Kiosk ${kioskId} activated`,
-        });
       }
       await refreshKiosks(); // Add UI refresh fix
     } catch (error) {
@@ -75,9 +69,6 @@ const AdminDashboard = () => {
   const handleDeactivateAll = async () => {
     try {
       await deactivateAllKiosks();
-      toast({
-        description: "All kiosks deactivated",
-      });
     } catch (error) {
       console.error('Error deactivating all kiosks:', error);
       toast({
@@ -98,9 +89,6 @@ const AdminDashboard = () => {
       try {
         await approveReflection(selectedReflection.id);
         setSelectedReflection(null);
-        toast({
-          description: "Reflection approved",
-        });
       } catch (error) {
         console.error('Error approving reflection:', error);
         toast({
@@ -117,9 +105,6 @@ const AdminDashboard = () => {
       try {
         await requestRevision(selectedReflection.id, feedback);
         setSelectedReflection(null);
-        toast({
-          description: "Revision requested",
-        });
       } catch (error) {
         console.error('Error requesting revision:', error);
         toast({
@@ -135,9 +120,6 @@ const AdminDashboard = () => {
   const handleClearQueue = async () => {
     try {
       await clearQueue();
-      toast({
-        description: "Queue cleared",
-      });
     } catch (error) {
       console.error('Error clearing queue:', error);
       toast({
