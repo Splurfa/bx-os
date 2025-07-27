@@ -13,15 +13,24 @@ interface QueueDisplayProps {
 }
 
 const getBehaviorColor = (behavior: string) => {
-  const colors: Record<string, string> = {
+  // Handle both display labels and stored IDs
+  const behaviorMap: Record<string, string> = {
+    // Display labels (what's shown in queue)
     'Disruptive': 'bg-behavior-disruptive',
     'Social-Emotional': 'bg-behavior-social',
     'Avoidance': 'bg-behavior-avoidance',
     'Eloping': 'bg-behavior-eloping',
     'Minor-Physical': 'bg-behavior-minor-physical',
-    'Major-Physical': 'bg-behavior-major-physical'
+    'Major-Physical': 'bg-behavior-major-physical',
+    // IDs (what's stored in database)
+    'disruptive': 'bg-behavior-disruptive',
+    'social-emotional': 'bg-behavior-social',
+    'avoidance': 'bg-behavior-avoidance',
+    'eloping': 'bg-behavior-eloping',
+    'minor-physical': 'bg-behavior-minor-physical',
+    'major-physical': 'bg-behavior-major-physical'
   };
-  return colors[behavior] || 'bg-primary';
+  return behaviorMap[behavior] || 'bg-primary';
 };
 
 const QueueDisplay = ({ items, onSelectReflection, formatTimeElapsed }: QueueDisplayProps) => {
