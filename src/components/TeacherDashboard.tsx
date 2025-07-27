@@ -79,17 +79,19 @@ const TeacherDashboard = () => {
       <AppHeader />
       
       
-      <main className="flex-1 overflow-hidden p-6 pt-2">
+      <main className="flex-1 overflow-hidden p-6 pt-2 flex items-center justify-center">
         {loading ? (
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : items.length > 0 ? (
-          <QueueDisplay
-            items={items}
-            onSelectReflection={handleSelectReflection}
-            formatTimeElapsed={formatTimeElapsed}
-          />
+          <div className="w-full h-full overflow-auto">
+            <QueueDisplay
+              items={items}
+              onSelectReflection={handleSelectReflection}
+              formatTimeElapsed={formatTimeElapsed}
+            />
+          </div>
         ) : (
           <EmptyState />
         )}
