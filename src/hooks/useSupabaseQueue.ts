@@ -104,16 +104,16 @@ export const useSupabaseQueue = () => {
     }
   };
 
-  // Debounced fetch function for real-time updates
+  // Enhanced debounced fetch function with longer delay to prevent race conditions
   const debouncedFetch = (() => {
     let timeoutId: NodeJS.Timeout;
     return () => {
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => fetchQueue(true), 300);
+      timeoutId = setTimeout(() => fetchQueue(true), 1000); // Increased from 300ms to 1000ms
     };
   })();
 
-  // Subscribe to real-time updates
+  // Subscribe to real-time updates with reduced frequency
   useEffect(() => {
     fetchQueue();
 
@@ -121,7 +121,13 @@ export const useSupabaseQueue = () => {
       .channel('queue-changes')
       .on('postgres_changes', 
         { event: '*', schema: 'public', table: 'behavior_requests' },
-        () => debouncedFetch()
+        (payload) => {
+          // Only trigger updates for meaningful changes, not just any modification
+          if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE' || 
+              (payload.eventType === 'UPDATE' && payload.new?.kiosk_status !== payload.old?.kiosk_status)) {
+            debouncedFetch();
+          }
+        }
       )
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'reflections' },
