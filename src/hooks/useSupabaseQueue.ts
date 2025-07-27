@@ -247,12 +247,12 @@ export const useSupabaseQueue = () => {
 
       if (reflectionError) throw reflectionError;
 
-      // Update behavior request status to completed and kiosk_status to completed
+      // Update behavior request status to completed and reset kiosk_status to waiting (making kiosk available)
       const { error: updateError } = await supabase
         .from('behavior_requests')
         .update({ 
           status: 'completed',
-          kiosk_status: 'completed'
+          kiosk_status: 'waiting'  // Reset to waiting so kiosk becomes available for reassignment
         })
         .eq('id', behaviorRequestId);
 
@@ -428,10 +428,10 @@ export const useSupabaseQueue = () => {
 
   // Get first waiting student for specific kiosk based on new status logic
   const getFirstWaitingStudentForKiosk = (kioskId: number) => {
-    // Find students assigned to this kiosk, prioritizing by kiosk_status and position
+    // Find students assigned to this kiosk, excluding completed students
     const kioskStudents = items.filter(item => 
       item.assigned_kiosk_id === kioskId && 
-      item.status === 'waiting'
+      item.status === 'waiting'  // Only show students who are still waiting, not completed
     ).sort((a, b) => {
       // Sort by kiosk_status priority and then by position
       const statusPriority = { 'in_progress': 0, 'ready': 1, 'waiting': 2 };
