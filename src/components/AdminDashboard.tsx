@@ -140,21 +140,17 @@ const AdminDashboard = () => {
       <AppHeader />
       
       <div className="container-page spacing-section">
-        {/* Header */}
-        <div className="flex flex-col spacing-tight">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-h1 flex items-center gap-3">
-                <Monitor className="icon-h1 text-primary" />
-                Admin Dashboard
-              </h1>
-              <p className="text-body-small">
-                Unified kiosk management and system monitoring
-              </p>
-            </div>
-            {!isMobile && <RealTimeStatus isConnected={true} lastUpdate={new Date()} />}
+        {/* Mobile RealTime Status */}
+        {isMobile && (
+          <div className="flex justify-end mb-4">
+            <RealTimeStatus isConnected={true} lastUpdate={new Date()} />
           </div>
-        </div>
+        )}
+        {!isMobile && (
+          <div className="flex justify-end mb-6">
+            <RealTimeStatus isConnected={true} lastUpdate={new Date()} />
+          </div>
+        )}
 
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className={`grid w-full grid-cols-2 ${isMobile ? 'text-xs' : 'text-xs sm:text-sm'}`}>

@@ -159,7 +159,7 @@ const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
             <Button 
               variant="outline"
               onClick={() => setShowNotesModal(true)}
-              className="w-full h-10 text-sm"
+              className="w-full h-11 text-sm"
             >
               <Edit3 className="icon-small mr-2" />
               {notes ? 'Edit Notes' : 'Add Notes'}

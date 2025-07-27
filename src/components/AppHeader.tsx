@@ -28,7 +28,7 @@ const AppHeader = () => {
 
   const getTeacherDisplayInfo = () => {
     if (user?.email === 'admin@school.edu') {
-      return 'Student Kiosk Admin';
+      return 'Admin Dashboard';
     }
     return 'Teacher Dashboard';
   };

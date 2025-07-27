@@ -38,7 +38,7 @@ const StickyFooter = ({ primaryAction, secondaryAction, className }: StickyFoote
         variant={primaryAction.variant || "default"}
         onClick={primaryAction.onClick}
         disabled={primaryAction.disabled}
-        className="flex-1 bg-gradient-primary text-white shadow-button hover:shadow-elevated transition-all duration-200"
+        className="flex-1 h-11 bg-gradient-primary text-white shadow-button hover:shadow-elevated transition-all duration-200"
       >
         {primaryAction.label}
       </Button>
