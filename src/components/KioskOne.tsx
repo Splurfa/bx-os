@@ -200,39 +200,41 @@ const KioskOne = () => {
     }
   };
 
-  // Setup/Loading state - wait for auth to be ready
-  if (loading || authLoading || kioskState === 'setup') {
+  // Show consistent loading state to prevent flickering
+  if (authLoading || (loading && kioskState === 'setup') || (kioskState === 'setup' && !activationError)) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="text-center space-y-4 max-w-md">
-          {activationError ? (
-            <>
-              <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
-                <Monitor className="h-8 w-8 text-destructive" />
-              </div>
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-destructive">Kiosk 1 Activation Failed</h3>
-                <p className="text-sm text-muted-foreground">{activationError}</p>
-                <Button 
-                  onClick={() => {
-                    setActivationError(null);
-                    setKioskState('setup');
-                  }}
-                  className="mt-4"
-                >
-                  Try Again
-                </Button>
-              </div>
-            </>
-          ) : (
-            <>
-              <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
-              <p className="text-muted-foreground">
-                {authLoading ? 'Authenticating...' : 
-                 kioskState === 'setup' ? 'Activating kiosk 1...' : 'Loading kiosk 1...'}
-              </p>
-            </>
-          )}
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+          <p className="text-muted-foreground">
+            {authLoading ? 'Authenticating...' : 'Activating kiosk 1...'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show activation error if it exists
+  if (activationError) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="text-center space-y-4 max-w-md">
+          <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
+            <Monitor className="h-8 w-8 text-destructive" />
+          </div>
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-destructive">Kiosk 1 Activation Failed</h3>
+            <p className="text-sm text-muted-foreground">{activationError}</p>
+            <Button 
+              onClick={() => {
+                setActivationError(null);
+                setKioskState('setup');
+              }}
+              className="mt-4"
+            >
+              Try Again
+            </Button>
+          </div>
         </div>
       </div>
     );
