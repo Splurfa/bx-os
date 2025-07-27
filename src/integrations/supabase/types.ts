@@ -131,6 +131,7 @@ export type Database = {
           behaviors: string[]
           created_at: string
           id: string
+          kiosk_status: string
           mood: string
           notes: string | null
           status: string
@@ -144,6 +145,7 @@ export type Database = {
           behaviors?: string[]
           created_at?: string
           id?: string
+          kiosk_status?: string
           mood: string
           notes?: string | null
           status?: string
@@ -157,6 +159,7 @@ export type Database = {
           behaviors?: string[]
           created_at?: string
           id?: string
+          kiosk_status?: string
           mood?: string
           notes?: string | null
           status?: string
@@ -380,6 +383,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      assign_waiting_students_to_kiosk: {
+        Args: { p_kiosk_id: number }
+        Returns: undefined
+      }
       create_user_session: {
         Args: {
           p_user_id: string
@@ -410,6 +417,10 @@ export type Database = {
       }
       update_session_activity: {
         Args: { p_session_id: string }
+        Returns: undefined
+      }
+      update_student_kiosk_status: {
+        Args: { p_behavior_request_id: string; p_new_kiosk_status: string }
         Returns: undefined
       }
     }
