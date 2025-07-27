@@ -246,10 +246,10 @@ const AdminDashboard = () => {
             {/* Queue Summary */}
             <div className={`grid grid-cols-2 ${isMobile ? 'gap-2' : 'md:grid-cols-4 gap-3'}`}>
               <Card>
-                <CardContent className={isMobile ? "p-2" : "p-4"}>
-                  <div className={`flex items-center ${isMobile ? 'space-x-1' : 'space-x-2'}`}>
-                    <Clock className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-orange-500`} />
-                    <div>
+                <CardContent className={isMobile ? "p-3" : "p-4"}>
+                  <div className={`flex items-center justify-center ${isMobile ? 'space-x-3' : 'space-x-4'}`}>
+                    <Clock className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-orange-500 flex-shrink-0`} />
+                    <div className="text-center">
                       <p className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{waitingInQueue.length}</p>
                       <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
                         {isMobile ? 'Waiting' : 'Waiting in Queue'}
@@ -260,10 +260,10 @@ const AdminDashboard = () => {
               </Card>
 
               <Card>
-                <CardContent className={isMobile ? "p-2" : "p-4"}>
-                  <div className={`flex items-center ${isMobile ? 'space-x-1' : 'space-x-2'}`}>
-                    <AlertTriangle className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-red-500`} />
-                    <div>
+                <CardContent className={isMobile ? "p-3" : "p-4"}>
+                  <div className={`flex items-center justify-center ${isMobile ? 'space-x-3' : 'space-x-4'}`}>
+                    <AlertTriangle className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-red-500 flex-shrink-0`} />
+                    <div className="text-center">
                       <p className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{completedReflections.length}</p>
                       <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
                         {isMobile ? 'Review' : 'Pending Review'}
@@ -274,10 +274,10 @@ const AdminDashboard = () => {
               </Card>
 
               <Card>
-                <CardContent className={isMobile ? "p-2" : "p-4"}>
-                  <div className={`flex items-center ${isMobile ? 'space-x-1' : 'space-x-2'}`}>
-                    <Monitor className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-blue-500`} />
-                    <div>
+                <CardContent className={isMobile ? "p-3" : "p-4"}>
+                  <div className={`flex items-center justify-center ${isMobile ? 'space-x-3' : 'space-x-4'}`}>
+                    <Monitor className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-blue-500 flex-shrink-0`} />
+                    <div className="text-center">
                       <p className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{assignedStudents.length}</p>
                       <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
                         {isMobile ? 'At Kiosks' : 'At Kiosks'}
@@ -288,10 +288,10 @@ const AdminDashboard = () => {
               </Card>
 
               <Card>
-                <CardContent className={isMobile ? "p-2" : "p-4"}>
-                  <div className={`flex items-center ${isMobile ? 'space-x-1' : 'space-x-2'}`}>
-                    <Power className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-green-500`} />
-                    <div>
+                <CardContent className={isMobile ? "p-3" : "p-4"}>
+                  <div className={`flex items-center justify-center ${isMobile ? 'space-x-3' : 'space-x-4'}`}>
+                    <Power className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-green-500 flex-shrink-0`} />
+                    <div className="text-center">
                       <p className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{activeKioskCount}</p>
                       <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
                         {isMobile ? 'Active' : 'Active Kiosks'}
