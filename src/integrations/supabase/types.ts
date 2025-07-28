@@ -172,7 +172,7 @@ export type Database = {
           {
             foreignKeyName: "behavior_requests_student_id_fkey"
             columns: ["student_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "students"
             referencedColumns: ["id"]
           },
@@ -305,6 +305,60 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      reflections_history: {
+        Row: {
+          archived_at: string
+          archived_by: string | null
+          attempt_number: number
+          behavior_request_id: string
+          id: string
+          original_created_at: string
+          original_reflection_id: string
+          original_updated_at: string
+          question1: string
+          question2: string
+          question3: string
+          question4: string
+          revision_reason: string | null
+          status: string
+          teacher_feedback: string | null
+        }
+        Insert: {
+          archived_at?: string
+          archived_by?: string | null
+          attempt_number?: number
+          behavior_request_id: string
+          id?: string
+          original_created_at: string
+          original_reflection_id: string
+          original_updated_at: string
+          question1: string
+          question2: string
+          question3: string
+          question4: string
+          revision_reason?: string | null
+          status: string
+          teacher_feedback?: string | null
+        }
+        Update: {
+          archived_at?: string
+          archived_by?: string | null
+          attempt_number?: number
+          behavior_request_id?: string
+          id?: string
+          original_created_at?: string
+          original_reflection_id?: string
+          original_updated_at?: string
+          question1?: string
+          question2?: string
+          question3?: string
+          question4?: string
+          revision_reason?: string | null
+          status?: string
+          teacher_feedback?: string | null
+        }
+        Relationships: []
       }
       students: {
         Row: {
