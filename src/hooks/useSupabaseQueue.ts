@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useKiosks } from '@/contexts/KioskContext';
 import { toast } from '@/hooks/use-toast';
 
 export interface Student {
@@ -46,6 +47,7 @@ export interface Reflection {
 
 export const useSupabaseQueue = () => {
   const { user } = useAuth();
+  const { updateKioskStudent } = useKiosks();
   const [items, setItems] = useState<BehaviorRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [clearQueueLoading, setClearQueueLoading] = useState(false);
@@ -514,6 +516,10 @@ export const useSupabaseQueue = () => {
 
       if (reflectionError) throw reflectionError;
 
+      // Get the current request data for kiosk cleanup
+      const currentRequest = items.find(item => item.id === behaviorRequestId);
+      const kioskId = currentRequest?.assigned_kiosk_id;
+
       // Remove from queue by deleting the behavior request
       const { error: deleteError } = await supabase
         .from('behavior_requests')
@@ -522,6 +528,19 @@ export const useSupabaseQueue = () => {
 
       if (deleteError) throw deleteError;
 
+      // If kiosk was assigned, clear its current student assignment
+      if (kioskId) {
+        try {
+          await updateKioskStudent(kioskId, undefined, undefined);
+          console.log('🧹 Cleared kiosk assignment for completed student');
+        } catch (kioskError) {
+          console.warn('⚠️ Failed to clear kiosk assignment:', kioskError);
+          // Don't fail the whole operation for this
+        }
+      }
+
+      // Trigger reassignment of waiting students
+      await reassignWaitingStudents();
 
       await fetchQueue(true);
     } catch (error) {
@@ -595,10 +614,13 @@ export const useSupabaseQueue = () => {
 
   // Get first waiting student for specific kiosk based on new status logic
   const getFirstWaitingStudentForKiosk = (kioskId: number) => {
-    // Find students assigned to this kiosk, excluding completed students
+    // Find students assigned to this kiosk, including those completing reflection
     const kioskStudents = items.filter(item => 
       item.assigned_kiosk_id === kioskId && 
-      item.status === 'waiting'  // Only show students who are still waiting, not completed
+      // Include students in various stages of completion flow, not just waiting
+      (item.status === 'waiting' || 
+       (item.status === 'review' && item.kiosk_status !== 'waiting') ||
+       (item.status === 'completed' && item.reflection?.status === 'approved'))
     ).sort((a, b) => {
       // Sort by kiosk_status priority and then by position
       const statusPriority = { 'in_progress': 0, 'ready': 1, 'waiting': 2 };
@@ -608,6 +630,13 @@ export const useSupabaseQueue = () => {
       if (aPriority !== bPriority) return aPriority - bPriority;
       return (a.position || 0) - (b.position || 0);
     });
+
+    console.log(`🔍 Kiosk ${kioskId} students found:`, kioskStudents.map(s => ({
+      name: s.student?.name, 
+      status: s.status, 
+      kiosk_status: s.kiosk_status,
+      reflection_status: s.reflection?.status
+    })));
 
     return kioskStudents.length > 0 ? kioskStudents[0] : undefined;
   };
@@ -624,16 +653,32 @@ export const useSupabaseQueue = () => {
   const clearQueue = async () => {
     try {
       setClearQueueLoading(true);
+      console.log('🧹 Starting clear queue operation...');
       
-      const { error } = await supabase
+      // First try to delete behavior requests
+      const { error: behaviorError } = await supabase
         .from('behavior_requests')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all records
-
-      if (error) {
-        throw error;
+        .gte('id', '00000000-0000-0000-0000-000000000000'); // Delete all records
+      
+      if (behaviorError) {
+        console.error('❌ Clear queue error:', behaviorError);
+        throw behaviorError;
       }
 
+      // Also clear any orphaned reflections
+      const { error: reflectionError } = await supabase
+        .from('reflections')
+        .delete()
+        .gte('id', '00000000-0000-0000-0000-000000000000');
+      
+      if (reflectionError) {
+        console.warn('⚠️ Warning clearing reflections:', reflectionError);
+        // Don't throw - this is secondary cleanup
+      }
+
+      console.log('✅ Queue cleared successfully');
+      
       // Immediately update local state to prevent flickering
       setItems([]);
       
@@ -641,6 +686,7 @@ export const useSupabaseQueue = () => {
       await fetchQueue(true);
     } catch (error) {
       console.error('💥 CLEAR QUEUE ERROR:', error);
+      throw error; // Re-throw so admin dashboard can show error toast
     } finally {
       setClearQueueLoading(false);
     }
