@@ -94,9 +94,16 @@ const KioskOne = () => {
     }
   }, [kioskState, activateKiosk, user, session, authLoading]);
 
-  // Reset state when student changes or completes - but preserve completed state
+  // Improved state management - prevent race conditions in completed state
   useEffect(() => {
-    if (!firstWaitingStudent && kioskState !== 'setup' && kioskState !== 'completed') {
+    // CRITICAL: Never interrupt the completed state
+    if (kioskState === 'completed') {
+      console.log('🔒 Kiosk in completed state - blocking external state changes');
+      return;
+    }
+
+    if (!firstWaitingStudent && kioskState !== 'setup') {
+      console.log('🏠 No student waiting - transitioning to welcome');
       setKioskState('welcome');
       setStudentPassword('');
       setPasswordError('');
@@ -107,10 +114,11 @@ const KioskOne = () => {
       // Clear kiosk assignment
       updateKioskStudent(KIOSK_ID, undefined, undefined);
     } else if (firstWaitingStudent && kioskState === 'welcome') {
+      console.log('👤 Student assigned to kiosk:', firstWaitingStudent.student.name);
       // Only update kiosk assignment, keep status as 'waiting' until user interacts
       updateKioskStudent(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
     }
-  }, [firstWaitingStudent?.id, kioskState, updateKioskStudent, updateStudentKioskStatus]);
+  }, [firstWaitingStudent?.id, kioskState, updateKioskStudent]);
 
   // Timer for reflection process
   useEffect(() => {
@@ -122,12 +130,16 @@ const KioskOne = () => {
     }
   }, [kioskState]);
 
-  // Auto-reset after completion with countdown
+  // Robust completion state management with proper isolation
   useEffect(() => {
     if (kioskState === 'completed') {
-      setCountdown(10); // Reset countdown when entering completed state
+      console.log('⏰ Starting 10-second completion countdown');
+      setCountdown(10);
+      
       const resetTimer = setTimeout(() => {
-        // Reset all states and go back to welcome screen
+        console.log('🔄 Completion timer finished - resetting kiosk state');
+        
+        // Complete state reset
         setKioskState('welcome');
         setStudentPassword('');
         setPasswordError('');
@@ -135,10 +147,15 @@ const KioskOne = () => {
         setAnswers({});
         setTimeElapsed(0);
         setCountdown(10);
+        
         // Clear kiosk assignment to allow next student
         updateKioskStudent(KIOSK_ID, undefined, undefined);
-      }, 10000); // 10 seconds
-      return () => clearTimeout(resetTimer);
+      }, 10000);
+      
+      return () => {
+        console.log('🧹 Cleaning up completion timer');
+        clearTimeout(resetTimer);
+      };
     }
   }, [kioskState, updateKioskStudent]);
 

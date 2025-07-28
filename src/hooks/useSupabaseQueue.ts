@@ -17,7 +17,7 @@ export interface BehaviorRequest {
   behaviors: string[];
   mood: string;
   status: 'waiting' | 'completed';
-  kiosk_status: 'waiting' | 'ready' | 'in_progress';
+  kiosk_status: 'waiting' | 'ready' | 'in_progress' | 'completed';
   urgent: boolean;
   notes?: string;
   assigned_kiosk_id?: number;
@@ -104,45 +104,6 @@ export const useSupabaseQueue = () => {
     }
   };
 
-  // Enhanced debounced fetch function with longer delay to prevent race conditions
-  const debouncedFetch = (() => {
-    let timeoutId: NodeJS.Timeout;
-    return () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => fetchQueue(true), 1000); // Increased from 300ms to 1000ms
-    };
-  })();
-
-  // Subscribe to real-time updates with reduced frequency
-  useEffect(() => {
-    fetchQueue();
-
-    const subscription = supabase
-      .channel('queue-changes')
-        .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'behavior_requests' },
-        (payload) => {
-          // Trigger updates for meaningful changes including status changes to completed
-          if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE' || 
-              (payload.eventType === 'UPDATE' && (
-                payload.new?.kiosk_status !== payload.old?.kiosk_status ||
-                payload.new?.status !== payload.old?.status
-              ))) {
-            debouncedFetch();
-          }
-        }
-      )
-      .on('postgres_changes',
-        { event: '*', schema: 'public', table: 'reflections' },
-        () => debouncedFetch()
-      )
-      .subscribe();
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
   // Call new database function to reassign all waiting students
   const reassignWaitingStudents = async (): Promise<void> => {
     try {
@@ -157,6 +118,52 @@ export const useSupabaseQueue = () => {
       throw error;
     }
   };
+
+  // Enhanced debounced fetch function with longer delay to prevent race conditions
+  const debouncedFetch = (() => {
+    let timeoutId: NodeJS.Timeout;
+    return () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => fetchQueue(true), 1000); // Increased from 300ms to 1000ms
+    };
+  })();
+
+  // Optimized real-time subscription with intelligent reassignment triggers
+  useEffect(() => {
+    fetchQueue();
+
+    const subscription = supabase
+      .channel('queue-changes')
+        .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'behavior_requests' },
+        (payload) => {
+          console.log('📡 Real-time update:', payload.eventType, payload);
+          
+          // Trigger immediate reassignment when a student completes reflection
+          if (payload.eventType === 'UPDATE' && 
+              payload.new?.status === 'completed' && 
+              payload.old?.status === 'waiting') {
+            console.log('🔄 Student completed reflection - triggering immediate reassignment');
+            reassignWaitingStudents().catch(console.error);
+          }
+          
+          // Debounced queue refresh for UI updates
+          debouncedFetch();
+        }
+      )
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'reflections' },
+        (payload) => {
+          console.log('📝 Reflection update:', payload);
+          debouncedFetch();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [debouncedFetch, reassignWaitingStudents]);
 
   // Add student to queue with enhanced FIFO assignment
   const addToQueue = async (data: {
@@ -247,32 +254,30 @@ export const useSupabaseQueue = () => {
 
       if (reflectionError) throw reflectionError;
 
-      // Update behavior request status to completed and reset kiosk_status to waiting (making kiosk available)
+      // Update behavior request status to completed AND set kiosk_status to completed
       const { error: updateError } = await supabase
         .from('behavior_requests')
         .update({ 
           status: 'completed',
-          kiosk_status: 'waiting'  // Reset to waiting so kiosk becomes available for reassignment
+          kiosk_status: 'completed'  // This allows the database function to recognize the kiosk as available
         })
         .eq('id', behaviorRequestId);
 
       if (updateError) throw updateError;
 
-      console.log('Reflection submitted successfully, triggering kiosk reassignment');
+      console.log('✅ Reflection submitted with status=completed, kiosk_status=completed');
       
-      // Force immediate queue refresh to reflect status change
-      await fetchQueue(true);
-      
-      // Immediately reassign waiting students to available kiosks
+      // Immediately trigger reassignment - the database function will handle cleanup and assignment
       try {
         await reassignWaitingStudents();
-        console.log('Kiosk reassignment triggered successfully after reflection completion');
-        // Force another queue refresh after reassignment
-        await fetchQueue(true);
+        console.log('✅ Queue reassignment triggered successfully after reflection completion');
       } catch (reassignError) {
-        console.warn('Kiosk reassignment failed after reflection completion:', reassignError);
+        console.error('❌ Queue reassignment failed after reflection completion:', reassignError);
         // Don't throw - reflection submission should succeed even if reassignment fails
       }
+
+      // Single refresh after all operations complete
+      await fetchQueue(true);
     } catch (error) {
       console.error('Error submitting reflection:', error);
     }
