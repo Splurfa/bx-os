@@ -193,7 +193,7 @@ const AdminDashboard = () => {
                   onClearQueue={handleClearQueue}
                   clearQueueLoading={clearQueueLoading}
                   queueLoading={queueLoading}
-                  showClearButton={items.length > 0}
+                  showClearButton={items.filter(item => item.status !== 'completed').length > 0}
                   showReviewButtons={false}
                 />
               </CardContent>

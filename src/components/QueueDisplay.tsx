@@ -49,34 +49,35 @@ const QueueDisplay = React.memo(({
   showClearButton = false,
   showReviewButtons = true
 }: QueueDisplayProps) => {
-  if (items.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full py-16">
-        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-          <User className="h-8 w-8 text-muted-foreground" />
-        </div>
-        <h3 className="text-lg font-semibold text-foreground">Queue is Empty</h3>
-      </div>
-    );
-  }
-
-  // Sort items: completed first, then by timestamp - memoized for performance
+  // Filter to only show active (not completed) items, then sort - memoized for performance
   const sortedItems = useMemo(() => {
-    return [...items].sort((a, b) => {
-      if (a.status === 'completed' && b.status !== 'completed') return -1;
-      if (a.status !== 'completed' && b.status === 'completed') return 1;
+    // Filter out completed items to show only active queue
+    const activeItems = items.filter(item => item.status !== 'completed');
+    
+    return [...activeItems].sort((a, b) => {
       const aTime = a.timestamp?.getTime() || new Date(a.created_at).getTime();
       const bTime = b.timestamp?.getTime() || new Date(b.created_at).getTime();
       return aTime - bTime;
     });
   }, [items]);
 
+  if (sortedItems.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full py-16">
+        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+          <User className="h-8 w-8 text-muted-foreground" />
+        </div>
+        <h3 className="text-lg font-semibold text-foreground">Active Queue is Empty</h3>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       {/* Header with Clear Queue button */}
       {showClearButton && onClearQueue && (
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Behavior Queue</h3>
+          <h3 className="text-lg font-semibold">Active Queue</h3>
           <Button 
             variant="destructive" 
             size="sm"
@@ -90,8 +91,7 @@ const QueueDisplay = React.memo(({
       
       <div className="space-y-1">
         {sortedItems.map((item) => {
-        const isCompleted = item.status === 'completed';
-        const isActive = (item.position === 1 || (!item.position && item.status === 'waiting')) && !isCompleted;
+        const isActive = (item.position === 1 || (!item.position && item.status === 'waiting'));
         
         return (
           <div
@@ -127,20 +127,7 @@ const QueueDisplay = React.memo(({
             </div>
 
             <div className="flex items-center">
-              {isCompleted && showReviewButtons ? (
-                <Button
-                  size="sm"
-                  onClick={() => onSelectReflection(item)}
-                  className="text-xs h-7 px-3"
-                >
-                  <CheckCircle className="h-3 w-3 mr-1" />
-                  Review
-                </Button>
-              ) : isCompleted && !showReviewButtons ? (
-                <Badge variant="default" className="bg-green-100 text-green-800 border-green-200 text-xs">
-                  Completed
-                </Badge>
-              ) : 'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
+              {'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
                 <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs">
                   In Progress
                 </Badge>
