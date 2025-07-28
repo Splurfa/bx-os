@@ -155,12 +155,8 @@ const QueueDisplay = React.memo(({
                 </Button>
               )}
               
-              {/* Status badges */}
-              {item.status === 'review' ? (
-                <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200 text-xs">
-                  Ready for Review
-                </Badge>
-              ) : 'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
+              {/* Status badges - no duplicate green badge for review status */}
+              {'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
                 <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs">
                   In Progress
                 </Badge>

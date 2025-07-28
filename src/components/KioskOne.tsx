@@ -94,6 +94,9 @@ const KioskOne = () => {
     }
   }, [kioskState, activateKiosk, user, session, authLoading]);
 
+  // Store completed student data to prevent early state transitions
+  const [completedStudentData, setCompletedStudentData] = useState<any>(null);
+
   // Improved state management - prevent race conditions in completed state
   useEffect(() => {
     // CRITICAL: Never interrupt the completed state
@@ -110,6 +113,7 @@ const KioskOne = () => {
       setCurrentQuestion(0);
       setAnswers({});
       setTimeElapsed(0);
+      setCompletedStudentData(null);
       
       // Clear kiosk assignment
       updateKioskStudent(KIOSK_ID, undefined, undefined);
@@ -228,6 +232,13 @@ const KioskOne = () => {
       };
       
       console.log('Submitting reflection and transitioning to completed state');
+      
+      // Store student data before it becomes null due to status change
+      setCompletedStudentData({
+        name: firstWaitingStudent.student.name,
+        id: firstWaitingStudent.id
+      });
+      
       await submitReflection(firstWaitingStudent.id, reflection);
       
       // Set completion state to show splash screen
@@ -467,7 +478,7 @@ const KioskOne = () => {
                 
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Reflection Complete!</h2>
-                  <p className="text-muted-foreground">Thank you for your thoughtful responses, {firstWaitingStudent.student.name}</p>
+                  <p className="text-muted-foreground">Thank you for your thoughtful responses, {completedStudentData?.name || 'Student'}</p>
                 </div>
 
                 <div className="space-y-4">
