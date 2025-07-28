@@ -54,6 +54,7 @@ const KioskTwo = () => {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activationError, setActivationError] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState(10);
   
   const firstWaitingStudent = getFirstWaitingStudentForKiosk(KIOSK_ID);
   const hasTeacherFeedback = firstWaitingStudent?.reflection?.teacher_feedback;
@@ -121,9 +122,15 @@ const KioskTwo = () => {
     }
   }, [kioskState]);
 
-  // Auto-reset after completion
+  // Auto-reset after completion and manage countdown
   useEffect(() => {
     if (kioskState === 'completed') {
+      setCountdown(10); // Reset countdown to 10 when entering completed state
+      
+      const countdownTimer = setInterval(() => {
+        setCountdown(prev => prev - 1);
+      }, 1000);
+      
       const resetTimer = setTimeout(() => {
         setKioskState('welcome');
         setStudentPassword('');
@@ -132,7 +139,11 @@ const KioskTwo = () => {
         setAnswers({});
         setTimeElapsed(0);
       }, 10000); // 10 seconds
-      return () => clearTimeout(resetTimer);
+      
+      return () => {
+        clearInterval(countdownTimer);
+        clearTimeout(resetTimer);
+      };
     }
   }, [kioskState]);
 
@@ -402,15 +413,6 @@ const KioskTwo = () => {
 
   // Completion view with auto-reset countdown
   if (kioskState === 'completed') {
-    const [countdown, setCountdown] = useState(10);
-    
-    useEffect(() => {
-      const timer = setInterval(() => {
-        setCountdown(prev => prev - 1);
-      }, 1000);
-      return () => clearInterval(timer);
-    }, []);
-
     return (
       <div className="min-h-screen bg-background flex flex-col">
         {/* Kiosk Header */}
