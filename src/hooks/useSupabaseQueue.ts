@@ -327,18 +327,18 @@ export const useSupabaseQueue = () => {
 
       if (reflectionError) throw reflectionError;
 
-      // Update behavior request status to completed AND set kiosk_status to completed
+      // Keep status as 'waiting' for teacher review, but set kiosk_status to 'completed' to free the kiosk
       const { error: updateError } = await supabase
         .from('behavior_requests')
         .update({ 
-          status: 'completed',
+          status: 'waiting',  // Keep as waiting so teacher can review the reflection
           kiosk_status: 'completed'  // This allows the database function to recognize the kiosk as available
         })
         .eq('id', behaviorRequestId);
 
       if (updateError) throw updateError;
 
-      console.log('✅ Reflection submitted with status=completed, kiosk_status=completed');
+      console.log('✅ Reflection submitted with status=waiting, kiosk_status=completed (ready for teacher review)');
       
       // Immediately trigger reassignment - the database function will handle cleanup and assignment
       try {
