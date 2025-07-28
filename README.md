@@ -1,8 +1,22 @@
 # 🎯 Behavior Support Request (BSR) System
 
+**🔴 CRITICAL STATUS**: Clear queue functionality broken - blocks deployment  
+**📄 HANDOFF READY**: Complete documentation package available  
+**📅 Last Updated**: 2025-07-28  
+
 ## 📋 What Is This App?
 
 The **Behavior Support Request System** is a digital tool designed to help schools manage student behavioral incidents in a supportive, structured way. Instead of traditional disciplinary approaches, this system focuses on **reflection and learning** to help students understand their actions and make positive changes.
+
+## 🚨 CRITICAL ISSUE - DEPLOYMENT BLOCKED
+
+**Clear Queue Broken**: Queue clearing appears successful but records persist in database
+- **File**: `src/hooks/useSupabaseQueue.ts` (lines 534-607)
+- **Impact**: Cannot test full workflow, blocks production
+- **Status**: 4 behavior_requests remain after "successful" clear operations
+- **Priority**: MUST FIX BEFORE DEPLOYMENT
+
+**📋 Complete handoff documentation available in project root and /docs folder**
 
 ### 🏫 Perfect For:
 - **Elementary & Middle Schools** looking to modernize behavior management
