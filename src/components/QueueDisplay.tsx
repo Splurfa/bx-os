@@ -155,8 +155,12 @@ const QueueDisplay = React.memo(({
                 </Button>
               )}
               
-              {/* Status badges - only show for non-review students */}
-              {item.status !== 'review' && (
+              {/* Status badges */}
+              {item.status === 'review' && !showReviewButtons ? (
+                <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200 text-xs">
+                  Pending Review
+                </Badge>
+              ) : item.status !== 'review' && (
                 'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
                   <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs">
                     In Progress
