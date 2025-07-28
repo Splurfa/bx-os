@@ -54,6 +54,7 @@ const KioskThree = () => {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activationError, setActivationError] = useState<string | null>(null);
+  const [currentStudentName, setCurrentStudentName] = useState<string | null>(null);
   
   const firstWaitingStudent = getFirstWaitingStudentForKiosk(KIOSK_ID);
   const hasTeacherFeedback = firstWaitingStudent?.reflection?.teacher_feedback;
@@ -102,6 +103,7 @@ const KioskThree = () => {
       setCurrentQuestion(0);
       setAnswers({});
       setTimeElapsed(0);
+      setCurrentStudentName(null);
       
       // Clear kiosk assignment
       updateKioskStudent(KIOSK_ID, undefined, undefined);
@@ -131,6 +133,7 @@ const KioskThree = () => {
         setCurrentQuestion(0);
         setAnswers({});
         setTimeElapsed(0);
+        setCurrentStudentName(null);
       }, 10000); // 10 seconds
       return () => clearTimeout(resetTimer);
     }
@@ -145,8 +148,9 @@ const KioskThree = () => {
   const handlePasswordSubmit = () => {
     // For demo purposes, accept "password123" for any student
     if (studentPassword === 'password123') {
-      // Update student status to 'ready' first (showing as "At Kiosk"), then to 'in_progress'
+      // Store current student name for completion message
       if (firstWaitingStudent) {
+        setCurrentStudentName(firstWaitingStudent.student.name);
         updateStudentKioskStatus(firstWaitingStudent.id, 'ready');
         // Immediately follow with 'in_progress' to show active reflection
         setTimeout(() => {
@@ -436,7 +440,7 @@ const KioskThree = () => {
                 
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Reflection Complete!</h2>
-                  <p className="text-muted-foreground">Thank you for your thoughtful responses, {firstWaitingStudent.student.name}</p>
+                  <p className="text-muted-foreground">Thank you for your thoughtful responses, {currentStudentName || 'Student'}</p>
                 </div>
 
                 <div className="space-y-4">

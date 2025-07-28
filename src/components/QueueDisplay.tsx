@@ -49,10 +49,18 @@ const QueueDisplay = React.memo(({
   showClearButton = false,
   showReviewButtons = true
 }: QueueDisplayProps) => {
-  // Filter to only show active (not completed) items, then sort - memoized for performance
+  // Filter to only show active items - waiting students + completed students with revisions needed
   const sortedItems = useMemo(() => {
-    // Filter out completed items to show only active queue
-    const activeItems = items.filter(item => item.status !== 'completed');
+    const activeItems = items.filter(item => {
+      // Include waiting students
+      if (item.status === 'waiting') return true;
+      
+      // Include completed students who need revision
+      if (item.status === 'completed' && item.reflection?.status === 'revision_requested') return true;
+      
+      // Exclude all other completed students
+      return false;
+    });
     
     return [...activeItems].sort((a, b) => {
       const aTime = a.timestamp?.getTime() || new Date(a.created_at).getTime();

@@ -193,7 +193,10 @@ const AdminDashboard = () => {
                   onClearQueue={handleClearQueue}
                   clearQueueLoading={clearQueueLoading}
                   queueLoading={queueLoading}
-                  showClearButton={items.filter(item => item.status !== 'completed').length > 0}
+                  showClearButton={items.filter(item => 
+                    item.status === 'waiting' || 
+                    (item.status === 'completed' && item.reflection?.status === 'revision_requested')
+                  ).length > 0}
                   showReviewButtons={false}
                 />
               </CardContent>
