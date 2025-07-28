@@ -81,7 +81,7 @@ const QueueDisplay = React.memo(({
             onClick={onClearQueue}
             disabled={queueLoading || clearQueueLoading}
           >
-            {clearQueueLoading ? 'Clearing...' : 'Clear Entire Queue'}
+            {clearQueueLoading ? 'Clearing...' : 'Clear Queue'}
           </Button>
         </div>
       )}
