@@ -531,29 +531,76 @@ export const useSupabaseQueue = () => {
     return waitingItems.length > 0 ? waitingItems[0] : undefined;
   };
 
-  // Clear all queue items - use database function for efficient bulk operation
+  // Clear all queue items - use direct Supabase operations to avoid auth issues
   const clearQueue = async () => {
     try {
       setClearQueueLoading(true);
       console.log('🧹 Starting clear queue operation...');
       
-      // Call the database function to clear the queue
-      const { data, error } = await supabase.rpc('clear_teacher_queue');
-      
-      if (error) {
-        console.error('❌ Clear queue error:', error);
-        throw error;
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('User not authenticated');
       }
       
-      console.log(`✅ Cleared ${data} behavior requests from queue`);
+      // Get user role for proper filtering
+      const currentRole = userRole || await getUserRole();
+      
+      // Get items to be deleted for counting
+      let countQuery = supabase
+        .from('behavior_requests')
+        .select('id', { count: 'exact', head: true });
+      
+      if (currentRole === 'teacher') {
+        countQuery = countQuery.eq('teacher_id', user.id);
+      }
+      
+      const { count } = await countQuery;
+      
+      // Delete behavior requests - this will trigger cascading deletion of reflections
+      // and the archive trigger will handle history preservation
+      let deleteQuery = supabase.from('behavior_requests').delete();
+      
+      if (currentRole === 'teacher') {
+        // Teachers can only clear their own queue
+        deleteQuery = deleteQuery.eq('teacher_id', user.id);
+      }
+      // Admins can clear all queues (no additional filter)
+      
+      const { error: deleteError } = await deleteQuery;
+      
+      if (deleteError) {
+        console.error('❌ Clear queue error:', deleteError);
+        throw deleteError;
+      }
+      
+      console.log(`✅ Cleared ${count || 0} behavior requests from queue`);
+      
+      // Trigger reassignment for any remaining students (if admin cleared specific teacher's queue)
+      try {
+        await reassignWaitingStudents();
+      } catch (reassignError) {
+        console.warn('Warning: Failed to reassign after clear, but clear was successful:', reassignError);
+      }
       
       // Immediately update local state to prevent flickering
       setItems([]);
       
       // Fetch fresh data without showing loading spinner
       await fetchQueue(true);
+      
+      toast({
+        title: "Queue Cleared",
+        description: `Successfully cleared ${count || 0} items from the queue.`,
+      });
+      
     } catch (error) {
       console.error('💥 CLEAR QUEUE ERROR:', error);
+      toast({
+        title: "Error Clearing Queue",
+        description: "Failed to clear the queue. Please try again.",
+        variant: "destructive",
+      });
       throw error; // Re-throw so admin dashboard can show error toast
     } finally {
       setClearQueueLoading(false);
