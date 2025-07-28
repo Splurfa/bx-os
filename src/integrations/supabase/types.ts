@@ -37,6 +37,7 @@ export type Database = {
           queue_created_at: string
           queue_position: number | null
           queue_started_at: string | null
+          reflection_history: Json | null
           reflection_id: string | null
           session_id: string | null
           student_class_name: string | null
@@ -73,6 +74,7 @@ export type Database = {
           queue_created_at: string
           queue_position?: number | null
           queue_started_at?: string | null
+          reflection_history?: Json | null
           reflection_id?: string | null
           session_id?: string | null
           student_class_name?: string | null
@@ -109,6 +111,7 @@ export type Database = {
           queue_created_at?: string
           queue_position?: number | null
           queue_started_at?: string | null
+          reflection_history?: Json | null
           reflection_id?: string | null
           session_id?: string | null
           student_class_name?: string | null
