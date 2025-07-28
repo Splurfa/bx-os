@@ -49,11 +49,14 @@ const QueueDisplay = React.memo(({
   showClearButton = false,
   showReviewButtons = true
 }: QueueDisplayProps) => {
-  // Filter to only show active items - waiting students + completed students with revisions needed
+  // Filter to only show active items - waiting students + review students + revision students
   const sortedItems = useMemo(() => {
     const activeItems = items.filter(item => {
       // Include waiting students
       if (item.status === 'waiting') return true;
+      
+      // Include students ready for review
+      if (item.status === 'review') return true;
       
       // Include completed students who need revision
       if (item.status === 'completed' && item.reflection?.status === 'revision_requested') return true;
@@ -63,6 +66,10 @@ const QueueDisplay = React.memo(({
     });
     
     return [...activeItems].sort((a, b) => {
+      // Priority order: review status first, then waiting, then by timestamp
+      if (a.status === 'review' && b.status !== 'review') return -1;
+      if (b.status === 'review' && a.status !== 'review') return 1;
+      
       const aTime = a.timestamp?.getTime() || new Date(a.created_at).getTime();
       const bTime = b.timestamp?.getTime() || new Date(b.created_at).getTime();
       return aTime - bTime;
@@ -134,8 +141,26 @@ const QueueDisplay = React.memo(({
               </div>
             </div>
 
-            <div className="flex items-center">
-              {'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
+            <div className="flex items-center space-x-2">
+              {/* Show Review button for students with status 'review' */}
+              {showReviewButtons && item.status === 'review' && (
+                <Button
+                  size="sm"
+                  variant="default"
+                  onClick={() => onSelectReflection(item)}
+                  className="text-xs"
+                >
+                  <CheckCircle className="h-3 w-3 mr-1" />
+                  Review
+                </Button>
+              )}
+              
+              {/* Status badges */}
+              {item.status === 'review' ? (
+                <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200 text-xs">
+                  Ready for Review
+                </Badge>
+              ) : 'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
                 <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs">
                   In Progress
                 </Badge>
