@@ -15,6 +15,7 @@ interface QueueDisplayProps {
   clearQueueLoading?: boolean;
   queueLoading?: boolean;
   showClearButton?: boolean;
+  showReviewButtons?: boolean;
 }
 
 const getBehaviorColor = (behavior: string) => {
@@ -45,7 +46,8 @@ const QueueDisplay = React.memo(({
   onClearQueue, 
   clearQueueLoading = false, 
   queueLoading = false, 
-  showClearButton = false 
+  showClearButton = false,
+  showReviewButtons = true
 }: QueueDisplayProps) => {
   if (items.length === 0) {
     return (
@@ -125,7 +127,7 @@ const QueueDisplay = React.memo(({
             </div>
 
             <div className="flex items-center">
-              {isCompleted ? (
+              {isCompleted && showReviewButtons ? (
                 <Button
                   size="sm"
                   onClick={() => onSelectReflection(item)}
@@ -134,6 +136,10 @@ const QueueDisplay = React.memo(({
                   <CheckCircle className="h-3 w-3 mr-1" />
                   Review
                 </Button>
+              ) : isCompleted && !showReviewButtons ? (
+                <Badge variant="default" className="bg-green-100 text-green-800 border-green-200 text-xs">
+                  Completed
+                </Badge>
               ) : 'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
                 <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs">
                   In Progress

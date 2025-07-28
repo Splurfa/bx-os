@@ -89,6 +89,7 @@ const TeacherDashboard = () => {
               items={items}
               onSelectReflection={handleSelectReflection}
               formatTimeElapsed={formatTimeElapsed}
+              showReviewButtons={true}
             />
           </div>
         ) : (

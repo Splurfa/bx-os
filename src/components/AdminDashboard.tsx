@@ -15,10 +15,8 @@ import { Monitor, PowerOff } from 'lucide-react';
 import AppHeader from './AppHeader';
 import QueueDisplay from './QueueDisplay';
 import UserManagement from './UserManagement';
-import ReviewReflection from './ReviewReflection';
 import { SessionMonitor } from './SessionMonitor';
 import { useToast } from '@/hooks/use-toast';
-import { BehaviorRequest } from '@/hooks/useSupabaseQueue';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -27,8 +25,6 @@ const AdminDashboard = () => {
     items, 
     loading: queueLoading, 
     clearQueueLoading,
-    approveReflection, 
-    requestRevision, 
     clearQueue,
     formatTimeElapsed 
   } = useSupabaseQueue();
@@ -36,12 +32,6 @@ const AdminDashboard = () => {
   const { students, loading: studentsLoading } = useStudents();
   const { toast } = useToast();
   const isMobile = useIsMobile();
-  const [selectedReflection, setSelectedReflection] = useState<BehaviorRequest | null>(null);
-
-  // Filter queue items for completed reflections only
-  const completedReflections = items.filter(item => 
-    item.reflection && item.reflection.status === 'pending'
-  );
 
   // Handle kiosk activation toggle
   const handleKioskToggle = async (kioskId: number, isActive: boolean) => {
@@ -76,42 +66,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // Handle reflection review
-  const handleSelectReflection = (item: BehaviorRequest) => {
-    setSelectedReflection(item);
-  };
-
-  const handleApproveReflection = async () => {
-    if (selectedReflection) {
-      try {
-        await approveReflection(selectedReflection.id);
-        setSelectedReflection(null);
-      } catch (error) {
-        console.error('Error approving reflection:', error);
-        toast({
-          variant: "destructive",
-          title: "Error", 
-          description: "Failed to approve reflection.",
-        });
-      }
-    }
-  };
-
-  const handleRequestRevision = async (feedback: string) => {
-    if (selectedReflection) {
-      try {
-        await requestRevision(selectedReflection.id, feedback);
-        setSelectedReflection(null);
-      } catch (error) {
-        console.error('Error requesting revision:', error);
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to request revision.",
-        });
-      }
-    }
-  };
 
   // Handle queue clearing
   const handleClearQueue = async () => {
@@ -234,12 +188,13 @@ const AdminDashboard = () => {
               <CardContent className={isMobile ? "p-3" : "p-6"}>
                 <QueueDisplay
                   items={items}
-                  onSelectReflection={handleSelectReflection}
+                  onSelectReflection={() => {}} // No-op for admin
                   formatTimeElapsed={formatTimeElapsed}
                   onClearQueue={handleClearQueue}
                   clearQueueLoading={clearQueueLoading}
                   queueLoading={queueLoading}
                   showClearButton={items.length > 0}
+                  showReviewButtons={false}
                 />
               </CardContent>
             </Card>
@@ -257,15 +212,6 @@ const AdminDashboard = () => {
         </Tabs>
       </div>
 
-      {/* Review Reflection Modal */}
-      {selectedReflection && (
-        <ReviewReflection
-          item={selectedReflection}
-          onApprove={handleApproveReflection}
-          onRequestRevision={handleRequestRevision}
-          onBack={() => setSelectedReflection(null)}
-        />
-      )}
     </div>
   );
 };

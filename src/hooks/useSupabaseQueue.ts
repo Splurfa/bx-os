@@ -49,6 +49,30 @@ export const useSupabaseQueue = () => {
   const [items, setItems] = useState<BehaviorRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [clearQueueLoading, setClearQueueLoading] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  // Get user role
+  const getUserRole = useCallback(async () => {
+    if (!user?.id) return null;
+    
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+      
+      if (error) {
+        console.error('Error fetching user role:', error);
+        return 'teacher'; // Default to teacher if error
+      }
+      
+      return data?.role || 'teacher';
+    } catch (error) {
+      console.error('Error in getUserRole:', error);
+      return 'teacher';
+    }
+  }, [user?.id]);
 
   // Fetch queue items with student and reflection data
   const fetchQueue = useCallback(async (skipLoadingState = false) => {
@@ -64,14 +88,33 @@ export const useSupabaseQueue = () => {
       
       console.log("🔄 Fetching queue data...");
       
-      const { data, error } = await supabase
+      // Get user role if not already cached
+      if (!userRole) {
+        const role = await getUserRole();
+        setUserRole(role);
+      }
+      
+      // Build query with role-based filtering
+      let query = supabase
         .from('behavior_requests')
         .select(`
           *,
           student:students(*),
           reflection:reflections(*)
-        `)
-        .order('created_at', { ascending: true });
+        `);
+      
+      // Apply role-based filtering
+      const currentRole = userRole || await getUserRole();
+      if (currentRole === 'teacher') {
+        // Teachers only see their own behavior requests
+        query = query.eq('teacher_id', user.id);
+        console.log("🔒 Applying teacher filter: only showing requests from current user");
+      } else {
+        // Admins see all behavior requests
+        console.log("👑 Admin access: showing all behavior requests");
+      }
+      
+      const { data, error } = await query.order('created_at', { ascending: true });
 
       if (error) {
         console.error('Supabase query error:', error);
@@ -125,7 +168,7 @@ export const useSupabaseQueue = () => {
         console.log("⏹️ Loading state set to false");
       }
     }
-  }, [user?.id, clearQueueLoading]);
+  }, [user?.id, clearQueueLoading, userRole, getUserRole]);
 
   // Call new database function to reassign all waiting students
   const reassignWaitingStudents = useCallback(async (): Promise<void> => {
@@ -150,6 +193,13 @@ export const useSupabaseQueue = () => {
       timeoutId = setTimeout(() => fetchQueue(true), 1000); // Increased from 300ms to 1000ms
     };
   })(), [fetchQueue]);
+
+  // Initialize user role
+  useEffect(() => {
+    if (user?.id && !userRole) {
+      getUserRole().then(setUserRole);
+    }
+  }, [user?.id, userRole, getUserRole]);
 
   // Optimized real-time subscription with intelligent reassignment triggers
   useEffect(() => {
