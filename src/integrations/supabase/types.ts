@@ -444,6 +444,10 @@ export type Database = {
         Args: { p_kiosk_id: number }
         Returns: undefined
       }
+      clear_teacher_queue: {
+        Args: { p_teacher_id?: string }
+        Returns: number
+      }
       create_user_session: {
         Args: {
           p_user_id: string

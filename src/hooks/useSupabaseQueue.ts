@@ -409,118 +409,10 @@ export const useSupabaseQueue = () => {
     }
   };
 
-  // Approve reflection and save to behavior history
+  // Approve reflection - simplified to just delete, let database trigger handle archival
   const approveReflection = async (behaviorRequestId: string) => {
     try {
-      // Get complete behavior request data with related information
-      const { data: behaviorData, error: behaviorError } = await supabase
-        .from('behavior_requests')
-        .select(`
-          *,
-          student:students(*),
-          reflection:reflections(*)
-        `)
-        .eq('id', behaviorRequestId)
-        .single();
-
-      if (behaviorError) throw behaviorError;
-      if (!behaviorData) throw new Error('Behavior request not found');
-
-      // Extract reflection data (it comes as an array from the join)
-      const reflectionData = Array.isArray(behaviorData.reflection) 
-        ? behaviorData.reflection[0] 
-        : behaviorData.reflection;
-
-      // Get teacher data
-      const { data: teacherData } = await supabase
-        .from('profiles')
-        .select('full_name, email')
-        .eq('id', behaviorData.teacher_id)
-        .single();
-
-      // Get kiosk data if assigned
-      let kioskData = null;
-      if (behaviorData.assigned_kiosk_id) {
-        const { data: kiosk } = await supabase
-          .from('kiosks')
-          .select('name, location')
-          .eq('id', behaviorData.assigned_kiosk_id)
-          .single();
-        kioskData = kiosk;
-      }
-
-      // Calculate time in queue
-      const queueTime = Math.floor(
-        (new Date().getTime() - new Date(behaviorData.created_at).getTime()) / (1000 * 60)
-      );
-
-      // Calculate queue position when created
-      const queuePosition = items.findIndex(item => item.id === behaviorRequestId) + 1;
-
-      // Create comprehensive behavior history record
-      const historyRecord = {
-        original_request_id: behaviorData.id,
-        student_id: behaviorData.student_id,
-        teacher_id: behaviorData.teacher_id,
-        behaviors: behaviorData.behaviors,
-        mood: behaviorData.mood,
-        urgent: behaviorData.urgent,
-        notes: behaviorData.notes,
-        assigned_kiosk_id: behaviorData.assigned_kiosk_id,
-        
-        // Student snapshot
-        student_name: behaviorData.student?.name || 'Unknown',
-        student_grade: behaviorData.student?.grade,
-        student_class_name: behaviorData.student?.class_name,
-        
-        // Teacher snapshot
-        teacher_name: teacherData?.full_name,
-        teacher_email: teacherData?.email,
-        
-        // Kiosk snapshot
-        kiosk_name: kioskData?.name,
-        kiosk_location: kioskData?.location,
-        
-        // Reflection data
-        reflection_id: reflectionData?.id,
-        question1: reflectionData?.question1,
-        question2: reflectionData?.question2,
-        question3: reflectionData?.question3,
-        question4: reflectionData?.question4,
-        teacher_feedback: reflectionData?.teacher_feedback,
-        
-        // Workflow metadata
-        queue_position: queuePosition,
-        time_in_queue_minutes: queueTime,
-        completion_status: 'completed',
-        intervention_outcome: 'approved',
-        
-        // Timestamps
-        queue_created_at: behaviorData.created_at,
-        queue_started_at: behaviorData.updated_at,
-        completed_at: new Date().toISOString()
-      };
-
-      // Save to behavior history
-      const { error: historyError } = await supabase
-        .from('behavior_history')
-        .insert([historyRecord]);
-
-      if (historyError) throw historyError;
-
-      // Update reflection status
-      const { error: reflectionError } = await supabase
-        .from('reflections')
-        .update({ status: 'approved' })
-        .eq('behavior_request_id', behaviorRequestId);
-
-      if (reflectionError) throw reflectionError;
-
-      // Get the current request data for kiosk cleanup
-      const currentRequest = items.find(item => item.id === behaviorRequestId);
-      const kioskId = currentRequest?.assigned_kiosk_id;
-
-      // Remove from queue by deleting the behavior request
+      // Simply delete the behavior request - the database trigger will handle archival
       const { error: deleteError } = await supabase
         .from('behavior_requests')
         .delete()
@@ -528,23 +420,13 @@ export const useSupabaseQueue = () => {
 
       if (deleteError) throw deleteError;
 
-      // If kiosk was assigned, clear its current student assignment
-      if (kioskId) {
-        try {
-          await updateKioskStudent(kioskId, undefined, undefined);
-          console.log('🧹 Cleared kiosk assignment for completed student');
-        } catch (kioskError) {
-          console.warn('⚠️ Failed to clear kiosk assignment:', kioskError);
-          // Don't fail the whole operation for this
-        }
-      }
-
       // Trigger reassignment of waiting students
       await reassignWaitingStudents();
 
       await fetchQueue(true);
     } catch (error) {
       console.error('Error approving reflection:', error);
+      throw error;
     }
   };
 
@@ -649,35 +531,21 @@ export const useSupabaseQueue = () => {
     return waitingItems.length > 0 ? waitingItems[0] : undefined;
   };
 
-  // Clear entire queue
+  // Clear all queue items - use database function for efficient bulk operation
   const clearQueue = async () => {
     try {
       setClearQueueLoading(true);
       console.log('🧹 Starting clear queue operation...');
       
-      // First try to delete behavior requests
-      const { error: behaviorError } = await supabase
-        .from('behavior_requests')
-        .delete()
-        .gte('id', '00000000-0000-0000-0000-000000000000'); // Delete all records
+      // Call the database function to clear the queue
+      const { data, error } = await supabase.rpc('clear_teacher_queue');
       
-      if (behaviorError) {
-        console.error('❌ Clear queue error:', behaviorError);
-        throw behaviorError;
+      if (error) {
+        console.error('❌ Clear queue error:', error);
+        throw error;
       }
-
-      // Also clear any orphaned reflections
-      const { error: reflectionError } = await supabase
-        .from('reflections')
-        .delete()
-        .gte('id', '00000000-0000-0000-0000-000000000000');
       
-      if (reflectionError) {
-        console.warn('⚠️ Warning clearing reflections:', reflectionError);
-        // Don't throw - this is secondary cleanup
-      }
-
-      console.log('✅ Queue cleared successfully');
+      console.log(`✅ Cleared ${data} behavior requests from queue`);
       
       // Immediately update local state to prevent flickering
       setItems([]);
