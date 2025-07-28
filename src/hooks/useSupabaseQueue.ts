@@ -53,6 +53,9 @@ export const useSupabaseQueue = () => {
       if (!skipLoadingState && !clearQueueLoading) {
         setLoading(true);
       }
+      
+      console.log("🔄 Fetching queue data...");
+      
       const { data, error } = await supabase
         .from('behavior_requests')
         .select(`
@@ -62,7 +65,12 @@ export const useSupabaseQueue = () => {
         `)
         .order('created_at', { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase query error:', error);
+        throw error;
+      }
+      
+      console.log("✅ Queue data fetched successfully:", data?.length || 0, "items");
       
       // Transform data to match expected format
       const transformedData = data?.map((item: any) => ({
@@ -95,11 +103,18 @@ export const useSupabaseQueue = () => {
       });
 
       setItems(transformedData);
+      console.log("📋 Queue state updated with", transformedData.length, "items");
     } catch (error) {
-      console.error('Error fetching queue:', error);
+      console.error('❌ Error fetching queue:', error);
+      // Show a toast notification for error
+      if (error instanceof Error) {
+        console.error('Error details:', error.message);
+      }
     } finally {
+      // Always ensure loading is set to false
       if (!skipLoadingState) {
         setLoading(false);
+        console.log("⏹️ Loading state set to false");
       }
     }
   };
