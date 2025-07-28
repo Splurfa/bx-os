@@ -1,6 +1,8 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from '@/hooks/use-toast';
 
 export interface Student {
   id: string;
@@ -43,12 +45,18 @@ export interface Reflection {
 }
 
 export const useSupabaseQueue = () => {
+  const { user } = useAuth();
   const [items, setItems] = useState<BehaviorRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [clearQueueLoading, setClearQueueLoading] = useState(false);
 
   // Fetch queue items with student and reflection data
-  const fetchQueue = async (skipLoadingState = false) => {
+  const fetchQueue = useCallback(async (skipLoadingState = false) => {
+    if (!user?.id) {
+      setLoading(false);
+      return;
+    }
+    
     try {
       if (!skipLoadingState && !clearQueueLoading) {
         setLoading(true);
@@ -117,10 +125,10 @@ export const useSupabaseQueue = () => {
         console.log("⏹️ Loading state set to false");
       }
     }
-  };
+  }, [user?.id, clearQueueLoading]);
 
   // Call new database function to reassign all waiting students
-  const reassignWaitingStudents = async (): Promise<void> => {
+  const reassignWaitingStudents = useCallback(async (): Promise<void> => {
     try {
       const { error } = await supabase.rpc('reassign_waiting_students');
       if (error) {
@@ -132,16 +140,16 @@ export const useSupabaseQueue = () => {
       console.error('Failed to reassign waiting students:', error);
       throw error;
     }
-  };
+  }, []);
 
   // Enhanced debounced fetch function with longer delay to prevent race conditions
-  const debouncedFetch = (() => {
+  const debouncedFetch = useCallback((() => {
     let timeoutId: NodeJS.Timeout;
     return () => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => fetchQueue(true), 1000); // Increased from 300ms to 1000ms
     };
-  })();
+  })(), [fetchQueue]);
 
   // Optimized real-time subscription with intelligent reassignment triggers
   useEffect(() => {
@@ -178,7 +186,7 @@ export const useSupabaseQueue = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [debouncedFetch, reassignWaitingStudents]);
+  }, [user?.id, fetchQueue, debouncedFetch, reassignWaitingStudents]);
 
   // Add student to queue with enhanced FIFO assignment
   const addToQueue = async (data: {
