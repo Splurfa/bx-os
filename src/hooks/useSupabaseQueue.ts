@@ -212,11 +212,11 @@ export const useSupabaseQueue = () => {
         (payload) => {
           console.log('📡 Real-time update:', payload.eventType, payload);
           
-          // Trigger immediate reassignment when a student completes reflection
+          // Trigger immediate reassignment when a student moves to review or completes reflection
           if (payload.eventType === 'UPDATE' && 
-              payload.new?.status === 'completed' && 
+              (payload.new?.status === 'review' || payload.new?.status === 'completed') && 
               payload.old?.status === 'waiting') {
-            console.log('🔄 Student completed reflection - triggering immediate reassignment');
+            console.log('🔄 Student moved to review status - triggering immediate reassignment');
             reassignWaitingStudents().catch(console.error);
           }
           

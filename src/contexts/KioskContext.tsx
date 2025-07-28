@@ -210,6 +210,18 @@ export const KioskProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (error) {
         console.error('Error updating kiosk student:', error);
+      } else {
+        // When clearing kiosk assignment (both params null), trigger reassignment
+        if (!studentId && !behaviorRequestId) {
+          console.log('🔄 Kiosk cleared - triggering student reassignment');
+          try {
+            await supabase.rpc('assign_waiting_students_to_kiosk', {
+              p_kiosk_id: kioskId
+            });
+          } catch (assignError) {
+            console.error('Error reassigning students to cleared kiosk:', assignError);
+          }
+        }
       }
     } catch (error) {
       console.error('Error in updateKioskStudent:', error);
