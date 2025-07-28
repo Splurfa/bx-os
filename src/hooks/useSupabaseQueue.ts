@@ -238,7 +238,7 @@ export const useSupabaseQueue = () => {
     };
   }, [user?.id, fetchQueue, debouncedFetch, reassignWaitingStudents]);
 
-  // Add student to queue with enhanced FIFO assignment
+  // Add student to queue with enhanced FIFO assignment and duplicate prevention
   const addToQueue = async (data: {
     studentName: string;
     behaviors: string[];
@@ -247,6 +247,17 @@ export const useSupabaseQueue = () => {
     notes?: string;
   }) => {
     try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Error",
+          description: "You must be logged in to add students to the queue",
+          variant: "destructive",
+        });
+        return;
+      }
+
       // First, ensure student exists
       const { data: existingStudent, error: studentError } = await supabase
         .from('students')
@@ -260,8 +271,30 @@ export const useSupabaseQueue = () => {
 
       let studentId = existingStudent?.id;
 
-      // Create student if doesn't exist
-      if (!existingStudent) {
+      if (existingStudent) {
+        // CRITICAL: Check for existing active request for this student
+        const { data: existingRequest, error: checkError } = await supabase
+          .from('behavior_requests')
+          .select('id, status')
+          .eq('student_id', studentId)
+          .in('status', ['waiting', 'assigned', 'in_progress', 'review'])
+          .maybeSingle();
+
+        if (checkError) {
+          console.error('Error checking for existing request:', checkError);
+          throw checkError;
+        }
+
+        if (existingRequest) {
+          toast({
+            title: "Student Already in Queue",
+            description: `${data.studentName} already has an active behavior request (${existingRequest.status}). Please complete or cancel the existing request first.`,
+            variant: "destructive",
+          });
+          return;
+        }
+      } else {
+        // Create student if doesn't exist
         const { data: newStudent, error: createStudentError } = await supabase
           .from('students')
           .insert([{ name: data.studentName }])
@@ -275,16 +308,12 @@ export const useSupabaseQueue = () => {
 
       if (!studentId) throw new Error('Student ID not found');
 
-      // Get current user's teacher ID (for authenticated requests)
-      const { data: { user } } = await supabase.auth.getUser();
-      let teacherId = user?.id || '00000000-0000-0000-0000-000000000000';
-
-      // Create behavior request without kiosk assignment first to ensure FIFO
+      // Create behavior request - unique constraint will prevent duplicates
       const { error: requestError } = await supabase
         .from('behavior_requests')
         .insert([{
           student_id: studentId,
-          teacher_id: teacherId,
+          teacher_id: user.id,
           behaviors: data.behaviors,
           mood: data.mood,
           status: 'waiting',
@@ -294,7 +323,24 @@ export const useSupabaseQueue = () => {
           kiosk_status: 'waiting'
         }]);
 
-      if (requestError) throw requestError;
+      if (requestError) {
+        console.error('Error creating behavior request:', requestError);
+        // Handle unique constraint violation gracefully
+        if (requestError.code === '23505') {
+          toast({
+            title: "Student Already in Queue",
+            description: `${data.studentName} already has an active behavior request. Please complete or cancel the existing request first.`,
+            variant: "destructive",
+          });
+          return;
+        }
+        throw requestError;
+      }
+
+      toast({
+        title: "Student Added",
+        description: `${data.studentName} has been added to the queue successfully.`,
+      });
 
       // Immediately trigger reassignment to ensure FIFO order
       await reassignWaitingStudents();
@@ -302,6 +348,11 @@ export const useSupabaseQueue = () => {
       await fetchQueue(true);
     } catch (error) {
       console.error('Error adding to queue:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add student to queue. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -478,10 +529,13 @@ export const useSupabaseQueue = () => {
     }
   };
 
-  // Request revision
+  // Request revision - FIXED: Reuses existing request with complete history preservation
   const requestRevision = async (behaviorRequestId: string, feedback: string) => {
     try {
-      // Update reflection with feedback and revision status
+      // CRITICAL: The reflection history trigger will automatically archive the current reflection
+      // when we update its status to 'revision_requested'
+      
+      // Update reflection with feedback and revision status (triggers automatic archival)
       const { error: reflectionError } = await supabase
         .from('reflections')
         .update({ 
@@ -492,18 +546,50 @@ export const useSupabaseQueue = () => {
 
       if (reflectionError) throw reflectionError;
 
-      // Update behavior request back to waiting
+      // FIXED: Reuse existing behavior request instead of creating duplicate
+      // Reset to waiting status so student can retry with the same request
       const { error: updateError } = await supabase
         .from('behavior_requests')
-        .update({ status: 'waiting' })
+        .update({ 
+          status: 'waiting',
+          kiosk_status: 'waiting', // Reset kiosk status so they can be reassigned
+          assigned_kiosk_id: null   // Clear kiosk assignment for reassignment
+        })
         .eq('id', behaviorRequestId);
 
       if (updateError) throw updateError;
 
+      // Clear the reflection content so student can provide new answers
+      // (Keep the archived version in reflections_history)
+      const { error: clearReflectionError } = await supabase
+        .from('reflections')
+        .update({
+          question1: '',
+          question2: '',
+          question3: '',
+          question4: '',
+          status: 'pending' // Ready for new submission
+        })
+        .eq('behavior_request_id', behaviorRequestId);
+
+      if (clearReflectionError) throw clearReflectionError;
+
+      // Trigger reassignment to put student back in proper queue order
+      await reassignWaitingStudents();
+
+      toast({
+        title: "Revision Requested",
+        description: "Student has been notified to revise their reflection and placed back in the queue.",
+      });
 
       await fetchQueue(true);
     } catch (error) {
       console.error('Error requesting revision:', error);
+      toast({
+        title: "Error",
+        description: "Failed to request revision. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
