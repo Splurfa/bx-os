@@ -155,23 +155,25 @@ const QueueDisplay = React.memo(({
                 </Button>
               )}
               
-              {/* Status badges - no duplicate green badge for review status */}
-              {'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
-                <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs">
-                  In Progress
-                </Badge>
-              ) : 'kiosk_status' in item && item.kiosk_status === 'ready' ? (
-                <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
-                  At Kiosk
-                </Badge>
-              ) : item.assigned_kiosk_id ? (
-                <Badge variant="outline" className="text-orange-600 border-orange-200 text-xs">
-                  Assigned
-                </Badge>
-              ) : (
-                <Badge variant="outline" className="text-muted-foreground text-xs">
-                  Waiting
-                </Badge>
+              {/* Status badges - only show for non-review students */}
+              {item.status !== 'review' && (
+                'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
+                  <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs">
+                    In Progress
+                  </Badge>
+                ) : 'kiosk_status' in item && item.kiosk_status === 'ready' ? (
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
+                    At Kiosk
+                  </Badge>
+                ) : item.assigned_kiosk_id ? (
+                  <Badge variant="outline" className="text-orange-600 border-orange-200 text-xs">
+                    Assigned
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="text-muted-foreground text-xs">
+                    Waiting
+                  </Badge>
+                )
               )}
             </div>
           </div>
