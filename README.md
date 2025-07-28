@@ -162,7 +162,8 @@ Our system creates a simple **3-step workflow** that turns behavioral incidents 
 - ✅ **Security features** and data protection
 
 ### **📞 Technical Details**
-- **Technical Setup**: See `TECHNICAL_README.md` for developer information
+- **Developer Documentation**: See [`docs/`](./docs/) folder for complete documentation
+- **Quick Setup**: See [`docs/setup/INSTALLATION.md`](./docs/setup/INSTALLATION.md)
 - **Built with Modern Technology**: React, TypeScript, and Supabase
 - **Secure & Reliable**: Industry-standard security practices
 
