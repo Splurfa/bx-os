@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
-import { Monitor, Users, Activity, Clock, AlertTriangle, Power, PowerOff } from 'lucide-react';
+import { Monitor, PowerOff } from 'lucide-react';
 import AppHeader from './AppHeader';
 import QueueDisplay from './QueueDisplay';
 import UserManagement from './UserManagement';
@@ -38,13 +38,10 @@ const AdminDashboard = () => {
   const isMobile = useIsMobile();
   const [selectedReflection, setSelectedReflection] = useState<BehaviorRequest | null>(null);
 
-  // Filter queue items
+  // Filter queue items for completed reflections only
   const completedReflections = items.filter(item => 
     item.reflection && item.reflection.status === 'pending'
   );
-  const waitingInQueue = items.filter(item => item.status === 'waiting');
-  const assignedStudents = items.filter(item => item.assigned_kiosk_id && item.status === 'waiting');
-  const unassignedStudents = waitingInQueue.filter(item => !item.assigned_kiosk_id);
 
   // Handle kiosk activation toggle
   const handleKioskToggle = async (kioskId: number, isActive: boolean) => {
@@ -131,9 +128,7 @@ const AdminDashboard = () => {
   };
 
   // Calculate active kiosks
-  const activeKiosks = kiosks.filter(k => k.isActive);
-  const kioskCount = kiosks.length;
-  const activeKioskCount = activeKiosks.length;
+  const activeKioskCount = kiosks.filter(k => k.isActive).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
@@ -234,100 +229,17 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
 
-            {/* Queue Summary */}
-            <div className={`grid grid-cols-2 ${isMobile ? 'gap-2' : 'md:grid-cols-4 gap-3'}`}>
-              <Card>
-                <CardContent className={isMobile ? "p-3" : "p-4"}>
-                  <div className="flex items-center justify-between">
-                    <div className="text-left">
-                      <p className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{waitingInQueue.length}</p>
-                      <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
-                        {isMobile ? 'Waiting' : 'Waiting in Queue'}
-                      </p>
-                    </div>
-                    <Clock className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-orange-500 flex-shrink-0`} />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className={isMobile ? "p-3" : "p-4"}>
-                  <div className="flex items-center justify-between">
-                    <div className="text-left">
-                      <p className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{completedReflections.length}</p>
-                      <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
-                        {isMobile ? 'Review' : 'Pending Review'}
-                      </p>
-                    </div>
-                    <AlertTriangle className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-red-500 flex-shrink-0`} />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className={isMobile ? "p-3" : "p-4"}>
-                  <div className="flex items-center justify-between">
-                    <div className="text-left">
-                      <p className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{assignedStudents.length}</p>
-                      <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
-                        {isMobile ? 'At Kiosks' : 'At Kiosks'}
-                      </p>
-                    </div>
-                    <Monitor className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-blue-500 flex-shrink-0`} />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className={isMobile ? "p-3" : "p-4"}>
-                  <div className="flex items-center justify-between">
-                    <div className="text-left">
-                      <p className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{activeKioskCount}</p>
-                      <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
-                        {isMobile ? 'Active' : 'Active Kiosks'}
-                      </p>
-                    </div>
-                    <Power className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-green-500 flex-shrink-0`} />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Queue Actions */}
-            {items.length > 0 && (
-              <Card>
-                <CardHeader className={isMobile ? "p-3 pb-2" : ""}>
-                  <div className={`flex items-center ${isMobile ? 'flex-col space-y-2' : 'justify-between'}`}>
-                    <CardTitle className={isMobile ? "text-base" : ""}>Queue Actions</CardTitle>
-                    <Button 
-                      variant="destructive" 
-                      size="sm"
-                      onClick={handleClearQueue}
-                      disabled={queueLoading || clearQueueLoading}
-                      className={isMobile ? "text-xs px-2" : ""}
-                    >
-                      {clearQueueLoading ? 'Clearing...' : (isMobile ? 'Clear Queue' : 'Clear Entire Queue')}
-                    </Button>
-                  </div>
-                </CardHeader>
-              </Card>
-            )}
-
             {/* Queue Display */}
             <Card>
-              <CardHeader className={isMobile ? "p-3 pb-2" : ""}>
-                <CardTitle className={isMobile ? "text-base" : ""}>Behavior Queue</CardTitle>
-                {!isMobile && (
-                  <CardDescription>
-                    Real-time view of all behavior requests and reflections
-                  </CardDescription>
-                )}
-              </CardHeader>
-              <CardContent className={isMobile ? "p-3 pt-0" : ""}>
+              <CardContent className={isMobile ? "p-3" : "p-6"}>
                 <QueueDisplay
                   items={items}
                   onSelectReflection={handleSelectReflection}
                   formatTimeElapsed={formatTimeElapsed}
+                  onClearQueue={handleClearQueue}
+                  clearQueueLoading={clearQueueLoading}
+                  queueLoading={queueLoading}
+                  showClearButton={items.length > 0}
                 />
               </CardContent>
             </Card>

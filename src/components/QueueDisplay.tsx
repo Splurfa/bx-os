@@ -11,6 +11,10 @@ interface QueueDisplayProps {
   items: (BehaviorRequest | MockBehaviorRequest)[];
   onSelectReflection: (item: BehaviorRequest | MockBehaviorRequest) => void;
   formatTimeElapsed: (timestamp: Date) => string;
+  onClearQueue?: () => void;
+  clearQueueLoading?: boolean;
+  queueLoading?: boolean;
+  showClearButton?: boolean;
 }
 
 const getBehaviorColor = (behavior: string) => {
@@ -34,7 +38,15 @@ const getBehaviorColor = (behavior: string) => {
   return behaviorMap[behavior] || 'bg-primary';
 };
 
-const QueueDisplay = React.memo(({ items, onSelectReflection, formatTimeElapsed }: QueueDisplayProps) => {
+const QueueDisplay = React.memo(({ 
+  items, 
+  onSelectReflection, 
+  formatTimeElapsed, 
+  onClearQueue, 
+  clearQueueLoading = false, 
+  queueLoading = false, 
+  showClearButton = false 
+}: QueueDisplayProps) => {
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full py-16">
@@ -58,8 +70,24 @@ const QueueDisplay = React.memo(({ items, onSelectReflection, formatTimeElapsed 
   }, [items]);
 
   return (
-    <div className="space-y-1">
-      {sortedItems.map((item) => {
+    <div className="space-y-4">
+      {/* Header with Clear Queue button */}
+      {showClearButton && onClearQueue && (
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">Behavior Queue</h3>
+          <Button 
+            variant="destructive" 
+            size="sm"
+            onClick={onClearQueue}
+            disabled={queueLoading || clearQueueLoading}
+          >
+            {clearQueueLoading ? 'Clearing...' : 'Clear Entire Queue'}
+          </Button>
+        </div>
+      )}
+      
+      <div className="space-y-1">
+        {sortedItems.map((item) => {
         const isCompleted = item.status === 'completed';
         const isActive = (item.position === 1 || (!item.position && item.status === 'waiting')) && !isCompleted;
         
@@ -126,7 +154,8 @@ const QueueDisplay = React.memo(({ items, onSelectReflection, formatTimeElapsed 
             </div>
           </div>
         );
-      })}
+        })}
+      </div>
     </div>
   );
 });
