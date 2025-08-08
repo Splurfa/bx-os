@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, GraduationCap, Download, Share, Smartphone } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
+import { supabase } from '@/integrations/supabase/client';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -19,12 +20,24 @@ const AuthPage = () => {
   const [error, setError] = useState('');
 
   // Redirect if already authenticated
-  if (user) {
-    // Route based on user role - admins go to admin dashboard, teachers go to teacher dashboard
-    const isAdmin = user.email === 'admin@school.edu';
-    navigate(isAdmin ? '/admin-dashboard' : '/teacher');
-    return null;
-  }
+  useEffect(() => {
+    const routeUser = async () => {
+      if (!user) return;
+      try {
+        const { data } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        const role = data?.role || 'teacher';
+        navigate(role === 'admin' ? '/admin-dashboard' : '/teacher', { replace: true });
+      } catch (e) {
+        // Fallback to teacher on error
+        navigate('/teacher', { replace: true });
+      }
+    };
+    routeUser();
+  }, [user, navigate]);
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,10 +54,22 @@ const AuthPage = () => {
       setError(error.message);
     } else {
       // Route based on user role after successful sign in
-      const isAdmin = email === 'admin@school.edu';
-      const destination = isAdmin ? '/admin-dashboard' : '/teacher';
-      
-      navigate(destination);
+      try {
+        const { data: { user: signedInUser } } = await supabase.auth.getUser();
+        if (signedInUser) {
+          const { data } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', signedInUser.id)
+            .single();
+          const role = data?.role || 'teacher';
+          navigate(role === 'admin' ? '/admin-dashboard' : '/teacher', { replace: true });
+        } else {
+          navigate('/teacher', { replace: true });
+        }
+      } catch {
+        navigate('/teacher', { replace: true });
+      }
     }
 
     setLoading(false);

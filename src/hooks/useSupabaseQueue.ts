@@ -279,7 +279,7 @@ export const useSupabaseQueue = () => {
           .from('behavior_requests')
           .select('id, status')
           .eq('student_id', studentId)
-          .in('status', ['waiting', 'assigned', 'in_progress', 'review'])
+          .in('status', ['waiting', 'review'])
           .maybeSingle();
 
         if (checkError) {
