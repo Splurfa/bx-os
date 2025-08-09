@@ -531,7 +531,7 @@ export const useSupabaseQueue = () => {
     return waitingItems.length > 0 ? waitingItems[0] : undefined;
   };
 
-  // Clear all queue items - use direct Supabase operations to avoid auth issues
+  // Clear all queue items (admin: hard reset via RPC; teacher: own queue)
   const clearQueue = async () => {
     try {
       setClearQueueLoading(true);
@@ -543,65 +543,63 @@ export const useSupabaseQueue = () => {
         throw new Error('User not authenticated');
       }
       
-      // Get user role for proper filtering
+      // Determine role (cached or fetched)
       const currentRole = userRole || await getUserRole();
-      
-      // Get items to be deleted for counting
-      let countQuery = supabase
+
+      if (currentRole === 'admin') {
+        // ADMIN: Hard reset using RPC function
+        console.log('👑 Admin detected — invoking RPC admin_clear_all_queues');
+        const { error } = await supabase.rpc('admin_clear_all_queues');
+        if (error) {
+          console.error('❌ RPC admin_clear_all_queues error:', error);
+          throw error;
+        }
+        console.log('✅ RPC admin_clear_all_queues succeeded');
+        
+        // Local reset + fresh fetch
+        setItems([]);
+        await fetchQueue(true);
+        
+        toast({ title: 'Queue cleared.' });
+        return;
+      }
+
+      // TEACHER: Clear only own queue (legacy path)
+      // Count items first (teacher scope)
+      const { count } = await supabase
         .from('behavior_requests')
-        .select('id', { count: 'exact', head: true });
-      
-      if (currentRole === 'teacher') {
-        countQuery = countQuery.eq('teacher_id', user.id);
-      }
-      
-      const { count } = await countQuery;
-      
-      // Delete behavior requests - this will trigger cascading deletion of reflections
-      // and the archive trigger will handle history preservation
-      let deleteQuery = supabase.from('behavior_requests').delete();
-      
-      if (currentRole === 'teacher') {
-        // Teachers can only clear their own queue
-        deleteQuery = deleteQuery.eq('teacher_id', user.id);
-      }
-      // Admins can clear all queues (no additional filter)
-      
-      const { error: deleteError } = await deleteQuery;
+        .select('id', { count: 'exact', head: true })
+        .eq('teacher_id', user.id);
+
+      // Delete behavior requests for this teacher
+      const { error: deleteError } = await supabase
+        .from('behavior_requests')
+        .delete()
+        .eq('teacher_id', user.id);
       
       if (deleteError) {
-        console.error('❌ Clear queue error:', deleteError);
+        console.error('❌ Clear queue error (teacher):', deleteError);
         throw deleteError;
       }
-      
-      console.log(`✅ Cleared ${count || 0} behavior requests from queue`);
-      
-      // Trigger reassignment for any remaining students (if admin cleared specific teacher's queue)
+
+      // Best-effort reassignment
       try {
         await reassignWaitingStudents();
       } catch (reassignError) {
-        console.warn('Warning: Failed to reassign after clear, but clear was successful:', reassignError);
+        console.warn('Warning: Reassign after teacher clear failed:', reassignError);
       }
-      
-      // Immediately update local state to prevent flickering
+
       setItems([]);
-      
-      // Fetch fresh data without showing loading spinner
       await fetchQueue(true);
-      
-      toast({
-        title: "Queue Cleared",
-        description: `Successfully cleared ${count || 0} items from the queue.`,
-      });
-      
+      toast({ title: 'Queue cleared.' });
     } catch (error) {
       console.error('💥 CLEAR QUEUE ERROR:', error);
       toast({
-        title: "Error Clearing Queue",
-        description: "Failed to clear the queue. Please try again.",
-        variant: "destructive",
+        title: 'Error clearing queue',
+        description: 'Failed to clear the queue. Please try again.',
+        variant: 'destructive',
       });
-      throw error; // Re-throw so admin dashboard can show error toast
+      throw error;
     } finally {
       setClearQueueLoading(false);
     }

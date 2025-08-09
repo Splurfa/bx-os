@@ -440,6 +440,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_clear_all_queues: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       assign_waiting_students_to_kiosk: {
         Args: { p_kiosk_id: number }
         Returns: undefined
