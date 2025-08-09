@@ -444,6 +444,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      admin_reset_app: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       assign_waiting_students_to_kiosk: {
         Args: { p_kiosk_id: number }
         Returns: undefined
