@@ -431,9 +431,19 @@ export const useSupabaseQueue = () => {
       // Trigger reassignment of waiting students
       await reassignWaitingStudents();
 
+      toast({
+        title: "Reflection Approved",
+        description: "Student removed from queue.",
+      });
+
       await fetchQueue(true);
     } catch (error) {
       console.error('Error approving reflection:', error);
+      toast({
+        title: "Error",
+        description: "Failed to approve reflection",
+        variant: "destructive",
+      });
       throw error;
     }
   };

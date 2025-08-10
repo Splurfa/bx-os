@@ -440,7 +440,7 @@ const KioskThree = () => {
                 
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Reflection Complete!</h2>
-                  <p className="text-muted-foreground">Thank you for your thoughtful responses, {currentStudentName || 'Student'}</p>
+                  <p className="text-muted-foreground">Thank you for your thoughtful responses.</p>
                 </div>
 
                 <div className="space-y-4">
