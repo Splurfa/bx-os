@@ -26,6 +26,7 @@ const AdminDashboard = () => {
     loading: queueLoading, 
     clearQueueLoading,
     clearQueue,
+    approveReflection,
     formatTimeElapsed 
   } = useSupabaseQueue();
   const { history: behaviorHistory, loading: historyLoading } = useBehaviorHistory();
@@ -77,6 +78,21 @@ const AdminDashboard = () => {
         variant: "destructive",
         title: "Error",
         description: "Failed to clear queue.",
+      });
+    }
+  };
+
+  // Clear a single student from the queue (stage-agnostic)
+  const handleClearItem = async (id: string) => {
+    try {
+      await approveReflection(id); // deletes request; stage-agnostic under RLS
+      toast({ title: 'Removed from queue.' });
+    } catch (error) {
+      console.error('Error removing item:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to remove student from queue.',
       });
     }
   };
@@ -193,11 +209,9 @@ const AdminDashboard = () => {
                   onClearQueue={handleClearQueue}
                   clearQueueLoading={clearQueueLoading}
                   queueLoading={queueLoading}
-                  showClearButton={items.filter(item => 
-                    item.status === 'waiting' || 
-                    (item.status === 'completed' && item.reflection?.status === 'revision_requested')
-                  ).length > 0}
+                  showClearButton={true}
                   showReviewButtons={false}
+                  onClearItem={handleClearItem}
                 />
               </CardContent>
             </Card>

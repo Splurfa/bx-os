@@ -126,11 +126,19 @@ export const useSupabaseQueue = () => {
       console.log("✅ Queue data fetched successfully:", data?.length || 0, "items");
       
       // Transform data to match expected format
-      const transformedData = data?.map((item: any) => ({
-        ...item,
-        position: 0, // Will be calculated below
-        timestamp: new Date(item.created_at)
-      })) || [];
+      const transformedData = data?.map((item: any) => {
+        // Normalize reflection: Supabase may return an array; we want a single latest entry
+        const normalizedReflection = Array.isArray(item.reflection)
+          ? item.reflection[0]
+          : item.reflection;
+
+        return {
+          ...item,
+          reflection: normalizedReflection,
+          position: 0, // Will be calculated below
+          timestamp: new Date(item.created_at)
+        };
+      }) || [];
 
       // Calculate positions (only for waiting items with kiosk assignment)
       const waitingItems = transformedData.filter(item => 

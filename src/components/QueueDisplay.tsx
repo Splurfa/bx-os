@@ -1,6 +1,6 @@
 
 import React, { useMemo } from "react";
-import { User, CheckCircle, Monitor } from "lucide-react";
+import { User, CheckCircle, Monitor, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import LiveTimer from "./LiveTimer";
@@ -16,6 +16,7 @@ interface QueueDisplayProps {
   queueLoading?: boolean;
   showClearButton?: boolean;
   showReviewButtons?: boolean;
+  onClearItem?: (id: string) => void;
 }
 
 const getBehaviorColor = (behavior: string) => {
@@ -47,7 +48,8 @@ const QueueDisplay = React.memo(({
   clearQueueLoading = false, 
   queueLoading = false, 
   showClearButton = false,
-  showReviewButtons = true
+  showReviewButtons = true,
+  onClearItem
 }: QueueDisplayProps) => {
   // Filter to only show active items - waiting students + review students + revision students
   const sortedItems = useMemo(() => {
@@ -152,6 +154,19 @@ const QueueDisplay = React.memo(({
                 >
                   <CheckCircle className="h-3 w-3 mr-1" />
                   Review
+                </Button>
+              )}
+
+              {/* Per-student clear (admin only when provided) */}
+              {onClearItem && (
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => onClearItem(item.id)}
+                  className="text-xs"
+                >
+                  <XCircle className="h-3 w-3 mr-1" />
+                  Remove
                 </Button>
               )}
               
