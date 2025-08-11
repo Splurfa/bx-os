@@ -160,13 +160,14 @@ const QueueDisplay = React.memo(({
               {/* Per-student clear (admin only when provided) */}
               {onClearItem && (
                 <Button
-                  size="sm"
-                  variant="destructive"
+                  size="icon"
+                  variant="ghost"
                   onClick={() => onClearItem(item.id)}
-                  className="text-xs"
+                  className="rounded-full"
+                  aria-label="Remove from queue"
+                  title="Remove from queue"
                 >
-                  <XCircle className="h-3 w-3 mr-1" />
-                  Remove
+                  <XCircle className="h-4 w-4" />
                 </Button>
               )}
               

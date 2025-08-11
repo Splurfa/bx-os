@@ -246,7 +246,7 @@ const KioskThree = () => {
   }
 
   // Welcome screen - no active student
-  if (!firstWaitingStudent || kioskState === 'welcome') {
+  if ((!firstWaitingStudent || kioskState === 'welcome') && kioskState !== 'completed') {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         {/* Kiosk Header */}
