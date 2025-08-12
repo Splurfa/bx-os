@@ -200,20 +200,6 @@ const QueueDisplay = React.memo(({
                 </Button>
               )}
 
-              {/* Per-student clear (admin only when provided) */}
-              {onClearItem && (
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => onClearItem(item.id)}
-                  className="rounded-full"
-                  aria-label="Remove from queue"
-                  title="Remove from queue"
-                >
-                  <XCircle className="h-4 w-4" />
-                </Button>
-              )}
-              
               {/* Status badges */}
               {item.status === 'review' && !showReviewButtons ? (
                 <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200 text-xs">
@@ -237,6 +223,35 @@ const QueueDisplay = React.memo(({
                     Waiting
                   </Badge>
                 )
+              )}
+
+              {/* Per-student clear (moved far right) */}
+              {onClearItem && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="rounded-full"
+                      aria-label="Remove from queue"
+                      title="Remove from queue"
+                    >
+                      <XCircle className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Remove this student?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This will remove the student from the active queue. This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => onClearItem(item.id)}>Confirm</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               )}
             </div>
           </div>

@@ -124,7 +124,7 @@ export const useSupabaseQueue = () => {
       
       console.log("✅ Queue data fetched successfully:", data?.length || 0, "items");
       
-      const transformedData = data?.map((item: any) => {
+      let transformedData = data?.map((item: any) => {
         // Normalize reflection: Supabase may return an array; pick the latest by created_at
         let latestReflection = null as any;
         if (Array.isArray(item.reflection)) {
@@ -139,8 +139,29 @@ export const useSupabaseQueue = () => {
           reflection: latestReflection,
           position: 0, // Will be calculated below
           timestamp: new Date(item.created_at)
-        };
+        } as BehaviorRequest;
       }) || [];
+
+      // Attach teacher profile info (full_name, email) for admin view chips
+      try {
+        const teacherIds = Array.from(new Set(transformedData.map((i) => i.teacher_id))).filter(Boolean) as string[];
+        if (teacherIds.length > 0) {
+          const { data: teachers, error: teacherErr } = await supabase
+            .from('profiles')
+            .select('id, full_name, email')
+            .in('id', teacherIds);
+          if (!teacherErr && teachers) {
+            const tMap = Object.fromEntries(teachers.map((t: any) => [t.id, t]));
+            transformedData = transformedData.map((i) => ({
+              ...i,
+              teacher_full_name: tMap[i.teacher_id]?.full_name ?? undefined,
+              teacher_email: tMap[i.teacher_id]?.email ?? undefined,
+            }));
+          }
+        }
+      } catch (e) {
+        console.warn('Could not attach teacher info:', e);
+      }
 
       // Calculate positions (only for waiting items with kiosk assignment)
       const waitingItems = transformedData.filter(item => 
