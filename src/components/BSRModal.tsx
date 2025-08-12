@@ -116,19 +116,17 @@ const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
             </div>
             <div className="flex items-center space-x-2">
               <Button
-                variant="ghost"
+                variant={isUrgent ? "destructive" : "outline"}
                 size="sm"
                 onClick={() => setIsUrgent(!isUrgent)}
-                className={`transition-all duration-200 ${
-                  isUrgent 
-                    ? "bg-queue-urgent/20 text-queue-urgent border-queue-urgent/30 hover:bg-queue-urgent/30" 
-                    : "hover:bg-muted/50"
-                }`}
+                className="transition-all duration-200"
+                aria-pressed={isUrgent}
+                aria-label="Toggle urgent"
               >
                 <AlertTriangle className="icon-inline" />
-                {isUrgent && <span className="ml-1 text-xs font-medium">URGENT</span>}
+                <span className="ml-1 text-xs font-medium">Urgent !</span>
               </Button>
-              <Button variant="ghost" size="sm" onClick={handleClose}>
+              <Button variant="ghost" size="sm" onClick={handleClose} aria-label="Close">
                 <X className="h-4 w-4" />
               </Button>
             </div>
