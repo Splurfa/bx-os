@@ -109,25 +109,17 @@ useEffect(() => {
 
   // Improved state management - prevent race conditions in completed state
   useEffect(() => {
-    // CRITICAL: Never interrupt the completed state
-    if (kioskState === 'completed') {
-      console.log('🔒 Kiosk in completed state - blocking external state changes');
-      return;
-    }
+    // Never interrupt the completed state
+    if (kioskState === 'completed') return;
 
-    if (!firstWaitingStudent && kioskState !== 'setup') {
-      console.log('🏠 No student waiting - transitioning to welcome');
-      setKioskState('welcome');
-      setStudentPassword('');
-      setPasswordError('');
-      setCurrentQuestion(0);
-      setAnswers({});
-      setTimeElapsed(0);
-      setCompletedStudentData(null);
-      
-      // Clear kiosk assignment
+    // Only sync assignment while on the welcome screen
+    if (kioskState !== 'welcome') return;
+
+    if (!firstWaitingStudent) {
+      console.log('🏠 No student waiting - staying on welcome');
+      // Clear kiosk assignment while idle
       updateKioskStudentRef.current(KIOSK_ID, undefined, undefined);
-    } else if (firstWaitingStudent && kioskState === 'welcome') {
+    } else {
       console.log('👤 Student assigned to kiosk:', firstWaitingStudent.student.name);
       // Only update kiosk assignment, keep status as 'waiting' until user interacts
       updateKioskStudentRef.current(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
@@ -303,7 +295,7 @@ useEffect(() => {
   }
 
   // Welcome screen - no active student
-  if ((!firstWaitingStudent || kioskState === 'welcome') && kioskState !== 'completed') {
+  if (kioskState === 'welcome') {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         {/* Kiosk Header */}
