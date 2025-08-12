@@ -104,7 +104,7 @@ const QueueDisplay = React.memo(({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Header with Clear Queue button */}
       {showClearButton && onClearQueue && (
         <div className="flex items-center justify-between">
@@ -144,7 +144,7 @@ const QueueDisplay = React.memo(({
         return (
           <div
             key={item.id}
-            className={`flex items-center justify-between px-4 py-3 border-b border-border last:border-b-0 ${
+            className={`flex items-center justify-between px-3 py-2 border-b border-border last:border-b-0 ${
               isActive ? 'bg-primary/5' : 'bg-background'
             }`}
           >
@@ -174,6 +174,8 @@ const QueueDisplay = React.memo(({
                   {showTeacherLastNameChip && (('teacher_full_name' in (item as any) || 'teacher_email' in (item as any))) && (
                     <Badge variant="outline" className="text-xs">
                       {(() => {
+                        const last = (item as any).teacher_last_name as string | undefined;
+                        if (last && last.trim()) return last.trim();
                         const full = (item as any).teacher_full_name as string | undefined;
                         const email = (item as any).teacher_email as string | undefined;
                         const fromFull = full ? full.trim().split(/\s+/).slice(-1)[0] : undefined;
