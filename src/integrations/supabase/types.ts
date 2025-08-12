@@ -239,24 +239,30 @@ export type Database = {
         Row: {
           created_at: string
           email: string | null
+          first_name: string | null
           full_name: string | null
           id: string
+          last_name: string | null
           role: string
           updated_at: string
         }
         Insert: {
           created_at?: string
           email?: string | null
+          first_name?: string | null
           full_name?: string | null
           id: string
+          last_name?: string | null
           role?: string
           updated_at?: string
         }
         Update: {
           created_at?: string
           email?: string | null
+          first_name?: string | null
           full_name?: string | null
           id?: string
+          last_name?: string | null
           role?: string
           updated_at?: string
         }
@@ -446,6 +452,10 @@ export type Database = {
       }
       admin_reset_app: {
         Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      admin_update_user_role: {
+        Args: { p_target_user_id: string; p_new_role: string }
         Returns: undefined
       }
       assign_waiting_students_to_kiosk: {

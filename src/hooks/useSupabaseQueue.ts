@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -32,8 +31,9 @@ export interface BehaviorRequest {
   timestamp?: Date;
   teacher_full_name?: string;
   teacher_email?: string;
+  teacher_first_name?: string;
+  teacher_last_name?: string;
 }
-
 
 export interface Reflection {
   id: string;
@@ -107,11 +107,9 @@ export const useSupabaseQueue = () => {
         `);
       
       if (currentRole === 'teacher') {
-        // Teachers only see their own behavior requests
         query = query.eq('teacher_id', user.id);
         console.log("🔒 Applying teacher filter: only showing requests from current user");
       } else {
-        // Admins see all behavior requests
         console.log("👑 Admin access: showing all behavior requests");
       }
       
@@ -137,26 +135,35 @@ export const useSupabaseQueue = () => {
         return {
           ...item,
           reflection: latestReflection,
-          position: 0, // Will be calculated below
+          position: 0,
           timestamp: new Date(item.created_at)
         } as BehaviorRequest;
       }) || [];
 
-      // Attach teacher profile info (full_name, email) for admin view chips
+      // Attach teacher profile info (first_name, last_name, full_name, email) for chips
       try {
         const teacherIds = Array.from(new Set(transformedData.map((i) => i.teacher_id))).filter(Boolean) as string[];
         if (teacherIds.length > 0) {
           const { data: teachers, error: teacherErr } = await supabase
             .from('profiles')
-            .select('id, full_name, email')
+            .select('id, first_name, last_name, full_name, email')
             .in('id', teacherIds);
           if (!teacherErr && teachers) {
             const tMap = Object.fromEntries(teachers.map((t: any) => [t.id, t]));
-            transformedData = transformedData.map((i) => ({
-              ...i,
-              teacher_full_name: tMap[i.teacher_id]?.full_name ?? undefined,
-              teacher_email: tMap[i.teacher_id]?.email ?? undefined,
-            }));
+            transformedData = transformedData.map((i) => {
+              const t = tMap[i.teacher_id] || {};
+              const computedFullName =
+                t.full_name ||
+                [t.first_name, t.last_name].filter(Boolean).join(' ') ||
+                undefined;
+              return {
+                ...i,
+                teacher_full_name: computedFullName,
+                teacher_email: t.email ?? undefined,
+                teacher_first_name: t.first_name ?? undefined,
+                teacher_last_name: t.last_name ?? undefined,
+              };
+            });
           }
         }
       } catch (e) {

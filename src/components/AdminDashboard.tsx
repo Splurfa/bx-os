@@ -105,8 +105,8 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <AppHeader />
       
-      <div className="container-page spacing-section">
-
+      {/* Widen the content area slightly on larger screens without affecting global layout */}
+      <div className="container-page spacing-section max-w-[1400px] mx-auto">
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className={`grid w-full grid-cols-2 ${isMobile ? 'text-xs' : 'text-xs sm:text-sm'}`}>
             <TabsTrigger value="overview">System Overview</TabsTrigger>
@@ -173,10 +173,10 @@ const AdminDashboard = () => {
 
             {/* Queue Display */}
             <Card>
-              <CardContent className={isMobile ? "p-3" : "p-6"}>
+              <CardContent className={isMobile ? "p-2" : "px-4 py-3 md:px-6 md:py-4"}>
                 <QueueDisplay
                   items={items}
-                  onSelectReflection={() => {}} // No-op for admin
+                  onSelectReflection={() => {}}
                   formatTimeElapsed={formatTimeElapsed}
                   onClearQueue={handleClearQueue}
                   clearQueueLoading={clearQueueLoading}
