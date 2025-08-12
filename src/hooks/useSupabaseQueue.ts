@@ -27,7 +27,6 @@ export interface BehaviorRequest {
   created_at: string;
   updated_at: string;
   student?: Student;
-  teacher?: { id: string; full_name?: string; email?: string };
   reflection?: Reflection;
   position?: number;
   timestamp?: Date;
@@ -101,8 +100,7 @@ export const useSupabaseQueue = () => {
         .select(`
           *,
           student:students(*),
-          reflection:reflections(*),
-          teacher:profiles(id, first_name, last_name)
+          reflection:reflections(*)
         `);
       
       if (currentRole === 'teacher') {

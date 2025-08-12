@@ -1,9 +1,8 @@
 
-import React, { useMemo, useState } from "react";
-import { User, CheckCircle, Monitor, Trash2 } from "lucide-react";
+import React, { useMemo } from "react";
+import { User, CheckCircle, Monitor, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import LiveTimer from "./LiveTimer";
 import { BehaviorRequest } from "@/hooks/useSupabaseQueue";
 import { MockBehaviorRequest } from "@/hooks/useMockData";
@@ -52,8 +51,6 @@ const QueueDisplay = React.memo(({
   showReviewButtons = true,
   onClearItem
 }: QueueDisplayProps) => {
-  const [confirmAllOpen, setConfirmAllOpen] = useState(false);
-  const [confirmId, setConfirmId] = useState<string | null>(null);
   // Filter to only show active items - waiting students + review students + revision students
   const sortedItems = useMemo(() => {
     const activeItems = items.filter(item => {
@@ -101,7 +98,7 @@ const QueueDisplay = React.memo(({
           <Button 
             variant="destructive" 
             size="sm"
-            onClick={() => setConfirmAllOpen(true)}
+            onClick={onClearQueue}
             disabled={queueLoading || clearQueueLoading}
           >
             {clearQueueLoading ? 'Clearing...' : 'Clear Queue'}
@@ -124,9 +121,6 @@ const QueueDisplay = React.memo(({
               <div className="flex-1">
                 <div className="flex items-center space-x-2">
                   <h3 className="text-sm font-medium text-foreground">{item.student?.name || 'Unknown Student'}</h3>
-                  {(item as any).teacher?.last_name && (
-                    <span className="text-xs text-muted-foreground">• {(item as any).teacher?.last_name}</span>
-                  )}
                   <div className="flex items-center space-x-1">
                     {item.behaviors.map((behavior, index) => (
                       <div 
@@ -163,6 +157,20 @@ const QueueDisplay = React.memo(({
                 </Button>
               )}
 
+              {/* Per-student clear (admin only when provided) */}
+              {onClearItem && (
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => onClearItem(item.id)}
+                  className="rounded-full"
+                  aria-label="Remove from queue"
+                  title="Remove from queue"
+                >
+                  <XCircle className="h-4 w-4" />
+                </Button>
+              )}
+              
               {/* Status badges */}
               {item.status === 'review' && !showReviewButtons ? (
                 <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200 text-xs">
@@ -187,71 +195,10 @@ const QueueDisplay = React.memo(({
                   </Badge>
                 )
               )}
-
-              {/* Per-student clear (admin only when provided) - far right */}
-              {onClearItem && (
-                <Button
-                  size="icon"
-                  variant="destructive"
-                  onClick={() => setConfirmId(item.id)}
-                  className="ml-2"
-                  aria-label="Remove from queue"
-                  title="Remove from queue"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              )}
             </div>
           </div>
         );
         })}
-        {/** Confirm: Clear All **/}
-        <AlertDialog open={confirmAllOpen} onOpenChange={setConfirmAllOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Clear entire queue?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will remove all active items from the queue. This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                onClick={() => {
-                  setConfirmAllOpen(false);
-                  onClearQueue?.();
-                }}
-              >
-                Clear Queue
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        {/** Confirm: Clear One **/}
-        <AlertDialog open={!!confirmId} onOpenChange={(open) => { if (!open) setConfirmId(null); }}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Remove this item?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will remove the student from the active queue.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                onClick={() => {
-                  if (confirmId && onClearItem) onClearItem(confirmId);
-                  setConfirmId(null);
-                }}
-              >
-                Remove
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </div>
     </div>
   );
