@@ -39,12 +39,20 @@ const questions = [
 
 const getBehaviorColor = (behavior: string) => {
   const colors: Record<string, string> = {
+    // Display labels
     'Disruptive': 'bg-behavior-disruptive',
     'Social-Emotional': 'bg-behavior-social',
     'Avoidance': 'bg-behavior-avoidance',
     'Eloping': 'bg-behavior-eloping',
     'Minor-Physical': 'bg-behavior-minor-physical',
-    'Major-Physical': 'bg-behavior-major-physical'
+    'Major-Physical': 'bg-behavior-major-physical',
+    // Stored IDs
+    'disruptive': 'bg-behavior-disruptive',
+    'social-emotional': 'bg-behavior-social',
+    'avoidance': 'bg-behavior-avoidance',
+    'eloping': 'bg-behavior-eloping',
+    'minor-physical': 'bg-behavior-minor-physical',
+    'major-physical': 'bg-behavior-major-physical'
   };
   return colors[behavior] || 'bg-primary';
 };

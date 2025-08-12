@@ -27,6 +27,7 @@ const AdminDashboard = () => {
     clearQueueLoading,
     clearQueue,
     approveReflection,
+    clearItem,
     formatTimeElapsed 
   } = useSupabaseQueue();
   const { history: behaviorHistory, loading: historyLoading } = useBehaviorHistory();
@@ -85,7 +86,7 @@ const AdminDashboard = () => {
   // Clear a single student from the queue (stage-agnostic)
   const handleClearItem = async (id: string) => {
     try {
-      await approveReflection(id); // deletes request; stage-agnostic under RLS
+      await clearItem(id); // archive with tags and remove from queue
       toast({ title: 'Removed from queue.' });
     } catch (error) {
       console.error('Error removing item:', error);

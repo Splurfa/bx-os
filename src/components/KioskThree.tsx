@@ -274,34 +274,21 @@ const KioskThree = () => {
                   <h2 className="text-3xl font-bold text-foreground mb-3">Student Reflection Kiosk</h2>
                   {firstWaitingStudent ? (
                     <div className="space-y-4">
-                      <p className="text-lg text-muted-foreground">
-                        Hello, <span className="font-semibold text-foreground">{firstWaitingStudent.student.name}</span>
-                      </p>
-                 {hasTeacherFeedback ? (
-                   <div className="space-y-3">
-                     <p className="text-muted-foreground">
-                       Your teacher has reviewed your previous reflection and provided feedback.
-                     </p>
-                     <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-left">
-                       <p className="text-sm font-medium text-blue-900 mb-1">Teacher's Feedback:</p>
-                       <p className="text-sm text-blue-800">{hasTeacherFeedback}</p>
-                     </div>
-                     <p className="text-sm text-muted-foreground">
-                       Please complete your reflection again, keeping this feedback in mind.
-                     </p>
-                   </div>
-                 ) : (
-                   <p className="text-muted-foreground">
-                     You've been asked to complete a behavior reflection. Click below to begin.
-                   </p>
-                 )}
-                      <Button 
-                        onClick={() => setKioskState('password')}
-                        className="w-full bg-gradient-primary text-white shadow-button hover:shadow-elevated transition-all duration-200"
-                        size="lg"
-                      >
-                        Begin Reflection
-                      </Button>
+<div className="space-y-4">
+  <p className="text-lg text-muted-foreground">
+    Hello, <span className="font-semibold text-foreground">{firstWaitingStudent.student.name}</span>
+  </p>
+  <p className="text-muted-foreground">
+    You've been asked to complete a behavior reflection. Click below to begin.
+  </p>
+  <Button 
+    onClick={() => setKioskState('password')}
+    className="w-full bg-gradient-primary text-white shadow-button hover:shadow-elevated transition-all duration-200"
+    size="lg"
+  >
+    Begin Reflection
+  </Button>
+</div>
                     </div>
                   ) : (
                     <p className="text-muted-foreground">

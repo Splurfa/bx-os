@@ -1,0 +1,27 @@
+# Proposed Docs IA
+
+nav:
+  - Overview: README.md
+  - Quickstart: docs/quickstart.md
+  - Architecture:
+      - Frontend: docs/technical/FRONTEND.md
+      - Database: docs/technical/DATABASE.md
+  - Workflows:
+      - SRF Cycle: docs/workflows/srf.md
+      - Second Try Again SRF Cycle: docs/workflows/srf-second-cycle.md
+  - Admin Dashboard: docs/features/admin-dashboard.md
+  - Operations:
+      - Runbook: docs/operations/runbook.md
+      - Deployment: docs/setup/DEPLOYMENT.md
+  - Contributing: CONTRIBUTING.md
+  - Security: SECURITY.md
+  - Privacy: docs/policies/privacy.md
+  - Changelog: CHANGELOG.md
+  - Glossary: docs/glossary.md
+  - ADRs: docs/adr/
+
+redirects:
+  - from: docs/README.md
+    to: README.md
+  - from: docs/setup/INSTALLATION.md
+    to: docs/quickstart.md

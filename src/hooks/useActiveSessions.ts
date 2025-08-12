@@ -5,6 +5,7 @@ interface ActiveSession {
   id: string;
   user_id: string;
   device_type: string;
+  device_identifier?: string | null;
   location: string | null;
   login_time: string;
   last_activity: string;
@@ -51,16 +52,28 @@ export const useActiveSessions = () => {
           id: session.id,
           user_id: session.user_id,
           device_type: session.device_type,
+          device_identifier: (session as any).device_identifier || null,
           location: session.location,
           login_time: session.login_time,
           last_activity: session.last_activity,
           session_status: session.session_status,
           user_email: profile?.email || 'Unknown',
           user_name: profile?.full_name || 'Unknown User'
-        };
+        } as ActiveSession;
       });
 
-      setSessions(formattedSessions);
+      // Deduplicate by (user_id, device_identifier || device_type), keep most recent by last_activity
+      const map = new Map<string, ActiveSession>();
+      formattedSessions
+        .sort((a, b) => new Date(b.last_activity).getTime() - new Date(a.last_activity).getTime())
+        .forEach(s => {
+          const key = `${s.user_id}:${s.device_identifier || ''}:${s.device_type}`;
+          if (!map.has(key)) {
+            map.set(key, s);
+          }
+        });
+
+      setSessions(Array.from(map.values()));
     } catch (error) {
       console.error('Error fetching active sessions:', error);
       setSessions([]);

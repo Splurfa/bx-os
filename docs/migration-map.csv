@@ -1,0 +1,9 @@
+old_path,new_path,action,rationale
+README.md,README.md,keep,Primary entry point
+EZ_README.md,README.md,merge,Duplicate of root README
+docs/README.md,README.md,redirect,Consolidate entry points
+docs/setup/INSTALLATION.md,docs/quickstart.md,update,Modernize setup
+docs/setup/DEVELOPMENT.md,docs/quickstart.md,merge,Combine with Quickstart
+docs/setup/DEPLOYMENT.md,docs/setup/DEPLOYMENT.md,update,Verify steps
+docs/technical/FRONTEND.md,docs/technical/FRONTEND.md,update,Match current code
+docs/technical/DATABASE.md,docs/technical/DATABASE.md,update,Match current schema

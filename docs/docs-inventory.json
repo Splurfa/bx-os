@@ -1,0 +1,38 @@
+[
+  {
+    "path": "README.md",
+    "title": "Project Overview",
+    "type": "md",
+    "size": null,
+    "last_modified": null,
+    "authorship": null,
+    "inbound_refs": [],
+    "outbound_links": ["docs/technical/FRONTEND.md", "docs/setup/DEPLOYMENT.md"],
+    "in_nav": true,
+    "status": "keep"
+  },
+  {
+    "path": "docs/setup/INSTALLATION.md",
+    "title": "Installation",
+    "type": "md",
+    "size": null,
+    "last_modified": null,
+    "authorship": null,
+    "inbound_refs": ["README.md"],
+    "outbound_links": [],
+    "in_nav": false,
+    "status": "update"
+  },
+  {
+    "path": "docs/technical/FRONTEND.md",
+    "title": "Frontend Architecture",
+    "type": "md",
+    "size": null,
+    "last_modified": null,
+    "authorship": null,
+    "inbound_refs": ["README.md"],
+    "outbound_links": ["src/components"],
+    "in_nav": true,
+    "status": "update"
+  }
+]

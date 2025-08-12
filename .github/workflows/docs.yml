@@ -1,0 +1,37 @@
+name: Docs CI
+
+on:
+  push:
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+      - '**/*.md'
+  pull_request:
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+      - '**/*.md'
+
+jobs:
+  lint-and-linkcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Markdown lint
+        uses: avto-dev/markdown-lint@v1
+        with:
+          config: |
+            {
+              "default": true,
+              "MD013": false,
+              "MD033": false
+            }
+
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: --verbose --no-progress .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

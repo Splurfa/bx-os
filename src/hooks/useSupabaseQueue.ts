@@ -90,11 +90,9 @@ export const useSupabaseQueue = () => {
       
       console.log("🔄 Fetching queue data...");
       
-      // Get user role if not already cached
-      if (!userRole) {
-        const role = await getUserRole();
-        setUserRole(role);
-      }
+      // Always fetch current role to reflect any changes immediately
+      const currentRole = await getUserRole();
+      setUserRole(currentRole);
       
       // Build query with role-based filtering
       let query = supabase
@@ -105,8 +103,6 @@ export const useSupabaseQueue = () => {
           reflection:reflections(*)
         `);
       
-      // Apply role-based filtering
-      const currentRole = userRole || await getUserRole();
       if (currentRole === 'teacher') {
         // Teachers only see their own behavior requests
         query = query.eq('teacher_id', user.id);
@@ -125,16 +121,19 @@ export const useSupabaseQueue = () => {
       
       console.log("✅ Queue data fetched successfully:", data?.length || 0, "items");
       
-      // Transform data to match expected format
       const transformedData = data?.map((item: any) => {
-        // Normalize reflection: Supabase may return an array; we want a single latest entry
-        const normalizedReflection = Array.isArray(item.reflection)
-          ? item.reflection[0]
-          : item.reflection;
+        // Normalize reflection: Supabase may return an array; pick the latest by created_at
+        let latestReflection = null as any;
+        if (Array.isArray(item.reflection)) {
+          latestReflection = [...item.reflection]
+            .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0] || null;
+        } else if (item.reflection) {
+          latestReflection = item.reflection;
+        }
 
         return {
           ...item,
-          reflection: normalizedReflection,
+          reflection: latestReflection,
           position: 0, // Will be calculated below
           timestamp: new Date(item.created_at)
         };
@@ -448,7 +447,7 @@ export const useSupabaseQueue = () => {
     }
   };
 
-  // Request revision - FIXED: Reuses existing request with complete history preservation
+  // ... keep existing code (other functions)
   const requestRevision = async (behaviorRequestId: string, feedback: string) => {
     try {
       // CRITICAL: The reflection history trigger will automatically archive the current reflection
@@ -716,6 +715,75 @@ export const useSupabaseQueue = () => {
     }
   };
 
+  // Clear a single item from the queue and archive with status tags
+  const clearItem = async (behaviorRequestId: string) => {
+    try {
+      // Fetch full request with joins
+      const { data: br, error } = await supabase
+        .from('behavior_requests')
+        .select(`*, student:students(*), reflection:reflections(*)`)
+        .eq('id', behaviorRequestId)
+        .maybeSingle();
+      if (error) throw error;
+      if (!br) throw new Error('Behavior request not found');
+
+      // Determine latest reflection (if any)
+      let latestReflection: any = null;
+      if (Array.isArray(br.reflection)) {
+        latestReflection = [...br.reflection]
+          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0] || null;
+      } else if (br.reflection) {
+        latestReflection = br.reflection;
+      }
+
+      // Insert into behavior_history with tags for audit-only
+      const insertPayload: any = {
+        original_request_id: br.id,
+        student_id: br.student_id,
+        teacher_id: br.teacher_id,
+        student_name: br.student?.name || 'Unknown',
+        student_grade: br.student?.grade || null,
+        student_class_name: br.student?.class_name || null,
+        mood: br.mood,
+        behaviors: br.behaviors,
+        notes: br.notes || null,
+        urgent: br.urgent,
+        assigned_kiosk_id: br.assigned_kiosk_id || null,
+        reflection_id: latestReflection?.id || null,
+        question1: latestReflection?.question1 || null,
+        question2: latestReflection?.question2 || null,
+        question3: latestReflection?.question3 || null,
+        question4: latestReflection?.question4 || null,
+        teacher_feedback: latestReflection?.teacher_feedback || null,
+        queue_created_at: br.created_at,
+        queue_started_at: null,
+        time_in_queue_minutes: null,
+        queue_position: null,
+        intervention_outcome: 'cleared',
+        completion_status: 'cleared',
+        device_type: 'web',
+        device_location: null,
+      };
+
+      const { error: histError } = await supabase.from('behavior_history').insert([insertPayload]);
+      if (histError) throw histError;
+
+      // Delete the original request
+      const { error: deleteError } = await supabase
+        .from('behavior_requests')
+        .delete()
+        .eq('id', behaviorRequestId);
+      if (deleteError) throw deleteError;
+
+      // Reassign waiting students and refresh
+      await reassignWaitingStudents();
+      await fetchQueue(true);
+    } catch (err) {
+      console.error('Error clearing item:', err);
+      throw err;
+    }
+  };
+
   return {
     items,
     loading,
@@ -728,6 +796,7 @@ export const useSupabaseQueue = () => {
     getFirstWaitingStudentForKiosk,
     reassignStudents,
     clearQueue,
+    clearItem,
     formatTimeElapsed,
     updateStudentKioskStatus,
     assignWaitingStudentsToKiosk,
