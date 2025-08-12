@@ -77,7 +77,7 @@ const ReviewReflection = ({ item, onApprove, onRequestRevision, onBack }: Review
   };
 
   return (
-    <div className="h-full bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Sticky Header */}
       <div className="sticky top-0 z-20 flex items-center justify-between p-4 border-b border-border bg-background shadow-sm">
         <div className="flex items-center space-x-3">
@@ -102,7 +102,7 @@ const ReviewReflection = ({ item, onApprove, onRequestRevision, onBack }: Review
       </div>
 
       {/* Content Area with proper bottom spacing */}
-      <div className="flex-1 overflow-auto pb-20 px-4">
+      <div className="flex-1 overflow-auto pb-28 px-4">
         <div className="space-y-3 py-4">
           {questions.map((question, index) => {
             const answerKey = `question${index + 1}` as keyof typeof reflection;
@@ -137,7 +137,7 @@ const ReviewReflection = ({ item, onApprove, onRequestRevision, onBack }: Review
       </div>
 
       {/* Sticky Footer positioned at bottom */}
-      <div className="sticky bottom-0 z-10 bg-background border-t border-border shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 z-30 bg-background border-t border-border shadow-lg">
         <StickyFooter
           secondaryAction={{
             label: "Try Again",
