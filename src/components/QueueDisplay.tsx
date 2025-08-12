@@ -144,11 +144,11 @@ const QueueDisplay = React.memo(({
         return (
           <div
             key={item.id}
-            className={`flex items-center justify-between px-3 py-2 border-b border-border last:border-b-0 ${
+            className={`flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3 px-3 py-2 border-b border-border last:border-b-0 ${
               isActive ? 'bg-primary/5' : 'bg-background'
             }`}
           >
-            <div className="flex items-center space-x-3 flex-1">
+            <div className="flex items-start md:items-center gap-3 flex-1">
               <div className="flex-1">
                 <div className="flex items-center space-x-2">
                   <h3 className="text-sm font-medium text-foreground">{item.student?.name || 'Unknown Student'}</h3>
@@ -161,7 +161,7 @@ const QueueDisplay = React.memo(({
                     ))}
                   </div>
                 </div>
-                <div className="flex items-center space-x-3 text-xs text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                   <LiveTimer startTime={item.timestamp || new Date(item.created_at)} />
                   {/* Show kiosk assignment only for non-review students */}
                   {'assigned_kiosk_id' in item && item.assigned_kiosk_id && item.status !== 'review' && (
@@ -188,7 +188,7 @@ const QueueDisplay = React.memo(({
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2 shrink-0 self-end md:self-auto">
               {/* Show Review button for students with status 'review' */}
               {showReviewButtons && item.status === 'review' && (
                 <Button
