@@ -122,11 +122,11 @@ const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
                 className={`transition-all duration-200 ${
                   isUrgent 
                     ? "bg-queue-urgent/20 text-queue-urgent border-queue-urgent/30 hover:bg-queue-urgent/30" 
-                    : "hover:bg-muted/50"
+                    : "border border-queue-urgent/30 text-queue-urgent bg-transparent hover:bg-transparent hover:text-queue-urgent"
                 }`}
               >
                 <AlertTriangle className="icon-inline" />
-                {isUrgent && <span className="ml-1 text-xs font-medium">URGENT</span>}
+                <span className="ml-1 text-xs font-medium">URGENT</span>
               </Button>
               <Button variant="ghost" size="sm" onClick={handleClose}>
                 <X className="h-4 w-4" />
