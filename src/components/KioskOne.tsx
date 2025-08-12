@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { User, ArrowRight, CheckCircle, Loader2, Eye, EyeOff, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -57,9 +57,19 @@ const KioskOne = () => {
   const [countdown, setCountdown] = useState(10);
   
   const firstWaitingStudent = getFirstWaitingStudentForKiosk(KIOSK_ID);
-  const hasTeacherFeedback = firstWaitingStudent?.reflection?.teacher_feedback;
+const hasTeacherFeedback = firstWaitingStudent?.reflection?.teacher_feedback;
 
-  // Initialize kiosk on mount - ONLY when authenticated
+const updateKioskStudentRef = useRef(updateKioskStudent);
+
+// Debug: track identity changes to prove fix
+useEffect(() => {
+  if (updateKioskStudentRef.current !== updateKioskStudent) {
+    console.log('🔁 updateKioskStudent identity changed');
+    updateKioskStudentRef.current = updateKioskStudent;
+  }
+}, [updateKioskStudent]);
+
+// Initialize kiosk on mount - ONLY when authenticated
   useEffect(() => {
     if (kioskState === 'setup' && !authLoading) {
       const setupKiosk = async () => {
@@ -116,13 +126,13 @@ const KioskOne = () => {
       setCompletedStudentData(null);
       
       // Clear kiosk assignment
-      updateKioskStudent(KIOSK_ID, undefined, undefined);
+      updateKioskStudentRef.current(KIOSK_ID, undefined, undefined);
     } else if (firstWaitingStudent && kioskState === 'welcome') {
       console.log('👤 Student assigned to kiosk:', firstWaitingStudent.student.name);
       // Only update kiosk assignment, keep status as 'waiting' until user interacts
-      updateKioskStudent(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
+      updateKioskStudentRef.current(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
     }
-  }, [firstWaitingStudent?.id, kioskState, updateKioskStudent]);
+  }, [firstWaitingStudent?.id, kioskState]);
 
   // Timer for reflection process
   useEffect(() => {
@@ -153,7 +163,7 @@ const KioskOne = () => {
         setCountdown(10);
         
         // Clear kiosk assignment to allow next student
-        updateKioskStudent(KIOSK_ID, undefined, undefined);
+        updateKioskStudentRef.current(KIOSK_ID, undefined, undefined);
       }, 10000);
       
       return () => {
@@ -161,7 +171,7 @@ const KioskOne = () => {
         clearTimeout(resetTimer);
       };
     }
-  }, [kioskState, updateKioskStudent]);
+  }, [kioskState]);
 
   // Countdown timer effect
   useEffect(() => {
