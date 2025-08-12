@@ -174,9 +174,9 @@ const QueueDisplay = React.memo(({
               </div>
             </div>
 
-            <div className="flex w-full md:w-auto flex-col gap-1">
+            <div className="flex w-full md:w-auto flex-col gap-0.5">
               {/* Row 1: left = status/review, right = clear */}
-              <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center justify-end gap-1">
                 <div className="flex items-center gap-2">
                   {showReviewButtons && item.status === 'review' ? (
                     <Button
@@ -191,25 +191,25 @@ const QueueDisplay = React.memo(({
                   ) : (
                     <>
                       {item.status === 'review' && !showReviewButtons ? (
-                        <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200 text-xs">
+                        <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200 text-xs px-2 py-0.5">
                           Pending Review
                         </Badge>
                       ) : (
                         <>
                           {'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
-                            <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs">
+                            <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs px-2 py-0.5">
                               In Progress
                             </Badge>
                           ) : 'kiosk_status' in item && item.kiosk_status === 'ready' ? (
-                            <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 text-xs px-2 py-0.5">
                               At Kiosk
                             </Badge>
                           ) : item.assigned_kiosk_id ? (
-                            <Badge variant="outline" className="text-orange-600 border-orange-200 text-xs">
+                            <Badge variant="outline" className="text-orange-600 border-orange-200 text-xs px-2 py-0.5">
                               Assigned
                             </Badge>
                           ) : (
-                            <Badge variant="outline" className="text-muted-foreground text-xs">
+                            <Badge variant="outline" className="text-muted-foreground text-xs px-2 py-0.5">
                               Waiting
                             </Badge>
                           )}
@@ -258,7 +258,7 @@ const QueueDisplay = React.memo(({
                 const fromEmail = !fromLast && !fromFull && email ? email.split('@')[0].split('.').slice(-1)[0] : undefined;
                 const derived = (fromLast as string) || (fromFull as string) || (fromEmail as string) || "";
                 return derived ? (
-                  <Badge variant="outline" className="text-xs self-start">
+                  <Badge variant="outline" className="text-xs self-start px-2 py-0.5">
                     {derived}
                   </Badge>
                 ) : null;
