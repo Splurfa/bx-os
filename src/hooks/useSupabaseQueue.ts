@@ -30,7 +30,10 @@ export interface BehaviorRequest {
   reflection?: Reflection;
   position?: number;
   timestamp?: Date;
+  teacher_full_name?: string;
+  teacher_email?: string;
 }
+
 
 export interface Reflection {
   id: string;

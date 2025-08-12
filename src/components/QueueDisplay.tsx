@@ -6,6 +6,17 @@ import { Badge } from "@/components/ui/badge";
 import LiveTimer from "./LiveTimer";
 import { BehaviorRequest } from "@/hooks/useSupabaseQueue";
 import { MockBehaviorRequest } from "@/hooks/useMockData";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 interface QueueDisplayProps {
   items: (BehaviorRequest | MockBehaviorRequest)[];
@@ -17,7 +28,9 @@ interface QueueDisplayProps {
   showClearButton?: boolean;
   showReviewButtons?: boolean;
   onClearItem?: (id: string) => void;
+  showTeacherLastNameChip?: boolean;
 }
+
 
 const getBehaviorColor = (behavior: string) => {
   // Handle both display labels and stored IDs
@@ -49,7 +62,8 @@ const QueueDisplay = React.memo(({
   queueLoading = false, 
   showClearButton = false,
   showReviewButtons = true,
-  onClearItem
+  onClearItem,
+  showTeacherLastNameChip = false
 }: QueueDisplayProps) => {
   // Filter to only show active items - waiting students + review students + revision students
   const sortedItems = useMemo(() => {
@@ -95,16 +109,33 @@ const QueueDisplay = React.memo(({
       {showClearButton && onClearQueue && (
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">Active Queue</h3>
-          <Button 
-            variant="destructive" 
-            size="sm"
-            onClick={onClearQueue}
-            disabled={queueLoading || clearQueueLoading}
-          >
-            {clearQueueLoading ? 'Clearing...' : 'Clear Queue'}
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button 
+                variant="destructive" 
+                size="sm"
+                className="text-xs"
+                disabled={queueLoading || clearQueueLoading}
+              >
+                {clearQueueLoading ? 'Clearing...' : 'Clear Queue'}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Clear entire queue?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will remove all active items from the queue. This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={onClearQueue}>Confirm</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       )}
+
       
       <div className="space-y-1">
         {sortedItems.map((item) => {
@@ -137,6 +168,18 @@ const QueueDisplay = React.memo(({
                     <Badge variant="outline" className="text-xs">
                       <Monitor className="h-3 w-3 mr-1" />
                       Kiosk {item.assigned_kiosk_id}
+                    </Badge>
+                  )}
+                  {/* Teacher last name chip (admin view only) */}
+                  {showTeacherLastNameChip && (('teacher_full_name' in (item as any) || 'teacher_email' in (item as any))) && (
+                    <Badge variant="outline" className="text-xs">
+                      {(() => {
+                        const full = (item as any).teacher_full_name as string | undefined;
+                        const email = (item as any).teacher_email as string | undefined;
+                        const fromFull = full ? full.trim().split(/\s+/).slice(-1)[0] : undefined;
+                        const fromEmail = email ? email.split('@')[0].split('.').slice(-1)[0] : undefined;
+                        return fromFull || fromEmail || '—';
+                      })()}
                     </Badge>
                   )}
                 </div>
