@@ -170,91 +170,99 @@ const QueueDisplay = React.memo(({
                       Kiosk {item.assigned_kiosk_id}
                     </Badge>
                   )}
-                  {/* Teacher last name chip (admin view only) */}
-                  {showTeacherLastNameChip && (('teacher_full_name' in (item as any) || 'teacher_email' in (item as any))) && (
-                    <Badge variant="outline" className="text-xs">
-                      {(() => {
-                        const last = (item as any).teacher_last_name as string | undefined;
-                        if (last && last.trim()) return last.trim();
-                        const full = (item as any).teacher_full_name as string | undefined;
-                        const email = (item as any).teacher_email as string | undefined;
-                        const fromFull = full ? full.trim().split(/\s+/).slice(-1)[0] : undefined;
-                        const fromEmail = email ? email.split('@')[0].split('.').slice(-1)[0] : undefined;
-                        return fromFull || fromEmail || '—';
-                      })()}
-                    </Badge>
-                  )}
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0 self-end md:self-auto">
-              {/* Show Review button for students with status 'review' */}
-              {showReviewButtons && item.status === 'review' && (
-                <Button
-                  size="sm"
-                  variant="default"
-                  onClick={() => onSelectReflection(item)}
-                  className="text-xs"
-                >
-                  <CheckCircle className="h-3 w-3 mr-1" />
-                  Review
-                </Button>
-              )}
-
-              {/* Status badges */}
-              {item.status === 'review' && !showReviewButtons ? (
-                <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200 text-xs">
-                  Pending Review
-                </Badge>
-              ) : item.status !== 'review' && (
-                'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
-                  <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs">
-                    In Progress
-                  </Badge>
-                ) : 'kiosk_status' in item && item.kiosk_status === 'ready' ? (
-                  <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
-                    At Kiosk
-                  </Badge>
-                ) : item.assigned_kiosk_id ? (
-                  <Badge variant="outline" className="text-orange-600 border-orange-200 text-xs">
-                    Assigned
-                  </Badge>
-                ) : (
-                  <Badge variant="outline" className="text-muted-foreground text-xs">
-                    Waiting
-                  </Badge>
-                )
-              )}
-
-              {/* Per-student clear (moved far right) */}
-              {onClearItem && (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
+            <div className="flex w-full md:w-auto flex-col gap-1">
+              {/* Row 1: left = status/review, right = clear */}
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  {showReviewButtons && item.status === 'review' ? (
                     <Button
-                      size="icon"
-                      variant="ghost"
-                      className="rounded-full"
-                      aria-label="Remove from queue"
-                      title="Remove from queue"
+                      size="sm"
+                      variant="default"
+                      onClick={() => onSelectReflection(item)}
+                      className="text-xs"
                     >
-                      <XCircle className="h-4 w-4 text-destructive" />
+                      <CheckCircle className="h-3 w-3 mr-1" />
+                      Review
                     </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Remove this student?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This will remove the student from the active queue. This action cannot be undone.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => onClearItem(item.id)}>Confirm</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
+                  ) : (
+                    <>
+                      {item.status === 'review' && !showReviewButtons ? (
+                        <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200 text-xs">
+                          Pending Review
+                        </Badge>
+                      ) : (
+                        <>
+                          {'kiosk_status' in item && item.kiosk_status === 'in_progress' ? (
+                            <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs">
+                              In Progress
+                            </Badge>
+                          ) : 'kiosk_status' in item && item.kiosk_status === 'ready' ? (
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
+                              At Kiosk
+                            </Badge>
+                          ) : item.assigned_kiosk_id ? (
+                            <Badge variant="outline" className="text-orange-600 border-orange-200 text-xs">
+                              Assigned
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-muted-foreground text-xs">
+                              Waiting
+                            </Badge>
+                          )}
+                        </>
+                      )}
+                    </>
+                  )}
+                </div>
+
+                {onClearItem && (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="rounded-full"
+                        aria-label="Remove from queue"
+                        title="Remove from queue"
+                      >
+                        <XCircle className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Remove this student?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This will remove the student from the active queue. This action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => onClearItem(item.id)}>Confirm</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
+              </div>
+
+              {/* Row 2: teacher last name chip (hidden if missing) */}
+              {showTeacherLastNameChip && (() => {
+                const last = (item as any).teacher_last_name as string | undefined;
+                const full = (item as any).teacher_full_name as string | undefined;
+                const email = (item as any).teacher_email as string | undefined;
+                const fromLast = last && last.trim();
+                const fromFull = !fromLast && full ? full.trim().split(/\s+/).slice(-1)[0] : undefined;
+                const fromEmail = !fromLast && !fromFull && email ? email.split('@')[0].split('.').slice(-1)[0] : undefined;
+                const derived = (fromLast as string) || (fromFull as string) || (fromEmail as string) || "";
+                return derived ? (
+                  <Badge variant="outline" className="text-xs self-start">
+                    {derived}
+                  </Badge>
+                ) : null;
+              })()}
             </div>
           </div>
         );
