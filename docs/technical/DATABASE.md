@@ -151,6 +151,7 @@ User profile information linked to Supabase Auth users.
 - Users can view their own profile
 - Authenticated users can view public profiles
 - Users can update their own profile
+- Admins can update any profile
 
 ### `students`
 

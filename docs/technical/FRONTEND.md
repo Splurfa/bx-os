@@ -55,10 +55,10 @@ src/
 
 **AdminDashboard.tsx**
 - Unified kiosk management interface
-- Real-time monitoring of all system components
+- Kiosk cards show only activation toggle and "Activated" time
 - Queue management and reflection review
 - User management interface
-- Session monitoring
+- Session monitoring (Location column removed)
 - Mobile-responsive design with tabs and collapsible sections
 
 **TeacherDashboard.tsx**

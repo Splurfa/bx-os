@@ -80,7 +80,7 @@ export const SessionMonitor = () => {
                 </TableHead>
                 {!isMobile && <TableHead>Login Time</TableHead>}
                 {!isMobile && <TableHead>Last Activity</TableHead>}
-                {!isMobile && <TableHead>Location</TableHead>}
+                
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -122,13 +122,6 @@ export const SessionMonitor = () => {
                   {!isMobile && (
                     <TableCell className="text-sm">
                       {formatDistanceToNow(new Date(session.last_activity), { addSuffix: true })}
-                    </TableCell>
-                  )}
-                  {!isMobile && (
-                    <TableCell>
-                      <span className="text-sm text-muted-foreground">
-                        {session.location || 'Unknown'}
-                      </span>
                     </TableCell>
                   )}
                 </TableRow>

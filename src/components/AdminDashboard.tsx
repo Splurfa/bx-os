@@ -156,42 +156,13 @@ const AdminDashboard = () => {
                           />
                         </div>
                         
-                        <div className={`space-y-${isMobile ? '1' : '2'}`}>
+                        <div>
                           <div className="flex items-center justify-between">
-                            <span className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>Status</span>
-                            <Badge variant={kiosk.isActive ? "default" : "secondary"} className={isMobile ? "text-xs px-1.5 py-0.5" : ""}>
-                              {kiosk.isActive ? (
-                                kiosk.currentStudentId ? "In Use" : "Active"
-                              ) : "Inactive"}
-                            </Badge>
+                            <span className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>Activated</span>
+                            <span className={`${isMobile ? 'text-xs' : 'text-sm'}`}>
+                              {kiosk.activatedAt ? new Date(kiosk.activatedAt).toLocaleTimeString() : '—'}
+                            </span>
                           </div>
-                          
-                          {kiosk.location && !isMobile && (
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm text-muted-foreground">Location</span>
-                              <span className="text-sm">{kiosk.location}</span>
-                            </div>
-                          )}
-                          
-                          {kiosk.currentStudentId && (
-                            <div className="flex items-center justify-between">
-                              <span className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
-                                {isMobile ? 'Student' : 'Current Student'}
-                              </span>
-                              <Badge variant="outline" className={`${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs'}`}>
-                                {isMobile ? 'Active' : 'Active Session'}
-                              </Badge>
-                            </div>
-                          )}
-                          
-                          {kiosk.isActive && kiosk.activatedAt && !isMobile && (
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm text-muted-foreground">Activated</span>
-                              <span className="text-xs">
-                                {new Date(kiosk.activatedAt).toLocaleTimeString()}
-                              </span>
-                            </div>
-                          )}
                         </div>
                       </CardContent>
                     </Card>
