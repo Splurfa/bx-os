@@ -174,7 +174,7 @@ const QueueDisplay = React.memo(({
               </div>
             </div>
 
-            <div className="flex w-full md:w-auto flex-col gap-0.5">
+            <div className="flex w-full md:w-auto flex-col gap-0.5 items-end">
               {/* Row 1: left = status/review, right = clear */}
               <div className="flex items-center justify-end gap-1">
                 <div className="flex items-center gap-2">
@@ -258,7 +258,7 @@ const QueueDisplay = React.memo(({
                 const fromEmail = !fromLast && !fromFull && email ? email.split('@')[0].split('.').slice(-1)[0] : undefined;
                 const derived = (fromLast as string) || (fromFull as string) || (fromEmail as string) || "";
                 return derived ? (
-                  <Badge variant="outline" className="text-xs self-start px-2 py-0.5">
+                  <Badge variant="outline" className="text-xs self-end px-2 py-0.5">
                     {derived}
                   </Badge>
                 ) : null;
