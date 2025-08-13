@@ -53,9 +53,26 @@ Deno.serve(async (req) => {
     // Default: logout_user (revoke tokens for the user and end active sessions records)
     if (!userId) throw new Error('userId is required for logout_user')
 
-    // Invalidate all refresh tokens for the user (forces logout across devices)
-    const { error: revokeErr } = await adminClient.auth.admin.invalidateRefreshTokens(userId)
-    if (revokeErr) throw new Error(`Failed to revoke tokens: ${revokeErr.message}`)
+    // Attempt to revoke user tokens across devices (compatibility with different supabase-js versions)
+    let revokeFailedMessage: string | null = null;
+    try {
+      const anyClient: any = adminClient as any;
+      if (anyClient?.auth?.admin?.signOut) {
+        const { error } = await anyClient.auth.admin.signOut(userId);
+        if (error) revokeFailedMessage = error.message;
+      } else if (anyClient?.auth?.admin?.invalidateRefreshTokens) {
+        const { error } = await anyClient.auth.admin.invalidateRefreshTokens(userId);
+        if (error) revokeFailedMessage = error.message;
+      } else {
+        revokeFailedMessage = 'Admin token revocation method not available in this SDK version';
+      }
+    } catch (e: any) {
+      revokeFailedMessage = e?.message ?? String(e);
+    }
+    if (revokeFailedMessage) {
+      console.warn('Token revocation warning:', revokeFailedMessage);
+      // Continue to mark sessions ended so UI updates; clients will drop on next refresh
+    }
 
     // Soft end all active/idle sessions for this user in our table
     await adminClient

@@ -4,7 +4,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Monitor, Smartphone, Tablet, LogOut } from 'lucide-react';
+import { Loader2, Monitor, Smartphone, Tablet } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
@@ -163,8 +163,8 @@ export const SessionMonitor = () => {
                           onClick={() => handleForceLogout(session)}
                           disabled={!!busy[session.id]}
                         >
-                          <LogOut className="h-4 w-4" />
-                          <span className="ml-1">{busy[session.id] ? 'Logging out...' : 'Force logout'}</span>
+                          
+                          {busy[session.id] ? 'Logging out...' : 'Logout'}
                         </Button>
                       ) : (
                         <span className="text-muted-foreground">—</span>
