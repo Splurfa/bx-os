@@ -1,10 +1,15 @@
+import React, { useState } from 'react';
 import { useActiveSessions } from '@/hooks/useActiveSessions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Monitor, Smartphone, Tablet } from 'lucide-react';
+import { Loader2, Monitor, Smartphone, Tablet, LogOut } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
+import { useProfile } from '@/hooks/useProfile';
+import { supabase } from '@/integrations/supabase/client';
 
 const getDeviceIcon = (deviceType: string) => {
   switch (deviceType.toLowerCase()) {
@@ -29,8 +34,33 @@ const getStatusColor = (status: string) => {
 };
 
 export const SessionMonitor = () => {
-  const { sessions, loading } = useActiveSessions();
+  const { sessions, loading, refetch } = useActiveSessions();
   const isMobile = useIsMobile();
+  const { profile } = useProfile();
+  const isAdmin = profile?.role === 'admin';
+  const { toast } = useToast();
+  const [busy, setBusy] = useState<Record<string, boolean>>({});
+
+  const handleForceLogout = async (s: any) => {
+    if (!isAdmin) return;
+    const proceed = window.confirm(`Force logout ${s.user_name || s.user_email}?`);
+    if (!proceed) return;
+    try {
+      setBusy((b) => ({ ...b, [s.id]: true }));
+      const { data, error } = await supabase.functions.invoke('force-logout', {
+        body: { action: 'logout_user', userId: s.user_id }
+      });
+      if (error || (data && data.success === false)) {
+        throw new Error(error?.message || data?.error || 'Failed to force logout');
+      }
+      toast({ title: 'User logged out', description: `${s.user_name || s.user_email} has been logged out.` });
+      await refetch?.();
+    } catch (e: any) {
+      toast({ title: 'Logout failed', description: e?.message || 'Unable to logout user', variant: 'destructive' as any });
+    } finally {
+      setBusy((b) => ({ ...b, [s.id]: false }));
+    }
+  };
 
   if (loading) {
     return (
@@ -80,7 +110,7 @@ export const SessionMonitor = () => {
                 </TableHead>
                 {!isMobile && <TableHead>Login Time</TableHead>}
                 {!isMobile && <TableHead>Last Activity</TableHead>}
-                
+                {(!isMobile && isAdmin) && <TableHead>Actions</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -122,6 +152,23 @@ export const SessionMonitor = () => {
                   {!isMobile && (
                     <TableCell className="text-sm">
                       {formatDistanceToNow(new Date(session.last_activity), { addSuffix: true })}
+                    </TableCell>
+                  )}
+                  {(!isMobile && isAdmin) && (
+                    <TableCell className="text-sm">
+                      {session.device_type?.toLowerCase() === 'teacher' && ['active','idle'].includes(String(session.session_status).toLowerCase()) ? (
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleForceLogout(session)}
+                          disabled={!!busy[session.id]}
+                        >
+                          <LogOut className="h-4 w-4" />
+                          <span className="ml-1">{busy[session.id] ? 'Logging out...' : 'Force logout'}</span>
+                        </Button>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
                     </TableCell>
                   )}
                 </TableRow>
