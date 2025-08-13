@@ -3,36 +3,39 @@
     "path": "README.md",
     "title": "Project Overview",
     "type": "md",
-    "size": null,
-    "last_modified": null,
-    "authorship": null,
-    "inbound_refs": [],
-    "outbound_links": ["docs/technical/FRONTEND.md", "docs/setup/DEPLOYMENT.md"],
     "in_nav": true,
-    "status": "keep"
+    "status": "keep",
+    "outbound_links": [
+      "docs/technical/FRONTEND.md",
+      "docs/setup/DEPLOYMENT.md"
+    ]
   },
   {
-    "path": "docs/setup/INSTALLATION.md",
-    "title": "Installation",
+    "path": "docs/quickstart.md",
+    "title": "Quickstart",
     "type": "md",
-    "size": null,
-    "last_modified": null,
-    "authorship": null,
-    "inbound_refs": ["README.md"],
-    "outbound_links": [],
-    "in_nav": false,
-    "status": "update"
+    "in_nav": true,
+    "status": "keep"
   },
   {
     "path": "docs/technical/FRONTEND.md",
     "title": "Frontend Architecture",
     "type": "md",
-    "size": null,
-    "last_modified": null,
-    "authorship": null,
-    "inbound_refs": ["README.md"],
-    "outbound_links": ["src/components"],
     "in_nav": true,
-    "status": "update"
+    "status": "keep"
+  },
+  {
+    "path": "docs/technical/DATABASE.md",
+    "title": "Database",
+    "type": "md",
+    "in_nav": true,
+    "status": "keep"
+  },
+  {
+    "path": "docs/setup/DEPLOYMENT.md",
+    "title": "Deployment",
+    "type": "md",
+    "in_nav": true,
+    "status": "keep"
   }
 ]

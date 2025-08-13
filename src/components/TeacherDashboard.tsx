@@ -90,6 +90,7 @@ const TeacherDashboard = () => {
               onSelectReflection={handleSelectReflection}
               formatTimeElapsed={formatTimeElapsed}
               showReviewButtons={true}
+              layout="teacher"
             />
           </div>
         ) : (

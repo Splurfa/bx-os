@@ -185,6 +185,7 @@ const AdminDashboard = () => {
                   showReviewButtons={false}
                   onClearItem={handleClearItem}
                   showTeacherLastNameChip={true}
+                  layout="admin"
                 />
               </CardContent>
             </Card>

@@ -11,27 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useProfile } from "@/hooks/useProfile";
 
 const AppHeader = () => {
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
 
-  const getDisplayName = () => {
-    if (!user) return 'Loading...';
-    
-    if (user.user_metadata?.first_name || user.user_metadata?.last_name) {
-      return `${user.user_metadata?.first_name || ''} ${user.user_metadata?.last_name || ''}`.trim();
-    }
-    
-    return user.email?.split('@')[0] || 'User';
-  };
-
-  const getTeacherDisplayInfo = () => {
-    if (user?.email === 'admin@school.edu') {
-      return 'Admin Dashboard';
-    }
-    return 'Teacher Dashboard';
-  };
+  const { getDisplayName, getTeacherDisplayInfo, profile } = useProfile();
 
   const handleSignOut = async () => {
     await signOut();
@@ -75,7 +61,7 @@ const AppHeader = () => {
                   {user?.email}
                 </p>
                 <p className="text-xs leading-none text-muted-foreground capitalize">
-                  {user?.user_metadata?.role || 'teacher'}
+                  {profile?.role || user?.user_metadata?.role || 'teacher'}
                 </p>
               </div>
             </DropdownMenuLabel>

@@ -1,4 +1,4 @@
-# Proposed Docs IA
+# Docs IA
 
 nav:
   - Overview: README.md
@@ -6,19 +6,15 @@ nav:
   - Architecture:
       - Frontend: docs/technical/FRONTEND.md
       - Database: docs/technical/DATABASE.md
+  - Features:
+      - Admin Dashboard: docs/features/ADMIN_DASHBOARD.md
   - Workflows:
-      - SRF Cycle: docs/workflows/srf.md
-      - Second Try Again SRF Cycle: docs/workflows/srf-second-cycle.md
-  - Admin Dashboard: docs/features/admin-dashboard.md
+      - SRF Second Cycle: docs/workflows/srf-second-cycle.md
   - Operations:
-      - Runbook: docs/operations/runbook.md
       - Deployment: docs/setup/DEPLOYMENT.md
   - Contributing: CONTRIBUTING.md
   - Security: SECURITY.md
-  - Privacy: docs/policies/privacy.md
   - Changelog: CHANGELOG.md
-  - Glossary: docs/glossary.md
-  - ADRs: docs/adr/
 
 redirects:
   - from: docs/README.md
