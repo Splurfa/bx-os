@@ -140,22 +140,51 @@ function dispatch(action: Action) {
 type Toast = Omit<ToasterToast, "id">
 
 function toast({ ...props }: Toast) {
-  // Toasts disabled globally for QA/testing
-  const dismiss = () => {}
-  const update = (_props: ToasterToast) => {}
+  const id = genId()
+
+  const dismiss = () => {
+    dispatch({ type: "DISMISS_TOAST", toastId: id })
+  }
+
+  const update = (props: ToasterToast) =>
+    dispatch({ type: "UPDATE_TOAST", toast: { ...props, id } })
+
+  dispatch({
+    type: "ADD_TOAST",
+    toast: {
+      ...props,
+      id,
+      open: true,
+    },
+  })
+
+  // Auto-dismiss after delay
+  setTimeout(() => {
+    dismiss()
+  }, TOAST_REMOVE_DELAY)
+
   return {
-    id: "noop",
+    id,
     dismiss,
     update,
   }
 }
 
 function useToast() {
-  // Return a no-op toast API while disabled
+  const [state, setState] = React.useState<State>(memoryState)
+
+  React.useEffect(() => {
+    listeners.push(setState)
+    return () => {
+      const index = listeners.indexOf(setState)
+      if (index > -1) listeners.splice(index, 1)
+    }
+  }, [])
+
   return {
-    toasts: [],
+    ...state,
     toast,
-    dismiss: (_toastId?: string) => {},
+    dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
   }
 }
 

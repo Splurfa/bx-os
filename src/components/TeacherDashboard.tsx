@@ -37,7 +37,7 @@ const TeacherDashboard = () => {
     await addToQueue({
       studentName: data.student.name,
       behaviors: data.behaviors,
-      mood: data.mood,
+      mood: String(data.mood),
       urgent: data.urgent,
       notes: data.notes
     });

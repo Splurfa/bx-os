@@ -14,7 +14,7 @@ import KioskThreePage from "./pages/KioskThreePage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 
 import NotFound from "./pages/NotFound";
-
+import { Toaster } from "@/components/ui/toaster";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -50,6 +50,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
+          <Toaster />
         </TooltipProvider>
       </KioskProvider>
     </AuthProvider>
