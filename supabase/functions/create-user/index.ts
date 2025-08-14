@@ -73,16 +73,13 @@ Deno.serve(async (req) => {
       )
     } else {
       // Default to create user
-      const { email, password, fullName, role } = requestData
+      const { email, password, firstName, lastName, role } = requestData
 
-      if (!email || !password || !fullName || !role) {
-        throw new Error('Missing required fields: email, password, fullName, role')
+      if (!email || !password || !firstName || !lastName || !role) {
+        throw new Error('Missing required fields: email, password, firstName, lastName, role')
       }
 
-      // Parse fullName into first and last name
-      const nameParts = fullName.trim().split(/\s+/)
-      const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(' ') : nameParts[0] || ''
-      const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : ''
+      const fullName = `${firstName} ${lastName}`.trim()
 
       // Create the user
       const { data: newUser, error: createError } = await supabase.auth.admin.createUser({

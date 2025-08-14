@@ -35,7 +35,8 @@ export default function UserManagement() {
   const [newUser, setNewUser] = useState({
     email: "",
     password: "",
-    fullName: "",
+    firstName: "",
+    lastName: "",
     role: "teacher"
   });
 
@@ -59,7 +60,7 @@ export default function UserManagement() {
   };
 
   const createUser = async () => {
-    if (!newUser.email || !newUser.password || !newUser.fullName) {
+    if (!newUser.email || !newUser.password || !newUser.firstName || !newUser.lastName) {
       toast({
         description: "Missing required fields",
         variant: "destructive",
@@ -73,7 +74,8 @@ export default function UserManagement() {
         body: {
           email: newUser.email,
           password: newUser.password,
-          fullName: newUser.fullName,
+          firstName: newUser.firstName,
+          lastName: newUser.lastName,
           role: newUser.role
         }
       });
@@ -81,7 +83,7 @@ export default function UserManagement() {
       if (error) throw error;
 
       if (data.success) {
-        setNewUser({ email: "", password: "", fullName: "", role: "teacher" });
+        setNewUser({ email: "", password: "", firstName: "", lastName: "", role: "teacher" });
         setIsCreateModalOpen(false);
         fetchUsers();
       } else {
@@ -183,14 +185,25 @@ export default function UserManagement() {
               <DialogTitle>Create New User</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <div>
-                <Label htmlFor="fullName">Full Name</Label>
-                <Input
-                  id="fullName"
-                  value={newUser.fullName}
-                  onChange={(e) => setNewUser(prev => ({ ...prev, fullName: e.target.value }))}
-                  placeholder="Enter full name"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input
+                    id="firstName"
+                    value={newUser.firstName}
+                    onChange={(e) => setNewUser(prev => ({ ...prev, firstName: e.target.value }))}
+                    placeholder="Enter first name"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input
+                    id="lastName"
+                    value={newUser.lastName}
+                    onChange={(e) => setNewUser(prev => ({ ...prev, lastName: e.target.value }))}
+                    placeholder="Enter last name"
+                  />
+                </div>
               </div>
               
               <div>

@@ -268,18 +268,23 @@ const QueueDisplay = React.memo(({
 
             {/* Row 2, Col 2: Teacher last name chip (hidden if missing) */}
             {showTeacherLastNameChip && (() => {
-              const last = (item as any).teacher_last_name as string | undefined;
-              const full = (item as any).teacher_full_name as string | undefined;
-              const email = (item as any).teacher_email as string | undefined;
-              const fromLast = last && last.trim();
-              const fromFull = !fromLast && full ? full.trim().split(/\s+/).slice(-1)[0] : undefined;
-              const fromEmail = !fromLast && !fromFull && email ? email.split('@')[0].split('.').slice(-1)[0] : undefined;
-              const derived = (fromLast as string) || (fromFull as string) || (fromEmail as string) || "";
-              return derived ? (
-                <Badge variant="outline" className="text-xs px-1.5 py-0.5 justify-self-end whitespace-nowrap">
-                  {derived}
-                </Badge>
-              ) : null;
+              // For admin view, we need to derive teacher info from behavior request
+              // This would typically come from a JOIN with profiles table
+              const teacherData = (item as any).teacher_profile;
+              
+              if (teacherData) {
+                const lastName = teacherData.last_name || 
+                  (teacherData.full_name ? teacherData.full_name.trim().split(/\s+/).slice(-1)[0] : '') ||
+                  (teacherData.email ? teacherData.email.split('@')[0].split('.').slice(-1)[0] : '');
+                
+                return lastName ? (
+                  <Badge variant="outline" className="text-xs px-1.5 py-0.5 justify-self-end whitespace-nowrap">
+                    {lastName}
+                  </Badge>
+                ) : null;
+              }
+              
+              return null;
             })()}
           </div>
         );

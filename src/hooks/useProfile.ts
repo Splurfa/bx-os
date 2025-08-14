@@ -42,31 +42,38 @@ export const useProfile = () => {
     try {
       setLoading(true);
       
-      // Create profile from auth user data with role detection
-      const profile: ProfileWithTeacher = {
-        id: user.id,
-        email: user.email || '',
-        first_name: user.user_metadata?.first_name,
-        last_name: user.user_metadata?.last_name,
-        role: user.email === 'admin@school.edu' ? 'admin' : 'teacher',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
+      // Fetch actual profile data from database
+      const { data: profileData, error } = await supabase
+        .from('profiles')
+        .select('id, email, full_name, first_name, last_name, role, created_at, updated_at')
+        .eq('id', user.id)
+        .single();
 
-      // If teacher, try to add teacher info
-      if (profile.role === 'teacher') {
-        // For demo purposes, add mock teacher data based on email
-        if (user.email === 'sarah.johnson@school.edu') {
-          profile.teacher = {
-            id: user.id,
-            school_name: 'Lincoln Elementary',
-            classroom: 'Room 101',
-            grade_level: '3rd Grade',
-            subject: 'Mathematics',
-            created_at: new Date().toISOString()
-          };
-        }
+      if (error) {
+        console.error('Error fetching profile:', error);
+        // Fallback to user metadata if profile doesn't exist
+        const profile: ProfileWithTeacher = {
+          id: user.id,
+          email: user.email || '',
+          first_name: user.user_metadata?.first_name,
+          last_name: user.user_metadata?.last_name,
+          role: user.user_metadata?.role || 'teacher',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+        setProfile(profile);
+        return;
       }
+
+      const profile: ProfileWithTeacher = {
+        id: profileData.id,
+        email: profileData.email || '',
+        first_name: profileData.first_name,
+        last_name: profileData.last_name,
+        role: profileData.role as 'teacher' | 'admin',
+        created_at: profileData.created_at,
+        updated_at: profileData.updated_at
+      };
 
       setProfile(profile);
     } catch (error) {
@@ -77,7 +84,7 @@ export const useProfile = () => {
         email: user.email || '',
         first_name: user.user_metadata?.first_name,
         last_name: user.user_metadata?.last_name,
-        role: user.email === 'admin@school.edu' ? 'admin' : 'teacher',
+        role: user.user_metadata?.role || 'teacher',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
