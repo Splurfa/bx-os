@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.12 (cd3cf9e)"
@@ -455,7 +455,7 @@ export type Database = {
         Returns: undefined
       }
       admin_update_user_role: {
-        Args: { p_target_user_id: string; p_new_role: string }
+        Args: { p_new_role: string; p_target_user_id: string }
         Returns: undefined
       }
       assign_waiting_students_to_kiosk: {
@@ -468,12 +468,12 @@ export type Database = {
       }
       create_user_session: {
         Args: {
-          p_user_id: string
-          p_device_type: string
-          p_location?: string
-          p_kiosk_id?: number
           p_device_identifier?: string
+          p_device_type: string
+          p_kiosk_id?: number
+          p_location?: string
           p_metadata?: Json
+          p_user_id: string
         }
         Returns: string
       }
@@ -484,8 +484,8 @@ export type Database = {
       get_active_sessions_summary: {
         Args: Record<PropertyKey, never>
         Returns: {
-          device_type: string
           active_count: number
+          device_type: string
           idle_count: number
           total_count: number
         }[]

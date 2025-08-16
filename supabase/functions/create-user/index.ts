@@ -96,7 +96,7 @@ Deno.serve(async (req) => {
 
       const fullName = `${firstName} ${lastName}`.trim()
 
-      // Create the user
+      // Create the user with explicit confirmation
       const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
         email,
         password,
@@ -104,21 +104,23 @@ Deno.serve(async (req) => {
           full_name: fullName,
           first_name: firstName,
           last_name: lastName,
-          role: role
+          role: role,
+          email_verified: true
         },
-        email_confirm: true, // Auto-confirm email for admin-created users
-        email_confirmed_at: new Date().toISOString(), // Explicitly set confirmation timestamp
-        app_metadata: {
-          provider: 'email',
-          providers: ['email']
-        }
+        email_confirm: true,
+        email_confirmed_at: new Date().toISOString()
       })
 
       if (createError) {
-        throw createError
+        console.error('User creation failed:', createError)
+        throw new Error(`Failed to create user: ${createError.message}`)
       }
 
-      console.log(`Admin ${user.email} created new user: ${email} with role: ${role}`)
+      if (!newUser || !newUser.user) {
+        throw new Error('User creation returned no user data')
+      }
+
+      console.log(`Admin ${user.email} created new user: ${email} with role: ${role} (ID: ${newUser.user.id})`)
 
       return new Response(
         JSON.stringify({ 
