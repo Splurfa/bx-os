@@ -106,7 +106,12 @@ Deno.serve(async (req) => {
           last_name: lastName,
           role: role
         },
-        email_confirm: true // Auto-confirm email for admin-created users
+        email_confirm: true, // Auto-confirm email for admin-created users
+        email_confirmed_at: new Date().toISOString(), // Explicitly set confirmation timestamp
+        app_metadata: {
+          provider: 'email',
+          providers: ['email']
+        }
       })
 
       if (createError) {
