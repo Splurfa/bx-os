@@ -11,6 +11,7 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Create Supabase client for database operations
     const supabase = createClient(supabaseUrl, supabaseServiceKey, {
       auth: {
         autoRefreshToken: false,
@@ -18,27 +19,41 @@ Deno.serve(async (req) => {
       }
     })
 
+    // Create client for user verification using anon key
+    const anonSupabase = createClient(
+      supabaseUrl, 
+      Deno.env.get('SUPABASE_ANON_KEY')!, 
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
+    )
+
     // Verify the user is an admin
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
       throw new Error('No authorization header')
     }
 
-    const token = authHeader.replace('Bearer ', '')
-    const { data: { user } } = await supabase.auth.getUser(token)
+    // Set the auth header for the anon client
+    const { data: { user }, error: userError } = await anonSupabase.auth.getUser(
+      authHeader.replace('Bearer ', '')
+    )
     
-    if (!user) {
-      throw new Error('Invalid token')
+    if (userError || !user) {
+      throw new Error('Invalid authentication token')
     }
 
     // Check if user is admin
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
-    if (profile?.role !== 'admin') {
+    if (profileError || profile?.role !== 'admin') {
       throw new Error('Unauthorized: Admin access required')
     }
 
