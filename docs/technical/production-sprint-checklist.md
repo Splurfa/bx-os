@@ -13,11 +13,13 @@
 **Priority:** CRITICAL - Enables all subsequent features
 
 #### ✅ Task 1.1: Implement Super Admin Role
-- [ ] Add `super_admin` to role enum in database
-- [ ] Update profiles table to support super_admin role
-- [ ] Create super_admin record for zach@zavitechllc.com
-- [ ] Test role assignment and verification
-- **Acceptance:** Super admin role exists and can be assigned
+- [ ] Run database migration: `ALTER TYPE role_type ADD VALUE 'super_admin';`
+- [ ] Update Zach's profile: `UPDATE profiles SET role = 'super_admin' WHERE email = 'zach@zavitechllc.com';`
+- [ ] Update RLS policies to include super_admin permissions
+- [ ] Test role verification in `get_current_user_role()` function
+- [ ] Verify super_admin can access admin dashboard
+- **Acceptance:** Super admin role exists and Zach has full system access
+- **Git:** `feat(phase-1): implement super_admin role with database migration`
 
 #### ✅ Task 1.2: Create Development Login Bypass
 - [ ] Create `/dev-login` route component
@@ -100,11 +102,13 @@
 - **Acceptance:** Kiosks optimized for tablet interaction
 
 #### ✅ Task 3.3: Gesture-Based Navigation
-- [ ] Add swipe gesture recognition library
-- [ ] Implement swipe-to-navigate in dashboards
-- [ ] Create touch-friendly form controls
-- [ ] Add haptic feedback simulation
-- **Acceptance:** Mobile devices support gesture navigation
+- [ ] Install gesture library: `npm install framer-motion` or `@react-spring/gesture`
+- [ ] Create SwipeNavigation component with horizontal swipe detection
+- [ ] Implement touch-friendly form controls with large input fields
+- [ ] Add haptic feedback: `navigator.vibrate([100])` for touch responses
+- [ ] Test gesture performance: <50ms swipe detection threshold
+- **Acceptance:** Mobile devices support gesture navigation with <100ms response time
+- **Git:** `feat(phase-3): add gesture-based navigation with performance optimization`
 
 **Phase 3 Verification:**
 - [ ] Mobile components render correctly
@@ -205,6 +209,63 @@
 - [ ] Notifications delivering correctly
 - [ ] Queue updates happening live
 - **Risk:** Production usability severely impacted
+
+---
+
+## 📋 Git Branch & Workflow Strategy
+
+### Branch Naming Convention
+```bash
+# Phase-based branch structure
+sprint/phase-1-auth-foundation
+sprint/phase-2-role-system  
+sprint/phase-3-mobile-ui
+sprint/phase-4-real-time
+sprint/phase-5-polish
+
+# Feature-specific branches within phases
+sprint/phase-1-auth-foundation/google-oauth
+sprint/phase-1-auth-foundation/kiosk-liberation
+```
+
+### Commit Message Standards
+```bash
+# Format: type(phase-n): description
+feat(phase-1): implement super_admin role creation
+fix(phase-1): resolve kiosk authentication bypass
+docs(phase-1): update auth transformation status
+test(phase-1): verify Google OAuth domain restriction
+
+# Examples for each phase
+feat(phase-2): add role-based landing page logic
+feat(phase-3): implement swipe gesture navigation  
+feat(phase-4): add real-time notification bell system
+feat(phase-5): create tutorial onboarding flow
+```
+
+### Phase Completion Workflow
+```bash
+# 1. Complete all tasks in current phase
+# 2. Update documentation
+git add docs/
+git commit -m "docs(phase-n): complete phase {n} documentation update"
+
+# 3. Test all functionality
+# 4. Get user approval
+# 5. Create branch for next phase
+git checkout -b sprint/phase-{n+1}-{feature-name}
+```
+
+### Emergency Rollback Git Commands
+```bash
+# Rollback to previous phase
+git checkout sprint/phase-{n-1}-{feature}
+git cherry-pick {working-commits}
+
+# Rollback specific feature within phase
+git revert {commit-hash}
+git commit -m "fix(phase-n): rollback {feature} due to {reason}"
+```
 
 ---
 

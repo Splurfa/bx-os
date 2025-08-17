@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This document maps the complete architectural transformation from current prototype state to production-ready Student Behavior Management System. Each domain below details current limitations, future requirements, and specific implementation changes needed for the 24-day sprint.
+This document maps the complete architectural transformation from current prototype state to production-ready Student Behavior Management System. Each domain below details current limitations, future requirements, and specific implementation changes needed for the 24-hour sprint.
 
 ---
 
@@ -127,11 +127,22 @@ This document maps the complete architectural transformation from current protot
 ```
 
 **Implementation Specifications:**
-- Supabase Google OAuth with domain restriction
-- `/dev-login` route for development access
-- `AuthContext` enhanced with role detection
-- Remove `ProtectedRoute` from kiosk paths
-- Implement role-based authentication redirects
+```typescript
+// Database Migration Required
+- Add 'super_admin' to role enum: ALTER TYPE role_type ADD VALUE 'super_admin';
+- Create super_admin user: UPDATE profiles SET role = 'super_admin' WHERE email = 'zach@zavitechllc.com';
+
+// Authentication Components
+- AuthContext: Add role-based session management and Google OAuth integration
+- DevLogin: New component at /dev-login with password-only super_admin access
+- ProtectedRoute: Remove wrapper from kiosk routes (/kiosk1, /kiosk2, /kiosk3)
+- Google OAuth: Configure in Supabase with domain restriction @school.edu
+
+// Anonymous Access Strategy  
+- Kiosk components: Function without auth.uid(), use device-based identification
+- Queue management: FIFO system using created_at timestamps, no user_id required
+- Session tracking: Use device_identifier instead of user authentication
+```
 
 ### Role & Permissions Domain
 **Production Requirements:**
@@ -246,10 +257,25 @@ This document maps the complete architectural transformation from current protot
 ```
 
 **Implementation Specifications:**
-- React-based gesture recognition library
-- Touch event handlers for swipe navigation
-- Mobile-first CSS with touch targets
-- Progressive enhancement for desktop
+```typescript
+// Gesture Library Integration
+- Install: react-spring/gesture or framer-motion for gesture recognition
+- SwipeNavigation: Horizontal swipe between dashboard sections
+- TouchHandlers: onTouchStart, onTouchMove, onTouchEnd for custom gestures
+- HapticFeedback: Navigator.vibrate() simulation for touch responses
+
+// Mobile-First CSS Architecture
+- Touch targets: min-height: 44px, min-width: 44px for all interactive elements
+- Viewport: <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+- CSS Variables: --touch-target-size: 44px, --mobile-breakpoint: 768px
+- Media Queries: Mobile-first approach with progressive enhancement
+
+// Performance Requirements
+- Touch response: <100ms latency for all interactions
+- Gesture recognition: <50ms threshold for swipe detection  
+- Animation: 60fps smooth transitions using transform/opacity
+- Memory usage: <100MB for kiosk tablet deployment
+```
 
 ---
 

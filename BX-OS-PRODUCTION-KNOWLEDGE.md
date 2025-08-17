@@ -60,9 +60,11 @@ Transform BX-OS from functional prototype to production-ready classroom system w
 
 ### Technology Stack
 - **Frontend:** React + TypeScript + Tailwind CSS + Vite
+- **State Management:** React Context + React Query for server state
+- **Mobile/Gestures:** Framer Motion or @react-spring/gesture for touch interactions
 - **Backend:** Supabase (PostgreSQL + Auth + Real-time + Edge Functions)
 - **Deployment:** Lovable Platform with Supabase integration
-- **Security:** Row Level Security (RLS) + JWT Authentication
+- **Security:** Row Level Security (RLS) + JWT Authentication + Anonymous access for kiosks
 
 ### Current System State
 ```typescript
@@ -175,16 +177,24 @@ teacher (Classroom Teachers):
 
 ### Production Mobile Specifications
 ```typescript
-// Touch Optimization
+// Touch Optimization Requirements
 - Minimum 44px touch targets for all interactive elements
-- Gesture-based navigation with swipe support
-- Haptic feedback simulation for touch interactions
-- Progressive disclosure for complex forms
+- Gesture recognition: <50ms swipe detection threshold
+- Touch response latency: <100ms for all interactions
+- Haptic feedback: navigator.vibrate([100]) for touch responses
+- Progressive disclosure for complex forms with smooth animations
 
-// Device Support Priority
-- Primary: iPad/Android tablets for kiosk deployment
-- Secondary: iPhone for teacher mobile access  
-- Tertiary: Desktop browsers for admin management
+// Performance Benchmarks
+- Kiosk load time: <2 seconds on iPad (iOS 12+)
+- Gesture response: 60fps smooth animations using transform/opacity
+- Memory usage: <100MB for sustained kiosk operation
+- Network efficiency: <1MB initial load, <10KB per interaction
+
+// Device Support Priority Matrix
+- Primary: iPad (iOS 12+) / Android tablets (API 21+) for kiosk deployment
+- Secondary: iPhone (iOS 12+) for teacher mobile access  
+- Tertiary: Desktop browsers (Chrome 90+, Safari 14+, Firefox 88+)
+- Testing: Chrome DevTools mobile emulation + actual device validation
 ```
 
 ---
