@@ -1,435 +1,357 @@
-# ✅ BX-OS Production Sprint Checklist
+# ✅ BX-OS Nuclear Reset Sprint Checklist
 
 ## 🎯 Sprint Overview
-**Duration:** 24-hour implementation sprint  
-**Objective:** Transform BX-OS from prototype to production-ready system  
-**Success Criteria:** All critical functionality operational for classroom deployment
+**Duration:** 24-hour nuclear reset and transformation sprint  
+**Objective:** Transform BX-OS from basic prototype to production-ready behavioral intelligence platform foundation
+**Success Criteria:** Complete student-centric architecture with 100+ imported students, anonymous kiosk access, AI integration readiness
 
-## 🚨 CRITICAL SUCCESS FACTORS
+## 🚨 NUCLEAR RESET PRIORITIES
 
-### Documentation-First Approach
-**MANDATORY:** Review these documents before starting any task:
-- `BX-OS-PRODUCTION-KNOWLEDGE.md` - Master system knowledge
-- `docs/architecture/transformation-blueprint.md` - Technical specifications  
+### Documentation-First Protocol
+**MANDATORY:** Review strategic context before implementation:
+- `BX-OS-STRATEGIC-ROADMAP.md` - Vision transformation to behavioral intelligence platform
+- `BX-OS-PRODUCTION-KNOWLEDGE.md` - Nuclear reset strategy and system architecture
+- `docs/technical/csv-import-strategy.md` - Family data normalization and import process  
+- `docs/technical/extension-architecture.md` - AI and external integration framework
 - `docs/technical/testing-verification-protocol.md` - **MANDATORY TESTING REQUIREMENTS**
-- This checklist - Current task context and progress
 
 ### Testing & Verification Protocol (BLOCKING)
-**CRITICAL:** Follow `docs/technical/testing-verification-protocol.md` requirements:
-- **Test-First Planning:** Define verification before implementation
-- **Incremental Testing:** Verify each component as built  
-- **Proof-Required Completion:** Screenshots, logs, queries REQUIRED
-- **No Progression:** Without documented proof of functionality
-
-### Git Workflow Integration
-- **Branch Strategy:** `sprint/phase-{n}-{domain-name}` for phases, nested features
-- **Commit Standards:** `feat(phase-n): description` format
-- **Phase Completion:** Documentation update → **MANDATORY TESTING** → User approval → Git publish
-- **Emergency Protocol:** Document rollback scenarios in all commits
+**CRITICAL:** No task completion without documented proof:
+- **Test-First Planning:** Define verification criteria before implementation
+- **Incremental Verification:** Test each component during build process
+- **Proof-Required Completion:** Screenshots, console logs, database queries REQUIRED
+- **Cross-Device Validation:** Mobile tablets, desktop browsers, touch interfaces
+- **No Progression:** Without documented evidence of working functionality
 
 ---
 
-## 🔥 PHASE 1: CRITICAL FOUNDATION (Hours 0-8)
+## 🔥 PHASE 1: NUCLEAR DATABASE FOUNDATION (Hours 0-8)
 
-### 🔐 Authentication Infrastructure Overhaul
-**Priority:** CRITICAL - Enables all subsequent features
+### 🗂️ Database Nuclear Reset & CSV Integration
+**Priority:** CRITICAL - Foundation for entire transformation
 
-#### ✅ Task 1.1: Database Foundation (CRITICAL - 30 minutes)
-**Objective:** Establish super_admin role and verify database security
-
-**Implementation Steps:**
-- [ ] Create `role_type` enum with 'teacher', 'admin', 'super_admin'
-- [ ] Update profiles table to use role_type enum  
-- [ ] Set Zach's profile (zach@school.edu) to super_admin role
-- [ ] Verify RLS policies work with new role system
-- [ ] Test database access patterns for each role
-
-**MANDATORY TESTING REQUIREMENTS:**
-- [ ] **PROOF:** SQL query showing `role_type` enum exists
-- [ ] **PROOF:** Query showing Zach has `super_admin` role  
-- [ ] **PROOF:** RLS policy tests with different roles
-- [ ] **VERIFICATION:** Console logs showing no database errors
-
-**Success Criteria:**
-- Super admin role exists and is assignable
-- Zach's account has super_admin privileges
-- All existing functionality remains intact
-- RLS policies enforce proper access control
-
-#### ✅ Task 1.2: Kiosk Liberation (CRITICAL - 15 minutes)
-**Objective:** Remove authentication barriers from kiosk routes
+#### ✅ Task 1.1: Nuclear Database Reset (CRITICAL - 2 hours)
+**Objective:** Complete database wipe and rebuild with student-centric family architecture
 
 **Implementation Steps:**
-- [ ] Remove ProtectedRoute wrapper from kiosk paths in App.tsx
-- [ ] Verify kiosk routes (/kiosk1, /kiosk2, /kiosk3) are publicly accessible
-- [ ] Test kiosk functionality without authentication
-- [ ] Ensure kiosk components load correctly for anonymous users
+- [ ] **Nuclear Reset:** DROP TABLE behavior_history, reflections_history, reflections, behavior_requests, students CASCADE
+- [ ] **Family Architecture:** CREATE TABLE families with primary contact information and addresses
+- [ ] **Student Records:** CREATE TABLE students linked to families with external correlation markers
+- [ ] **Guardian Management:** CREATE TABLE guardians with communication preferences and relationships
+- [ ] **Extension Points:** CREATE TABLE external_data, behavior_patterns, communication_templates for future AI integration
+- [ ] **Role Enhancement:** ALTER TYPE role_type ADD VALUE 'super_admin' for Zach's system access
 
 **MANDATORY TESTING REQUIREMENTS:**
-- [ ] **PROOF:** Screenshots accessing /kiosk1, /kiosk2, /kiosk3 without login
-- [ ] **PROOF:** Network requests showing no auth redirects
-- [ ] **VERIFICATION:** Console logs showing kiosk functionality works
-- [ ] **TESTING:** Kiosk components load and function properly
+- [ ] **PROOF:** SQL query showing new family-centric table structure exists
+- [ ] **PROOF:** Query confirming all extension point tables created successfully
+- [ ] **PROOF:** Database schema diagram showing families → students → guardians relationships
+- [ ] **VERIFICATION:** Console logs showing no database errors during reset
 
 **Success Criteria:**
-- Students can access any kiosk without logging in
-- Kiosk interfaces are fully functional
-- No authentication redirects occur on kiosk routes
+- Complete database transformation from individual students to family-centric architecture
+- All extension point tables ready for AI, external data, and communication integration
+- Database schema supports 100+ student import with family relationships
+- Super admin role available for Zach's system management access
 
-#### ✅ Task 1.3: Dev Login Route (CRITICAL - 30 minutes)
-**Objective:** Create development bypass for super admin access
+#### ✅ Task 1.2: CSV Data Import & Family Normalization (CRITICAL - 3 hours)
+**Objective:** Import 100+ students with complete family relationships and guardian contacts
 
 **Implementation Steps:**
-- [ ] Create /dev-login route and DevLogin component
-- [ ] Implement password-only authentication for super_admin users
-- [ ] Add route to App.tsx routing configuration
-- [ ] Test super admin login functionality
-- [ ] Verify access to admin dashboard after dev login
+- [ ] **CSV Processing:** Parse student records and extract family unit information
+- [ ] **Family Normalization:** Group students by household and create family records
+- [ ] **Guardian Extraction:** Process parent/guardian contact information with communication preferences
+- [ ] **Relationship Mapping:** Establish students → families → guardians relationships
+- [ ] **External Markers:** Add correlation identifiers for future SIS integration
+- [ ] **Data Validation:** Verify complete family structure and contact information integrity
 
 **MANDATORY TESTING REQUIREMENTS:**
-- [ ] **PROOF:** Screenshot of /dev-login page loading
-- [ ] **PROOF:** Successful login with super_admin credentials
-- [ ] **VERIFICATION:** Console logs showing authentication flow
-- [ ] **TESTING:** Failed login attempts handled properly
+- [ ] **PROOF:** Database query showing 100+ students imported with family_id relationships
+- [ ] **PROOF:** Query displaying families table with normalized household information
+- [ ] **PROOF:** Guardian contacts linked to families with communication preferences
+- [ ] **VERIFICATION:** Sample family showing complete student → guardians relationship chain
 
 **Success Criteria:**
-- /dev-login route is accessible and functional
-- Super admin can log in with email/password only
-- Dev login bypasses OAuth requirements
-- Successful login redirects to appropriate dashboard
+- 100+ students successfully imported with family context
+- Family relationships properly normalized from flat CSV data
+- Guardian contact information available for future parent communication
+- External correlation markers prepared for SIS integration
 
-#### ✅ Task 1.4: Google OAuth Setup (CRITICAL - 45 minutes)
-**Objective:** Configure Google OAuth with school domain restriction
+#### ✅ Task 1.3: Anonymous Kiosk Liberation (CRITICAL - 1 hour)
+**Objective:** Remove authentication barriers from kiosk routes for student access
 
 **Implementation Steps:**
-- [ ] Configure Google OAuth provider in Supabase dashboard
-- [ ] Set domain restriction to @school.edu in provider settings
-- [ ] Add Google OAuth button to AuthPage component
-- [ ] Test OAuth flow with school domain email
-- [ ] Verify domain restriction blocks unauthorized emails
+- [ ] **Authentication Removal:** Remove ProtectedRoute wrapper from /kiosk1, /kiosk2, /kiosk3 routes
+- [ ] **Anonymous Operation:** Update kiosk components to function without user authentication
+- [ ] **Device Identification:** Implement localStorage device_id for queue management
+- [ ] **Queue Management:** Create FIFO system using created_at timestamps without user_id
+- [ ] **Student Interface:** Ensure kiosk components load and function for anonymous users
 
 **MANDATORY TESTING REQUIREMENTS:**
-- [ ] **PROOF:** Screenshot of Google OAuth button on auth page
-- [ ] **PROOF:** Domain restriction preventing non-@school.edu logins
-- [ ] **VERIFICATION:** Successful OAuth flow with school domain
-- [ ] **TESTING:** Error handling for unauthorized domains
+- [ ] **PROOF:** Screenshots accessing /kiosk1, /kiosk2, /kiosk3 without login redirect
+- [ ] **PROOF:** Network requests showing no authentication requirements for kiosk routes
+- [ ] **VERIFICATION:** Console logs demonstrating kiosk functionality without user session
+- [ ] **TESTING:** Student reflection workflow completing successfully on anonymous kiosk
 
 **Success Criteria:**
-- Google OAuth is configured and operational
-- Only @school.edu emails can authenticate
-- OAuth flow integrates seamlessly with existing auth
-- Proper error handling for unauthorized domains
+- Students can access any kiosk route without authentication barriers
+- Kiosk interfaces fully operational for anonymous users
+- Queue management system functions without user login requirements
+- Device-based identification enables student session tracking
 
-**Phase 1 Verification:**
-- [ ] Super admin can log in via /dev-login
-- [ ] Google OAuth restricts to school domain
-- [ ] Kiosks function anonymously
-- [ ] All authentication flows tested
+#### ✅ Task 1.4: Super Admin Bootstrap & OAuth Setup (CRITICAL - 2 hours)
+**Objective:** Enable Zach's system management access and configure secure authentication
 
-**📤 PUBLISH TO GITHUB - Phase 1 Complete:**
-- [ ] **USER ACTION REQUIRED:** Please PUBLISH/UPDATE the repository to GitHub now
+**Implementation Steps:**
+- [ ] **Super Admin Role:** Update Zach's profile (zach@zavitechllc.com) to super_admin role  
+- [ ] **Dev Login Route:** Create /dev-login route and DevLogin component for development access
+- [ ] **Google OAuth:** Configure Google OAuth provider in Supabase with @school.edu domain restriction
+- [ ] **Authentication Testing:** Verify super admin access, OAuth domain restriction, dev login functionality
+- [ ] **Role-Based Access:** Test role hierarchy and permission system with new super_admin role
+
+**MANDATORY TESTING REQUIREMENTS:**
+- [ ] **PROOF:** SQL query showing Zach's profile has super_admin role assigned
+- [ ] **PROOF:** Screenshot of /dev-login page functioning for super admin access
+- [ ] **PROOF:** Google OAuth restricted to @school.edu domain (non-school email rejection)
+- [ ] **VERIFICATION:** Super admin accessing admin dashboard via dev login route
+
+**Success Criteria:**
+- Zach has super_admin role with full system management capabilities
+- /dev-login route provides development bypass for super admin access
+- Google OAuth restricts authentication to school domain emails only
+- All authentication flows tested and operational
+
+**🔍 Phase 1 Verification Checkpoint:**
+- [ ] **Complete family-centric database** operational with 100+ students imported
+- [ ] **Anonymous kiosk access** functional for student reflection workflows
+- [ ] **Super admin system management** available via /dev-login development access
+- [ ] **Extension point foundation** ready for AI integration and external data correlation
+
+**📤 PUBLISH TO GITHUB - Phase 1 Nuclear Reset Complete:**
+- [ ] **USER ACTION REQUIRED:** Please PUBLISH/UPDATE the repository to GitHub now - Phase 1 foundation complete
 - [ ] Wait for user confirmation before proceeding to Phase 2
-- [ ] Verify all Phase 1 changes are synchronized in repository
+- [ ] Verify all nuclear reset changes synchronized in repository
 
 ---
 
-## 🏗️ PHASE 2: ROLE SYSTEM & ROUTING (Hours 8-12)
+## 🏗️ PHASE 2: STUDENT CONTEXT & MOBILE FOUNDATION (Hours 8-16)
 
-### 👥 Enhanced Role Management System
+### 👨‍👩‍👧‍👦 Family Context Integration
+**Priority:** HIGH - Essential for behavioral intelligence platform
 
-#### ✅ Task 2.1: Implement Role-Based Landing Logic
-- [ ] Create smart EntryPoint component with role detection
-- [ ] Update App.tsx to use role-aware routing at "/"
-- [ ] Implement automatic role-based redirects
-- [ ] Test routing for each role type
-- **Acceptance:** Users automatically route to correct dashboards
+#### ✅ Task 2.1: Student Selection with Family Context (3 hours)
+**Objective:** Display complete family information in student selection interfaces
 
-#### ✅ Task 2.2: Enhanced Permission System
-- [ ] Create usePermissions hook for role checking
-- [ ] Implement role-based component rendering
-- [ ] Add permission checks to sensitive operations
-- [ ] Update RLS policies for role hierarchy
-- **Acceptance:** UI adapts based on user role permissions
+**Implementation Steps:**
+- [ ] **Student Selection Enhancement:** Update StudentSelection component to show family context
+- [ ] **Family Information Display:** Show parent/guardian names, contact information, communication preferences
+- [ ] **Behavior Request Integration:** Include family context in BSR creation workflow
+- [ ] **Guardian Contact Access:** Enable teachers to view family contact details
+- [ ] **Relationship Context:** Display family structure and household information
 
-#### ✅ Task 2.3: Role-Aware Navigation Components
-- [ ] Update AppHeader with role-based navigation
-- [ ] Create role-specific menu items
-- [ ] Implement conditional feature access
-- [ ] Test navigation for all user types
-- **Acceptance:** Navigation menus reflect user capabilities
+**MANDATORY TESTING REQUIREMENTS:**
+- [ ] **PROOF:** Screenshots of student selection showing family context information
+- [ ] **PROOF:** BSR creation displaying guardian contact details
+- [ ] **VERIFICATION:** Family relationships visible in teacher interfaces
+- [ ] **TESTING:** Complete workflow from student selection through family context display
 
-**Phase 2 Verification:**
-- [ ] Role-based landing pages function
-- [ ] Permission system controls UI elements  
-- [ ] Navigation adapts to user roles
-- [ ] All role types tested and verified
+**Success Criteria:**
+- Teachers can view complete family context when selecting students
+- Guardian contact information available during behavior request creation
+- Family relationships clearly displayed in all relevant interfaces
+- Behavioral context enhanced by family structure information
 
-**📤 PUBLISH TO GITHUB - Phase 2 Complete:**
-- [ ] **USER ACTION REQUIRED:** Please PUBLISH/UPDATE the repository to GitHub now
+### 📱 Mobile-First UI Transformation
+**Priority:** HIGH - Critical for classroom tablet deployment
+
+#### ✅ Task 2.2: Touch-Optimized Component Library (4 hours)
+**Objective:** Create mobile-first components for tablet and touch device deployment
+
+**Implementation Steps:**
+- [ ] **Touch Components:** Create SwipeNavigation, TouchOptimizedButton, MobileModal components
+- [ ] **Gesture Recognition:** Install and integrate framer-motion for gesture support
+- [ ] **Touch Targets:** Implement 44px minimum touch targets for all interactive elements
+- [ ] **Tablet Kiosk Interface:** Redesign kiosk components for large touch screens
+- [ ] **Visual Feedback:** Add immediate touch response and haptic feedback simulation
+
+**MANDATORY TESTING REQUIREMENTS:**
+- [ ] **PROOF:** Video/screenshots of swipe gesture navigation functioning on tablets
+- [ ] **PROOF:** Touch targets meeting 44px minimum size requirements
+- [ ] **VERIFICATION:** Mobile components rendering correctly across device sizes
+- [ ] **TESTING:** Kiosk interfaces optimized for tablet interaction and student use
+
+**Success Criteria:**
+- All mobile components optimized for touch interaction
+- Gesture recognition functional with <50ms response time
+- Kiosk interfaces designed for classroom tablet deployment
+- Touch targets meet accessibility standards for student use
+
+#### ✅ Task 2.3: Extension Point Validation (1 hour)
+**Objective:** Verify AI and external integration framework operational
+
+**Implementation Steps:**
+- [ ] **AI Integration Test:** Verify behavior_patterns and ai_insights table structure
+- [ ] **External Data Test:** Confirm external_data correlation framework functional
+- [ ] **Communication Test:** Validate communication_templates system foundation  
+- [ ] **API Readiness:** Ensure database hooks ready for future AI service integration
+- [ ] **Correlation Framework:** Test external system correlation with sample data
+
+**MANDATORY TESTING REQUIREMENTS:**
+- [ ] **PROOF:** Database queries showing extension point tables operational
+- [ ] **PROOF:** Sample AI insights and external data successfully stored
+- [ ] **VERIFICATION:** Communication template system processing test workflows
+- [ ] **TESTING:** Extension point integration with existing student/family data
+
+**Success Criteria:**
+- AI integration hooks operational and ready for machine learning services
+- External data correlation framework prepared for SIS integration
+- Communication system foundation ready for parent notification automation
+- Extension architecture supports future behavioral intelligence features
+
+**🔍 Phase 2 Verification Checkpoint:**
+- [ ] **Family context integration** operational across all student selection workflows
+- [ ] **Mobile-first components** optimized for classroom tablet deployment
+- [ ] **Extension point framework** validated and ready for AI/external integration
+- [ ] **Touch interface optimization** tested and functional on target devices
+
+**📤 PUBLISH TO GITHUB - Phase 2 Context & Mobile Complete:**
+- [ ] **USER ACTION REQUIRED:** Please PUBLISH/UPDATE the repository to GitHub now - Phase 2 enhancement complete
 - [ ] Wait for user confirmation before proceeding to Phase 3
-- [ ] Verify all Phase 2 changes are synchronized in repository
+- [ ] Verify all context and mobile changes synchronized in repository
 
 ---
 
-## 📱 PHASE 3: MOBILE-FIRST UI TRANSFORMATION (Hours 12-18)
+## 🔔 PHASE 3: REAL-TIME & PRODUCTION READINESS (Hours 16-24)
 
-### 🤳 Mobile-Optimized Interface Components
+### ⚡ Real-Time Notification Infrastructure
+**Priority:** MEDIUM - Enhanced user experience and operational efficiency
 
-#### ✅ Task 3.1: Mobile-First Component Library
-- [ ] Create SwipeNavigation component for tabs
-- [ ] Design TouchOptimizedButton with 44px minimum target
-- [ ] Implement MobileModal with gesture support  
-- [ ] Create ProgressiveDisclosure components
-- **Acceptance:** Core mobile components ready for use
+#### ✅ Task 3.1: Notification Bell System (3 hours)
+**Objective:** Implement real-time behavioral alert system for teachers and administrators
 
-#### ✅ Task 3.2: Kiosk Touch Interface Optimization
-- [ ] Redesign kiosk interfaces for tablet use
-- [ ] Implement large touch targets for all interactions
-- [ ] Add visual feedback for touch events
-- [ ] Test on tablet-sized screens
-- **Acceptance:** Kiosks optimized for tablet interaction
+**Implementation Steps:**
+- [ ] **NotificationBell Component:** Create notification bell with badge count and dropdown menu
+- [ ] **Real-Time Subscriptions:** Set up Supabase real-time subscriptions for queue updates
+- [ ] **Behavioral Alerts:** Implement notifications for BSR assignments, reflection completions, urgent situations
+- [ ] **Role-Based Filtering:** Configure notifications based on user roles and responsibilities
+- [ ] **Toast Integration:** Enhance toast system for all notification types
 
-#### ✅ Task 3.3: Gesture-Based Navigation
-- [ ] Install gesture library: `npm install framer-motion` or `@react-spring/gesture`
-- [ ] Create SwipeNavigation component with horizontal swipe detection
-- [ ] Implement touch-friendly form controls with large input fields
-- [ ] Add haptic feedback: `navigator.vibrate([100])` for touch responses
-- [ ] Test gesture performance: <50ms swipe detection threshold
-- **Acceptance:** Mobile devices support gesture navigation with <100ms response time
-- **Git:** `feat(phase-3): add gesture-based navigation with performance optimization`
+**MANDATORY TESTING REQUIREMENTS:**
+- [ ] **PROOF:** Screenshots of notification bell appearing in teacher/admin headers
+- [ ] **PROOF:** Real-time notifications triggering when queue changes occur
+- [ ] **VERIFICATION:** Console logs showing Supabase real-time subscription functionality
+- [ ] **TESTING:** Cross-user notification delivery (teacher creates BSR, admin receives notification)
 
-**Phase 3 Verification:**
-- [ ] Mobile components render correctly
-- [ ] Touch gestures work on all target devices
-- [ ] Kiosk interfaces optimized for tablets
-- [ ] Mobile-first responsive design validated
+**Success Criteria:**
+- Real-time notifications functional across all user roles
+- Notification bell displays accurate badge counts and recent alerts
+- Supabase subscriptions perform efficiently without performance impact
+- Toast system handles all behavioral alert types appropriately
 
-**📤 PUBLISH TO GITHUB - Phase 3 Complete:**
-- [ ] **USER ACTION REQUIRED:** Please PUBLISH/UPDATE the repository to GitHub now
-- [ ] Wait for user confirmation before proceeding to Phase 4
-- [ ] Verify all Phase 3 changes are synchronized in repository
+### 🧪 Comprehensive System Testing & Validation
+**Priority:** HIGH - Production deployment readiness
 
----
+#### ✅ Task 3.2: Cross-Device & Performance Testing (3 hours)
+**Objective:** Validate system functionality across all target deployment devices
 
-## 🔔 PHASE 4: REAL-TIME SYSTEMS (Hours 18-22)
+**Implementation Steps:**
+- [ ] **Tablet Testing:** Test complete system on iPad and Android tablets (classroom devices)
+- [ ] **Mobile Phone Testing:** Validate functionality on iPhone and Android phones
+- [ ] **Desktop Testing:** Confirm admin interfaces work on desktop computers
+- [ ] **Cross-Browser Testing:** Test Chrome, Safari, Firefox, Edge compatibility
+- [ ] **Performance Optimization:** Validate loading times, touch response, memory usage
 
-### ⚡ Notification & Real-Time Updates
+**MANDATORY TESTING REQUIREMENTS:**
+- [ ] **PROOF:** Video demonstrations of system functioning on actual tablet devices
+- [ ] **PROOF:** Performance metrics showing <100ms touch response times
+- [ ] **VERIFICATION:** Cross-browser compatibility screenshots
+- [ ] **TESTING:** Memory usage analysis showing <100MB consumption on tablets
 
-#### ✅ Task 4.1: Notification Bell System
-- [ ] Create NotificationBell component with dropdown
-- [ ] Add bell icons to teacher and admin headers
-- [ ] Implement notification badge with count
-- [ ] Style notification dropdown menu
-- **Acceptance:** Notification bells appear in headers
+**Success Criteria:**
+- System functions flawlessly on all target classroom devices
+- Performance meets production requirements for classroom deployment
+- Cross-browser compatibility validated for all major browsers
+- Memory usage optimized for sustained tablet operation
 
-#### ✅ Task 4.2: Real-Time Queue Updates
-- [ ] Set up Supabase real-time subscriptions for queue
-- [ ] Implement live position updates for students
-- [ ] Add real-time BSR notifications for teachers
-- [ ] Create reflection approval alerts
-- **Acceptance:** All queue changes update in real-time
+#### ✅ Task 3.3: Security Audit & Production Validation (2 hours)
+**Objective:** Ensure security standards and production deployment readiness
 
-#### ✅ Task 4.3: Toast Notification Integration
-- [ ] Enhance toast system for all notification types
-- [ ] Add notification persistence and history
-- [ ] Implement role-based notification filtering
-- [ ] Test notification delivery across user types
-- **Acceptance:** Notifications deliver reliably to appropriate users
+**Implementation Steps:**
+- [ ] **Security Audit:** Run Supabase security linter and resolve all critical issues
+- [ ] **RLS Policy Validation:** Test all row-level security policies with different user roles
+- [ ] **Data Protection Verification:** Confirm student data protection and family privacy measures
+- [ ] **Anonymous Access Security:** Validate kiosk security without authentication vulnerabilities
+- [ ] **Production Environment Testing:** Test domain restrictions and production security measures
 
-**Phase 4 Verification:**
-- [ ] Real-time updates function across all components
-- [ ] Notifications deliver to correct user roles
-- [ ] Toast system handles all notification types
-- [ ] Performance remains optimal with real-time features
+**MANDATORY TESTING REQUIREMENTS:**
+- [ ] **PROOF:** Supabase security audit results showing no critical vulnerabilities
+- [ ] **PROOF:** RLS policy tests demonstrating proper access control
+- [ ] **VERIFICATION:** Anonymous kiosk access security validated without data exposure risks
+- [ ] **TESTING:** Domain restriction enforcement for Google OAuth authentication
 
-**📤 PUBLISH TO GITHUB - Phase 4 Complete:**
-- [ ] **USER ACTION REQUIRED:** Please PUBLISH/UPDATE the repository to GitHub now
-- [ ] Wait for user confirmation before proceeding to Phase 5
-- [ ] Verify all Phase 4 changes are synchronized in repository
+**Success Criteria:**
+- Security audit passes with no critical or high-priority vulnerabilities
+- All RLS policies enforce proper data access control
+- Anonymous kiosk access maintains security without authentication
+- Production environment ready for immediate classroom deployment
 
----
+### 🎯 Future-Proof Platform Validation
+**Priority:** MEDIUM - Ensure foundation ready for advanced features
 
-## 🎓 PHASE 5: TUTORIAL & POLISH (Hours 22-24)
+#### ✅ Task 3.4: AI Integration & Extension Readiness (2 hours)  
+**Objective:** Validate foundation ready for behavioral intelligence platform expansion
 
-### 📚 Onboarding & User Experience
+**Implementation Steps:**
+- [ ] **AI Framework Test:** Verify behavior pattern recognition hooks operational with test data
+- [ ] **External Data Test:** Confirm SIS correlation framework ready for PowerSchool/Infinite Campus integration
+- [ ] **Communication Test:** Validate parent notification template system foundation
+- [ ] **Analytics Readiness:** Ensure database structure supports advanced behavioral analytics
+- [ ] **Multi-School Preparation:** Verify architecture scales for district-level deployment
 
-#### ✅ Task 5.1: Tutorial System Implementation
-- [ ] Create TutorialModal component with step navigation
-- [ ] Design role-specific tutorial flows
-- [ ] Implement first-time user detection
-- [ ] Add tutorial completion tracking
-- **Acceptance:** New users receive appropriate tutorials
+**MANDATORY TESTING REQUIREMENTS:**
+- [ ] **PROOF:** Sample AI insights successfully generated and stored in behavior_patterns table
+- [ ] **PROOF:** External data correlation test showing SIS integration readiness
+- [ ] **VERIFICATION:** Communication template processing with sample parent notifications
+- [ ] **TESTING:** Database performance with simulated multi-school data loads
 
-#### ✅ Task 5.2: Final Polish & Testing
-- [ ] Comprehensive cross-browser testing
-- [ ] Mobile device testing on actual tablets/phones
-- [ ] Performance optimization and validation
-- [ ] User acceptance testing simulation
-- **Acceptance:** System ready for classroom deployment
+**Success Criteria:**
+- AI integration framework operational and ready for machine learning services
+- External data correlation system prepared for immediate SIS integration
+- Communication automation foundation ready for parent engagement workflows
+- Database architecture validated for district-level behavioral intelligence platform
 
-#### ✅ Task 5.3: Security & Production Readiness
-- [ ] Run complete security audit using Supabase linter
-- [ ] Validate all RLS policies function correctly
-- [ ] Test domain restrictions in production environment
-- [ ] Verify data integrity and protection measures
-- **Acceptance:** Security audit passes all checks
-
-**Phase 5 Verification:**
-- [ ] Tutorial system guides new users effectively
-- [ ] All devices and browsers tested successfully
-- [ ] Performance meets production requirements
-- [ ] Security measures validated and operational
+**🔍 Phase 3 Final Verification Checkpoint:**
+- [ ] **Real-time notification system** operational across all user roles and devices
+- [ ] **Cross-device compatibility** validated for classroom tablet deployment
+- [ ] **Security standards** met for production student data management
+- [ ] **Future-proof foundation** confirmed ready for AI and external system integration
 
 **📤 PUBLISH TO GITHUB - Sprint Complete:**
 - [ ] **USER ACTION REQUIRED:** Please PUBLISH/UPDATE the repository to GitHub for final production release
 - [ ] Wait for user confirmation that all changes are synchronized
-- [ ] Verify production-ready system is available in GitHub repository
+- [ ] Verify production-ready behavioral intelligence platform available in GitHub repository
 
 ---
 
-## 🚨 CRITICAL CHECKPOINTS
+## 🚨 CRITICAL SUCCESS METRICS
 
-### Hour 4 Checkpoint
-**Must Complete:** Authentication overhaul and kiosk liberation
-- [ ] Kiosks accessible without auth
-- [ ] Super admin role functional
-- **Risk:** If not complete, entire sprint timeline jeopardized
-- **📤 USER ACTION:** Please PUBLISH to GitHub - Hour 4 checkpoint reached
+### Nuclear Reset Validation
+- [ ] **Complete database transformation** from prototype to student-centric family architecture
+- [ ] **100+ students imported** with normalized family relationships and guardian contacts  
+- [ ] **Anonymous kiosk access** functional without authentication barriers for student reflection workflows
+- [ ] **Extension point foundation** operational for AI integration, external data correlation, communication automation
 
-### Hour 8 Checkpoint  
-**Must Complete:** Role system and routing foundation
-- [ ] Role-based landing pages working
-- [ ] Permission system operational
-- **Risk:** UI/UX work cannot proceed without role foundation
-- **📤 USER ACTION:** Please PUBLISH to GitHub - Phase 1 complete
+### Production Readiness Validation  
+- [ ] **Mobile-first design** optimized for classroom tablet deployment with touch interfaces
+- [ ] **Cross-device compatibility** validated on tablets, phones, desktop browsers
+- [ ] **Real-time notification system** operational for behavioral alerts and queue updates
+- [ ] **Security standards** met for student data protection and family privacy
 
-### Hour 16 Checkpoint
-**Must Complete:** Mobile-first transformation
-- [ ] Touch interfaces optimized
-- [ ] Gesture navigation functional  
-- **Risk:** Classroom deployment impossible without mobile optimization
-- **📤 USER ACTION:** Please PUBLISH to GitHub - Phase 3 complete
-
-### Hour 20 Checkpoint
-**Must Complete:** Real-time systems operational
-- [ ] Notifications delivering correctly
-- [ ] Queue updates happening live
-- **Risk:** Production usability severely impacted
-- **📤 USER ACTION:** Please PUBLISH to GitHub - Phase 4 complete
+### Future-Proof Platform Validation
+- [ ] **Behavioral intelligence foundation** ready for AI-powered pattern recognition and intervention planning
+- [ ] **External integration framework** prepared for SIS correlation and third-party data systems
+- [ ] **Communication automation infrastructure** ready for parent notification and engagement workflows  
+- [ ] **Scalable architecture** validated for multi-school district-level platform evolution
 
 ---
 
-## 📋 Git Branch & Workflow Strategy
-
-### Branch Naming Convention
-```bash
-# Phase-based branch structure
-sprint/phase-1-auth-foundation
-sprint/phase-2-role-system  
-sprint/phase-3-mobile-ui
-sprint/phase-4-real-time
-sprint/phase-5-polish
-
-# Feature-specific branches within phases
-sprint/phase-1-auth-foundation/google-oauth
-sprint/phase-1-auth-foundation/kiosk-liberation
-```
-
-### Commit Message Standards
-```bash
-# Format: type(phase-n): description
-feat(phase-1): implement super_admin role creation
-fix(phase-1): resolve kiosk authentication bypass
-docs(phase-1): update auth transformation status
-test(phase-1): verify Google OAuth domain restriction
-
-# Examples for each phase
-feat(phase-2): add role-based landing page logic
-feat(phase-3): implement swipe gesture navigation  
-feat(phase-4): add real-time notification bell system
-feat(phase-5): create tutorial onboarding flow
-```
-
-### Phase Completion Workflow
-```bash
-# 1. Complete all tasks in current phase
-# 2. Update documentation
-git add docs/
-git commit -m "docs(phase-n): complete phase {n} documentation update"
-
-# 3. Test all functionality
-# 4. Get user approval
-# 5. Create branch for next phase
-git checkout -b sprint/phase-{n+1}-{feature-name}
-```
-
-### Emergency Rollback Protocol
-**When rollback is needed:**
-1. **ALERT USER:** "URGENT: Need to rollback/revert repository to [specific point] due to [issue]"
-2. **PROVIDE COMMANDS:** Give exact Git commands or branch names for user to execute
-3. **WAIT FOR USER:** Do not proceed until user confirms rollback completion
-4. **VERIFY SYNC:** Ensure rollback state is properly synchronized in GitHub
-
-### Emergency Rollback Git Commands
-```bash
-# Rollback to previous phase
-git checkout sprint/phase-{n-1}-{feature}
-git cherry-pick {working-commits}
-
-# Rollback specific feature within phase
-git revert {commit-hash}
-git commit -m "fix(phase-n): rollback {feature} due to {reason}"
-```
-
----
-
-## 🔧 ROLLBACK PROCEDURES
-
-### Authentication Rollback
-**If Google OAuth fails:**
-1. Revert to password-only authentication
-2. Maintain kiosk liberation (critical)
-3. Document OAuth issues for post-sprint resolution
-
-### Mobile UI Rollback  
-**If gesture recognition fails:**
-1. Fall back to button-based navigation
-2. Ensure touch targets remain optimized
-3. Maintain responsive design improvements
-
-### Real-Time Rollback
-**If Supabase subscriptions fail:**
-1. Implement polling fallback for queue updates  
-2. Maintain basic notification via toast system
-3. Document real-time issues for resolution
-
----
-
-## ✅ FINAL ACCEPTANCE CRITERIA
-
-### Functional Requirements
-- [ ] Students can use kiosks without authentication
-- [ ] Teachers receive real-time queue notifications  
-- [ ] Admins can manage all system aspects
-- [ ] Super admin has development access via /dev-login
-- [ ] Mobile devices support all core functionality
-- [ ] Google OAuth restricted to school domain
-
-### Technical Requirements  
-- [ ] All RLS policies enforce proper security
-- [ ] Real-time updates perform efficiently
-- [ ] Mobile-first responsive design validated
-- [ ] Cross-browser compatibility verified
-- [ ] Performance benchmarks met
-- [ ] Security audit passes completely
-
-### User Experience Requirements
-- [ ] New users receive appropriate tutorials
-- [ ] Interface adapts to user roles seamlessly
-- [ ] Mobile interactions feel native and responsive
-- [ ] Error handling provides clear user feedback
-- [ ] System remains usable under typical classroom load
-
----
-
-**🎯 Sprint Success Definition:** All critical and high-priority items completed, system ready for immediate classroom deployment, all acceptance criteria validated.**
+**🎯 Nuclear Reset Success Definition:** Complete architectural transformation from basic BSR prototype to production-ready behavioral intelligence platform foundation, with student-centric family architecture operational, 100+ students imported with relationships, anonymous kiosk access functional, mobile-first design validated for classroom deployment, and extension points prepared for AI integration and external data correlation.**
