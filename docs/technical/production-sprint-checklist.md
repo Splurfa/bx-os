@@ -5,6 +5,28 @@
 **Objective:** Transform BX-OS from prototype to production-ready system  
 **Success Criteria:** All critical functionality operational for classroom deployment
 
+## 🚨 CRITICAL SUCCESS FACTORS
+
+### Documentation-First Approach
+**MANDATORY:** Review these documents before starting any task:
+- `BX-OS-PRODUCTION-KNOWLEDGE.md` - Master system knowledge
+- `docs/architecture/transformation-blueprint.md` - Technical specifications  
+- `docs/technical/testing-verification-protocol.md` - **MANDATORY TESTING REQUIREMENTS**
+- This checklist - Current task context and progress
+
+### Testing & Verification Protocol (BLOCKING)
+**CRITICAL:** Follow `docs/technical/testing-verification-protocol.md` requirements:
+- **Test-First Planning:** Define verification before implementation
+- **Incremental Testing:** Verify each component as built  
+- **Proof-Required Completion:** Screenshots, logs, queries REQUIRED
+- **No Progression:** Without documented proof of functionality
+
+### Git Workflow Integration
+- **Branch Strategy:** `sprint/phase-{n}-{domain-name}` for phases, nested features
+- **Commit Standards:** `feat(phase-n): description` format
+- **Phase Completion:** Documentation update → **MANDATORY TESTING** → User approval → Git publish
+- **Emergency Protocol:** Document rollback scenarios in all commits
+
 ---
 
 ## 🔥 PHASE 1: CRITICAL FOUNDATION (Hours 0-8)
@@ -12,35 +34,91 @@
 ### 🔐 Authentication Infrastructure Overhaul
 **Priority:** CRITICAL - Enables all subsequent features
 
-#### ✅ Task 1.1: Implement Super Admin Role
-- [ ] Run database migration: `ALTER TYPE role_type ADD VALUE 'super_admin';`
-- [ ] Update Zach's profile: `UPDATE profiles SET role = 'super_admin' WHERE email = 'zach@zavitechllc.com';`
-- [ ] Update RLS policies to include super_admin permissions
-- [ ] Test role verification in `get_current_user_role()` function
-- [ ] Verify super_admin can access admin dashboard
-- **Acceptance:** Super admin role exists and Zach has full system access
-- **Git:** `feat(phase-1): implement super_admin role with database migration`
+#### ✅ Task 1.1: Database Foundation (CRITICAL - 30 minutes)
+**Objective:** Establish super_admin role and verify database security
 
-#### ✅ Task 1.2: Create Development Login Bypass
-- [ ] Create `/dev-login` route component
-- [ ] Implement password-only login for super_admin
-- [ ] Add route to App.tsx routing table
-- [ ] Test development access for Zach's account
-- **Acceptance:** Super admin can access system via /dev-login
+**Implementation Steps:**
+- [ ] Create `role_type` enum with 'teacher', 'admin', 'super_admin'
+- [ ] Update profiles table to use role_type enum  
+- [ ] Set Zach's profile (zach@school.edu) to super_admin role
+- [ ] Verify RLS policies work with new role system
+- [ ] Test database access patterns for each role
 
-#### ✅ Task 1.3: Configure Google OAuth Domain Restriction
-- [ ] Set up Google OAuth in Supabase dashboard
-- [ ] Configure domain restriction to @school.edu
-- [ ] Add Google OAuth button to AuthPage
-- [ ] Test OAuth flow with restricted domain
-- **Acceptance:** Only @school.edu emails can authenticate via Google
+**MANDATORY TESTING REQUIREMENTS:**
+- [ ] **PROOF:** SQL query showing `role_type` enum exists
+- [ ] **PROOF:** Query showing Zach has `super_admin` role  
+- [ ] **PROOF:** RLS policy tests with different roles
+- [ ] **VERIFICATION:** Console logs showing no database errors
 
-#### ✅ Task 1.4: Liberation of Kiosk Routes
+**Success Criteria:**
+- Super admin role exists and is assignable
+- Zach's account has super_admin privileges
+- All existing functionality remains intact
+- RLS policies enforce proper access control
+
+#### ✅ Task 1.2: Kiosk Liberation (CRITICAL - 15 minutes)
+**Objective:** Remove authentication barriers from kiosk routes
+
+**Implementation Steps:**
 - [ ] Remove ProtectedRoute wrapper from kiosk paths in App.tsx
-- [ ] Update kiosk components to function without authentication
-- [ ] Test anonymous access to /kiosk1, /kiosk2, /kiosk3
-- [ ] Verify kiosk functionality without user context
-- **Acceptance:** Kiosks accessible without authentication
+- [ ] Verify kiosk routes (/kiosk1, /kiosk2, /kiosk3) are publicly accessible
+- [ ] Test kiosk functionality without authentication
+- [ ] Ensure kiosk components load correctly for anonymous users
+
+**MANDATORY TESTING REQUIREMENTS:**
+- [ ] **PROOF:** Screenshots accessing /kiosk1, /kiosk2, /kiosk3 without login
+- [ ] **PROOF:** Network requests showing no auth redirects
+- [ ] **VERIFICATION:** Console logs showing kiosk functionality works
+- [ ] **TESTING:** Kiosk components load and function properly
+
+**Success Criteria:**
+- Students can access any kiosk without logging in
+- Kiosk interfaces are fully functional
+- No authentication redirects occur on kiosk routes
+
+#### ✅ Task 1.3: Dev Login Route (CRITICAL - 30 minutes)
+**Objective:** Create development bypass for super admin access
+
+**Implementation Steps:**
+- [ ] Create /dev-login route and DevLogin component
+- [ ] Implement password-only authentication for super_admin users
+- [ ] Add route to App.tsx routing configuration
+- [ ] Test super admin login functionality
+- [ ] Verify access to admin dashboard after dev login
+
+**MANDATORY TESTING REQUIREMENTS:**
+- [ ] **PROOF:** Screenshot of /dev-login page loading
+- [ ] **PROOF:** Successful login with super_admin credentials
+- [ ] **VERIFICATION:** Console logs showing authentication flow
+- [ ] **TESTING:** Failed login attempts handled properly
+
+**Success Criteria:**
+- /dev-login route is accessible and functional
+- Super admin can log in with email/password only
+- Dev login bypasses OAuth requirements
+- Successful login redirects to appropriate dashboard
+
+#### ✅ Task 1.4: Google OAuth Setup (CRITICAL - 45 minutes)
+**Objective:** Configure Google OAuth with school domain restriction
+
+**Implementation Steps:**
+- [ ] Configure Google OAuth provider in Supabase dashboard
+- [ ] Set domain restriction to @school.edu in provider settings
+- [ ] Add Google OAuth button to AuthPage component
+- [ ] Test OAuth flow with school domain email
+- [ ] Verify domain restriction blocks unauthorized emails
+
+**MANDATORY TESTING REQUIREMENTS:**
+- [ ] **PROOF:** Screenshot of Google OAuth button on auth page
+- [ ] **PROOF:** Domain restriction preventing non-@school.edu logins
+- [ ] **VERIFICATION:** Successful OAuth flow with school domain
+- [ ] **TESTING:** Error handling for unauthorized domains
+
+**Success Criteria:**
+- Google OAuth is configured and operational
+- Only @school.edu emails can authenticate
+- OAuth flow integrates seamlessly with existing auth
+- Proper error handling for unauthorized domains
 
 **Phase 1 Verification:**
 - [ ] Super admin can log in via /dev-login
