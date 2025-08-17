@@ -1,301 +1,160 @@
-# 🧭 BX-OS Production Knowledge Compass
+# 🎯 BX-OS Production Knowledge
 
-## System Identity & Mission
+**MISSION:** Transform Student Behavior Management System into a comprehensive **Behavioral Intelligence Platform** through nuclear database reset and strategic architecture rebuild within 24-hour sprint window.
 
-**BX-OS (Behavior Support Request Operating System)** is a comprehensive Student Behavior Management System designed for real-time classroom intervention support. The system enables teachers to create Behavior Support Requests (BSRs), students to complete reflections via tablet kiosks, and administrators to manage the entire behavioral intervention workflow.
+## 🚨 NUCLEAR RESET SPRINT CONTEXT
 
----
+**Sprint Objective:** Complete architectural transformation from basic prototype to future-proof behavioral intelligence foundation within 24 hours.
 
-## 🎯 Current Sprint Context
+**Nuclear Reset Strategy:**
+- **Complete Database Wipe:** Drop all existing tables and rebuild with student-centric architecture
+- **CSV Data Import:** 100+ students with complete family relationships and guardian contacts
+- **Future-Proof Foundation:** Database and API architecture ready for AI integration and external data correlation
 
-### Sprint Objective
-Transform BX-OS from functional prototype to production-ready classroom system within 24-hour implementation window.
+**Critical Success Factors:**
+1. **Student-Centric Architecture:** Families → Students → Guardians relational model with 100+ imported students
+2. **Anonymous Kiosk Access:** Students must access reflection system without authentication barriers
+3. **Extension Point Preparation:** Database hooks and service architecture ready for AI/analytics integration
+4. **Mobile-First Experience:** Touch-optimized interfaces for classroom tablets
+5. **Communication Foundation:** Template system and notification framework prepared for parent engagement
 
-### Critical Success Factors
-1. **Kiosk Liberation:** Students must access reflection systems without authentication barriers
-2. **Role-Based Security:** Proper access control for super_admin, admin, and teacher roles  
-3. **Mobile-First Experience:** Touch-optimized interfaces for classroom tablet deployment
-4. **Real-Time Communication:** Live queue updates and notification system for immediate teacher awareness
+### 📋 Strategic Documentation References
 
----
+**Reference documents provide essential context for nuclear reset and future-proof development:**
 
-## 📋 Strategic Documentation References
+#### **Strategic Evolution Framework**
+- **File:** `BX-OS-STRATEGIC-ROADMAP.md`
+- **Purpose:** Vision and roadmap from basic BSR system to comprehensive behavioral intelligence platform
+- **Critical Sections:** Phase evolution, AI integration plan, multi-school platform strategy
 
-### 🗺️ Transformation Blueprint
-**Location:** `docs/architecture/transformation-blueprint.md`
+#### **Nuclear Reset Implementation Guide**
+- **File:** `docs/architecture/transformation-blueprint.md`
+- **Purpose:** Complete architectural transformation from prototype to future-proof foundation
+- **Critical Sections:** Database nuclear reset, student-centric architecture, extension point preparation
 
-**Purpose:** Complete architectural mapping from current prototype state to production requirements
+#### **CSV Data Integration Strategy**
+- **File:** `docs/technical/csv-import-strategy.md`
+- **Purpose:** Transform flat CSV data into sophisticated relational family/student/guardian architecture
+- **Critical Sections:** Family normalization, external correlation preparation, 100+ student import process
 
-**Key Sections:**
-- **Current State Analysis:** Detailed technical assessment of existing limitations
-- **Future State Architecture:** Production specifications for each system domain
-- **Transformation Requirements:** Implementation priorities and dependency mapping
+#### **Extension Architecture Preparation**
+- **File:** `docs/technical/extension-architecture.md`
+- **Purpose:** Framework for AI integration, external data correlation, and communication automation
+- **Critical Sections:** Service registry, integration points, future-proof hooks
 
-**When to Reference:** 
-- Understanding what needs to change and why
-- Technical specification lookup during implementation
-- Architectural decision validation
-- Sprint planning and scope definition
+#### **Sprint Execution Framework**
+- **File:** `docs/technical/production-sprint-checklist.md`
+- **Purpose:** Hour-by-hour nuclear reset and rebuild implementation guide
+- **Critical Sections:** Database wipe, CSV import, anonymous access, mobile-first UI
 
-### ✅ Sprint Execution Checklist
-**Location:** `docs/technical/production-sprint-checklist.md`
-
-**Purpose:** Hour-by-hour implementation guide with verification checkpoints
-
-**Key Sections:**
-- **Phase-Based Task Breakdown:** 5 phases across 24-hour sprint timeline
-- **Critical Checkpoints:** Risk mitigation and progress validation points
-- **Rollback Procedures:** Fallback strategies for high-risk implementations
-- **Final Acceptance Criteria:** Production readiness validation requirements
-
-**When to Reference:**
-- Daily sprint execution tracking
-- Task completion verification  
-- Risk assessment and mitigation
-- Progress reporting and timeline management
-
----
-
-## 🏛️ Architectural Foundation
+## 🏗️ ARCHITECTURAL FOUNDATION
 
 ### Technology Stack
-- **Frontend:** React + TypeScript + Tailwind CSS + Vite
-- **State Management:** React Context + React Query for server state
-- **Mobile/Gestures:** Framer Motion or @react-spring/gesture for touch interactions
-- **Backend:** Supabase (PostgreSQL + Auth + Real-time + Edge Functions)
-- **Deployment:** Lovable Platform with Supabase integration
-- **Security:** Row Level Security (RLS) + JWT Authentication + Anonymous access for kiosks
+- **Frontend:** React 18 + TypeScript + Tailwind CSS + Vite
+- **Backend:** Supabase (PostgreSQL + Auth + Real-Time + Edge Functions)
+- **Authentication:** Supabase Auth with JWT tokens
+- **Database:** PostgreSQL with Row Level Security (RLS)
+- **Deployment:** Lovable Platform with automatic deployments
+- **Real-Time:** Supabase Real-Time subscriptions for live updates
+- **Future Extensions:** OpenAI API integration, external SIS correlation, communication automation
 
-### Current System State
-```typescript
-// Authentication: Password-only, blocks kiosks
-// Roles: teacher, admin (missing super_admin)
-// Routing: Static, non-role-aware
-// UI: Desktop-first responsive design
-// Notifications: None implemented
-// Kiosks: Authentication-blocked (non-functional)
+### Nuclear Reset Transformation (24-Hour Sprint)
+**FROM: Basic Prototype**
+- Simple behavior_requests → reflections workflow
+- Authentication blocking all routes (including kiosks)
+- Individual student records without family context
+- Desktop-first design with manual refresh patterns
+
+**TO: Future-Proof Behavioral Intelligence Foundation**
+- **Student-Centric Architecture:** families → students → guardians → behavior_requests → reflections
+- **Anonymous Kiosk Access:** Students can complete reflections without authentication
+- **Family Context Integration:** Complete guardian contact information and relationships
+- **Extension Point Preparation:** Database hooks for AI insights, external data correlation, communication automation
+- **Mobile-First Design:** Touch-optimized interfaces with gesture support for classroom tablets
+- **Real-Time Foundation:** Notification system infrastructure ready for behavioral alerts
+
+### Post-Sprint Evolution Roadmap
+**Phase 2: AI Integration** (Weeks 2-4)
+- Behavioral pattern recognition using imported reflection data
+- AI-generated intervention suggestions based on family context and behavioral history
+- External SIS data correlation using time/name/grade matching algorithms
+
+**Phase 3: Communication Platform** (Months 2-3)
+- Automated parent notifications using guardian contact preferences
+- Template-based communication workflows for behavioral events
+- Multi-channel support (email, SMS, app notifications) with engagement tracking
+
+**Phase 4: Multi-School Intelligence** (Months 4-6)
+- Cross-school behavioral trend analysis and best practice sharing
+- District-level administrative dashboards with compliance monitoring
+- Resource sharing and intervention strategy collaboration between schools
+
+## 🗂️ DATA ARCHITECTURE
+
+### Nuclear Reset Database Schema (Future-Proof Foundation)
+
+#### **Core Student Data (Family-Centric Model)**
+1. **families** - Family units with primary contact information and addresses
+2. **students** - Student records linked to families with external correlation markers
+3. **guardians** - Guardian/parent contacts with communication preferences and relationships
+4. **behavior_requests** - Teacher-initiated BSR records with family context
+5. **reflections** - Student 4-question responses with AI analysis hooks
+6. **behavior_history** - Completed workflow records with intervention tracking
+
+#### **Extension Point Tables (Prepared for Future Features)**
+7. **external_data** - SIS correlation data for academic/attendance integration
+8. **data_sources** - External system connection tracking (PowerSchool, Infinite Campus, etc.)
+9. **behavior_patterns** - AI-identified behavioral trends and recurring issues
+10. **ai_insights** - Generated recommendations and early warning alerts
+11. **communication_templates** - Parent notification templates and workflows
+12. **communication_logs** - Message delivery tracking and engagement metrics
+
+#### **System Management (Enhanced)**
+13. **profiles** - User account management with super_admin role support
+14. **kiosks** - Physical device management with location tracking
+15. **user_sessions** - Session tracking with device identification
+
+### Enhanced BSR Workflow with Family Context
+```
+Teacher Creates BSR (with family context) → Student Assigned to Kiosk → 
+Reflection Questions (with AI pattern detection) → Teacher Review (with AI insights) → 
+Resolution (with family notification) → Pattern Analysis (for future interventions)
 ```
 
-### Production Target State  
-```typescript
-// Authentication: Google OAuth @school.edu + password fallback + dev bypass
-// Roles: super_admin, admin, teacher with proper hierarchy
-// Routing: Role-aware smart landing with automatic redirects
-// UI: Mobile-first with gesture support and touch optimization
-// Notifications: Real-time bell system with role-based filtering
-// Kiosks: Anonymous access, tablet-optimized, FIFO queue management
-```
+**State Transitions:**
+- `waiting` → `in_progress` → `completed` → `archived` → `analyzed`
+- Family notification triggers and communication workflow automation
+- AI pattern detection and intervention recommendation generation
+- External data correlation for comprehensive student support
 
----
+## 🚨 CRITICAL IMPLEMENTATION PRIORITIES
 
-## 👥 User Architecture & Workflow
+### IMMEDIATE BLOCKERS (Must Fix First)
+1. **Nuclear Database Reset** - Wipe and rebuild with student-centric architecture
+2. **CSV Import Integration** - 100+ students with family relationships
+3. **Anonymous Kiosk Access** - Remove authentication barriers for student access
+4. **Super Admin Bootstrap** - Zach needs system management capabilities
 
-### Role Hierarchy
-```
-super_admin (Zach): zach@zavitechllc.com
-├── Full system access and user management
-├── Development login bypass via /dev-login
-└── Reset capabilities and system administration
+### HIGH PRIORITY (Production Essential)
+5. **Mobile-First UI Overhaul** - Touch-optimized interfaces for classroom tablets
+6. **Student Selection Enhancement** - Family context display for behavior requests
+7. **Real-Time Foundation** - Notification infrastructure for behavioral alerts
+8. **Extension Point Preparation** - Database hooks for AI and external data integration
 
-admin (School Administrators): 
-├── Manage all students, teachers, and data
-├── Access kiosks for testing and monitoring
-└── View comprehensive system analytics
-
-teacher (Classroom Teachers):
-├── Create and manage Behavior Support Requests (BSRs)
-├── Review and approve student reflections
-└── Monitor classroom queue and intervention status
-```
-
-### Core Workflow: BSR → Reflection → Resolution
-1. **Teacher** creates BSR for student behavioral intervention
-2. **Student** accesses anonymous kiosk for 4-question reflection
-3. **System** manages FIFO queue with real-time position tracking
-4. **Teacher** receives notification, reviews reflection, approves/requests revision
-5. **Admin** monitors overall system health and intervention outcomes
-
----
-
-## 🗺️ Routing & Navigation Architecture
-
-### Current Route Structure
-```
-/ → AuthPage (static login)
-/auth → Authentication interface
-/teacher → Teacher dashboard (protected)
-/admin-dashboard → Admin interface (protected)  
-/kiosk1, /kiosk2, /kiosk3 → Student kiosks (currently protected - BROKEN)
-```
-
-### Production Route Architecture
-```typescript
-/ → Smart EntryPoint with role-based routing:
-  ├── super_admin → /admin-dashboard (system management)
-  ├── admin → /admin-dashboard (school management)  
-  ├── teacher → /teacher (classroom management)
-  └── unauthenticated → /auth (login/registration)
-
-/dev-login → Development super_admin bypass (password-only)
-/kiosk1, /kiosk2, /kiosk3 → Anonymous student access (NO AUTH)
-```
-
----
-
-## 🔐 Security & Access Control
-
-### Current Security Gaps
-- No domain restriction on authentication (@school.edu requirement missing)
-- Kiosks blocked by authentication (prevents student access)
-- Missing super_admin role for system management
-- Basic RLS without granular role differentiation
-
-### Production Security Model
-```sql
--- Role-Based Access Control (RBAC)
-- Google OAuth restricted to @school.edu domain
-- RLS policies enforce role hierarchy access
-- Anonymous kiosk access for student reflections
-- Development environment super_admin bypass
-
--- Data Protection
-- Students: No direct database access, anonymous kiosk interaction
-- Teachers: Access own BSRs and assigned reflections only  
-- Admins: School-wide data access for management
-- Super Admin: Full system access including user management
-```
-
----
-
-## 📱 Mobile-First Requirements
-
-### Current Mobile Limitations
-- Desktop-ported responsive design (not mobile-first)
-- Button-based navigation (no gesture support)
-- Touch targets too small for reliable tablet interaction
-- Missing native mobile interaction patterns
-
-### Production Mobile Specifications
-```typescript
-// Touch Optimization Requirements
-- Minimum 44px touch targets for all interactive elements
-- Gesture recognition: <50ms swipe detection threshold
-- Touch response latency: <100ms for all interactions
-- Haptic feedback: navigator.vibrate([100]) for touch responses
-- Progressive disclosure for complex forms with smooth animations
-
-// Performance Benchmarks
-- Kiosk load time: <2 seconds on iPad (iOS 12+)
-- Gesture response: 60fps smooth animations using transform/opacity
-- Memory usage: <100MB for sustained kiosk operation
-- Network efficiency: <1MB initial load, <10KB per interaction
-
-// Device Support Priority Matrix
-- Primary: iPad (iOS 12+) / Android tablets (API 21+) for kiosk deployment
-- Secondary: iPhone (iOS 12+) for teacher mobile access  
-- Tertiary: Desktop browsers (Chrome 90+, Safari 14+, Firefox 88+)
-- Testing: Chrome DevTools mobile emulation + actual device validation
-```
-
----
-
-## ⚡ Real-Time System Requirements
-
-### Current Real-Time Gaps
-- No notification system implemented
-- Queue updates require manual refresh
-- No real-time communication between teacher/student interactions
-- Missing live position tracking for kiosk queue
-
-### Production Real-Time Architecture
-```typescript
-// Supabase Real-Time Subscriptions
-- Queue position updates for students at kiosks
-- BSR notifications for teachers (new requests, reflections submitted)
-- Reflection approval status for queue management
-- System announcements for all authenticated users
-
-// Notification Bell System
-- Role-based notification filtering
-- Notification persistence and history
-- Toast integration for immediate alerts
-- Badge counts for unread notifications
-```
-
----
-
-## 📊 Data Architecture & Workflow State Machine
-
-### Core Tables & Relationships
-```sql
-profiles (user roles & authentication)
-├── students (classroom roster)
-├── behavior_requests (BSR workflow state)
-├── reflections (student responses) 
-├── kiosks (tablet station management)
-└── user_sessions (activity tracking)
-```
-
-### BSR Workflow State Machine
-```
-BSR Created (teacher) → Queue Position Assigned → Kiosk Available → 
-Student Reflection → Teacher Review → [Approved|Revision Requested] → 
-Completed/Archived
-```
-
----
-
-## 🚨 Critical Implementation Priorities
-
-### BLOCKING ISSUES (Must Fix Immediately)
-1. **Kiosk Authentication Removal** - Students cannot access system
-2. **Super Admin Role Creation** - Zach needs system management access  
-3. **Google OAuth Domain Restriction** - Security requirement for school deployment
-
-### HIGH PRIORITY (Production Quality)
-4. **Mobile Touch Optimization** - Required for tablet kiosk deployment
-5. **Real-Time Notification System** - Essential for teacher workflow efficiency
-6. **Role-Based Landing Logic** - Improves user experience and security
-
-### MEDIUM PRIORITY (Enhancement)  
-7. **Tutorial System** - Improves new user onboarding
-8. **Advanced Mobile Gestures** - Enhanced user experience
-9. **Comprehensive Analytics** - Long-term system optimization
-
----
-
-## 🎯 Sprint Success Metrics
+## 🎯 SPRINT SUCCESS METRICS
 
 ### Functional Validation
-- [ ] Students can complete reflections without authentication barriers
-- [ ] Teachers receive real-time queue and reflection notifications
-- [ ] Admins can manage users and monitor system health  
-- [ ] Super admin can access development environment and reset system
+- [ ] 100+ students imported with complete family relationships
+- [ ] Students can access kiosks without authentication barriers
+- [ ] Teachers can create BSRs with family context display
+- [ ] Super admin can manage system via /dev-login
 - [ ] Mobile tablets support all core kiosk functionality
 
 ### Technical Validation
-- [ ] Google OAuth restricts access to @school.edu domain only
-- [ ] All RLS policies enforce proper role-based access control
-- [ ] Real-time subscriptions perform efficiently under classroom load
+- [ ] Nuclear database reset completed successfully
+- [ ] CSV import process transforms data into relational structure
+- [ ] Extension points prepared for AI and external integration
 - [ ] Mobile-first responsive design validated across target devices
-- [ ] Security audit passes all production readiness checks
+- [ ] Real-time notification foundation operational
 
----
-
-## 🔗 Integration & Deployment Context
-
-### Supabase Services Integration
-- **Database:** PostgreSQL with RLS for secure multi-role access
-- **Authentication:** Google OAuth + email/password with domain restrictions  
-- **Real-Time:** WebSocket subscriptions for live queue and notification updates
-- **Edge Functions:** Custom logic for user creation and session management
-
-### Deployment Environment
-- **Platform:** Lovable with automatic deployment pipeline
-- **Domain:** Custom school domain configuration required
-- **Performance:** Optimized for classroom network conditions and tablet hardware
-- **Monitoring:** Real-time error tracking and performance metrics
-
----
-
-**🧭 This knowledge document serves as the master compass for the BX-OS production sprint. Reference the transformation blueprint for detailed technical specifications and the sprint checklist for implementation execution. All three documents work together to ensure successful prototype-to-production transformation within the 24-hour sprint timeline.**
+**🎯 SPRINT SUCCESS DEFINITION:** Complete architectural transformation from prototype to future-proof behavioral intelligence platform foundation, ready for immediate classroom deployment and future AI/analytics expansion.

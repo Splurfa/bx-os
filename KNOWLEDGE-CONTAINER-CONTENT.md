@@ -1,44 +1,67 @@
 # 📋 BX-OS Knowledge Container Content
 
-**This content should be copied and pasted into the project's knowledge container for AI alignment throughout the production sprint.**
+**This content should be copied and pasted into the project's knowledge container for AI alignment throughout the nuclear reset sprint.**
 
 ---
 
-## 🎯 PROJECT CONTEXT: BX-OS Production Sprint
+## 🎯 PROJECT CONTEXT: BX-OS Nuclear Reset Sprint
 
-**CURRENT PHASE:** 24-hour production transformation sprint  
-**OBJECTIVE:** Transform Student Behavior Management System from prototype to classroom-ready production system
+**CURRENT PHASE:** 24-hour nuclear database reset and architectural transformation sprint  
+**OBJECTIVE:** Transform Student Behavior Management System from basic prototype to future-proof behavioral intelligence platform
 
 ### 🗂️ DOCUMENTATION HIERARCHY
 
-**Master Knowledge Compass:** `BX-OS-PRODUCTION-KNOWLEDGE.md`
-- Strategic overview and system understanding
-- Role definitions and workflow documentation  
-- Integration context and success metrics
+**Strategic Evolution Roadmap:** `BX-OS-STRATEGIC-ROADMAP.md`
+- Vision transformation from basic BSR to comprehensive behavioral intelligence platform
+- Phase evolution plan: Foundation → AI Integration → Communication Platform → Multi-School Intelligence
+- Future API architecture and technology evolution strategy
 
-**Technical Transformation Map:** `docs/architecture/transformation-blueprint.md`  
-- Current state → Future state architectural mapping
-- Domain-specific transformation requirements
-- Implementation specifications and dependencies
+**Master Production Knowledge:** `BX-OS-PRODUCTION-KNOWLEDGE.md`
+- Nuclear reset strategy and implementation priorities
+- Student-centric database architecture with family relationships
+- Extension point preparation for AI and external data integration
+
+**Technical Transformation Blueprint:** `docs/architecture/transformation-blueprint.md`  
+- Complete architectural transformation specifications
+- Domain-specific implementation requirements and dependencies
+- Nuclear reset approach with future-proof foundation design
+
+**CSV Import Strategy:** `docs/technical/csv-import-strategy.md`
+- Transform flat CSV data into sophisticated relational family/student/guardian structure
+- Family normalization and external correlation preparation
+- 100+ student import process with relationship mapping
+
+**Extension Architecture Framework:** `docs/technical/extension-architecture.md`
+- AI integration points, external data correlation framework
+- Communication automation system and service registry
+- Future-proof hooks for behavioral intelligence features
 
 **Sprint Execution Guide:** `docs/technical/production-sprint-checklist.md`
-- Hour-by-hour implementation checklist
-- Critical checkpoints and rollback procedures
-- Acceptance criteria and verification steps
+- Hour-by-hour nuclear reset implementation checklist
+- Critical checkpoints and mandatory testing requirements
+- Rollback procedures and success validation criteria
 
 ---
 
-## 🚨 CRITICAL IMPLEMENTATION PRIORITIES
+## 🚨 NUCLEAR RESET IMPLEMENTATION PRIORITIES
 
-### IMMEDIATE BLOCKERS (Must Fix First)
-1. **Remove authentication from kiosk routes** - Students cannot access reflection system
-2. **Create super_admin role** - Zach needs system management capabilities  
-3. **Implement Google OAuth domain restriction** - Security requirement for @school.edu
+### IMMEDIATE FOUNDATION (Hours 0-8)
+1. **Nuclear Database Reset** - Complete wipe and rebuild with student-centric architecture
+2. **CSV Data Import** - 100+ students with family relationships and guardian contacts
+3. **Anonymous Kiosk Liberation** - Remove authentication barriers for student access
+4. **Super Admin Bootstrap** - Zach system management via /dev-login
 
-### HIGH PRIORITY (Production Essential)
-4. **Mobile-first touch optimization** - Tablets are primary kiosk hardware
-5. **Real-time notification system** - Teachers need immediate queue awareness
-6. **Role-based landing page logic** - Proper user experience flow
+### HIGH PRIORITY FOUNDATION (Hours 8-16)
+5. **Student Selection Enhancement** - Family context display in behavior request creation
+6. **Mobile-First UI Transformation** - Touch-optimized interfaces for classroom tablets
+7. **Extension Point Preparation** - Database hooks for AI insights and external data correlation
+8. **Communication Foundation** - Template system infrastructure for parent notifications
+
+### PRODUCTION READINESS (Hours 16-24)
+9. **Real-Time Notification System** - Behavioral alert infrastructure for teachers
+10. **Mobile Gesture Navigation** - Swipe-based interfaces optimized for tablet deployment
+11. **Future-Proof Validation** - Ensure readiness for AI integration and external SIS correlation
+12. **Comprehensive Testing** - Cross-device validation and security verification
 
 ---
 
@@ -46,149 +69,134 @@
 
 ### Super Admin (Zach: zach@zavitechllc.com)
 - **Access:** Development bypass via `/dev-login` + full system control
-- **Capabilities:** User management, system reset, all data access
-- **Implementation:** Must create `super_admin` role in database enum
+- **Capabilities:** User management, system reset, nuclear database operations, AI integration setup
+- **Implementation:** Must create `super_admin` role and bootstrap account
 
 ### Admin (School Administrators)  
 - **Access:** Google OAuth @school.edu domain + admin dashboard
-- **Capabilities:** Student/teacher management, system monitoring, kiosk testing
-- **Landing:** `/admin-dashboard` after authentication
+- **Capabilities:** Student/family management, behavioral analytics, system monitoring
+- **Future Features:** District-level dashboards, compliance monitoring, cross-school analytics
 
 ### Teacher (Classroom Teachers)
 - **Access:** Google OAuth @school.edu domain + teacher interface  
-- **Capabilities:** Create BSRs, review reflections, manage classroom queue
-- **Landing:** `/teacher` after authentication
+- **Capabilities:** Create BSRs with family context, AI-powered insights, parent communication
+- **Future Features:** Intervention planning, behavioral pattern recognition, automated notifications
 
 ### Students (Kiosk Users)
 - **Access:** Anonymous access, NO AUTHENTICATION required
-- **Capabilities:** Complete 4-question reflections, view queue position
+- **Capabilities:** Complete 4-question reflections, view queue position, family-aware interactions
 - **Routes:** `/kiosk1`, `/kiosk2`, `/kiosk3` must work without auth
 
 ---
 
-## 🏗️ TECHNICAL ARCHITECTURE REQUIREMENTS
+## 🏗️ NUCLEAR RESET ARCHITECTURE REQUIREMENTS
 
-### Authentication System
-```typescript
-// CURRENT (Broken): All routes require auth, kiosks blocked
-// REQUIRED (Production):
-- Google OAuth restricted to @school.edu domain
-- Password fallback for all users  
-- /dev-login bypass for super_admin development access
-- Kiosk routes (/kiosk1, /kiosk2, /kiosk3) NO AUTH required
+### Database Nuclear Reset Strategy
+```sql
+-- Complete wipe and rebuild approach
+DROP TABLE IF EXISTS behavior_history CASCADE;
+DROP TABLE IF EXISTS reflections_history CASCADE;
+DROP TABLE IF EXISTS reflections CASCADE;
+DROP TABLE IF EXISTS behavior_requests CASCADE;
+DROP TABLE IF EXISTS students CASCADE;
+
+-- Rebuild with student-centric family architecture
+CREATE TABLE families (...);  -- Family units with contact information
+CREATE TABLE students (...);  -- Students linked to families
+CREATE TABLE guardians (...); -- Guardian contacts with preferences
+-- Plus extension tables for AI and external data
 ```
 
-### Mobile-First Design Requirements
-```typescript  
-// CURRENT (Problem): Desktop-first responsive, button navigation
-// REQUIRED (Production):
-- Touch-first design with 44px minimum targets
-- Gesture-based navigation (swipe support)
-- Tablet-optimized kiosk interfaces
-- Progressive disclosure for complex forms
+### CSV Import Transformation Requirements
+```typescript
+// Transform flat CSV into relational structure
+- Extract family units from individual student records
+- Create guardian relationships with communication preferences
+- Establish correlation markers for external SIS integration
+- Prepare extension points for AI behavioral analysis
 ```
 
-### Real-Time System Requirements
+### Future-Proof Extension Points
 ```typescript
-// CURRENT (Missing): No notifications, manual refresh required  
-// REQUIRED (Production):
-- Notification bell in teacher/admin headers
-- Real-time queue position updates for students
-- Live BSR notifications for teachers
-- Toast system integration for immediate alerts
+// AI Integration Preparation
+- behavior_patterns table for AI-identified trends
+- ai_insights table for generated recommendations
+- communication_templates for parent notification automation
+- external_data table for SIS correlation framework
 ```
 
 ---
 
-## 🔄 TRANSFORMATION WORKFLOW
+## 🔄 NUCLEAR RESET TRANSFORMATION WORKFLOW
 
-### Phase 1: Foundation (Hours 0-8)
-**Critical Path:** Authentication overhaul + kiosk liberation
+### Phase 1: Database Foundation (Hours 0-8)
+**Critical Path:** Nuclear reset + CSV import + anonymous access
+- Complete database wipe and student-centric rebuild
+- Import 100+ students with family relationships
 - Remove ProtectedRoute from kiosk paths
-- Implement super_admin role and /dev-login  
-- Configure Google OAuth domain restriction
-- **Checkpoint:** Kiosks accessible, super_admin functional
+- Bootstrap super_admin role and /dev-login access
+- **Checkpoint:** Family-centric database operational, kiosks accessible
 
-### Phase 2: Role System (Hours 8-12)  
-**Critical Path:** Role-based access control + smart routing
-- Create role-aware landing page logic
-- Implement permission system for UI components
-- Update RLS policies for role hierarchy
-- **Checkpoint:** Role-based routing and permissions working
+### Phase 2: Student Context Enhancement (Hours 8-16)  
+**Critical Path:** Family integration + mobile UI + extension preparation
+- Student selection with family context display
+- Mobile-first touch-optimized component library
+- Extension point database hooks for AI integration
+- **Checkpoint:** Family context integrated, mobile interfaces functional
 
-### Phase 3: Mobile UI (Hours 12-18)
-**Critical Path:** Touch optimization + gesture support  
-- Create mobile-first component library
-- Implement swipe navigation and touch targets
-- Optimize kiosk interfaces for tablets
-- **Checkpoint:** Mobile devices fully functional
-
-### Phase 4: Real-Time (Hours 18-22)
-**Critical Path:** Notification system + live updates
-- Implement notification bell with real-time subscriptions
-- Add toast integration and queue updates  
-- Create role-based notification filtering
-- **Checkpoint:** Real-time communication operational
-
-### Phase 5: Polish (Hours 22-24)
-**Critical Path:** Tutorial system + production readiness
-- Add onboarding tutorials for each role
-- Comprehensive testing and security validation
-- **Final Checkpoint:** System ready for classroom deployment
+### Phase 3: Behavioral Intelligence Foundation (Hours 16-24)
+**Critical Path:** Real-time system + future-proof validation
+- Notification infrastructure for behavioral alerts
+- Communication system foundation for parent engagement
+- AI integration readiness validation
+- **Checkpoint:** Future-proof behavioral intelligence platform operational
 
 ---
 
-## 🚨 ROLLBACK PROCEDURES
+## 🚨 CRITICAL SUCCESS FACTORS
 
-### Authentication Rollback
-**If Google OAuth fails:** Maintain password auth + kiosk liberation (critical)
+### Nuclear Reset Validation
+- [ ] **100+ students imported** with complete family relationships established
+- [ ] **Anonymous kiosk access** functional for all student reflection workflows
+- [ ] **Student-centric architecture** with families → students → guardians structure
+- [ ] **Extension points prepared** for AI insights and external data correlation
 
-### Mobile UI Rollback  
-**If gestures fail:** Fall back to optimized button navigation with large touch targets
+### Future-Proof Foundation Validation
+- [ ] **AI integration hooks** ready in database schema and service architecture
+- [ ] **Communication framework** prepared for parent notification automation  
+- [ ] **External correlation** markers established for SIS integration
+- [ ] **Mobile-first design** validated for classroom tablet deployment
 
-### Real-Time Rollback
-**If Supabase subscriptions fail:** Implement polling fallback for queue updates
-
----
-
-## ✅ SUCCESS CRITERIA VALIDATION
-
-### Functional Requirements
-- [ ] Students access kiosks without authentication barriers
-- [ ] Teachers receive real-time queue notifications
-- [ ] Super admin has development access via /dev-login
-- [ ] Google OAuth restricted to @school.edu domain  
-- [ ] Mobile tablets support all core functionality
-
-### Technical Requirements
-- [ ] RLS policies enforce role-based security
-- [ ] Real-time updates perform efficiently
-- [ ] Mobile-first responsive design validated
-- [ ] Cross-browser compatibility verified
-- [ ] Security audit passes completely
+### Production Readiness Validation
+- [ ] **Super admin system management** via /dev-login operational
+- [ ] **Family context display** in all relevant user interfaces
+- [ ] **Real-time foundation** ready for behavioral alert notifications
+- [ ] **Scalability architecture** prepared for multi-school platform evolution
 
 ---
 
 ## 📚 AI IMPLEMENTATION GUIDANCE
 
-### Always Reference Documentation
+### Always Reference Strategic Documentation
 Before implementing any changes, consult:
-1. **Current task context** from `docs/technical/production-sprint-checklist.md`
-2. **Technical specifications** from `docs/architecture/transformation-blueprint.md`  
-3. **System overview** from `BX-OS-PRODUCTION-KNOWLEDGE.md`
+1. **Strategic vision** from `BX-OS-STRATEGIC-ROADMAP.md`
+2. **Nuclear reset specifications** from `BX-OS-PRODUCTION-KNOWLEDGE.md`
+3. **CSV import strategy** from `docs/technical/csv-import-strategy.md`
+4. **Extension architecture** from `docs/technical/extension-architecture.md`
+5. **Implementation checklist** from `docs/technical/production-sprint-checklist.md`
 
-### Implementation Principles
-- **Mobile-First:** Design for tablets, enhance for desktop
-- **Security-Conscious:** Maintain RLS while enabling anonymous kiosk access
-- **Performance-Aware:** Real-time features must not impact classroom usability
-- **Role-Centric:** Every UI decision should consider user role context
+### Nuclear Reset Implementation Principles
+- **Student-Centric Architecture:** Design everything around family relationships and student context
+- **Future-Proof Foundation:** Every decision should support AI integration and external data correlation
+- **Extension Point Preparation:** Database schema and service architecture ready for advanced features
+- **Communication Framework:** Build infrastructure for parent engagement and notification automation
 
-### Critical Success Factors
-1. **Kiosk Liberation:** Students MUST access reflection system without authentication
-2. **Role Hierarchy:** Super admin → Admin → Teacher access control must function  
-3. **Mobile Optimization:** Tablet interfaces MUST be touch-friendly and responsive
-4. **Real-Time Communication:** Teachers MUST receive immediate queue awareness
+### Critical Implementation Success Factors
+1. **Nuclear Database Reset:** Complete architectural transformation from prototype to intelligence platform
+2. **CSV Integration:** 100+ students with family relationships imported successfully
+3. **Anonymous Kiosk Access:** Students MUST complete reflections without authentication barriers
+4. **Extension Readiness:** AI hooks and external data correlation framework operational
 
 ---
 
-**🎯 SPRINT SUCCESS DEFINITION:** All critical functionality operational, system ready for immediate classroom deployment, mobile-first design validated, security requirements met.**
+**🎯 NUCLEAR RESET SUCCESS DEFINITION:** Complete transformation from basic prototype to future-proof behavioral intelligence platform foundation, with 100+ students imported in family-centric architecture, anonymous kiosk access functional, extension points prepared for AI integration, and mobile-first design validated for classroom deployment.**
