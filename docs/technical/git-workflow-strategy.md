@@ -40,6 +40,44 @@ main
 
 ---
 
+## 🤝 Human-in-the-Loop GitHub Operations
+
+### Critical Coordination Protocol
+**AI MUST request explicit user action for ALL GitHub operations:**
+
+### Phase Completion Publishing
+```
+🚨 REQUEST TO USER:
+"Please PUBLISH/UPDATE the repository to GitHub now - we've completed Phase X and need to sync our changes"
+
+✅ WAIT for user confirmation before proceeding to next phase
+```
+
+### Critical Checkpoint Backup
+```  
+🚨 REQUEST TO USER:
+"We've reached Hour X checkpoint - please PUBLISH/UPDATE to GitHub to save our progress"
+
+✅ ALWAYS backup at Hours 4, 8, 16, 20
+```
+
+### Emergency Rollback Coordination
+```
+🚨 URGENT REQUEST TO USER:
+"URGENT: Please REVERT/ROLLBACK the repository to [specific commit/branch] due to [issue]"
+
+✅ PROVIDE exact Git commands or branch names
+✅ WAIT for user confirmation before continuing
+```
+
+### User Confirmation Requirements
+- **Never proceed to next phase without user GitHub sync confirmation**
+- **Always provide specific commands or branch names for user actions**
+- **Wait for explicit user confirmation that GitHub operations are complete**
+- **Verify synchronization success before continuing development**
+
+---
+
 ## 📝 Commit Standards
 
 ### Commit Message Format
@@ -125,7 +163,11 @@ git commit -m "docs(phase-n): complete phase {n} documentation update"
 git tag -a "phase-{n}-complete" -m "Phase {n} completed: {domain-name}"
 git push origin phase-{n}-complete
 
-# 4. Prepare for next phase (after user approval)
+# 4. REQUEST USER TO PUBLISH/UPDATE REPOSITORY
+# AI MUST REQUEST: "Please PUBLISH/UPDATE repository - Phase X complete"
+# WAIT for user confirmation before proceeding
+
+# 5. Prepare for next phase (after user GitHub sync confirmation)
 git checkout main
 git merge sprint/phase-{n}-{domain}
 git push origin main
