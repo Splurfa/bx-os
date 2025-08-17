@@ -2,6 +2,49 @@
 
 **MISSION:** Transform Student Behavior Management System into a comprehensive **Behavioral Intelligence Platform** through nuclear database reset and strategic architecture rebuild within 24-hour sprint window.
 
+## 🏗️ SOPHISTICATED VERSION CONTROL STRATEGY
+
+### **Production Snapshot Protection Protocol**
+**CRITICAL:** Current `main` branch → Rename to `main-legacy-backup` (disaster recovery fallback)
+**CRITICAL:** Create new `production-ready` branch → New golden snapshot base for all development
+**CRITICAL:** Tagged milestones every 4 hours → Rollback points with verification
+
+### **Branch Architecture (Phase-Based Development)**
+```
+production-ready (NEW MAIN - Golden Snapshot)
+├── sprint/phase-1-nuclear-foundation     ← Hours 0-8
+│   ├── phase-1/database-reset           ← Hour 2 checkpoint  
+│   ├── phase-1/kiosk-liberation         ← Hour 4 checkpoint
+│   ├── phase-1/super-admin-setup        ← Hour 6 checkpoint
+│   └── phase-1/csv-integration          ← Hour 8 checkpoint
+├── sprint/phase-2-mobile-overhaul       ← Hours 8-16
+│   ├── phase-2/component-library        ← Hour 12 checkpoint
+│   └── phase-2/student-context          ← Hour 16 checkpoint
+└── sprint/phase-3-realtime-system       ← Hours 16-24
+    ├── phase-3/notification-framework   ← Hour 20 checkpoint
+    └── phase-3/extension-validation     ← Hour 24 checkpoint
+```
+
+### **Risk Mitigation Framework**
+**ROLLBACK CAPABILITIES:**
+- **Feature breaks** → Revert to last checkpoint branch
+- **Phase fails** → Rollback to previous phase tag  
+- **Complete disaster** → Return to production-ready base
+- **Nuclear fallback** → Restore main-legacy-backup
+
+### **Human-in-the-Loop Management Protocol**
+**USER RESPONSIBILITIES:**
+- Create branches when AI requests them
+- Confirm Lovable branch switches successfully
+- Sync to GitHub at mandatory checkpoints
+- Create tags for major milestones (v1.0-phase1-complete, etc.)
+- Authorize phase completions and merges to production-ready
+
+**QUALITY GATES (USER MUST CONFIRM):**
+- **Hour 0:** Branch creation + production-ready base confirmation
+- **Hour 4, 8, 12, 16, 20:** Mandatory GitHub sync + checkpoint validation
+- **Hour 8, 16, 24:** Phase completion + tag creation + merge approval
+
 ## 🚨 NUCLEAR RESET SPRINT CONTEXT
 
 **Sprint Objective:** Complete architectural transformation from basic prototype to future-proof behavioral intelligence foundation within 24 hours.
@@ -157,4 +200,12 @@ Resolution (with family notification) → Pattern Analysis (for future intervent
 - [ ] Mobile-first responsive design validated across target devices
 - [ ] Real-time notification foundation operational
 
-**🎯 SPRINT SUCCESS DEFINITION:** Complete architectural transformation from prototype to future-proof behavioral intelligence platform foundation, ready for immediate classroom deployment and future AI/analytics expansion.
+### Version Control & Risk Management Validation
+- [ ] **Production snapshot protection** via main-legacy-backup established
+- [ ] **Phase-based development** with hourly checkpoints functional
+- [ ] **Rollback capabilities** tested and verified at each level (feature/phase/complete/nuclear)
+- [ ] **Human-in-the-loop** management controls operational for all GitHub operations
+- [ ] **Quality gates** enforced at Hours 0, 4, 8, 12, 16, 20, 24 with mandatory user confirmation
+- [ ] **Tagged milestones** created successfully (v1.0-phase1-complete, v1.1-phase2-complete, v1.2-phase3-complete)
+
+**🎯 SPRINT SUCCESS DEFINITION:** Complete architectural transformation from prototype to future-proof behavioral intelligence platform foundation, ready for immediate classroom deployment and future AI/analytics expansion, with sophisticated version control and rollback protection ensuring zero-risk development.
