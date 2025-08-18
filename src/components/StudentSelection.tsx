@@ -14,11 +14,15 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
   const [searchTerm, setSearchTerm] = useState("");
   const { students, loading } = useStudents();
 
-  const filteredStudents = students.filter(student => 
-    student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.grade?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.class_name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredStudents = students.filter(student => {
+    const fullName = `${student.first_name} ${student.last_name}`.toLowerCase();
+    const searchLower = searchTerm.toLowerCase();
+    return fullName.includes(searchLower) ||
+           student.first_name?.toLowerCase().includes(searchLower) ||
+           student.last_name?.toLowerCase().includes(searchLower) ||
+           student.grade?.toLowerCase().includes(searchLower) ||
+           student.class_name?.toLowerCase().includes(searchLower);
+  });
 
   const handleStudentClick = (student: Student) => {
     if (selectedStudentId === student.id) {
@@ -59,7 +63,7 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
                 className="flex items-center justify-between p-3 border-b border-border cursor-pointer transition-colors bg-primary/10"
               >
                 <div>
-                  <h4 className="font-medium text-foreground text-sm">{student.name}</h4>
+                  <h4 className="font-medium text-foreground text-sm">{student.first_name} {student.last_name}</h4>
                   <p className="text-xs text-muted-foreground">{student.grade} Grade • Class {student.class_name}</p>
                 </div>
                 <div className="w-5 h-5 rounded-full border-2 bg-primary border-primary flex items-center justify-center transition-all">
@@ -76,7 +80,7 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
               className="flex items-center justify-between p-3 border-b border-border cursor-pointer transition-colors hover:bg-muted/50"
             >
               <div>
-                <h4 className="font-medium text-foreground text-sm">{student.name}</h4>
+                <h4 className="font-medium text-foreground text-sm">{student.first_name} {student.last_name}</h4>
                 <p className="text-xs text-muted-foreground">{student.grade} Grade • Class {student.class_name}</p>
               </div>
               <div className="w-5 h-5 rounded-full border-2 border-muted-foreground flex items-center justify-center transition-all">

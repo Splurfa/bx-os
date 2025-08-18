@@ -24,7 +24,7 @@ export const useStudents = () => {
       const { data, error } = await supabase
         .from('students')
         .select('*')
-        .order('name');
+        .order('first_name, last_name');
 
       if (error) throw error;
       setStudents(data || []);

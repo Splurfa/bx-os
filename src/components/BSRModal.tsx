@@ -111,7 +111,7 @@ const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
               </Button>
               <div>
                 <h2 className="text-h4">Log Behavior</h2>
-                <p className="text-caption">{selectedStudent?.name}</p>
+                <p className="text-caption">{selectedStudent?.first_name} {selectedStudent?.last_name}</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">

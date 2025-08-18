@@ -139,7 +139,7 @@ export const useSupabaseQueue = () => {
 
   // Add student to queue
   const addToQueue = async (data: {
-    studentName: string;
+    student: Student;
     behaviors: string[];
     mood: string;
     urgent?: boolean;
@@ -155,49 +155,9 @@ export const useSupabaseQueue = () => {
         return;
       }
 
-      // Find or create student
-      let student = await supabase
-        .from('students')
-        .select('id, family_id')
-        .eq('name', data.studentName)
-        .maybeSingle();
-
-      if (student.error && student.error.code !== 'PGRST116') {
-        throw student.error;
-      }
-
-      let studentId = student.data?.id;
-      let familyId = student.data?.family_id;
-
-      if (!studentId) {
-        // Create family first
-        const { data: newFamily, error: familyError } = await supabase
-          .from('families')
-          .insert([{
-            family_name: `${data.studentName} Family`,
-            primary_contact_name: 'Unknown'
-          }])
-          .select('id')
-          .single();
-
-        if (familyError) throw familyError;
-        familyId = newFamily.id;
-
-        // Create student
-        const { data: newStudent, error: studentError } = await supabase
-          .from('students')
-          .insert([{
-            name: data.studentName,
-            first_name: data.studentName.split(' ')[0] || data.studentName,
-            last_name: data.studentName.split(' ').slice(1).join(' ') || '',
-            family_id: familyId
-          }])
-          .select('id')
-          .single();
-
-        if (studentError) throw studentError;
-        studentId = newStudent.id;
-      }
+      // Use the provided student directly
+      const studentId = data.student.id;
+      const familyId = data.student.family_id;
 
       // Create behavior request
       const { error: requestError } = await supabase
@@ -216,7 +176,7 @@ export const useSupabaseQueue = () => {
 
       toast({
         title: "Student Added",
-        description: `${data.studentName} has been added to the queue.`,
+        description: `${data.student.first_name} ${data.student.last_name} has been added to the queue.`,
       });
 
       await fetchQueue();

@@ -35,7 +35,7 @@ const TeacherDashboard = () => {
 
   const handleBSRSubmit = async (data: any) => {
     await addToQueue({
-      studentName: data.student.name,
+      student: data.student,
       behaviors: data.behaviors,
       mood: String(data.mood),
       urgent: data.urgent,
