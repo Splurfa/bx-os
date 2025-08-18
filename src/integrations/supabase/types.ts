@@ -944,6 +944,10 @@ export type Database = {
         Args: { p_kiosk_id: number }
         Returns: undefined
       }
+      check_kiosk_rate_limit: {
+        Args: { p_kiosk_id: number }
+        Returns: boolean
+      }
       create_user_session: {
         Args: {
           p_device_info?: Json
