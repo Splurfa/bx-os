@@ -2,9 +2,9 @@
 
 ## 📋 CRITICAL MANDATES - READ FIRST & FOLLOW ALWAYS
 
-**MANDATE 1:** ⚠️ **ALWAYS reference SPRINT-HANDOFF-KIT as source of truth** - Keep folder updated at all times. All documentation, specifications, and implementation details are maintained in the SPRINT-HANDOFF-KIT folder. Never work from outdated or conflicting information.
+**MANDATE 1:** ⚠️ **ALWAYS reference SPRINT-DOCUMENTATION as source of truth** - Keep folder updated at all times. All documentation, specifications, and implementation details are maintained in the SPRINT-DOCUMENTATION folder. Never work from outdated or conflicting information.
 
-**MANDATE 2:** ⚠️ **ACTIVELY use sprint checklist and keep it updated continuously** - The IMPLEMENTATION-CHECKLIST.md file in SPRINT-HANDOFF-KIT must be consulted and updated throughout development. Check off completed tasks, update timelines, and track progress in real-time.
+**MANDATE 2:** ⚠️ **ACTIVELY use sprint checklist and keep it updated continuously** - The IMPLEMENTATION-CHECKLIST.md file in SPRINT-DOCUMENTATION must be consulted and updated throughout development. Check off completed tasks, update timelines, and track progress in real-time.
 
 **MANDATE 3:** ⚠️ **Follow corrected scope** - This is a DATA POPULATION & FEATURE IMPLEMENTATION sprint, NOT a nuclear reset. The database architecture already exists and is correct - focus on populating data and implementing missing features.
 
@@ -188,7 +188,7 @@ WITH CHECK (auth.role() = 'anon');
 - **CONTINUOUS:** Keep checklist as living document reflecting actual implementation status
 
 ### Source of Truth Maintenance
-- **ALL specifications:** Reference SPRINT-HANDOFF-KIT folder documents
+- **ALL specifications:** Reference SPRINT-DOCUMENTATION folder documents
 - **ALL technical details:** Consult BX-OS-TECHNICAL-CONTEXT.md for implementation guidance
 - **ALL feature requirements:** Follow SPRINT-FEATURE-REQUIREMENTS.md specifications
 - **ALL architectural decisions:** Align with TRANSFORMATION-BLUEPRINT.md corrected scope
@@ -201,4 +201,4 @@ WITH CHECK (auth.role() = 'anon');
 
 ---
 
-**FINAL REMINDER:** This sprint is about DATA POPULATION and FEATURE IMPLEMENTATION using the existing, correctly-architected database. Success depends on following the SPRINT-HANDOFF-KIT documentation as source of truth and maintaining active checklist management throughout implementation.
+**FINAL REMINDER:** This sprint is about DATA POPULATION and FEATURE IMPLEMENTATION using the existing, correctly-architected database. Success depends on following the SPRINT-DOCUMENTATION folder as source of truth and maintaining active checklist management throughout implementation.

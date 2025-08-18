@@ -67,7 +67,7 @@ src/
 ├── pages/               # Route components
 └── integrations/        # Supabase client & types
 
-SPRINT-HANDOFF-KIT/      # Sprint documentation & requirements
+SPRINT-DOCUMENTATION/    # Sprint documentation & requirements
 ```
 
 ### 🎯 CRITICAL SUCCESS METRICS
@@ -84,7 +84,7 @@ SPRINT-HANDOFF-KIT/      # Sprint documentation & requirements
 - All critical RPC functions have been created
 
 ### 📚 REFERENCE DOCUMENTATION
-See `SPRINT-HANDOFF-KIT/` folder for:
+See `SPRINT-DOCUMENTATION/` folder for:
 - Detailed implementation specifications
 - Database schema documentation  
 - Feature requirements and acceptance criteria
