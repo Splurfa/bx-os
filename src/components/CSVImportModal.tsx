@@ -81,67 +81,96 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   } | null>(null);
 
   const parseCSV = (csvText: string): CSVStudent[] => {
-    const lines = csvText.split('\n').filter(line => line.trim());
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const lines = csvText.trim().split('\n');
+    const headers = lines[0].toLowerCase().split(',').map(h => h.trim().replace(/"/g, ''));
     
     return lines.slice(1).map(line => {
       const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
       const student: any = {};
       
       headers.forEach((header, index) => {
-        if (header.includes('student') && header.includes('name')) {
-          student.student_name = values[index];
-        } else if (header.includes('teacher')) {
-          student.teacher_name = values[index];
-        } else if (header.includes('grade')) {
-          student.grade = values[index];
-        } else if (header.includes('class')) {
-          student.class = values[index];
-        } else if (header.includes('family') || header.includes('contact') || header.includes('parent')) {
-          student.family_info = values[index];
-        }
+        student[header] = values[index] || '';
       });
       
       return student as CSVStudent;
-    }).filter(student => student.student_name && student.student_name.trim());
+    }).filter(student => student.student_first_name && student.student_first_name.trim());
   };
 
   const normalizeFamilies = (students: CSVStudent[]): ProcessedFamily[] => {
     const familyMap = new Map<string, ProcessedFamily>();
     
     students.forEach(csvStudent => {
-      // Create family key from family info (phone/email) or student's last name
-      const nameParts = csvStudent.student_name.split(' ');
-      const firstName = nameParts[0];
-      const lastName = nameParts[nameParts.length - 1];
+      const firstName = csvStudent.student_first_name;
+      const lastName = csvStudent.student_last_name;
+      const fullName = csvStudent.student_full_name || `${firstName} ${lastName}`;
       
-      let familyKey = lastName.toLowerCase();
-      let contactInfo = csvStudent.family_info || '';
-      
-      // Extract phone/email from family_info if available
-      const phoneMatch = contactInfo.match(/(\d{3}[-.]?\d{3}[-.]?\d{4})/);
-      const emailMatch = contactInfo.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
-      
-      if (phoneMatch || emailMatch) {
-        familyKey = (phoneMatch?.[0] || emailMatch?.[0] || lastName).toLowerCase();
-      }
+      // Use family_header as the family key
+      const familyKey = csvStudent.family_header.toLowerCase();
       
       if (!familyMap.has(familyKey)) {
+        // Parse emails from household_emails
+        const emails = csvStudent.household_emails ? 
+          csvStudent.household_emails.split(',').map(e => e.trim()) : [];
+        const primaryEmail = emails[0] || '';
+        
+        // Create guardians from parent1 and parent2
+        const guardians: ProcessedGuardian[] = [];
+        
+        if (csvStudent.parent1_name) {
+          const parent1Names = csvStudent.parent1_name.split(' ');
+          guardians.push({
+            first_name: parent1Names[0] || '',
+            last_name: parent1Names.slice(1).join(' ') || parent1Names[0],
+            name: csvStudent.parent1_name,
+            relationship: 'Parent',
+            phone_primary: csvStudent.parent1_cell_1 || '',
+            email: emails[0] || '',
+            is_primary_contact: true
+          });
+        }
+        
+        if (csvStudent.parent2_name) {
+          const parent2Names = csvStudent.parent2_name.split(' ');
+          guardians.push({
+            first_name: parent2Names[0] || '',
+            last_name: parent2Names.slice(1).join(' ') || parent2Names[0],
+            name: csvStudent.parent2_name,
+            relationship: 'Parent',
+            phone_primary: csvStudent.parent2_cell_1 || '',
+            email: emails[1] || emails[0] || '',
+            is_primary_contact: false
+          });
+        }
+        
         familyMap.set(familyKey, {
-          family_name: `${lastName} Family`,
-          primary_contact_name: contactInfo.split(/[,;]|phone|email/i)[0]?.trim() || `${lastName} Guardian`,
-          primary_contact_phone: phoneMatch?.[0] || '',
-          primary_contact_email: emailMatch?.[0] || '',
-          students: []
+          family_name: csvStudent.family_header,
+          primary_contact_name: csvStudent.parent1_name || csvStudent.parent2_name || '',
+          primary_contact_phone: csvStudent.parent1_cell_1 || csvStudent.parent2_cell_1 || '',
+          primary_contact_email: primaryEmail,
+          address_line1: csvStudent.street || '',
+          city: csvStudent.city || '',
+          state: csvStudent.state || '',
+          zip_code: csvStudent.zipc || '',
+          students: [],
+          guardians: guardians
         });
       }
       
-      familyMap.get(familyKey)!.students.push({
-        name: csvStudent.student_name,
+      const family = familyMap.get(familyKey)!;
+      family.students.push({
+        name: fullName,
         first_name: firstName,
         last_name: lastName,
-        grade: csvStudent.grade || '',
-        class_name: csvStudent.class || csvStudent.teacher_name || ''
+        grade: csvStudent.class_raw || '',
+        class_name: csvStudent.class_raw || '',
+        date_of_birth: csvStudent.dob ? (() => {
+          try {
+            const [month, day, year] = csvStudent.dob.split('/');
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+          } catch (e) {
+            return undefined;
+          }
+        })() : undefined
       });
     });
     
@@ -163,7 +192,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             family_name: family.family_name,
             primary_contact_name: family.primary_contact_name,
             primary_contact_phone: family.primary_contact_phone,
-            primary_contact_email: family.primary_contact_email
+            primary_contact_email: family.primary_contact_email,
+            address_line1: family.address_line1,
+            city: family.city,
+            state: family.state,
+            zip_code: family.zip_code
           })
           .select()
           .single();
@@ -171,20 +204,20 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         if (familyError) throw familyError;
         familiesCreated++;
         
-        // Create guardian
-        if (family.primary_contact_name) {
+        // Create guardians
+        for (const guardian of family.guardians) {
           const { error: guardianError } = await supabase
             .from('guardians')
             .insert({
               family_id: familyData.id,
-              first_name: family.primary_contact_name.split(' ')[0],
-              last_name: family.primary_contact_name.split(' ').slice(1).join(' ') || family.primary_contact_name.split(' ')[0],
-              name: family.primary_contact_name,
-              relationship: 'Parent/Guardian',
-              phone_primary: family.primary_contact_phone,
-              email: family.primary_contact_email,
-              is_primary_contact: true,
-              communication_preference: family.primary_contact_email ? 'email' : 'phone'
+              first_name: guardian.first_name,
+              last_name: guardian.last_name,
+              name: guardian.name,
+              relationship: guardian.relationship,
+              phone_primary: guardian.phone_primary,
+              email: guardian.email,
+              is_primary_contact: guardian.is_primary_contact,
+              communication_preference: guardian.email ? 'email' : 'phone'
             });
             
           if (guardianError) throw guardianError;
@@ -201,16 +234,17 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               first_name: student.first_name,
               last_name: student.last_name,
               grade: student.grade,
-              class_name: student.class_name
+              class_name: student.class_name,
+              date_of_birth: student.date_of_birth || null
             });
             
           if (studentError) throw studentError;
           studentsProcessed++;
         }
         
-        setProgress((familiesCreated / families.length) * 100);
-        
+        setProgress(Math.round((familiesCreated / families.length) * 100));
       } catch (error: any) {
+        console.error('Import error:', error);
         errors.push(`Family ${family.family_name}: ${error.message}`);
       }
     }
@@ -305,7 +339,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               <Alert>
                 <FileText className="h-4 w-4" />
                 <AlertDescription>
-                  Upload a CSV file with columns: student_name, teacher_name, grade, class, family_info
+                  Upload the Hillel enrollment CSV file to import student and family data.
                 </AlertDescription>
               </Alert>
               
