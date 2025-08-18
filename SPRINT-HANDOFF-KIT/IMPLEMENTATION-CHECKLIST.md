@@ -6,6 +6,15 @@
 
 ### ✅ Phase 1: Data Foundation & Feature Setup (COMPLETE: 100%)
 - [x] **Database Architecture** - Verified existing schema is perfect and ready
+
+## ✅ CRITICAL BUG FIX RESOLVED (08/18/2025)
+**ROOT CAUSE IDENTIFIED & FIXED:** RLS Infinite Recursion in Profiles Table
+- **Issue:** `42P17 infinite recursion detected in policy for relation "profiles"`
+- **Cause:** RLS policies recursively querying profiles table to check user roles (circular reference)
+- **Solution:** Created `get_current_user_role()` security definer function with proper search_path
+- **Result:** ✅ Google OAuth login now works correctly, routing logic restored for super_admin users
+- **Validation:** ✅ Profile query successful: zsummerfield@hillelhebrew.org routes to `/admin-dashboard`
+
 ## ✅ CRITICAL TASK: CSV IMPORT COMPLETED
 
 ### ✅ IMPLEMENTATION STATUS - COMPLETE
