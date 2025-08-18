@@ -1,17 +1,18 @@
 
-import { User, LogOut, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
+import { LogOut, User, GraduationCap, ChevronDown } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { NotificationBell } from './NotificationBell';
+import { Button } from '@/components/ui/button';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuSeparator, 
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { useProfile } from "@/hooks/useProfile";
+  DropdownMenuLabel
+} from '@/components/ui/dropdown-menu';
+import { useProfile } from '@/hooks/useProfile';
+import { useNavigate } from 'react-router-dom';
 
 const AppHeader = () => {
   const { signOut, user } = useAuth();
@@ -41,8 +42,16 @@ const AppHeader = () => {
           </div>
         </div>
         
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+        <div className="flex items-center gap-2">
+          {/* Notification Bell */}
+          <NotificationBell 
+            userRole={profile?.role || 'teacher'}
+            showPWAGuidance={true}
+          />
+          
+          {/* User Menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
             <Button 
               variant="ghost" 
               className="w-auto h-10 px-3 rounded-full bg-muted hover:bg-muted/80 transition-colors duration-200 flex items-center space-x-2"
@@ -70,8 +79,9 @@ const AppHeader = () => {
               <LogOut className="mr-2 h-4 w-4" />
               Sign out
             </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );
