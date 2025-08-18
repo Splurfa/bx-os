@@ -1,21 +1,45 @@
 # 📱 UI Component Specifications
 
-## Mobile-First Component Requirements for Classroom Tablet Deployment
+## Mobile-Enhanced Component Requirements for Existing Responsive Interface
 
-### **TOUCH-OPTIMIZED COMPONENT LIBRARY**
+### **NOTIFICATION SYSTEM & TOUCH ENHANCEMENTS**
 
-## 1. 🖱️ TouchOptimizedButton Component
+## 1. 🔔 NotificationBell Component (CRITICAL MISSING)
 
-### Component Specifications
-**File:** `src/components/ui/touch-optimized-button.tsx`
-**Priority:** CRITICAL - Foundation component for all interfaces
+### Component Specifications  
+**File:** `src/components/ui/NotificationBell.tsx`
+**Priority:** CRITICAL - Essential missing notification system
 
 **Requirements:**
-- [ ] **Minimum 44px touch targets** for accessibility compliance
-- [ ] **Immediate visual feedback** on touch interaction (<50ms)
-- [ ] **Haptic feedback simulation** using navigator.vibrate() when available
-- [ ] **Touch state management** with pressed, hover, and disabled states
-- [ ] **Gesture recognition** for long press and double tap events
+- [ ] **Real-time notification badge** with count display for behavior requests
+- [ ] **Dropdown notification list** with role-based filtering (teacher/admin/super_admin)
+- [ ] **Supabase real-time subscription** for behavior_requests and reflections updates
+- [ ] **PWA installation guidance** integration for mobile notification permissions
+- [ ] **Touch-optimized interactions** for mobile and tablet devices
+- [ ] **Notification sound/vibration** support for PWA environments
+
+**Critical Implementation:**
+```typescript
+interface NotificationBellProps {
+  userId?: string;
+  userRole: 'teacher' | 'admin' | 'super_admin';
+  maxNotifications?: number;
+  autoMarkAsRead?: boolean;
+  showPWAGuidance?: boolean;
+  onNotificationClick?: (notification: Notification) => void;
+  className?: string;
+}
+
+// Real-time subscription for notifications
+const channel = supabase
+  .channel('behavior-notifications')
+  .on('postgres_changes', {
+    event: 'INSERT',
+    schema: 'public',
+    table: 'behavior_requests'
+  }, handleNewBehaviorRequest)
+  .subscribe();
+```
 
 **Technical Implementation:**
 ```typescript

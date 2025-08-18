@@ -4,33 +4,45 @@
 
 ### **CRITICAL SPRINT FEATURES**
 
-## 1. 🗂️ Nuclear Database Reset & Family Architecture
+## 1. 📊 CSV Import & Data Population
 
-### Feature: Complete Database Transformation
+### Feature: Student Data Import with Family Context
 **Priority:** CRITICAL - Sprint Foundation
-**Implementation Time:** 2 hours
+**Implementation Time:** 4 hours
 
 **Requirements:**
-- [ ] **Complete database wipe** of existing student-centric tables
-- [ ] **New family-centric schema** with families → students → guardians relationships
-- [ ] **Extension point tables** for AI, external data, and communication integration
-- [ ] **Super admin role creation** for system management
+- [ ] **CSV processing pipeline** for flat student data transformation
+- [ ] **Family normalization algorithm** to extract and deduplicate family units
+- [ ] **Student import with family links** using existing database schema
+- [ ] **Guardian contact processing** with communication preferences
 
 **Acceptance Criteria:**
-- Database schema supports 100+ student import with complete family relationships
-- Extension point tables operational for future AI and external integration
-- Zero data loss risk with proper backup/restore capabilities
-- Super admin role enables full system management access
+- CSV import processes 100+ student records successfully within 5 minutes
+- Family relationships properly normalized with zero duplication
+- Students correctly linked to family units with guardian contacts
+- External correlation markers prepared for future SIS integration
+- Data integrity validation confirms all relationships accurate
 
 **Technical Specifications:**
-```sql
--- Core Tables Required
-CREATE TABLE families (id, family_name, address, phone, email, created_at)
-CREATE TABLE students (id, family_id, name, grade, class_name, external_student_id)
-CREATE TABLE guardians (id, family_id, name, relationship, contact_preferences)
-CREATE TABLE external_data (id, student_id, data_source_id, correlation_confidence)
-CREATE TABLE behavior_patterns (id, student_id, pattern_type, ai_confidence)
-CREATE TABLE communication_templates (id, template_name, content_template)
+```typescript
+// Existing Database Schema (VERIFIED COMPLETE):
+// ✅ families table - family units with contact information
+// ✅ students table - linked to families with external correlation markers  
+// ✅ guardians table - parent/guardian contacts with communication preferences
+// ✅ behavior_requests table - teacher-initiated BSRs with family context
+// ✅ reflections table - student responses with AI analysis hooks
+// ✅ behavior_history table - completed workflows
+
+// CSV Processing Functions Required:
+interface CSVStudent {
+  student_name: string;
+  teacher_name: string;
+  grade: string;
+  class: string;
+  family_info: string; // Contact details for family grouping
+}
+
+// Family normalization and student import with existing schema population
 ```
 
 ---

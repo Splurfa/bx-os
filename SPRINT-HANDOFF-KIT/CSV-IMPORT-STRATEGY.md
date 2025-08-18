@@ -53,21 +53,27 @@ graph TD
 
 ### **Phase 1: Family Normalization (30 minutes)**
 
-**1.1 Extract Unique Families**
+**1.1 Verify Existing Families Table**
 ```sql
--- Create families table for CSV import
-CREATE TABLE families (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    family_name TEXT NOT NULL,
-    address TEXT,
-    phone_primary TEXT,
-    phone_secondary TEXT,
-    email_primary TEXT,
-    emergency_contact TEXT,
-    notes TEXT,
-    created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now()
-);
+-- FAMILIES TABLE ALREADY EXISTS - VERIFIED READY FOR IMPORT
+-- ✅ families table structure:
+-- id UUID PRIMARY KEY DEFAULT gen_random_uuid()
+-- family_name TEXT NOT NULL
+-- primary_contact_name TEXT
+-- primary_contact_phone TEXT  
+-- primary_contact_email TEXT
+-- address_line1 TEXT
+-- address_line2 TEXT
+-- city TEXT
+-- state TEXT
+-- zip_code TEXT
+-- emergency_contact_name TEXT
+-- emergency_contact_phone TEXT
+-- notes TEXT
+-- created_at TIMESTAMPTZ DEFAULT now()
+-- updated_at TIMESTAMPTZ DEFAULT now()
+
+-- NO TABLE CREATION NEEDED - POPULATE EXISTING SCHEMA
 ```
 
 **1.2 Process CSV Family Logic**

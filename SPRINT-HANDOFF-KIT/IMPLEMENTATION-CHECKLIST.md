@@ -6,39 +6,36 @@
 
 ---
 
-## 🚀 PHASE 1: NUCLEAR FOUNDATION (Hours 0-8)
+## 🚀 PHASE 1: DATA FOUNDATION & FEATURE SETUP (Hours 0-8)
 
 ### **Hour 0-1: Sprint Initialization**
-- [ ] **Review handoff kit documentation** (15 minutes)
+- [ ] **Review corrected handoff kit documentation** (15 minutes)
+- [ ] **Verify database architecture exists** - confirm all tables present (15 minutes)
 - [ ] **Create sprint branch** from production-ready (15 minutes)
-- [ ] **Backup current database state** (15 minutes)
-- [ ] **Initialize development environment** (15 minutes)
+- [ ] **Initialize CSV import development environment** (15 minutes)
 
-### **Hour 1-3: Nuclear Database Reset**
-- [ ] **Execute database wipe** - DROP CASCADE all existing tables (30 minutes)
-- [ ] **Create family-centric schema** - families, students, guardians tables (60 minutes)
-- [ ] **Create extension point tables** - behavior_patterns, external_data, communication_templates (30 minutes)
-- [ ] **Test database schema integrity** with sample data (30 minutes)
+### **Hour 1-4: CSV Import & Data Population**
+- [ ] **Create CSV processing pipeline** - file upload and parsing utilities (60 minutes)
+- [ ] **Implement family normalization algorithm** - extract unique families from CSV (45 minutes)
+- [ ] **Process 100+ student records** - import with family relationship links (45 minutes)
+- [ ] **Create guardian contacts** - process parent/guardian data with communication preferences (30 minutes)
+- [ ] **Validate data integrity** - verify all relational links and family structures (20 minutes)
 
-### **Hour 3-4: Super Admin Bootstrap**
-- [ ] **Add super_admin role** to enum type (15 minutes)
-- [ ] **Update Zach's profile** to super_admin role (15 minutes)
-- [ ] **Create /dev-login route** and DevLogin component (30 minutes)
-
-### **Hour 4-6: CSV Import Integration**
-- [ ] **Create CSV processing utility** (45 minutes)
-- [ ] **Implement family normalization** algorithm (45 minutes)
-- [ ] **Process 100+ student records** with family relationships (30 minutes)
+### **Hour 4-6: Google OAuth Integration**
+- [ ] **Configure Google Cloud Console** - OAuth 2.0 client setup with domain restrictions (45 minutes)
+- [ ] **Set up Supabase Google Auth provider** - client ID and secret configuration (30 minutes)
+- [ ] **Update authentication flow** - add Google OAuth option to existing login (30 minutes)
+- [ ] **Test Google OAuth functionality** - verify teacher/admin domain access (15 minutes)
 
 ### **Hour 6-7: Anonymous Kiosk Liberation**
-- [ ] **Remove ProtectedRoute** from kiosk paths (15 minutes)
-- [ ] **Update kiosk components** for anonymous operation (30 minutes)
-- [ ] **Test anonymous kiosk access** without authentication (15 minutes)
+- [ ] **Remove authentication guards** - update route configuration for /kiosk1, /kiosk2, /kiosk3 (15 minutes)
+- [ ] **Implement RLS policy modifications** - allow anonymous access for kiosk operations (30 minutes)
+- [ ] **Test anonymous kiosk access** - verify students can access without login (15 minutes)
 
 ### **Hour 7-8: Phase 1 Validation**
-- [ ] **Verify 100+ students imported** with family relationships (15 minutes)
-- [ ] **Confirm anonymous kiosk functionality** (15 minutes)
-- [ ] **Test super admin access** via /dev-login (15 minutes)
+- [ ] **Verify CSV import success** - 100+ students with complete family relationships (15 minutes)
+- [ ] **Confirm Google OAuth integration** - seamless login with existing auth (15 minutes)
+- [ ] **Test anonymous kiosk functionality** - full reflection workflow without authentication (15 minutes)
 - [ ] **Phase 1 checkpoint - PUBLISH TO GITHUB** (15 minutes)
 
 ---
