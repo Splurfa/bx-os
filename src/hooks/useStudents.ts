@@ -3,9 +3,12 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface Student {
   id: string;
-  name: string;
+  name?: string;
+  first_name: string;
+  last_name: string;
   grade: string | null;
   class_name: string | null;
+  family_id: string;
   created_at: string;
   updated_at: string;
 }

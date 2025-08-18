@@ -186,10 +186,10 @@ useEffect(() => {
     if (studentPassword === 'password123') {
       // Update student status to 'ready' first (showing as "At Kiosk"), then to 'in_progress'
       if (firstWaitingStudent) {
-        updateStudentKioskStatus(firstWaitingStudent.id, 'ready');
+        updateStudentKioskStatus(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
         // Immediately follow with 'in_progress' to show active reflection
         setTimeout(() => {
-          updateStudentKioskStatus(firstWaitingStudent.id, 'in_progress');
+          updateStudentKioskStatus(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
         }, 100);
       }
       setKioskState('reflection');

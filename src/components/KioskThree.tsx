@@ -150,11 +150,11 @@ const KioskThree = () => {
     if (studentPassword === 'password123') {
       // Store current student name for completion message
       if (firstWaitingStudent) {
-        setCurrentStudentName(firstWaitingStudent.student.name);
-        updateStudentKioskStatus(firstWaitingStudent.id, 'ready');
+        setCurrentStudentName(firstWaitingStudent.student?.name || firstWaitingStudent.student?.first_name + ' ' + firstWaitingStudent.student?.last_name);
+        updateStudentKioskStatus(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
         // Immediately follow with 'in_progress' to show active reflection
         setTimeout(() => {
-          updateStudentKioskStatus(firstWaitingStudent.id, 'in_progress');
+          updateStudentKioskStatus(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
         }, 100);
       }
       setKioskState('reflection');
