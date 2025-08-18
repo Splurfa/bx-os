@@ -116,22 +116,17 @@ Deno.serve(async (req) => {
 
     console.log('Starting CSV import process...');
 
-    // Read the CSV file
-    let csvContent: string;
-    try {
-      csvContent = await Deno.readTextFile('/opt/api/public/data/hillel_students_2025.csv');
-    } catch (error) {
-      console.error('Error reading CSV file:', error);
-      // Fallback: try to fetch from URL
-      const response = await fetch('https://tkqlflnarqrddjdqslom.supabase.co/storage/v1/object/public/data/hillel_students_2025.csv');
-      if (!response.ok) {
-        return new Response(
-          JSON.stringify({ error: 'Could not read CSV file' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      csvContent = await response.text();
+    // Read the CSV file from request body
+    const { csvData } = await req.json();
+    
+    if (!csvData) {
+      return new Response(
+        JSON.stringify({ error: 'No CSV data provided' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
+    
+    const csvContent = csvData;
 
     // Parse CSV content
     const lines = csvContent.split('\n').filter(line => line.trim());

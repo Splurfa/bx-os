@@ -84,8 +84,8 @@ SPRINT-DOCUMENTATION/    # Sprint documentation & requirements
 - All critical RPC functions have been created
 
 ### 📚 REFERENCE DOCUMENTATION
-See `SPRINT-DOCUMENTATION/` folder for:
-- Detailed implementation specifications
-- Database schema documentation  
-- Feature requirements and acceptance criteria
-- Technical context and architectural decisions
+See `SPRINT-DOCUMENTATION/` folder for complete project knowledge:
+- `FINAL-PROJECT-KNOWLEDGE.md` - Current system state and critical priorities
+- `IMPLEMENTATION-CHECKLIST.md` - Sprint progress tracking
+- `BX-OS-TECHNICAL-CONTEXT.md` - Technical implementation details  
+- `SPRINT-FEATURE-REQUIREMENTS.md` - Feature specifications and acceptance criteria
