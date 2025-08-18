@@ -957,6 +957,10 @@ export type Database = {
         Args: { p_session_id: string }
         Returns: undefined
       }
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       import_complete_hillel_csv_data: {
         Args: Record<PropertyKey, never>
         Returns: string
