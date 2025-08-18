@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import LiveTimer from "./LiveTimer";
 import { BehaviorRequest } from "@/hooks/useSupabaseQueue";
-import { MockBehaviorRequest } from "@/hooks/useMockData";
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -19,8 +18,8 @@ import {
 } from "@/components/ui/alert-dialog";
 
 interface QueueDisplayProps {
-  items: (BehaviorRequest | MockBehaviorRequest)[];
-  onSelectReflection: (item: BehaviorRequest | MockBehaviorRequest) => void;
+  items: BehaviorRequest[];
+  onSelectReflection: (item: BehaviorRequest) => void;
   formatTimeElapsed: (timestamp: Date) => string;
   onClearQueue?: () => void;
   clearQueueLoading?: boolean;

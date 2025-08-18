@@ -6,9 +6,8 @@ import { useToast } from '@/hooks/use-toast';
 export interface Profile {
   id: string;
   email: string;
-  first_name?: string;
-  last_name?: string;
-  role: 'teacher' | 'admin';
+  full_name?: string;
+  role: 'teacher' | 'admin' | 'super_admin';
   created_at: string;
   updated_at: string;
 }
@@ -45,7 +44,7 @@ export const useProfile = () => {
       // Fetch actual profile data from database
       const { data: profileData, error } = await supabase
         .from('profiles')
-        .select('id, email, full_name, first_name, last_name, role, created_at, updated_at')
+        .select('id, email, full_name, role, created_at, updated_at')
         .eq('id', user.id)
         .single();
 
@@ -55,8 +54,7 @@ export const useProfile = () => {
         const profile: ProfileWithTeacher = {
           id: user.id,
           email: user.email || '',
-          first_name: user.user_metadata?.first_name,
-          last_name: user.user_metadata?.last_name,
+          full_name: user.user_metadata?.full_name || `${user.user_metadata?.first_name || ''} ${user.user_metadata?.last_name || ''}`.trim(),
           role: user.user_metadata?.role || 'teacher',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
@@ -68,9 +66,8 @@ export const useProfile = () => {
       const profile: ProfileWithTeacher = {
         id: profileData.id,
         email: profileData.email || '',
-        first_name: profileData.first_name,
-        last_name: profileData.last_name,
-        role: profileData.role as 'teacher' | 'admin',
+        full_name: profileData.full_name,
+        role: profileData.role as 'teacher' | 'admin' | 'super_admin',
         created_at: profileData.created_at,
         updated_at: profileData.updated_at
       };
@@ -82,8 +79,7 @@ export const useProfile = () => {
       const profile: ProfileWithTeacher = {
         id: user.id,
         email: user.email || '',
-        first_name: user.user_metadata?.first_name,
-        last_name: user.user_metadata?.last_name,
+        full_name: user.user_metadata?.full_name || `${user.user_metadata?.first_name || ''} ${user.user_metadata?.last_name || ''}`.trim(),
         role: user.user_metadata?.role || 'teacher',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
@@ -124,9 +120,7 @@ export const useProfile = () => {
   const getDisplayName = () => {
     if (!profile) return 'Loading...';
     
-    if (profile.first_name || profile.last_name) {
-      return `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
-    }
+    if (profile.full_name) return profile.full_name;
     
     return profile.email.split('@')[0];
   };

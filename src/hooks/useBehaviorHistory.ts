@@ -3,26 +3,18 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface BehaviorHistoryItem {
   id: string;
-  student_name: string;
-  student_grade: string | null;
-  student_class_name: string | null;
-  behaviors: string[];
-  mood: string;
-  teacher_name: string | null;
-  teacher_email: string | null;
-  intervention_outcome: string;
-  completion_status: string;
+  behavior_request_id: string;
+  student_id: string;
+  reflection_id: string;
+  resolution_type: string;
+  resolution_notes: string | null;
+  intervention_applied: string | null;
+  family_notified: boolean | null;
+  notification_method: string | null;
+  follow_up_required: boolean | null;
+  follow_up_date: string | null;
+  archived_at: string;
   created_at: string;
-  completed_at: string;
-  time_in_queue_minutes: number | null;
-  kiosk_name: string | null;
-  kiosk_location: string | null;
-  question1: string | null;
-  question2: string | null;
-  question3: string | null;
-  question4: string | null;
-  teacher_feedback: string | null;
-  urgent: boolean;
 }
 
 export const useBehaviorHistory = () => {

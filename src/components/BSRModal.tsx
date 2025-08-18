@@ -5,7 +5,7 @@ import StudentSelection from "./StudentSelection";
 import MoodSlider from "./MoodSlider";
 import BehaviorSelection from "./BehaviorSelection";
 import StickyFooter from "./StickyFooter";
-import { MockStudent } from "@/hooks/useMockData";
+import { Student } from "@/hooks/useSupabaseQueue";
 
 interface BSRModalProps {
   isOpen: boolean;
@@ -15,7 +15,7 @@ interface BSRModalProps {
 
 const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedStudent, setSelectedStudent] = useState<MockStudent | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [teacherMood, setTeacherMood] = useState(50);
   const [selectedBehaviors, setSelectedBehaviors] = useState<string[]>([]);
   const [isUrgent, setIsUrgent] = useState(false);
@@ -36,7 +36,7 @@ const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
     onClose();
   };
 
-  const handleStudentSelect = (student: MockStudent) => {
+  const handleStudentSelect = (student: Student) => {
     setSelectedStudent(student);
   };
 

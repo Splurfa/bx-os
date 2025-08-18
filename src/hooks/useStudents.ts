@@ -10,6 +10,8 @@ interface Student {
   updated_at: string;
 }
 
+export type { Student };
+
 export const useStudents = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);

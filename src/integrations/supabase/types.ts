@@ -843,6 +843,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_clear_all_queues: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      assign_waiting_students_to_kiosk: {
+        Args: { p_kiosk_id: number }
+        Returns: undefined
+      }
       create_user_session: {
         Args: {
           p_device_info?: Json
@@ -854,6 +862,18 @@ export type Database = {
       }
       end_user_session: {
         Args: { p_session_id: string }
+        Returns: undefined
+      }
+      reassign_waiting_students: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      update_student_kiosk_status: {
+        Args: {
+          p_behavior_request_id?: string
+          p_kiosk_id: number
+          p_student_id?: string
+        }
         Returns: undefined
       }
     }

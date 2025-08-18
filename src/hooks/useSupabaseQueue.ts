@@ -1,103 +1,83 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { useKiosks } from '@/contexts/KioskContext';
 import { toast } from '@/hooks/use-toast';
 
 export interface Student {
   id: string;
-  name: string;
+  name?: string;
+  first_name: string;
+  last_name: string;
   grade?: string;
   class_name?: string;
+  family_id: string;
   created_at: string;
+  updated_at: string;
 }
 
 export interface BehaviorRequest {
   id: string;
   student_id: string;
-  teacher_id: string;
-  behaviors: string[];
-  mood: string;
-  status: 'waiting' | 'completed' | 'review';
-  kiosk_status: 'waiting' | 'ready' | 'in_progress' | 'completed';
-  urgent: boolean;
-  notes?: string;
+  teacher_id?: string;
+  behavior_type: string;
+  description: string;
+  teacher_name: string;
+  status: 'waiting' | 'active' | 'completed' | 'review';
+  priority_level?: string;
+  assigned_kiosk?: number;
   assigned_kiosk_id?: number;
+  location?: string;
+  time_of_incident?: string;
   created_at: string;
   updated_at: string;
   student?: Student;
   reflection?: Reflection;
   position?: number;
   timestamp?: Date;
-  teacher_full_name?: string;
-  teacher_email?: string;
-  teacher_first_name?: string;
-  teacher_last_name?: string;
+  behaviors?: string[];
 }
 
 export interface Reflection {
   id: string;
   behavior_request_id: string;
-  question1: string;
-  question2: string;
-  question3: string;
-  question4: string;
-  status: 'pending' | 'approved' | 'revision_requested';
+  student_id: string;
+  question_1_response?: string;
+  question_2_response?: string;  
+  question_3_response?: string;
+  question_4_response?: string;
   teacher_feedback?: string;
+  teacher_approved: boolean;
+  revision_requested: boolean;
+  submitted_at?: string;
+  reviewed_at?: string;
   created_at: string;
   updated_at: string;
+  status?: 'pending' | 'approved' | 'revision_requested';
 }
 
 export const useSupabaseQueue = () => {
   const { user } = useAuth();
-  const { updateKioskStudent } = useKiosks();
   const [items, setItems] = useState<BehaviorRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [clearQueueLoading, setClearQueueLoading] = useState(false);
-  const [userRole, setUserRole] = useState<string | null>(null);
 
-  // Get user role
-  const getUserRole = useCallback(async () => {
-    if (!user?.id) return null;
-    
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-      
-      if (error) {
-        console.error('Error fetching user role:', error);
-        return 'teacher'; // Default to teacher if error
-      }
-      
-      return data?.role || 'teacher';
-    } catch (error) {
-      console.error('Error in getUserRole:', error);
-      return 'teacher';
-    }
-  }, [user?.id]);
-
-  // Fetch queue items with student and reflection data
-  const fetchQueue = useCallback(async (skipLoadingState = false) => {
+  // Fetch queue items
+  const fetchQueue = useCallback(async () => {
     if (!user?.id) {
       setLoading(false);
       return;
     }
-    
+
     try {
-      if (!skipLoadingState && !clearQueueLoading) {
-        setLoading(true);
-      }
+      setLoading(true);
       
-      console.log("🔄 Fetching queue data...");
-      
-      // Always fetch current role to reflect any changes immediately
-      const currentRole = await getUserRole();
-      setUserRole(currentRole);
-      
-      // Build query with role-based filtering
+      // Get user role for filtering
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
       let query = supabase
         .from('behavior_requests')
         .select(`
@@ -105,180 +85,59 @@ export const useSupabaseQueue = () => {
           student:students(*),
           reflection:reflections(*)
         `);
-      
-      if (currentRole === 'teacher') {
+
+      // Filter by teacher if not admin
+      if (profile?.role === 'teacher') {
         query = query.eq('teacher_id', user.id);
-        console.log("🔒 Applying teacher filter: only showing requests from current user");
-      } else {
-        console.log("👑 Admin access: showing all behavior requests");
       }
-      
+
       const { data, error } = await query.order('created_at', { ascending: true });
 
-      if (error) {
-        console.error('Supabase query error:', error);
-        throw error;
-      }
-      
-      console.log("✅ Queue data fetched successfully:", data?.length || 0, "items");
-      
-      let transformedData = data?.map((item: any) => {
-        // Normalize reflection: Supabase may return an array; pick the latest by created_at
-        let latestReflection = null as any;
-        if (Array.isArray(item.reflection)) {
-          latestReflection = [...item.reflection]
-            .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0] || null;
-        } else if (item.reflection) {
-          latestReflection = item.reflection;
-        }
+      if (error) throw error;
 
-        return {
-          ...item,
-          reflection: latestReflection,
-          position: 0,
-          timestamp: new Date(item.created_at)
-        } as BehaviorRequest;
-      }) || [];
-
-      // Attach teacher profile info (first_name, last_name, full_name, email) for chips
-      try {
-        const teacherIds = Array.from(new Set(transformedData.map((i) => i.teacher_id))).filter(Boolean) as string[];
-        if (teacherIds.length > 0) {
-          const { data: teachers, error: teacherErr } = await supabase
-            .from('profiles')
-            .select('id, first_name, last_name, full_name, email')
-            .in('id', teacherIds);
-          if (!teacherErr && teachers) {
-            const tMap = Object.fromEntries(teachers.map((t: any) => [t.id, t]));
-            transformedData = transformedData.map((i) => {
-              const t = tMap[i.teacher_id] || {};
-              const computedFullName =
-                t.full_name ||
-                [t.first_name, t.last_name].filter(Boolean).join(' ') ||
-                undefined;
-              return {
-                ...i,
-                teacher_full_name: computedFullName,
-                teacher_email: t.email ?? undefined,
-                teacher_first_name: t.first_name ?? undefined,
-                teacher_last_name: t.last_name ?? undefined,
-              };
-            });
-          }
-        }
-      } catch (e) {
-        console.warn('Could not attach teacher info:', e);
-      }
-
-      // Calculate positions (only for waiting items with kiosk assignment)
-      const waitingItems = transformedData.filter(item => 
-        item.status === 'waiting' && item.assigned_kiosk_id !== null
-      );
-      
-      // Group by kiosk and calculate position within each kiosk's queue
-      const kioskGroups: Record<number, any[]> = {};
-      waitingItems.forEach(item => {
-        if (item.assigned_kiosk_id) {
-          if (!kioskGroups[item.assigned_kiosk_id]) {
-            kioskGroups[item.assigned_kiosk_id] = [];
-          }
-          kioskGroups[item.assigned_kiosk_id].push(item);
-        }
-      });
-      
-      // Set positions within each kiosk's queue
-      Object.values(kioskGroups).forEach(kioskItems => {
-        kioskItems.forEach((item, index) => {
-          item.position = index + 1;
-        });
-      });
+      const transformedData = data?.map((item: any, index: number) => ({
+        ...item,
+        student: item.student,
+        reflection: Array.isArray(item.reflection) 
+          ? item.reflection[0] 
+          : item.reflection,
+        position: index + 1,
+        timestamp: new Date(item.created_at),
+        behaviors: item.behavior_type ? item.behavior_type.split(', ') : [],
+        assigned_kiosk_id: item.assigned_kiosk
+      } as BehaviorRequest)) || [];
 
       setItems(transformedData);
-      console.log("📋 Queue state updated with", transformedData.length, "items");
     } catch (error) {
-      console.error('❌ Error fetching queue:', error);
-      // Show a toast notification for error
-      if (error instanceof Error) {
-        console.error('Error details:', error.message);
-      }
+      console.error('Error fetching queue:', error);
+      setItems([]);
     } finally {
-      // Always ensure loading is set to false
-      if (!skipLoadingState) {
-        setLoading(false);
-        console.log("⏹️ Loading state set to false");
-      }
+      setLoading(false);
     }
-  }, [user?.id, clearQueueLoading, userRole, getUserRole]);
+  }, [user?.id]);
 
-  // Call new database function to reassign all waiting students
-  const reassignWaitingStudents = useCallback(async (): Promise<void> => {
-    try {
-      const { error } = await supabase.rpc('reassign_waiting_students');
-      if (error) {
-        console.error('Error reassigning waiting students:', error);
-        throw error;
-      }
-      console.log('Successfully reassigned waiting students');
-    } catch (error) {
-      console.error('Failed to reassign waiting students:', error);
-      throw error;
-    }
-  }, []);
-
-  // Enhanced debounced fetch function with longer delay to prevent race conditions
-  const debouncedFetch = useCallback((() => {
-    let timeoutId: NodeJS.Timeout;
-    return () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => fetchQueue(true), 1000); // Increased from 300ms to 1000ms
-    };
-  })(), [fetchQueue]);
-
-  // Initialize user role
-  useEffect(() => {
-    if (user?.id && !userRole) {
-      getUserRole().then(setUserRole);
-    }
-  }, [user?.id, userRole, getUserRole]);
-
-  // Optimized real-time subscription with intelligent reassignment triggers
+  // Set up real-time subscriptions
   useEffect(() => {
     fetchQueue();
 
     const subscription = supabase
       .channel('queue-changes')
-        .on('postgres_changes', 
+      .on('postgres_changes', 
         { event: '*', schema: 'public', table: 'behavior_requests' },
-        (payload) => {
-          console.log('📡 Real-time update:', payload.eventType, payload);
-          
-          // Trigger immediate reassignment when a student moves to review or completes reflection
-          if (payload.eventType === 'UPDATE' && 
-              (payload.new?.status === 'review' || payload.new?.status === 'completed') && 
-              payload.old?.status === 'waiting') {
-            console.log('🔄 Student moved to review status - triggering immediate reassignment');
-            reassignWaitingStudents().catch(console.error);
-          }
-          
-          // Debounced queue refresh for UI updates
-          debouncedFetch();
-        }
+        () => fetchQueue()
       )
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'reflections' },
-        (payload) => {
-          console.log('📝 Reflection update:', payload);
-          debouncedFetch();
-        }
+        () => fetchQueue()
       )
       .subscribe();
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [user?.id, fetchQueue, debouncedFetch, reassignWaitingStudents]);
+  }, [fetchQueue]);
 
-  // Add student to queue with enhanced FIFO assignment and duplicate prevention
+  // Add student to queue
   const addToQueue = async (data: {
     studentName: string;
     behaviors: string[];
@@ -287,8 +146,6 @@ export const useSupabaseQueue = () => {
     notes?: string;
   }) => {
     try {
-      // Get current user
-      const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast({
           title: "Error",
@@ -298,94 +155,71 @@ export const useSupabaseQueue = () => {
         return;
       }
 
-      // First, ensure student exists
-      const { data: existingStudent, error: studentError } = await supabase
+      // Find or create student
+      let student = await supabase
         .from('students')
-        .select('id')
+        .select('id, family_id')
         .eq('name', data.studentName)
         .maybeSingle();
 
-      if (studentError) {
-        throw studentError;
+      if (student.error && student.error.code !== 'PGRST116') {
+        throw student.error;
       }
 
-      let studentId = existingStudent?.id;
+      let studentId = student.data?.id;
+      let familyId = student.data?.family_id;
 
-      if (existingStudent) {
-        // CRITICAL: Check for existing active request for this student
-        const { data: existingRequest, error: checkError } = await supabase
-          .from('behavior_requests')
-          .select('id, status')
-          .eq('student_id', studentId)
-          .in('status', ['waiting', 'review'])
-          .maybeSingle();
-
-        if (checkError) {
-          console.error('Error checking for existing request:', checkError);
-          throw checkError;
-        }
-
-        if (existingRequest) {
-          toast({
-            title: "Student Already in Queue",
-            description: `${data.studentName} already has an active behavior request (${existingRequest.status}). Please complete or cancel the existing request first.`,
-            variant: "destructive",
-          });
-          return;
-        }
-      } else {
-        // Create student if doesn't exist
-        const { data: newStudent, error: createStudentError } = await supabase
-          .from('students')
-          .insert([{ name: data.studentName }])
+      if (!studentId) {
+        // Create family first
+        const { data: newFamily, error: familyError } = await supabase
+          .from('families')
+          .insert([{
+            family_name: `${data.studentName} Family`,
+            primary_contact_name: 'Unknown'
+          }])
           .select('id')
           .single();
 
-        if (createStudentError) throw createStudentError;
-        if (!newStudent) throw new Error('Failed to create student');
+        if (familyError) throw familyError;
+        familyId = newFamily.id;
+
+        // Create student
+        const { data: newStudent, error: studentError } = await supabase
+          .from('students')
+          .insert([{
+            name: data.studentName,
+            first_name: data.studentName.split(' ')[0] || data.studentName,
+            last_name: data.studentName.split(' ').slice(1).join(' ') || '',
+            family_id: familyId
+          }])
+          .select('id')
+          .single();
+
+        if (studentError) throw studentError;
         studentId = newStudent.id;
       }
 
-      if (!studentId) throw new Error('Student ID not found');
-
-      // Create behavior request - unique constraint will prevent duplicates
+      // Create behavior request
       const { error: requestError } = await supabase
         .from('behavior_requests')
         .insert([{
           student_id: studentId,
           teacher_id: user.id,
-          behaviors: data.behaviors,
-          mood: data.mood,
+          behavior_type: data.behaviors.join(', '),
+          description: data.notes || 'Behavior incident',
+          teacher_name: user.email?.split('@')[0] || 'Teacher',
           status: 'waiting',
-          urgent: data.urgent || false,
-          notes: data.notes || null,
-          assigned_kiosk_id: null, // Start unassigned for proper FIFO
-          kiosk_status: 'waiting'
+          priority_level: data.urgent ? 'high' : 'medium'
         }]);
 
-      if (requestError) {
-        console.error('Error creating behavior request:', requestError);
-        // Handle unique constraint violation gracefully
-        if (requestError.code === '23505') {
-          toast({
-            title: "Student Already in Queue",
-            description: `${data.studentName} already has an active behavior request. Please complete or cancel the existing request first.`,
-            variant: "destructive",
-          });
-          return;
-        }
-        throw requestError;
-      }
+      if (requestError) throw requestError;
 
       toast({
         title: "Student Added",
-        description: `${data.studentName} has been added to the queue successfully.`,
+        description: `${data.studentName} has been added to the queue.`,
       });
 
-      // Immediately trigger reassignment to ensure FIFO order
-      await reassignWaitingStudents();
-
-      await fetchQueue(true);
+      await fetchQueue();
     } catch (error) {
       console.error('Error adding to queue:', error);
       toast({
@@ -407,66 +241,74 @@ export const useSupabaseQueue = () => {
     }
   ) => {
     try {
+      // Get behavior request to find student_id
+      const { data: request } = await supabase
+        .from('behavior_requests')
+        .select('student_id')
+        .eq('id', behaviorRequestId)
+        .single();
+
+      if (!request) throw new Error('Behavior request not found');
+
       // Insert reflection
       const { error: reflectionError } = await supabase
         .from('reflections')
         .insert([{
           behavior_request_id: behaviorRequestId,
-          ...reflectionData,
-          status: 'pending'
+          student_id: request.student_id,
+          question_1_response: reflectionData.question1,
+          question_2_response: reflectionData.question2,
+          question_3_response: reflectionData.question3,
+          question_4_response: reflectionData.question4,
+          teacher_approved: false,
+          revision_requested: false,
+          submitted_at: new Date().toISOString()
         }]);
 
       if (reflectionError) throw reflectionError;
 
-      // Set status to 'review' for teacher review, and kiosk_status to 'completed' to free the kiosk
+      // Update behavior request status
       const { error: updateError } = await supabase
         .from('behavior_requests')
-        .update({ 
-          status: 'review',  // Ready for teacher review
-          kiosk_status: 'completed'  // This allows the database function to recognize the kiosk as available
-        })
+        .update({ status: 'completed' })
         .eq('id', behaviorRequestId);
 
       if (updateError) throw updateError;
 
-      console.log('✅ Reflection submitted with status=review, kiosk_status=completed (ready for teacher review)');
-      
-      // Immediately trigger reassignment - the database function will handle cleanup and assignment
-      try {
-        await reassignWaitingStudents();
-        console.log('✅ Queue reassignment triggered successfully after reflection completion');
-      } catch (reassignError) {
-        console.error('❌ Queue reassignment failed after reflection completion:', reassignError);
-        // Don't throw - reflection submission should succeed even if reassignment fails
-      }
-
-      // Single refresh after all operations complete
-      await fetchQueue(true);
+      await fetchQueue();
     } catch (error) {
       console.error('Error submitting reflection:', error);
     }
   };
 
-  // Approve reflection - simplified to just delete, let database trigger handle archival
+  // Approve reflection
   const approveReflection = async (behaviorRequestId: string) => {
     try {
-      // Simply delete the behavior request - the database trigger will handle archival
-      const { error: deleteError } = await supabase
+      // Update reflection to approved
+      const { error: reflectionError } = await supabase
+        .from('reflections')
+        .update({ 
+          teacher_approved: true,
+          reviewed_at: new Date().toISOString()
+        })
+        .eq('behavior_request_id', behaviorRequestId);
+
+      if (reflectionError) throw reflectionError;
+
+      // Archive the behavior request
+      const { error: archiveError } = await supabase
         .from('behavior_requests')
         .delete()
         .eq('id', behaviorRequestId);
 
-      if (deleteError) throw deleteError;
-
-      // Trigger reassignment of waiting students
-      await reassignWaitingStudents();
+      if (archiveError) throw archiveError;
 
       toast({
         title: "Reflection Approved",
         description: "Student removed from queue.",
       });
 
-      await fetchQueue(true);
+      await fetchQueue();
     } catch (error) {
       console.error('Error approving reflection:', error);
       toast({
@@ -474,64 +316,38 @@ export const useSupabaseQueue = () => {
         description: "Failed to approve reflection",
         variant: "destructive",
       });
-      throw error;
     }
   };
 
-  // ... keep existing code (other functions)
+  // Request revision
   const requestRevision = async (behaviorRequestId: string, feedback: string) => {
     try {
-      // CRITICAL: The reflection history trigger will automatically archive the current reflection
-      // when we update its status to 'revision_requested'
-      
-      // Update reflection with feedback and revision status (triggers automatic archival)
+      // Update reflection with feedback
       const { error: reflectionError } = await supabase
         .from('reflections')
-        .update({ 
-          status: 'revision_requested',
-          teacher_feedback: feedback
+        .update({
+          revision_requested: true,
+          teacher_feedback: feedback,
+          teacher_approved: false
         })
         .eq('behavior_request_id', behaviorRequestId);
 
       if (reflectionError) throw reflectionError;
 
-      // FIXED: Reuse existing behavior request instead of creating duplicate
-      // Reset to waiting status so student can retry with the same request
+      // Reset behavior request to waiting
       const { error: updateError } = await supabase
         .from('behavior_requests')
-        .update({ 
-          status: 'waiting',
-          kiosk_status: 'waiting', // Reset kiosk status so they can be reassigned
-          assigned_kiosk_id: null   // Clear kiosk assignment for reassignment
-        })
+        .update({ status: 'waiting' })
         .eq('id', behaviorRequestId);
 
       if (updateError) throw updateError;
 
-      // Clear the reflection content so student can provide new answers
-      // (Keep the archived version in reflections_history)
-      const { error: clearReflectionError } = await supabase
-        .from('reflections')
-        .update({
-          question1: '',
-          question2: '',
-          question3: '',
-          question4: '',
-          status: 'pending' // Ready for new submission
-        })
-        .eq('behavior_request_id', behaviorRequestId);
-
-      if (clearReflectionError) throw clearReflectionError;
-
-      // Trigger reassignment to put student back in proper queue order
-      await reassignWaitingStudents();
-
       toast({
         title: "Revision Requested",
-        description: "Student has been notified to revise their reflection and placed back in the queue.",
+        description: "Student has been notified to revise their reflection.",
       });
 
-      await fetchQueue(true);
+      await fetchQueue();
     } catch (error) {
       console.error('Error requesting revision:', error);
       toast({
@@ -542,145 +358,61 @@ export const useSupabaseQueue = () => {
     }
   };
 
-  // Get first waiting student for specific kiosk based on new status logic
-  const getFirstWaitingStudentForKiosk = (kioskId: number) => {
-    // Find students assigned to this kiosk, including those completing reflection
-    const kioskStudents = items.filter(item => 
-      item.assigned_kiosk_id === kioskId && 
-      // Include students in various stages of completion flow, not just waiting
-      (item.status === 'waiting' || 
-       (item.status === 'review' && item.kiosk_status !== 'waiting') ||
-       (item.status === 'completed' && item.reflection?.status === 'approved'))
-    ).sort((a, b) => {
-      // Sort by kiosk_status priority and then by position
-      const statusPriority = { 'in_progress': 0, 'ready': 1, 'waiting': 2 };
-      const aPriority = statusPriority[a.kiosk_status] || 3;
-      const bPriority = statusPriority[b.kiosk_status] || 3;
-      
-      if (aPriority !== bPriority) return aPriority - bPriority;
-      return (a.position || 0) - (b.position || 0);
-    });
-
-    console.log(`🔍 Kiosk ${kioskId} students found:`, kioskStudents.map(s => ({
-      name: s.student?.name, 
-      status: s.status, 
-      kiosk_status: s.kiosk_status,
-      reflection_status: s.reflection?.status
-    })));
-
-    return kioskStudents.length > 0 ? kioskStudents[0] : undefined;
-  };
-
-  // Get first waiting student (legacy function for compatibility)
-  const getFirstWaitingStudent = () => {
-    const waitingItems = items.filter(item => 
-      item.status === 'waiting' && item.kiosk_status === 'waiting'
-    );
-    return waitingItems.length > 0 ? waitingItems[0] : undefined;
-  };
-
-  // Clear all queue items (admin: hard reset via RPC; teacher: own queue)
+  // Clear queue
   const clearQueue = async () => {
     try {
       setClearQueueLoading(true);
-      console.log('🧹 Starting clear queue operation...');
       
-      // Get current user
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw new Error('User not authenticated');
-      }
-      
-      // Determine role (cached or fetched)
-      const currentRole = userRole || await getUserRole();
+      if (!user) throw new Error('User not authenticated');
 
-      if (currentRole === 'admin') {
-        // ADMIN: Hard reset using RPC function
-        console.log('👑 Admin detected — invoking RPC admin_clear_all_queues');
+      // Get user role
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+        // Admin can clear all
         const { error } = await supabase.rpc('admin_clear_all_queues');
-        if (error) {
-          console.error('❌ RPC admin_clear_all_queues error:', error);
-          throw error;
-        }
-        console.log('✅ RPC admin_clear_all_queues succeeded');
-        
-        // Local reset + fresh fetch
-        setItems([]);
-        await fetchQueue(true);
-        
-        toast({ title: 'Queue cleared.' });
-        return;
+        if (error) throw error;
+      } else {
+        // Teacher can only clear their own
+        const { error } = await supabase
+          .from('behavior_requests')
+          .delete()
+          .eq('teacher_id', user.id);
+        if (error) throw error;
       }
 
-      // TEACHER: Clear only own queue (legacy path)
-      // Count items first (teacher scope)
-      const { count } = await supabase
-        .from('behavior_requests')
-        .select('id', { count: 'exact', head: true })
-        .eq('teacher_id', user.id);
-
-      // Delete behavior requests for this teacher
-      const { error: deleteError } = await supabase
-        .from('behavior_requests')
-        .delete()
-        .eq('teacher_id', user.id);
-      
-      if (deleteError) {
-        console.error('❌ Clear queue error (teacher):', deleteError);
-        throw deleteError;
-      }
-
-      // Best-effort reassignment
-      try {
-        await reassignWaitingStudents();
-      } catch (reassignError) {
-        console.warn('Warning: Reassign after teacher clear failed:', reassignError);
-      }
-
-      setItems([]);
-      await fetchQueue(true);
       toast({ title: 'Queue cleared.' });
+      await fetchQueue();
     } catch (error) {
-      console.error('💥 CLEAR QUEUE ERROR:', error);
+      console.error('Error clearing queue:', error);
       toast({
         title: 'Error clearing queue',
         description: 'Failed to clear the queue. Please try again.',
         variant: 'destructive',
       });
-      throw error;
     } finally {
       setClearQueueLoading(false);
     }
   };
 
-  // Legacy kiosk assignment - replaced by database function
-  const assignStudentToKiosk = async (): Promise<number | null> => {
+  // Clear single item
+  const clearItem = async (behaviorRequestId: string) => {
     try {
-      // Get active kiosks count for return value
-      const { data: activeKiosks, error: kioskError } = await supabase
-        .from('kiosks')
-        .select('id')
-        .eq('is_active', true)
-        .limit(1);
+      const { error } = await supabase
+        .from('behavior_requests')
+        .delete()
+        .eq('id', behaviorRequestId);
 
-      if (kioskError) throw kioskError;
-      
-      return activeKiosks && activeKiosks.length > 0 ? activeKiosks[0].id : null;
-    } catch (error) {
-      console.error('Error in kiosk assignment:', error);
-      return null;
-    }
-  };
+      if (error) throw error;
 
-  // Enhanced reassign students using database RPC
-  const reassignStudents = async () => {
-    try {
-      // Use the enhanced database function for proper FIFO reassignment
-      await reassignWaitingStudents();
-      await fetchQueue(true);
-      console.log('Reassigned waiting students using enhanced database function');
+      await fetchQueue();
     } catch (error) {
-      console.error('Error reassigning students:', error);
+      console.error('Error clearing item:', error);
+      throw error;
     }
   };
 
@@ -704,114 +436,27 @@ export const useSupabaseQueue = () => {
     return remainingMins > 0 ? `${diffHours}h ${remainingMins}m` : `${diffHours} hours`;
   };
 
-  // Update student kiosk status with local state optimization
-  const updateStudentKioskStatus = async (behaviorRequestId: string, newStatus: 'waiting' | 'ready' | 'in_progress') => {
-    try {
-      const { error } = await supabase.rpc('update_student_kiosk_status', {
-        p_behavior_request_id: behaviorRequestId,
-        p_new_kiosk_status: newStatus
-      });
-
-      if (error) throw error;
-      
-      // Update local state immediately to prevent flickering
-      setItems(prev => prev.map(item => 
-        item.id === behaviorRequestId 
-          ? { ...item, kiosk_status: newStatus }
-          : item
-      ));
-      
-      console.log(`Updated kiosk status for ${behaviorRequestId} to ${newStatus}`);
-    } catch (error) {
-      console.error('Error updating student kiosk status:', error);
-    }
+  // Get first waiting student for kiosk
+  const getFirstWaitingStudentForKiosk = (kioskId: number) => {
+    const waiting = items.find(item => item.status === 'waiting');
+    return waiting || null;
   };
 
-  // Enhanced assign waiting students to newly activated kiosk with FIFO
-  const assignWaitingStudentsToKiosk = async (kioskId: number) => {
+  // Update student kiosk status
+  const updateStudentKioskStatus = async (
+    kioskId: number,
+    studentId?: string,
+    behaviorRequestId?: string
+  ) => {
     try {
-      // Use enhanced database function that handles FIFO assignment and load balancing
-      const { error } = await supabase.rpc('assign_waiting_students_to_kiosk', {
-        p_kiosk_id: kioskId
+      await supabase.rpc('update_student_kiosk_status', {
+        p_kiosk_id: kioskId,
+        p_student_id: studentId,
+        p_behavior_request_id: behaviorRequestId
       });
-
-      if (error) throw error;
-      
-      console.log(`Assigned waiting students to kiosk ${kioskId} using FIFO`);
-      
-      // Refresh queue to show updates
-      await fetchQueue(true);
+      await fetchQueue();
     } catch (error) {
-      console.error('Error assigning students to kiosk:', error);
-    }
-  };
-
-  // Clear a single item from the queue and archive with status tags
-  const clearItem = async (behaviorRequestId: string) => {
-    try {
-      // Fetch full request with joins
-      const { data: br, error } = await supabase
-        .from('behavior_requests')
-        .select(`*, student:students(*), reflection:reflections(*)`)
-        .eq('id', behaviorRequestId)
-        .maybeSingle();
-      if (error) throw error;
-      if (!br) throw new Error('Behavior request not found');
-
-      // Determine latest reflection (if any)
-      let latestReflection: any = null;
-      if (Array.isArray(br.reflection)) {
-        latestReflection = [...br.reflection]
-          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0] || null;
-      } else if (br.reflection) {
-        latestReflection = br.reflection;
-      }
-
-      // Insert into behavior_history with tags for audit-only
-      const insertPayload: any = {
-        original_request_id: br.id,
-        student_id: br.student_id,
-        teacher_id: br.teacher_id,
-        student_name: br.student?.name || 'Unknown',
-        student_grade: br.student?.grade || null,
-        student_class_name: br.student?.class_name || null,
-        mood: br.mood,
-        behaviors: br.behaviors,
-        notes: br.notes || null,
-        urgent: br.urgent,
-        assigned_kiosk_id: br.assigned_kiosk_id || null,
-        reflection_id: latestReflection?.id || null,
-        question1: latestReflection?.question1 || null,
-        question2: latestReflection?.question2 || null,
-        question3: latestReflection?.question3 || null,
-        question4: latestReflection?.question4 || null,
-        teacher_feedback: latestReflection?.teacher_feedback || null,
-        queue_created_at: br.created_at,
-        queue_started_at: null,
-        time_in_queue_minutes: null,
-        queue_position: null,
-        intervention_outcome: 'cleared',
-        completion_status: 'cleared',
-        device_type: 'web',
-        device_location: null,
-      };
-
-      const { error: histError } = await supabase.from('behavior_history').insert([insertPayload]);
-      if (histError) throw histError;
-
-      // Delete the original request
-      const { error: deleteError } = await supabase
-        .from('behavior_requests')
-        .delete()
-        .eq('id', behaviorRequestId);
-      if (deleteError) throw deleteError;
-
-      // Reassign waiting students and refresh
-      await reassignWaitingStudents();
-      await fetchQueue(true);
-    } catch (err) {
-      console.error('Error clearing item:', err);
-      throw err;
+      console.error('Error updating kiosk status:', error);
     }
   };
 
@@ -823,15 +468,11 @@ export const useSupabaseQueue = () => {
     submitReflection,
     approveReflection,
     requestRevision,
-    getFirstWaitingStudent,
-    getFirstWaitingStudentForKiosk,
-    reassignStudents,
     clearQueue,
     clearItem,
     formatTimeElapsed,
-    updateStudentKioskStatus,
-    assignWaitingStudentsToKiosk,
-    reassignWaitingStudents,
-    refreshQueue: fetchQueue
+    refreshQueue: fetchQueue,
+    getFirstWaitingStudentForKiosk,
+    updateStudentKioskStatus
   };
 };

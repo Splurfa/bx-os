@@ -1,24 +1,26 @@
 
 import { useState } from "react";
 import { Search, Check } from "lucide-react";
-import { MOCK_STUDENTS, MockStudent } from "@/hooks/useMockData";
+import { useStudents } from "@/hooks/useStudents";
+import type { Student } from "@/hooks/useStudents";
 
 interface StudentSelectionProps {
-  onStudentSelect: (student: MockStudent) => void;
+  onStudentSelect: (student: Student) => void;
   onStudentDeselect?: () => void;
   selectedStudentId?: string;
 }
 
 const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentId }: StudentSelectionProps) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { students, loading } = useStudents();
 
-  const filteredStudents = MOCK_STUDENTS.filter(student => 
-    student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.grade.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.class_name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredStudents = students.filter(student => 
+    student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.grade?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.class_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleStudentClick = (student: MockStudent) => {
+  const handleStudentClick = (student: Student) => {
     if (selectedStudentId === student.id) {
       // Deselect if clicking the already selected student
       onStudentDeselect?.();
