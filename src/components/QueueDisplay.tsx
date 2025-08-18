@@ -76,6 +76,9 @@ const QueueDisplay = React.memo(({
       // Include waiting students
       if (item.status === 'waiting') return true;
       
+      // Include active students (assigned to kiosks)
+      if (item.status === 'active') return true;
+      
       // Include students ready for review
       if (item.status === 'review') return true;
       
