@@ -35,9 +35,9 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
-              <Route path="/kiosk1" element={<ProtectedRoute><KioskOnePage /></ProtectedRoute>} />
-              <Route path="/kiosk2" element={<ProtectedRoute><KioskTwoPage /></ProtectedRoute>} />
-              <Route path="/kiosk3" element={<ProtectedRoute><KioskThreePage /></ProtectedRoute>} />
+              <Route path="/kiosk1" element={<KioskOnePage />} />
+              <Route path="/kiosk2" element={<KioskTwoPage />} />
+              <Route path="/kiosk3" element={<KioskThreePage />} />
               <Route 
                 path="/admin-dashboard" 
                 element={

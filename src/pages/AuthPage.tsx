@@ -10,6 +10,7 @@ import { Loader2, GraduationCap, Download, Share, Smartphone } from 'lucide-reac
 import { useToast } from '@/hooks/use-toast';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { supabase } from '@/integrations/supabase/client';
+import { GoogleAuthButton } from '@/components/GoogleAuthButton';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -140,6 +141,10 @@ const AuthPage = () => {
                 Sign In
               </Button>
             </form>
+
+            <div className="mt-4 pt-4 border-t">
+              <GoogleAuthButton />
+            </div>
 
             {isInstallable && (
               <div className="mt-4 pt-4 border-t">

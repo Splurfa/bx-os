@@ -17,6 +17,7 @@ import QueueDisplay from './QueueDisplay';
 import UserManagement from './UserManagement';
 import { SessionMonitor } from './SessionMonitor';
 import { useToast } from '@/hooks/use-toast';
+import { CSVImportModal } from './CSVImportModal';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -34,6 +35,7 @@ const AdminDashboard = () => {
   const { students, loading: studentsLoading } = useStudents();
   const { toast } = useToast();
   const isMobile = useIsMobile();
+  const [showCSVImport, setShowCSVImport] = useState(false);
 
   // Handle kiosk activation toggle
   const handleKioskToggle = async (kioskId: number, isActive: boolean) => {
@@ -123,17 +125,26 @@ const AdminDashboard = () => {
                     <Monitor className="icon-h2 text-primary" />
                     <CardTitle className="text-h3">Kiosk Management</CardTitle>
                   </div>
-                  {!isMobile && (
+                  <div className="flex gap-2">
                     <Button 
-                      variant="outline" 
+                      variant="secondary" 
                       size="sm"
-                      onClick={handleDeactivateAll}
-                      disabled={kioskLoading || activeKioskCount === 0}
+                      onClick={() => setShowCSVImport(true)}
                     >
-                      <PowerOff className="icon-inline mr-2" />
-                      Deactivate All
+                      Import CSV
                     </Button>
-                  )}
+                    {!isMobile && (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={handleDeactivateAll}
+                        disabled={kioskLoading || activeKioskCount === 0}
+                      >
+                        <PowerOff className="icon-inline mr-2" />
+                        Deactivate All
+                      </Button>
+                    )}
+                  </div>
                 </div>
                 <CardDescription className="text-body-small">
                   Manage kiosk activation status and monitor real-time usage
@@ -203,6 +214,15 @@ const AdminDashboard = () => {
         </Tabs>
       </div>
 
+      <CSVImportModal 
+        isOpen={showCSVImport} 
+        onClose={() => setShowCSVImport(false)}
+        onImportComplete={() => {
+          setShowCSVImport(false);
+          // Refresh students data after import
+          window.location.reload();
+        }}
+      />
     </div>
   );
 };
