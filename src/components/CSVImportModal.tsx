@@ -16,11 +16,21 @@ interface CSVImportModalProps {
 }
 
 interface CSVStudent {
-  student_name: string;
-  teacher_name: string;
-  grade: string;  
-  class: string;
-  family_info: string;
+  family_header: string;
+  street: string;
+  city: string;
+  state: string;
+  zipc: string;
+  parent1_name: string;
+  parent1_cell_1: string;
+  parent2_name: string;
+  parent2_cell_1: string;
+  student_first_name: string;
+  student_last_name: string;
+  student_full_name: string;
+  dob: string;
+  class_raw: string;
+  household_emails: string;
 }
 
 interface ProcessedFamily {
@@ -28,7 +38,12 @@ interface ProcessedFamily {
   primary_contact_name: string;
   primary_contact_phone: string;
   primary_contact_email: string;
+  address_line1: string;
+  city: string;
+  state: string;
+  zip_code: string;
   students: ProcessedStudent[];
+  guardians: ProcessedGuardian[];
 }
 
 interface ProcessedStudent {
@@ -37,6 +52,17 @@ interface ProcessedStudent {
   last_name: string;
   grade: string;
   class_name: string;
+  date_of_birth?: string;
+}
+
+interface ProcessedGuardian {
+  first_name: string;
+  last_name: string;
+  name: string;
+  relationship: string;
+  phone_primary: string;
+  email?: string;
+  is_primary_contact: boolean;
 }
 
 export const CSVImportModal: React.FC<CSVImportModalProps> = ({
