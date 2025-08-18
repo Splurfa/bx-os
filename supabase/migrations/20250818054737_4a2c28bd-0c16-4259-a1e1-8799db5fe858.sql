@@ -1,0 +1,1 @@
+SELECT process_csv_to_families_and_students();
