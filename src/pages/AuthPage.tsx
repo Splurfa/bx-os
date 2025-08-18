@@ -31,7 +31,12 @@ const AuthPage = () => {
           .eq('id', user.id)
           .single();
         const role = data?.role || 'teacher';
-        navigate(role === 'admin' ? '/admin-dashboard' : '/teacher', { replace: true });
+        // Route based on role - super_admin and admin go to admin dashboard
+        if (role === 'super_admin' || role === 'admin') {
+          navigate('/admin-dashboard', { replace: true });
+        } else {
+          navigate('/teacher', { replace: true });
+        }
       } catch (e) {
         // Fallback to teacher on error
         navigate('/teacher', { replace: true });
@@ -64,7 +69,12 @@ const AuthPage = () => {
             .eq('id', signedInUser.id)
             .single();
           const role = data?.role || 'teacher';
-          navigate(role === 'admin' ? '/admin-dashboard' : '/teacher', { replace: true });
+          // Route based on role - super_admin and admin go to admin dashboard
+          if (role === 'super_admin' || role === 'admin') {
+            navigate('/admin-dashboard', { replace: true });
+          } else {
+            navigate('/teacher', { replace: true });
+          }
         } else {
           navigate('/teacher', { replace: true });
         }
