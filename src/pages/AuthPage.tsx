@@ -11,7 +11,6 @@ import { useToast } from '@/hooks/use-toast';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { supabase } from '@/integrations/supabase/client';
 import { GoogleAuthButton } from '@/components/GoogleAuthButton';
-import { SetupDatabase } from '@/components/SetupDatabase';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -182,9 +181,7 @@ const AuthPage = () => {
               </div>
             )}
 
-            <div className="mt-4 space-y-4">
-              <SetupDatabase />
-              
+            <div className="mt-4">
               <div className="p-4 bg-blue-50 rounded-lg">
                 <p className="text-sm font-medium text-blue-900 mb-2">Demo Accounts:</p>
                 <div className="text-xs text-blue-700 space-y-1">
