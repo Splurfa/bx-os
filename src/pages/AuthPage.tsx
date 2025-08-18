@@ -19,31 +19,77 @@ const AuthPage = () => {
   const { isInstallable, installApp, debugInfo, isIOSSafari } = usePWAInstall();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [routingUser, setRoutingUser] = useState(false);
 
-  // Redirect if already authenticated
+  // Enhanced redirect with retry logic for role fetching
   useEffect(() => {
     const routeUser = async () => {
-      if (!user) return;
-      try {
-        const { data } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single();
-        const role = data?.role || 'teacher';
-        // Route based on role - super_admin and admin go to admin dashboard
-        if (role === 'super_admin' || role === 'admin') {
-          navigate('/admin-dashboard', { replace: true });
-        } else {
-          navigate('/teacher', { replace: true });
+      if (!user || routingUser) return;
+      
+      setRoutingUser(true);
+      console.log('🔄 Routing user:', user.email, 'ID:', user.id);
+      
+      // Retry logic for role fetching with exponential backoff
+      const maxRetries = 3;
+      let retryCount = 0;
+      
+      while (retryCount < maxRetries) {
+        try {
+          console.log(`📡 Attempt ${retryCount + 1}: Fetching profile for user ${user.id}`);
+          
+          const { data, error: profileError } = await supabase
+            .from('profiles')
+            .select('role, full_name')
+            .eq('id', user.id)
+            .maybeSingle();
+          
+          if (profileError) {
+            console.error('❌ Profile query error:', profileError);
+            throw profileError;
+          }
+          
+          if (!data) {
+            console.warn('⚠️ No profile found, waiting for trigger to create it...');
+            // Wait a bit for the trigger to create the profile
+            await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+            retryCount++;
+            continue;
+          }
+          
+          const role = data.role || 'teacher';
+          console.log('✅ User profile found:', { role, name: data.full_name });
+          
+          // Route based on role - super_admin and admin go to admin dashboard
+          if (role === 'super_admin' || role === 'admin') {
+            console.log('🚀 Routing to admin dashboard');
+            navigate('/admin-dashboard', { replace: true });
+          } else {
+            console.log('🚀 Routing to teacher dashboard');
+            navigate('/teacher', { replace: true });
+          }
+          
+          setRoutingUser(false);
+          return;
+          
+        } catch (e) {
+          console.error(`❌ Routing attempt ${retryCount + 1} failed:`, e);
+          retryCount++;
+          
+          if (retryCount < maxRetries) {
+            // Exponential backoff: wait 1s, 2s, 4s
+            await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, retryCount - 1)));
+          }
         }
-      } catch (e) {
-        // Fallback to teacher on error
-        navigate('/teacher', { replace: true });
       }
+      
+      // All retries failed - fallback to teacher with warning
+      console.warn('⚠️ All routing attempts failed, defaulting to teacher dashboard');
+      navigate('/teacher', { replace: true });
+      setRoutingUser(false);
     };
+    
     routeUser();
-  }, [user, navigate]);
+  }, [user, navigate, routingUser]);
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
