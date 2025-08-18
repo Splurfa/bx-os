@@ -352,6 +352,99 @@ export type Database = {
         }
         Relationships: []
       }
+      csv_import_raw: {
+        Row: {
+          address_parse_mode: string | null
+          address_raw: string | null
+          city: string | null
+          class_raw: string | null
+          created_at: string | null
+          dob: string | null
+          family_header: string | null
+          household_emails: string | null
+          id: number
+          page_number: string | null
+          parent1_cell_1: string | null
+          parent1_cell_2: string | null
+          parent1_name: string | null
+          parent1_work_1: string | null
+          parent1_work_2: string | null
+          parent2_cell_1: string | null
+          parent2_cell_2: string | null
+          parent2_name: string | null
+          parent2_work_1: string | null
+          parent2_work_2: string | null
+          source_excerpt: string | null
+          state: string | null
+          street: string | null
+          street_normalized: string | null
+          student_first_name: string | null
+          student_full_name: string | null
+          student_last_name: string | null
+          zipc: string | null
+        }
+        Insert: {
+          address_parse_mode?: string | null
+          address_raw?: string | null
+          city?: string | null
+          class_raw?: string | null
+          created_at?: string | null
+          dob?: string | null
+          family_header?: string | null
+          household_emails?: string | null
+          id?: number
+          page_number?: string | null
+          parent1_cell_1?: string | null
+          parent1_cell_2?: string | null
+          parent1_name?: string | null
+          parent1_work_1?: string | null
+          parent1_work_2?: string | null
+          parent2_cell_1?: string | null
+          parent2_cell_2?: string | null
+          parent2_name?: string | null
+          parent2_work_1?: string | null
+          parent2_work_2?: string | null
+          source_excerpt?: string | null
+          state?: string | null
+          street?: string | null
+          street_normalized?: string | null
+          student_first_name?: string | null
+          student_full_name?: string | null
+          student_last_name?: string | null
+          zipc?: string | null
+        }
+        Update: {
+          address_parse_mode?: string | null
+          address_raw?: string | null
+          city?: string | null
+          class_raw?: string | null
+          created_at?: string | null
+          dob?: string | null
+          family_header?: string | null
+          household_emails?: string | null
+          id?: number
+          page_number?: string | null
+          parent1_cell_1?: string | null
+          parent1_cell_2?: string | null
+          parent1_name?: string | null
+          parent1_work_1?: string | null
+          parent1_work_2?: string | null
+          parent2_cell_1?: string | null
+          parent2_cell_2?: string | null
+          parent2_name?: string | null
+          parent2_work_1?: string | null
+          parent2_work_2?: string | null
+          source_excerpt?: string | null
+          state?: string | null
+          street?: string | null
+          street_normalized?: string | null
+          student_first_name?: string | null
+          student_full_name?: string | null
+          student_last_name?: string | null
+          zipc?: string | null
+        }
+        Relationships: []
+      }
       data_sources: {
         Row: {
           connection_info: Json | null
@@ -869,6 +962,10 @@ export type Database = {
         Returns: string
       }
       import_hillel_csv_data: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      process_csv_to_families_and_students: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
