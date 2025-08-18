@@ -864,6 +864,10 @@ export type Database = {
         Args: { p_session_id: string }
         Returns: undefined
       }
+      import_complete_hillel_csv_data: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       import_hillel_csv_data: {
         Args: Record<PropertyKey, never>
         Returns: string

@@ -7,8 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { GraduationCap, Tablet, RefreshCw, Settings } from "lucide-react";
+import { GraduationCap, Tablet, RefreshCw, Settings, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { CSVImportTest } from "@/components/CSVImportTest";
 
 const EntryPoint = () => {
   const navigate = useNavigate();
@@ -92,6 +93,21 @@ const EntryPoint = () => {
             </Button>
           </CardContent>
         </Card>
+
+        {/* CSV Import Test - Development Only */}
+        {import.meta.env.DEV && (
+          <Card className="border-2 border-dashed border-orange-300">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-2">
+                <Upload className="h-4 w-4 text-orange-600" />
+                <CardTitle className="text-sm text-orange-600">Development: CSV Import</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <CSVImportTest />
+            </CardContent>
+          </Card>
+        )}
 
         {/* Main Navigation */}
         <div className="grid md:grid-cols-2 gap-6">
