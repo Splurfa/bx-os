@@ -969,6 +969,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      log_kiosk_auth_attempt: {
+        Args: { p_kiosk_id: number; p_student_id?: string; p_success?: boolean }
+        Returns: undefined
+      }
       process_csv_to_families_and_students: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -984,6 +988,10 @@ export type Database = {
           p_student_id?: string
         }
         Returns: undefined
+      }
+      validate_student_birthday_password: {
+        Args: { p_password: string; p_student_id: string }
+        Returns: boolean
       }
     }
     Enums: {

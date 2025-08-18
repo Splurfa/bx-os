@@ -5,10 +5,12 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { TouchOptimizedButton } from "@/components/TouchOptimizedButton";
 import { useSupabaseQueue } from "../hooks/useSupabaseQueue";
 import { useKiosks } from "@/contexts/KioskContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const KIOSK_ID = 2;
 
@@ -46,7 +48,7 @@ const KioskTwo = () => {
   } = useSupabaseQueue();
   
   const [kioskState, setKioskState] = useState<'setup' | 'welcome' | 'password' | 'reflection' | 'completed'>('setup');
-  const [studentPassword, setStudentPassword] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -98,7 +100,7 @@ const KioskTwo = () => {
   useEffect(() => {
     if (!firstWaitingStudent && kioskState !== 'setup') {
       setKioskState('welcome');
-      setStudentPassword('');
+        setPasswordInput('');
       setPasswordError('');
       setCurrentQuestion(0);
       setAnswers({});
@@ -133,7 +135,7 @@ const KioskTwo = () => {
       
       const resetTimer = setTimeout(() => {
         setKioskState('welcome');
-        setStudentPassword('');
+        setPasswordInput('');
         setPasswordError('');
         setCurrentQuestion(0);
         setAnswers({});
@@ -153,21 +155,65 @@ const KioskTwo = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handlePasswordSubmit = () => {
-    // For demo purposes, accept "password123" for any student
-    if (studentPassword === 'password123') {
-      // Update student status to 'ready' first (showing as "At Kiosk"), then to 'in_progress'
+  const handlePasswordSubmit = async () => {
+    if (!passwordInput || passwordInput.length !== 4) {
+      toast.error('Please enter your 4-digit birthday (MMDD format). For example: 0315 for March 15th');
+      return;
+    }
+
+    if (!firstWaitingStudent) {
+      toast.error('No student assigned to this kiosk');
+      return;
+    }
+
+    try {
+      // Validate birthday password using database function
+      const { data, error } = await supabase.rpc('validate_student_birthday_password', {
+        p_student_id: firstWaitingStudent.student_id,
+        p_password: passwordInput
+      });
+
+      if (error) {
+        console.error('Password validation error:', error);
+        toast.error('Authentication error. Please try again.');
+        return;
+      }
+
+      if (!data) {
+        // Log failed attempt
+        await supabase.rpc('log_kiosk_auth_attempt', {
+          p_kiosk_id: KIOSK_ID,
+          p_student_id: firstWaitingStudent.student_id,
+          p_success: false
+        });
+        
+        toast.error('Incorrect birthday. Please enter MMDD format (e.g., 0315 for March 15th)');
+        return;
+      }
+
+      // Log successful attempt
+      await supabase.rpc('log_kiosk_auth_attempt', {
+        p_kiosk_id: KIOSK_ID,
+        p_student_id: firstWaitingStudent.student_id,
+        p_success: true
+      });
+
+      // Update student status to active
       if (firstWaitingStudent) {
         updateStudentKioskStatus(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
-        // Immediately follow with 'in_progress' to show active reflection
         setTimeout(() => {
           updateStudentKioskStatus(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
         }, 100);
       }
+      
+      setCurrentQuestion(0);
+      setAnswers({});
       setKioskState('reflection');
+      setTimeElapsed(0);
       setPasswordError('');
-    } else {
-      setPasswordError('Incorrect password. Please try again.');
+    } catch (error) {
+      console.error('Authentication error:', error);
+      toast.error('Authentication failed. Please try again.');
     }
   };
 
@@ -336,59 +382,51 @@ const KioskTwo = () => {
                   <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                     <User className="h-8 w-8 text-primary" />
                   </div>
-                  <h2 className="text-2xl font-bold text-foreground mb-2">Welcome, {firstWaitingStudent.student.name}</h2>
-                  <p className="text-muted-foreground">Please enter your student password to continue</p>
+                  <h2 className="text-2xl font-bold text-primary mb-2">
+                    Hello {firstWaitingStudent?.student?.first_name}!
+                  </h2>
+                  <p className="text-muted-foreground mb-4">
+                    Please enter your birthday password to get started with your reflection.
+                  </p>
+                  <p className="text-sm text-muted-foreground/70 mb-6">
+                    Use 4 digits: month and day (MMDD)<br/>
+                    Example: March 15th = 0315
+                  </p>
                 </div>
-
+                
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Student Password</Label>
-                    <div className="relative">
-                      <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        value={studentPassword}
-                        onChange={(e) => setStudentPassword(e.target.value)}
-                        placeholder="Enter your password"
-                        className="pr-10"
-                        onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </Button>
-                    </div>
-                    {passwordError && (
-                      <p className="text-sm text-destructive">{passwordError}</p>
-                    )}
-                  </div>
-
-                  <div className="space-y-3">
-                    <Button 
-                      onClick={handlePasswordSubmit}
-                      disabled={!studentPassword.trim()}
-                      className="w-full bg-gradient-primary text-white shadow-button hover:shadow-elevated transition-all duration-200"
-                    >
-                      Continue to Reflection
-                    </Button>
-                    
-                    <Button 
-                      variant="outline"
-                      onClick={() => setKioskState('welcome')}
-                      className="w-full"
-                    >
-                      Go Back
-                    </Button>
-                  </div>
-
-                  <div className="text-center text-xs text-muted-foreground mt-4 p-3 bg-muted/50 rounded-lg">
-                    <p><strong>Demo Password:</strong> password123</p>
-                  </div>
+                  <Input
+                    type="tel"
+                    placeholder="MMDD (e.g., 0315)"
+                    value={passwordInput}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                      setPasswordInput(value);
+                    }}
+                    onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                    className="text-lg py-6 text-center tracking-widest"
+                    maxLength={4}
+                    autoFocus
+                  />
+                  {passwordError && (
+                    <p className="text-sm text-destructive">{passwordError}</p>
+                  )}
+                  
+                  <TouchOptimizedButton 
+                    onClick={handlePasswordSubmit}
+                    className="w-full py-6 text-xl"
+                    disabled={passwordInput.length !== 4}
+                  >
+                    Continue
+                  </TouchOptimizedButton>
+                  
+                  <TouchOptimizedButton 
+                    variant="outline"
+                    onClick={() => setKioskState('welcome')}
+                    className="w-full"
+                  >
+                    Go Back
+                  </TouchOptimizedButton>
                 </div>
               </div>
             </Card>
