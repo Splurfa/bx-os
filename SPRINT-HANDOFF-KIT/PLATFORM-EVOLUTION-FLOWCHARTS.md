@@ -6,7 +6,7 @@ This document visualizes the complete evolution of BX-OS from prototype to Behav
 
 ## 🎯 Nuclear Reset Transformation Flow
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Current Prototype] --> B{Nuclear Reset Decision}
     B -->|EXECUTE| C[Complete Database Wipe]
@@ -25,13 +25,13 @@ flowchart TD
     style A fill:#ffebee
     style J fill:#e8f5e8
     style M fill:#e3f2fd
-</lov-mermaid>
+```
 
 ## 🏗️ Architecture Evolution Phases
 
 ### Phase 1: Nuclear Reset Foundation (24 Hours)
 
-<lov-mermaid>
+```mermaid
 flowchart LR
     subgraph "Current State"
         A1[Individual Records]
@@ -78,11 +78,11 @@ flowchart LR
     style C4 fill:#e8f5e8
     style C5 fill:#e8f5e8
     style C6 fill:#e8f5e8
-</lov-mermaid>
+```
 
 ### Phase 2: AI Integration (Future)
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Foundation Complete] --> B[Pattern Recognition Engine]
     B --> C[Behavioral Analysis AI]
@@ -102,11 +102,11 @@ flowchart TD
     
     style A fill:#e8f5e8
     style G fill:#fff3e0
-</lov-mermaid>
+```
 
 ### Phase 3: Communication Platform (Future)
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[AI Insights Ready] --> B[Communication Automation]
     B --> C[Parent Notification System]
@@ -125,11 +125,11 @@ flowchart TD
     
     style A fill:#fff3e0
     style F fill:#e3f2fd
-</lov-mermaid>
+```
 
 ### Phase 4: Multi-School Intelligence (Future)
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Communication Platform Complete] --> B[Multi-Tenant Architecture]
     B --> C[Cross-School Analytics]
@@ -148,13 +148,13 @@ flowchart TD
     
     style A fill:#e3f2fd
     style K fill:#f3e5f5
-</lov-mermaid>
+```
 
 ## 🔄 Student Journey Evolution
 
 ### Current State vs. Future Vision
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     subgraph "Current Prototype Journey"
         A1[Individual BSR Created] --> A2[Basic Reflection Form]
@@ -181,13 +181,13 @@ flowchart TD
     
     style B1 fill:#e8f5e8
     style B8 fill:#f3e5f5
-</lov-mermaid>
+```
 
 ## 📊 Data Flow Evolution
 
 ### From Simple Records to Behavioral Intelligence
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     subgraph "Phase 1: Foundation Data Flow"
         A1[CSV Student Import] --> A2[Family Normalization]
@@ -223,13 +223,13 @@ flowchart TD
     
     style A1 fill:#e1f5fe
     style D5 fill:#f3e5f5
-</lov-mermaid>
+```
 
 ## 🚀 Technology Stack Evolution
 
 ### Infrastructure Growth Path
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     subgraph "Current Stack"
         A1[React Frontend]
@@ -281,13 +281,13 @@ flowchart TD
     style E3 fill:#f3e5f5
     style E4 fill:#f3e5f5
     style E5 fill:#f3e5f5
-</lov-mermaid>
+```
 
 ## 📈 Implementation Readiness Matrix
 
 ### Immediate vs. Future Implementation
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     subgraph "24-Hour Sprint (Phase 1)"
         A1[Database Reset] --> A2[CSV Import]
@@ -314,7 +314,7 @@ flowchart TD
     style B2 fill:#fff3e0
     style B3 fill:#fff3e0
     style B4 fill:#fff3e0
-</lov-mermaid>
+```
 
 ---
 
