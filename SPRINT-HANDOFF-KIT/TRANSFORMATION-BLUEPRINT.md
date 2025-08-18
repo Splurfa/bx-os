@@ -148,10 +148,10 @@ UPDATE profiles SET role = 'super_admin' WHERE email = 'zach@zavitechllc.com';
 ```typescript
 // Mobile-first component specifications
 interface TouchComponents {
-  SwipeNavigation: {
-    gestureThreshold: '< 50ms detection';
+  TouchOptimizedButton: {
     touchTargets: 'minimum 44px height/width';
     hapticFeedback: 'navigator.vibrate([100])';
+    gestureThreshold: '< 50ms detection';
   };
   
   TabletKioskInterface: {
@@ -160,21 +160,21 @@ interface TouchComponents {
     errorHandling: 'clear, age-appropriate messaging';
   };
   
-  MobileGestures: {
-    swipeNavigation: 'horizontal tabs switching';
-    touchResponsive: '< 100ms interaction latency';
-    gestureLibrary: 'framer-motion or react-spring/gesture';
+  NotificationBell: {
+    realTimeUpdates: 'Supabase subscriptions';
+    badgeCount: 'unread notifications';
+    PWAGuidance: 'mobile installation prompts';
   };
 }
 ```
 
 ### 4. Real-Time Communication Domain
-**Nuclear Reset Priority: MEDIUM**
+**Nuclear Reset Priority: CRITICAL**
 
 **Notification Infrastructure:**
-- **NotificationBell:** Real-time queue updates via Supabase subscriptions  
+- **NotificationBell (CRITICAL):** Real-time queue updates via Supabase subscriptions with PWA guidance
 - **Toast System:** Behavioral alerts and reflection completions
-- **Communication Framework:** Template-based parent notifications (foundation only)
+- **PWA Support:** Mobile installation prompts and push notification readiness
 
 **Supabase Real-Time Integration:**
 ```typescript
@@ -246,17 +246,16 @@ useEffect(() => {
 ### Phase 2: Student Context Enhancement (8-16 hours)
 **CRITICAL PATH:** Family integration and mobile UI foundation
 
-**Phase 2.1: Student Selection with Family Context (3 hours)**
-- Update student selection components to display family information
-- Show guardian contact details and communication preferences
-- Integrate family context into behavior request creation workflow
-- Test family data display across all user interfaces
-
-**Phase 2.2: Mobile-First Component Library (4 hours)**
-- Create SwipeNavigation, TouchOptimizedButton, MobileModal components
-- Implement gesture recognition with framer-motion
+**Phase 2.1: Touch-Optimized Component Library (3 hours)**
+- Create TouchOptimizedButton, TabletKioskInterface, and NotificationBell components
+- Implement minimal UI changes with focus on notification system
 - Design tablet-optimized kiosk interfaces with large touch targets
 - Test mobile components on actual tablets and mobile devices
+
+**Phase 2.2: Real-Time Notification System (3 hours)**
+- Add PWA guidance and mobile installation prompts
+- Create role-based notification filtering for behavioral alerts
+- Test notification delivery across all user roles
 
 **Phase 2.3: Extension Point Validation (1 hour)**
 - Verify AI integration hooks are operational in database schema
@@ -267,11 +266,11 @@ useEffect(() => {
 ### Phase 3: Production Readiness (16-24 hours)
 **CRITICAL PATH:** Real-time systems and comprehensive testing
 
-**Phase 3.1: Real-Time Notification System (3 hours)**
-- Implement NotificationBell component with Supabase subscriptions
-- Create real-time queue position updates for students
-- Add behavioral alert notifications for teachers
-- Test notification delivery across all user roles
+**Phase 3.1: Advanced System Features (2 hours)**
+- Enhance notification system with advanced filtering and PWA features
+- Implement optional tutorial system framework if time permits
+- Add minimal additional UI components as needed
+- Test advanced notification features across devices
 
 **Phase 3.2: Comprehensive System Testing (3 hours)**
 - Cross-device validation on tablets, phones, desktop
@@ -279,11 +278,11 @@ useEffect(() => {
 - Performance optimization for classroom deployment
 - Security audit and RLS policy validation
 
-**Phase 3.3: Future-Proof Validation (2 hours)**
-- Verify AI integration readiness with test data
-- Validate external data correlation framework functionality
-- Test communication system foundation with sample workflows
-- Confirm scalability architecture for multi-school platform evolution
+**Phase 3.3: Optional Tutorial System (2 hours)**
+- Create TutorialModal component with guided highlights (OPTIONAL)
+- Implement role-based tutorial content for teachers and admins
+- Add first-time login detection and tutorial triggers
+- Test tutorial workflows across all user roles if implemented
 
 ## 🎯 Success Metrics
 
@@ -299,14 +298,14 @@ useEffect(() => {
 - [ ] **CSV import process** transforms flat data into sophisticated relational structure
 - [ ] **Extension points prepared** for AI insights, external data correlation, communication automation
 - [ ] **Mobile-first responsive design** validated across target classroom tablet devices
-- [ ] **Real-time notification foundation** operational for behavioral alert infrastructure
+- [ ] **Real-time notification system** operational with PWA guidance features
 
 ### Future-Proof Foundation Validation
 - [ ] **AI integration hooks** ready in database schema and API architecture
 - [ ] **External correlation framework** prepared for SIS data integration
 - [ ] **Communication system foundation** ready for parent notification automation
-- [ ] **Behavioral intelligence platform** architecture supports advanced analytics and multi-school deployment
+- [ ] **Tutorial system foundation** prepared for comprehensive staff onboarding (OPTIONAL)
 
 ---
 
-**🎯 Nuclear Reset Success Definition:** Complete architectural transformation from basic prototype to future-proof behavioral intelligence platform foundation, with 100+ students in family-centric architecture, anonymous kiosk access operational, extension points prepared for AI and external integration, and mobile-first design validated for immediate classroom deployment.**
+**🎯 Nuclear Reset Success Definition:** Complete architectural transformation from basic prototype to future-proof behavioral intelligence platform foundation, with 100+ students in family-centric architecture, anonymous kiosk access operational, notification system with PWA guidance, extension points prepared for AI and external integration, mobile-first design validated for immediate classroom deployment, and optional tutorial system for comprehensive staff onboarding.**

@@ -59,10 +59,10 @@
 - [ ] **Create SwipeNavigation** component (45 minutes)
 - [ ] **Implement gesture detection** with touch boundaries (15 minutes)
 
-### **Hour 12-14: Family Context Integration**
-- [ ] **Update StudentSelection** component with family display (60 minutes)
-- [ ] **Show guardian contact information** in BSR creation (30 minutes)
-- [ ] **Test family context** across teacher workflows (30 minutes)
+### **Hour 12-14: Notification System Integration**
+- [ ] **Create NotificationBell** component with badge count (45 minutes)
+- [ ] **Implement real-time subscriptions** to Supabase behavior_requests (45 minutes)
+- [ ] **Test cross-user notifications** and role-based filtering (30 minutes)
 
 ### **Hour 14-15: Mobile Modal & Enhancement**
 - [ ] **Create MobileModal** component with swipe-to-close (30 minutes)
@@ -70,16 +70,16 @@
 
 ### **Hour 15-16: Phase 2 Validation**
 - [ ] **Test mobile components** on actual tablets (30 minutes)
-- [ ] **Validate family context display** (15 minutes)
+- [ ] **Validate notification system** with real-time updates (15 minutes)
 - [ ] **Phase 2 checkpoint - PUBLISH TO GITHUB** (15 minutes)
 
 ---
 
 ## 🔔 PHASE 3: REAL-TIME & PRODUCTION (Hours 16-24)
 
-### **Hour 16-17: Notification Bell System**
-- [ ] **Create NotificationBell** component (30 minutes)
-- [ ] **Implement real-time subscriptions** to Supabase (30 minutes)
+### **Hour 16-17: Advanced Notification Features**
+- [ ] **Enhance NotificationBell** with dropdown menu and filtering (30 minutes)
+- [ ] **Implement PWA guidance notifications** for mobile users (30 minutes)
 
 ### **Hour 17-19: Real-Time Integration**
 - [ ] **Set up behavior_requests subscriptions** for queue updates (45 minutes)
@@ -102,9 +102,20 @@
 - [ ] **Test communication template** system (15 minutes)
 
 ### **Hour 23-24: Final Sprint Validation**
-- [ ] **Complete functional validation** checklist (30 minutes)
-- [ ] **Performance benchmark** validation (15 minutes)
-- [ ] **Final PUBLISH TO GITHUB** - Sprint Complete (15 minutes)
+- [ ] **Complete functional validation** checklist (20 minutes)
+- [ ] **Performance benchmark** validation (10 minutes)
+- [ ] **Final PUBLISH TO GITHUB** - Sprint Complete (10 minutes)
+- [ ] **OPTIONAL: Begin Tutorial System** if time permits (20 minutes)
+
+---
+
+## 📋 PHASE 4: OPTIONAL ENHANCEMENTS (Hour 24+)
+
+### **Tutorial System Implementation (OPTIONAL)**
+- [ ] **Create TutorialModal** component with guided highlights (45 minutes)
+- [ ] **Implement role-based tutorial content** for teachers and admins (45 minutes)
+- [ ] **Add first-time login detection** and tutorial triggers (30 minutes)
+- [ ] **Test tutorial workflows** across all user roles (30 minutes)
 
 ---
 
@@ -118,15 +129,16 @@
 
 ### **After Phase 2 (Hour 16)**
 - [ ] Touch-optimized components render properly on tablets
-- [ ] Family context visible in all student selection interfaces
+- [ ] Notification system operational with real-time updates
 - [ ] Mobile navigation and modals function with touch gestures
 - [ ] Tablet kiosk interface optimized for student use
 
 ### **After Phase 3 (Hour 24)**
-- [ ] Real-time notifications operational across all user roles
+- [ ] Real-time notifications operational across all user roles with PWA guidance
 - [ ] Cross-device compatibility validated on target devices
 - [ ] Security audit passes with no critical vulnerabilities
 - [ ] Extension points validated for future AI/external integration
+- [ ] **OPTIONAL:** Tutorial system functional for comprehensive staff onboarding
 
 ---
 
@@ -182,4 +194,4 @@ interface SprintProgress {
 - [ ] **Hour 16:** Phase 2 mobile/context complete and published
 - [ ] **Hour 24:** Phase 3 production-ready and final publish
 
-**🎯 Implementation Success Definition:** All phases completed on schedule with verified functionality, performance targets met, and production-ready system deployed to classroom tablets.
+**🎯 Implementation Success Definition:** All phases completed on schedule with verified functionality, notification system operational with PWA guidance, performance targets met, and production-ready system deployed to classroom tablets. Tutorial system optional but valuable for comprehensive staff onboarding and smooth system adoption.

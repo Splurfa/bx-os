@@ -259,32 +259,35 @@ const emotionLabels = {
 
 ### Component Specifications
 **File:** `src/components/ui/notification-bell.tsx`
-**Priority:** MEDIUM - Real-time notification system
+**Priority:** CRITICAL - Real-time notifications with PWA guidance
 
 **Requirements:**
-- [ ] **Badge count display** with dynamic updates
+- [ ] **Badge count display** with dynamic updates and PWA guidance prompts
 - [ ] **Dropdown notification list** with touch-friendly items
 - [ ] **Real-time subscription** to Supabase changes
+- [ ] **PWA installation guidance** for mobile users
 - [ ] **Role-based filtering** for relevant notifications
 - [ ] **Touch-optimized interactions** for all notification actions
 
 **Technical Implementation:**
 ```typescript
 interface NotificationBellProps {
-  userId: string;
+  userId?: string;
   userRole: 'teacher' | 'admin' | 'super_admin';
   maxNotifications?: number; // Default: 10
   autoMarkAsRead?: boolean;
+  showPWAGuidance?: boolean;
   onNotificationClick?: (notification: Notification) => void;
 }
 
 interface Notification {
   id: string;
-  type: 'BSR_assigned' | 'reflection_completed' | 'urgent_behavior';
+  type: 'BSR_assigned' | 'reflection_completed' | 'urgent_behavior' | 'PWA_install';
   title: string;
   message: string;
   timestamp: Date;
   isRead: boolean;
+  priority: 'low' | 'medium' | 'high' | 'critical';
   studentName?: string;
   actionUrl?: string;
 }
@@ -318,6 +321,49 @@ useEffect(() => {
 
 ---
 
+## 7. 🎓 TutorialModal Component (OPTIONAL)
+
+### Component Specifications
+**File:** `src/components/ui/tutorial-modal.tsx`
+**Priority:** OPTIONAL - User onboarding system
+
+**Requirements:**
+- [ ] **Interactive guided highlights** with overlay positioning
+- [ ] **Role-based tutorial content** for teachers vs admins
+- [ ] **Step progression controls** with next/previous navigation
+- [ ] **Tutorial completion tracking** with persistence
+- [ ] **Skip/replay functionality** for user control
+
+**Technical Implementation:**
+```typescript
+interface TutorialModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  userRole: 'teacher' | 'admin' | 'super_admin';
+  currentStep: number;
+  totalSteps: number;
+  onNext: () => void;
+  onPrevious: () => void;
+  onSkip: () => void;
+  onComplete: () => void;
+}
+
+interface TutorialStep {
+  id: string;
+  title: string;
+  description: string;
+  targetElement?: string; // CSS selector
+  highlightArea?: boolean;
+  actionRequired?: boolean;
+  content: {
+    teacher: string;
+    admin: string;
+  };
+}
+```
+
+---
+
 ## **COMPONENT LIBRARY INTEGRATION**
 
 ### 7. 📚 Component Export Structure
@@ -329,7 +375,7 @@ export { TouchOptimizedButton } from './touch-optimized-button';
 export { SwipeNavigation } from './swipe-navigation';
 export { MobileModal } from './mobile-modal';
 export { TabletKioskInterface } from './tablet-kiosk-interface';
-export { NotificationBell } from './notification-bell';
+export { TutorialModal } from './tutorial-modal'; // OPTIONAL
 
 // Enhanced Existing Components
 export { MoodSlider } from './mood-slider';
@@ -382,11 +428,12 @@ export { Card } from './card'; // Enhanced with touch interactions
 
 ### Component Development Priority
 - [ ] **TouchOptimizedButton** - Foundation component (1 hour)
+- [ ] **NotificationBell** - Critical real-time system (1.5 hours)
 - [ ] **TabletKioskInterface** - Critical for kiosk deployment (2 hours)
 - [ ] **SwipeNavigation** - Enhanced mobile navigation (1 hour)
 - [ ] **MobileModal** - Workflow management (30 minutes)
-- [ ] **NotificationBell** - Real-time system (1 hour)
 - [ ] **MoodSlider Enhancement** - Reflection interface (30 minutes)
+- [ ] **TutorialModal** - OPTIONAL user onboarding (1 hour if time permits)
 
 ### Testing & Validation Requirements
 - [ ] **Touch target accessibility** validation on actual tablets
@@ -395,4 +442,4 @@ export { Card } from './card'; // Enhanced with touch interactions
 - [ ] **Cross-device compatibility** iPad, Android tablets, phones
 - [ ] **Visual feedback consistency** across all components
 
-**🎯 Component Success Definition:** Complete touch-optimized component library operational on classroom tablets with <100ms response times and accessibility compliance for student use.
+**🎯 Component Success Definition:** Complete touch-optimized component library operational on classroom tablets with notification system, PWA guidance, <100ms response times, accessibility compliance, and optional tutorial system for comprehensive staff onboarding.

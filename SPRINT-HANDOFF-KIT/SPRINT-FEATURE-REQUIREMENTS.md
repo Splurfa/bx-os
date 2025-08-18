@@ -127,40 +127,7 @@ UPDATE profiles SET role = 'super_admin' WHERE email = 'zach@zavitechllc.com';
 
 ---
 
-## 5. 👨‍👩‍👧‍👦 Student Selection with Family Context
-
-### Feature: Family-Integrated Student Selection
-**Priority:** HIGH - Core Functionality Enhancement
-**Implementation Time:** 3 hours
-
-**Requirements:**
-- [ ] **Family context display** in student selection interfaces
-- [ ] **Guardian contact information** visible during BSR creation
-- [ ] **Family relationship visualization** in teacher workflows
-- [ ] **Communication preference access** for parent engagement
-
-**Acceptance Criteria:**
-- Teachers can view complete family context when selecting students
-- Guardian contact details available during behavior request creation
-- Family relationships clearly displayed in all relevant interfaces
-- Behavioral context enhanced by family structure information
-
-**Technical Specifications:**
-```typescript
-interface FamilyContext {
-  student: { name: string; grade: string; class_name: string; };
-  family: { family_name: string; address: string; phone: string; };
-  guardians: Array<{
-    name: string; 
-    relationship: string; 
-    contact_preferences: ContactPreference;
-  }>;
-}
-```
-
----
-
-## 6. 📱 Touch-Optimized Component Library
+## 5. 📱 Touch-Optimized Component Library
 
 ### Feature: Mobile-First UI Components
 **Priority:** HIGH - Tablet Deployment Readiness
@@ -190,10 +157,10 @@ interface TouchOptimizedComponents {
 
 ---
 
-## 7. 🔔 Real-Time Notification System
+## 6. 🔔 Real-Time Notification System
 
 ### Feature: Behavioral Alert Infrastructure
-**Priority:** MEDIUM - Enhanced User Experience
+**Priority:** CRITICAL - PWA Guidance & Notifications
 **Implementation Time:** 3 hours
 
 **Requirements:**
@@ -220,7 +187,7 @@ interface NotificationSystem {
 
 ---
 
-## 8. 🧪 Extension Point Validation
+## 7. 🧪 Extension Point Validation
 
 ### Feature: AI & External Integration Readiness
 **Priority:** MEDIUM - Future-Proof Foundation
@@ -258,7 +225,7 @@ interface ExtensionPoints {
 - [ ] **Student-centric architecture** operational with family context
 - [ ] **Super admin system management** via /dev-login access
 - [ ] **Mobile tablet support** for all core kiosk functionality
-- [ ] **Family context integration** across all student selection interfaces
+- [ ] **Minimal UI changes complete** (notification bell, login button, admin routing)
 - [ ] **Real-time notifications** operational for behavioral alerts
 - [ ] **Extension point framework** validated for future integration
 
@@ -278,4 +245,50 @@ interface ExtensionPoints {
 
 ---
 
-**🎯 Sprint Feature Success Definition:** All critical and high-priority features implemented, tested, and validated for immediate classroom deployment, with extension points prepared for future behavioral intelligence platform expansion.
+## 8. 🎓 Tutorial System (OPTIONAL)
+
+### Feature: Interactive User Onboarding
+**Priority:** OPTIONAL - Post-Sprint Enhancement
+**Implementation Time:** 2 hours (if time permits)
+
+**Requirements:**
+- [ ] **First-time login detection** and tutorial modal trigger
+- [ ] **Role-based tutorial content** for teachers vs admins
+- [ ] **Interactive walkthrough components** with guided highlights
+- [ ] **Tutorial completion tracking** to prevent repeat displays
+
+**Teacher Tutorial Content:**
+- Submitting a behavioral report walkthrough
+- Navigation between behavioral screens
+- Features and functionality overview
+- Student reflection review process
+- Request revision workflow
+- Logout procedure
+
+**Admin Tutorial Content:**
+- User management interface
+- System monitoring capabilities 
+- Queue management tools
+- Super admin exclusive features
+- System configuration options
+
+**Acceptance Criteria:**
+- Tutorial system triggers on first login for all user roles
+- Step-by-step guidance covers all core workflows
+- Interactive elements highlight relevant UI components
+- Tutorial can be skipped or replayed as needed
+- Completion state persisted to prevent repetition
+
+**Technical Specifications:**
+```typescript
+interface TutorialSystem {
+  triggers: 'first_login' | 'manual_activation';
+  content: { teacher: TutorialStep[]; admin: TutorialStep[]; };
+  completion: 'localStorage + database persistence';
+  interactive: 'highlight overlay + guided clicks';
+}
+```
+
+---
+
+**🎯 Sprint Feature Success Definition:** All critical and high-priority features implemented, tested, and validated for immediate classroom deployment, with extension points prepared for future behavioral intelligence platform expansion. Tutorial system optional but valuable for comprehensive staff onboarding.
