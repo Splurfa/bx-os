@@ -272,7 +272,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
       </PopoverTrigger>
       
       <PopoverContent 
-        className="w-80 p-0" 
+        className="w-80 p-0 bg-background border shadow-lg z-50" 
         align="end"
         side="bottom"
         sideOffset={8}

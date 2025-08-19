@@ -7,6 +7,7 @@ import AdminRoute from "./components/AdminRoute";
 import TeacherRoute from "./components/TeacherRoute";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
+import RoleBasedRedirect from "./components/RoleBasedRedirect";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
 import KioskOnePage from "./pages/KioskOnePage";
 import KioskTwoPage from "./pages/KioskTwoPage";
@@ -26,7 +27,7 @@ const App = () => (
         <TooltipProvider>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<AuthPage />} />
+              <Route path="/" element={<RoleBasedRedirect />} />
               <Route path="/login" element={<AuthPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route 
