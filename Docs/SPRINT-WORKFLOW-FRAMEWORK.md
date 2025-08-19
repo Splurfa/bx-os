@@ -93,6 +93,42 @@ Create comprehensive visual documentation following the **BX-OS Flowchart Protoc
 **User-Journey Flowcharts (11+):**
 - `11-user-journey-map.md` - Complete stakeholder experience flows
 
+## 🤖 AI ASSISTANT SPRINT ORIENTATION
+
+### MANDATORY ENTRY PROTOCOL FOR AI ASSISTANTS
+
+Before ANY sprint work, AI assistants MUST:
+
+1. **📋 READ SPRINT ENTRY PROTOCOL**
+   - Complete `Docs/AI-ASSISTANT-SPRINT-PROTOCOL.md` checklist
+   - Validate current system state vs claimed implementation status
+   - Run reality check tools from `Docs/REALITY-TESTING-INTEGRATION.md`
+
+2. **🔍 VERIFY ACTUAL SYSTEM STATE**
+   - Test critical components exist and function (don't trust documentation)
+   - Check authentication boundaries actually work
+   - Validate database connectivity and data integrity
+
+3. **🎯 IDENTIFY TRUE IMPLEMENTATION GAPS**
+   - Compare documentation claims against actual codebase functionality
+   - Focus only on explicitly broken or missing functionality
+   - Plan minimal changes to address specific user requests
+
+4. **⚠️ MANDATORY VALIDATION GATES**
+   - NEVER claim completion without functional testing
+   - ALWAYS test end-to-end workflows before declaring success
+   - MUST validate security boundaries and role restrictions work in practice
+
+### ASSISTANT SELF-VALIDATION REQUIREMENTS
+
+Every implementation phase requires:
+- **Component Testing**: Individual parts work in isolation  
+- **Integration Testing**: Parts work together correctly
+- **System Testing**: Complete user workflows function end-to-end
+- **Security Testing**: Authentication and authorization boundaries enforced
+
+See `Docs/SPRINT-VALIDATION-FRAMEWORK.md` for complete testing protocols.
+
 ## 🔄 Sprint Execution Phases
 
 **🚀 CONTINUOUS IMPLEMENTATION MODE**: Phases are organizational only. Implementation continues through all phases until completion or critical blocker. No manual approval required between phases.
@@ -253,6 +289,38 @@ flowchart TD
 - [ ] Documentation updated to match implementation
 - [ ] Known issues and technical debt documented
 - [ ] Repository structure clean and navigation-ready
+
+### 🔬 MANDATORY AI ASSISTANT VALIDATION PROTOCOL
+
+Before claiming sprint completion, AI assistants MUST:
+
+#### Pre-Completion System Validation
+- [ ] **Authentication Testing**: Role-based route protection verified with actual user accounts
+- [ ] **Component Functionality**: All claimed components exist and work in practice  
+- [ ] **UI Interactions**: Critical interactive elements (NotificationBell, QueueDisplay) function correctly
+- [ ] **Data Flow Testing**: Student lookup, queue management, BSR workflows tested end-to-end
+- [ ] **Security Boundaries**: Anonymous kiosk access and role restrictions verified
+
+#### Reality Check Requirements  
+- [ ] **Database Queries**: Run validation queries to check actual data state
+- [ ] **Console Log Review**: No critical JavaScript errors during normal operation
+- [ ] **Network Request Testing**: API calls succeed and return expected data
+- [ ] **Cross-Session Testing**: Real-time updates work across multiple browser windows
+- [ ] **Role-Based Testing**: Test system with actual admin, teacher, and anonymous users
+
+#### User Handoff Preparation
+- [ ] **Accurate Documentation**: Implementation status reflects tested reality, not aspirational goals
+- [ ] **Clear Testing Instructions**: Provide specific user scenarios to validate
+- [ ] **Known Issues Documentation**: Honest reporting of limitations and edge cases
+- [ ] **Rollback Plan**: Clear instructions if critical issues discovered during user testing
+
+#### Sprint Success Criteria Validation
+- [ ] **Core Workflows Functional**: Admin dashboard, teacher dashboard, kiosk access tested
+- [ ] **Security Architecture**: Role isolation and authentication boundaries working
+- [ ] **Data Integrity**: Student records, queue management, session tracking accurate  
+- [ ] **UI/UX Functionality**: Interactive components respond correctly to user actions
+
+**CRITICAL**: Sprint is NOT complete until ALL validation requirements pass functional testing.
 
 ## 🎯 Framework Success Metrics
 

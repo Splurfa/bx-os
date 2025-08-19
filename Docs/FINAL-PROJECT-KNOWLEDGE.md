@@ -1,5 +1,41 @@
 # 🎯 BX-OS PROJECT KNOWLEDGE - UPDATED SYSTEM STATE
 
+## 🚀 QUICK START FOR AI ASSISTANTS
+
+### MANDATORY FIRST ACTIONS (30 seconds)
+**ALWAYS DO THESE BEFORE ANY IMPLEMENTATION:**
+
+1. **🔍 REALITY CHECK FIRST**
+   - Read this section completely (you are here)
+   - Check current route context for user location
+   - Run `Docs/AI-ASSISTANT-SPRINT-PROTOCOL.md` entry checklist
+
+2. **⚡ IMMEDIATE VALIDATION TOOLS**
+   ```sql
+   -- Verify database connection and user state
+   SELECT COUNT(*) FROM auth.users;
+   SELECT * FROM profiles WHERE role = 'admin' LIMIT 3;
+   SELECT * FROM active_sessions WHERE is_active = true LIMIT 5;
+   ```
+
+3. **🎯 CRITICAL FILE PRIORITIES**
+   - `src/components/AdminRoute.tsx` - Does it exist? Does it work?
+   - `src/components/TeacherRoute.tsx` - Does it exist? Does it work? 
+   - `src/hooks/usePermissions.ts` - Does it exist? Does it work?
+   - `src/components/NotificationBell.tsx` - Does dropdown work on click?
+
+4. **📋 SPRINT STATUS VALIDATION**
+   - Check `SPRINT-01-LAUNCH/IMPLEMENTATION-CHECKLIST.md` for claimed vs actual status
+   - Use `Docs/REALITY-TESTING-INTEGRATION.md` tools to verify claims
+   - Never trust documentation - always verify code functionality
+
+### 🚨 KNOWN CRITICAL GAPS (Updated Real-Time)
+- **Authentication Architecture**: Role-based route protection missing or broken
+- **UI Permission System**: Component-level authorization not implemented
+- **Session Correlation**: User sessions show "Unknown User" instead of real names
+- **NotificationBell**: Dropdown interactions fail - component exists but doesn't work
+- **Kiosk Access**: May be blocked by authentication when should be anonymous
+
 ## 📋 CRITICAL SYSTEM STATE (Updated 8/19/2025)
 
 ### 🚨 PRIMARY ARCHITECTURAL FAILURES
