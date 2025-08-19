@@ -3,7 +3,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { KioskProvider } from "./contexts/KioskContext";
-import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
+import TeacherRoute from "./components/TeacherRoute";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
@@ -31,9 +32,9 @@ const App = () => (
               <Route 
                 path="/teacher" 
                 element={
-                  <ProtectedRoute>
+                  <TeacherRoute>
                     <TeacherDashboardPage />
-                  </ProtectedRoute>
+                  </TeacherRoute>
                 } 
               />
               {/* Dynamic kiosk route with session ID */}
@@ -46,9 +47,9 @@ const App = () => (
               <Route 
                 path="/admin-dashboard" 
                 element={
-                  <ProtectedRoute>
+                  <AdminRoute>
                     <AdminDashboardPage />
-                  </ProtectedRoute>
+                  </AdminRoute>
                 } 
               />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -48,7 +48,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { data, error } = await supabase.rpc('create_user_session', {
         p_user_id: userId,
         p_device_type: userRole,
-        p_device_info: { browser: navigator.userAgent },
+        p_device_info: { 
+          browser: navigator.userAgent,
+          role: userRole,
+          timestamp: new Date().toISOString()
+        },
         p_location: window.location.pathname
       });
       

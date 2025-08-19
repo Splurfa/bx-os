@@ -51,8 +51,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
     // Behavior request notifications (for admins and assigned teachers)
     behaviorRequests.forEach(request => {
       if (userRole === 'admin' || userRole === 'super_admin' || request.teacher_id === user?.id) {
-        const studentName = request.student?.name || 
-                           `${request.student?.first_name} ${request.student?.last_name}` || 
+        const studentName = `${request.student?.first_name || ''} ${request.student?.last_name || ''}`.trim() || 
                            'Unknown Student';
 
         if (request.status === 'waiting') {
@@ -92,8 +91,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
       const behaviorRequest = behaviorRequests.find(req => req.id === reflection.behavior_request_id);
       if (!behaviorRequest) return;
 
-      const studentName = behaviorRequest.student?.name || 
-                         `${behaviorRequest.student?.first_name} ${behaviorRequest.student?.last_name}` || 
+      const studentName = `${behaviorRequest.student?.first_name || ''} ${behaviorRequest.student?.last_name || ''}`.trim() || 
                          'Unknown Student';
 
       if (userRole === 'admin' || userRole === 'super_admin' || behaviorRequest.teacher_id === user?.id) {

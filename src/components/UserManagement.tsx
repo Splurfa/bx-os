@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { usePermissions } from "@/hooks/usePermissions";
 import { supabase } from "@/integrations/supabase/client";
 import { UserPlus, Search, MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -30,6 +31,7 @@ export default function UserManagement() {
   const [isCreating, setIsCreating] = useState(false);
   const { toast } = useToast();
   const isMobile = useIsMobile();
+  const { canCreateUsers } = usePermissions();
 
   // Form state
   const [newUser, setNewUser] = useState({
@@ -173,13 +175,14 @@ export default function UserManagement() {
           </p>
         </div>
         
-        <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-          <DialogTrigger asChild>
-            <Button size={isMobile ? "sm" : "default"} className={isMobile ? "text-xs px-2" : ""}>
-              <UserPlus className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
-              {isMobile ? 'Add' : 'Add User'}
-            </Button>
-          </DialogTrigger>
+        {canCreateUsers && (
+          <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+            <DialogTrigger asChild>
+              <Button size={isMobile ? "sm" : "default"} className={isMobile ? "text-xs px-2" : ""}>
+                <UserPlus className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
+                {isMobile ? 'Add' : 'Add User'}
+              </Button>
+            </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Create New User</DialogTitle>
@@ -252,6 +255,7 @@ export default function UserManagement() {
             </div>
           </DialogContent>
         </Dialog>
+        )}
       </div>
 
       {/* Stats */}
