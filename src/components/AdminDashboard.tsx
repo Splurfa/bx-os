@@ -235,13 +235,13 @@ const AdminDashboard = () => {
               </div>
             )}
             
-            {/* Unified Kiosk Management */}
+            {/* Simplified Kiosk Management */}
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Monitor className="icon-h2 text-primary" />
-                    <CardTitle className="text-h3">Kiosk Management</CardTitle>
+                    <CardTitle className="text-h3">iPad Kiosk Setup</CardTitle>
                   </div>
                   {!isMobile && (
                     <Button 
@@ -256,14 +256,15 @@ const AdminDashboard = () => {
                   )}
                 </div>
                 <CardDescription className="text-body-small">
-                  Manage kiosk activation status and monitor real-time usage
+                  Static URLs for 3 dedicated iPads - no session management needed
                 </CardDescription>
               </CardHeader>
               <CardContent className={`space-y-4 ${isMobile ? 'p-3 pt-0' : ''}`}>
                 <div className={`grid grid-cols-1 ${isMobile ? 'gap-2' : 'sm:grid-cols-2 lg:grid-cols-3 gap-4'}`}>
                   {kiosks.map((kiosk) => {
-                    const session = kioskSessions[kiosk.id];
-                    const isSessionExpired = session && session.expiresAt < new Date();
+                    // Simplified: Use static URLs instead of dynamic sessions
+                    const staticUrl = `/kiosk${kiosk.id}`;
+                    const fullUrl = `${window.location.origin}${staticUrl}`;
                     
                     return (
                       <Card key={kiosk.id} className="relative">
@@ -272,10 +273,10 @@ const AdminDashboard = () => {
                             <div className="flex items-center space-x-2">
                               <Monitor className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
                               <span className={`font-medium ${isMobile ? 'text-sm' : ''}`}>{kiosk.name}</span>
-                              {session && !isSessionExpired && (
+                              {kiosk.isActive && (
                                 <Badge variant="secondary" className="text-xs">
                                   <Shield className="w-3 h-3 mr-1" />
-                                  Active Session
+                                  Ready
                                 </Badge>
                               )}
                             </div>
@@ -288,34 +289,25 @@ const AdminDashboard = () => {
                           
                           <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                              <span className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>Activated</span>
+                              <span className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>Status</span>
                               <span className={`${isMobile ? 'text-xs' : 'text-sm'}`}>
-                                {kiosk.activatedAt ? new Date(kiosk.activatedAt).toLocaleTimeString() : '—'}
+                                {kiosk.isActive ? 'Active' : 'Inactive'}
                               </span>
                             </div>
 
-                            {/* Session Info */}
-                            {session && !isSessionExpired && (
+                            {/* Static URL Info */}
+                            {kiosk.isActive && (
                               <div className="space-y-2 p-2 bg-muted/50 rounded-lg">
                                 <div className="flex items-center justify-between">
-                                  <span className="text-xs text-muted-foreground">Session ID</span>
-                                  <code className="text-xs font-mono">{session.sessionId}</code>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs text-muted-foreground flex items-center">
-                                    <Clock className="w-3 h-3 mr-1" />
-                                    Expires
-                                  </span>
-                                  <span className="text-xs">
-                                    {session.expiresAt.toLocaleTimeString()}
-                                  </span>
+                                  <span className="text-xs text-muted-foreground">Static URL</span>
+                                  <code className="text-xs font-mono">{staticUrl}</code>
                                 </div>
                                 <div className="flex gap-1 pt-1">
                                   <Button
                                     size="sm"
                                     variant="outline"
                                     className="text-xs h-6 px-2"
-                                    onClick={() => handleCopyUrl(session.accessUrl, kiosk.id)}
+                                    onClick={() => handleCopyUrl(staticUrl, kiosk.id)}
                                   >
                                     <Copy className="w-3 h-3 mr-1" />
                                     Copy URL
@@ -324,7 +316,7 @@ const AdminDashboard = () => {
                                     size="sm"
                                     variant="outline"
                                     className="text-xs h-6 px-2"
-                                    onClick={() => handleOpenKiosk(session.accessUrl)}
+                                    onClick={() => handleOpenKiosk(staticUrl)}
                                   >
                                     <ExternalLink className="w-3 h-3 mr-1" />
                                     Open
@@ -333,27 +325,11 @@ const AdminDashboard = () => {
                               </div>
                             )}
 
-            {/* Generate Session Button */}
-            {kiosk.isActive && (!session || isSessionExpired) && (
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant="default"
-                  className="flex-1 text-xs"
-                  onClick={() => handleGenerateSession(kiosk.id)}
-                  disabled={generatingSession === kiosk.id}
-                >
-                  <LinkIcon className="w-3 h-3 mr-1" />
-                  {generatingSession === kiosk.id ? 'Generating...' : 'Generate Access URL'}
-                </Button>
-              </div>
-            )}
-
                             {/* Inactive Notice */}
                             {!kiosk.isActive && (
                               <Alert className="p-2">
                                 <AlertDescription className="text-xs">
-                                  Activate kiosk to generate access URLs
+                                  Activate kiosk to enable student access at {staticUrl}
                                 </AlertDescription>
                               </Alert>
                             )}

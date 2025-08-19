@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
-interface Student {
+interface MiddleSchoolStudent {
   id: string;
   name?: string;
   first_name: string;
@@ -13,24 +13,28 @@ interface Student {
   updated_at: string;
 }
 
-export type { Student };
+export type { MiddleSchoolStudent };
 
-export const useStudents = () => {
-  const [students, setStudents] = useState<Student[]>([]);
+/**
+ * Hook specifically for middle school students (6th, 7th, 8th grade)
+ * Used by kiosk components for student selection
+ */
+export const useMiddleSchoolStudents = () => {
+  const [students, setStudents] = useState<MiddleSchoolStudent[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchStudents = async () => {
+  const fetchMiddleSchoolStudents = async () => {
     try {
       const { data, error } = await supabase
         .from('students')
         .select('*')
-        .in('grade', ['6th', '7th', '8th']) // Filter for middle school students only
+        .in('grade', ['6th', '7th', '8th'])
         .order('first_name, last_name');
 
       if (error) throw error;
       setStudents(data || []);
     } catch (error) {
-      console.error('Error fetching students:', error);
+      console.error('Error fetching middle school students:', error);
       setStudents([]);
     } finally {
       setLoading(false);
@@ -38,11 +42,11 @@ export const useStudents = () => {
   };
 
   useEffect(() => {
-    fetchStudents();
+    fetchMiddleSchoolStudents();
 
-    // Set up real-time subscription for students
+    // Set up real-time subscription
     const channel = supabase
-      .channel('students_changes')
+      .channel('middle_school_students_changes')
       .on(
         'postgres_changes',
         {
@@ -51,7 +55,7 @@ export const useStudents = () => {
           table: 'students'
         },
         () => {
-          fetchStudents();
+          fetchMiddleSchoolStudents();
         }
       )
       .subscribe();
@@ -61,5 +65,10 @@ export const useStudents = () => {
     };
   }, []);
 
-  return { students, loading, refetch: fetchStudents };
+  return { 
+    students, 
+    loading, 
+    refetch: fetchMiddleSchoolStudents,
+    count: students.length 
+  };
 };

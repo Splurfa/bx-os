@@ -38,13 +38,13 @@ const App = () => (
                   </TeacherRoute>
                 } 
               />
-              {/* Dynamic kiosk route with session ID */}
-              <Route path="/kiosk/:sessionId" element={<UniversalKioskPage />} />
-              
-              {/* Legacy static kiosk routes for backward compatibility */}
+              {/* Primary static kiosk routes for iPad deployment */}
               <Route path="/kiosk1" element={<KioskOnePage />} />
               <Route path="/kiosk2" element={<KioskTwoPage />} />
               <Route path="/kiosk3" element={<KioskThreePage />} />
+              
+              {/* Dynamic kiosk route (secondary) */}
+              <Route path="/kiosk/:sessionId" element={<UniversalKioskPage />} />
               <Route 
                 path="/admin-dashboard" 
                 element={
