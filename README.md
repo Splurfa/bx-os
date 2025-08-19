@@ -1,91 +1,136 @@
 # BX-OS: Behavioral Intelligence Platform
 
-A comprehensive, mobile-first behavioral support system designed for educational environments. Built with React, TypeScript, and Supabase for real-time collaboration and data management.
+A simplified, mobile-first behavioral support system designed for middle school environments. Built with React, TypeScript, and Supabase for real-time collaboration and data management.
 
-## 🚀 Current Status: PRODUCTION READY
+## 🎯 Current Status: IMPLEMENTATION READY
 
-**Last Updated**: January 18, 2025  
-**Sprint Status**: ✅ COMPLETED - All objectives achieved
+**Last Updated**: August 19, 2025  
+**Architecture**: Simplified for dedicated iPad deployment  
+**Target**: 159 middle school students (6th-8th grade)
 
-### ✅ System Status
-- **Database**: Fully populated with student and family data  
-- **Authentication**: Demo accounts operational and tested
-- **Real-Time Features**: Live queue management active
-- **Mobile Optimization**: Tablet-ready interface deployed
-- **Security**: RLS policies implemented and validated
-- **UI/UX**: Clean, professional interface without setup elements
+### ✅ System Foundation
+- **Database**: Complete schema with proper relationships
+- **Authentication**: Google OAuth operational for staff access
+- **Anonymous Access**: Kiosk routes available without authentication
+- **Mobile Interface**: Tablet-optimized for dedicated iPads
+- **Real-Time Features**: Supabase subscriptions operational
 
-## 🎯 Key Features
+## 🚀 Simplified Architecture
 
-### Core Functionality
-- **Student Behavior Tracking**: Comprehensive behavior request and reflection system
-- **Real-Time Queue Management**: Live updates for behavior requests across kiosks
-- **Multi-Role Dashboard**: Separate interfaces for teachers and administrators
-- **Mobile-First Design**: Optimized for tablet and touch interaction
-- **PWA Capabilities**: Installable app with offline functionality
+### Core Design Principles
+- **Dedicated iPads**: 3 static kiosks with fixed URLs
+- **Single School**: Designed for one middle school deployment
+- **Grade Filtering**: Only 6th-8th grade students (159 total)
+- **Static Configuration**: No complex device detection or sessions
+- **Reliable Queue Management**: Simple, effective notification system
 
-### Role-Based Access
-- **Admin Dashboard**: System oversight, user management, queue control
-- **Teacher Dashboard**: Student behavior tracking, reflection review
-- **Student Kiosks**: Anonymous access for self-reflection (Kiosk 1, 2, 3)
+### Implementation Plan (6 hours total)
 
-## 🔐 Demo Accounts
+#### Phase 1: Security & Grade Filtering (2 hours)
+- Update RLS policies for anonymous kiosk access
+- Implement 6th-8th grade filtering
+- Validate AdminRoute/TeacherRoute protection
+- Test anonymous access to static kiosk URLs
 
-Access the system with these demo credentials:
+#### Phase 2: Simplified Kiosk System (2 hours)
+- Replace complex device sessions with static URLs
+- Remove device fingerprinting and dynamic routing
+- Update admin dashboard for tech team configuration
+- Clean up unused components
 
+#### Phase 3: Queue Management Fixes (1 hour)
+- Debug `admin_clear_all_queues()` function
+- Fix student lookup field references
+- Test real-time queue updates
+- Validate history preservation
+
+#### Phase 4: Data Integration Preparation (1 hour)
+- Filter dataset to middle school only
+- Validate schema for school system integration
+- Test complete workflows
+- Document integration points
+
+## 🔐 Access Patterns
+
+### Staff Authentication (Google OAuth)
 ```
-Admin Account:
-Email: admin@school.edu
-Password: password123
-Access: Full system administration
+Admin Dashboard: /admin
+- Full system oversight
+- User management
+- Queue clearing controls
 
-Teacher Account:  
-Email: teacher@school.edu
-Password: password123
-Access: Behavior tracking and review
+Teacher Dashboard: /teacher  
+- Behavior request review
+- Student reflection tracking
+- Real-time notifications
 ```
 
-## 📊 Database Population
+### Student Anonymous Access
+```
+Kiosk URLs (for tech team iPad configuration):
+- /kiosk/1 - Kiosk One (anonymous)
+- /kiosk/2 - Kiosk Two (anonymous) 
+- /kiosk/3 - Kiosk Three (anonymous)
 
-The system is populated with sample data representing a real school environment:
-- **5 Families**: Complete family units with verified contact information
-- **10 Guardians**: Parent/guardian contacts with communication preferences  
-- **9 Students**: Student records across multiple grade levels with family relationships
+Students access: Self-reflection → Behavior selection → Mood tracking
+```
 
-**Data Structure**: Families → Students → Guardians → Behavior Tracking pipeline fully operational
+## 📊 Target Deployment
 
-### 🗂️ PROJECT STRUCTURE
+### School Environment
+- **Middle School Only**: Grades 6-8
+- **Student Population**: 159 students
+- **Device Strategy**: 3 dedicated iPads
+- **Network**: School WiFi with static kiosk URLs
+- **Staff Access**: Desktop/mobile for teachers and admins
+
+### Success Metrics
+- Students can complete reflections without authentication barriers
+- Teachers receive real-time notifications of behavior requests
+- Admins can clear queues reliably while preserving history
+- All interfaces responsive on target devices
+- Clean foundation ready for school data integration
+
+## 🗂️ PROJECT STRUCTURE
 
 ```
 src/
 ├── components/           # UI components
 │   ├── ui/              # shadcn/ui components
-│   ├── Kiosk*/          # Student reflection interfaces
-│   └── *Dashboard/      # Teacher/Admin dashboards
+│   ├── Kiosk*/          # Static kiosk interfaces
+│   ├── AdminRoute.tsx   # Role-based protection
+│   ├── TeacherRoute.tsx # Role-based protection
+│   └── *Dashboard/      # Role-specific dashboards
 ├── contexts/            # React contexts (Auth, Kiosk)
 ├── hooks/               # Custom hooks (Supabase data, queues)
 ├── pages/               # Route components
 └── integrations/        # Supabase client & types
 
-SPRINT-DOCUMENTATION/    # Sprint documentation & requirements
+SPRINT-01-LAUNCH/        # Current implementation documentation
+Docs/                    # System architecture & protocols
 ```
 
-### 🎯 CRITICAL SUCCESS METRICS
-- **Data Population**: 1000+ student records via CSV import
-- **Real-time Features**: Sub-2s notification delivery
-- **Anonymous Access**: Students can complete reflections without authentication
-- **Cross-device**: Full functionality on desktop, tablet, mobile
+## 🔧 TECHNICAL FOUNDATION
 
-### 🔧 DEVELOPMENT NOTES
-- Database schema is complete and correct
-- Mock data has been removed - using real Supabase data only  
-- Authentication system is fully functional
-- PWA capabilities are implemented and working
-- All critical RPC functions have been created
+### Working Systems
+- Database schema with proper relationships and constraints
+- Mobile-responsive UI components across device types
+- PWA infrastructure for installation and offline capability
+- Supabase integration with real-time subscriptions
+- Google OAuth authentication for staff
 
-### 📚 REFERENCE DOCUMENTATION
-See `SPRINT-DOCUMENTATION/` folder for complete project knowledge:
-- `FINAL-PROJECT-KNOWLEDGE.md` - Current system state and critical priorities
-- `IMPLEMENTATION-CHECKLIST.md` - Sprint progress tracking
-- `BX-OS-TECHNICAL-CONTEXT.md` - Technical implementation details  
-- `SPRINT-FEATURE-REQUIREMENTS.md` - Feature specifications and acceptance criteria
+### Implementation Focus
+- **Simplicity Over Complexity**: Static URLs instead of dynamic sessions
+- **Reliability Over Features**: Robust queue clearing with history preservation
+- **Accessibility Over Barriers**: Anonymous kiosk access for students
+- **Foundation Over Optimization**: Clean architecture for future enhancement
+
+## 📚 DOCUMENTATION
+
+- `SPRINT-01-LAUNCH/` - Current implementation sprint
+- `Docs/` - System architecture and development protocols
+- `Docs/Flowcharts/` - Visual system architecture diagrams
+
+---
+
+**Next Sprint Preparation**: School system data integration and enrollment synchronization

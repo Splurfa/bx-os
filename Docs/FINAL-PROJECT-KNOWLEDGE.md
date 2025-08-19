@@ -1,40 +1,33 @@
-# 🎯 BX-OS PROJECT KNOWLEDGE - UPDATED SYSTEM STATE
+# 🎯 BX-OS PROJECT KNOWLEDGE - SIMPLIFIED ARCHITECTURE
 
 ## 🚀 QUICK START FOR AI ASSISTANTS
 
 ### MANDATORY FIRST ACTIONS (30 seconds)
 **ALWAYS DO THESE BEFORE ANY IMPLEMENTATION:**
 
-1. **🔍 REALITY CHECK FIRST**
-   - Read this section completely (you are here)
-   - Check current route context for user location
-   - Run `Docs/AI-ASSISTANT-SPRINT-PROTOCOL.md` entry checklist
+1. **🔍 REALITY CHECK**
+   - This is a **SINGLE MIDDLE SCHOOL** deployment (159 students, grades 6-8)
+   - **3 DEDICATED iPads** as fixed kiosks with static URLs
+   - **NO device detection, fingerprinting, or complex session management**
+   - Focus on SIMPLICITY and RELIABILITY over enterprise features
 
-2. **⚡ IMMEDIATE VALIDATION TOOLS**
+2. **⚡ VALIDATION TOOLS**
    ```sql
-   -- Verify database connection and user state
-   SELECT COUNT(*) FROM auth.users;
-   SELECT * FROM profiles WHERE role = 'admin' LIMIT 3;
-   SELECT * FROM active_sessions WHERE is_active = true LIMIT 5;
+   -- Verify middle school student count (should be 159)
+   SELECT COUNT(*) FROM students WHERE grade_level IN (6, 7, 8);
+   
+   -- Check queue functionality
+   SELECT * FROM behavior_requests WHERE status = 'pending' LIMIT 5;
+   
+   -- Validate anonymous kiosk access
+   SELECT * FROM students LIMIT 3;
    ```
 
-3. **🎯 CRITICAL FILE PRIORITIES**
-   - `src/components/AdminRoute.tsx` - Does it exist? Does it work?
-   - `src/components/TeacherRoute.tsx` - Does it exist? Does it work? 
-   - `src/hooks/usePermissions.ts` - Does it exist? Does it work?
-   - `src/components/NotificationBell.tsx` - Does dropdown work on click?
-
-4. **📋 SPRINT STATUS VALIDATION**
-   - Check `SPRINT-01-LAUNCH/IMPLEMENTATION-CHECKLIST.md` for claimed vs actual status
-   - Use `Docs/REALITY-TESTING-INTEGRATION.md` tools to verify claims
-   - Never trust documentation - always verify code functionality
-
-### 🚨 KNOWN CRITICAL GAPS (Updated Real-Time)
-- **Authentication Architecture**: Role-based route protection missing or broken
-- **UI Permission System**: Component-level authorization not implemented
-- **Session Correlation**: User sessions show "Unknown User" instead of real names
-- **NotificationBell**: Dropdown interactions fail - component exists but doesn't work
-- **Kiosk Access**: May be blocked by authentication when should be anonymous
+3. **🎯 CRITICAL IMPLEMENTATION FOCUS**
+   - **Static Kiosk URLs**: `/kiosk/1`, `/kiosk/2`, `/kiosk/3` (no dynamics)
+   - **Grade Filtering**: Only show 6th-8th grade students (159 total)
+   - **Queue Clearing**: Fix `admin_clear_all_queues()` with history preservation
+   - **Anonymous Access**: Students must reach kiosks without authentication
 
 ## 📋 CRITICAL SYSTEM STATE (Updated 8/19/2025)
 
