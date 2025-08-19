@@ -385,7 +385,7 @@ export default function UserManagement() {
                       </TableCell>
                     )}
                     <TableCell>
-                      {(canChangeUserRoles || canDeleteUsers) && (
+                      {isSuperAdmin && (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size={isMobile ? "sm" : "sm"}>

@@ -13,11 +13,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
-import { Monitor, PowerOff, Link as LinkIcon, Copy, Clock, Shield, ExternalLink, UserPlus } from 'lucide-react';
+import { Monitor, PowerOff, Link as LinkIcon, Copy, Clock, Shield, ExternalLink } from 'lucide-react';
 import AppHeader from './AppHeader';
 import QueueDisplay from './QueueDisplay';
 import UserManagement from './UserManagement';
-import CreateSuperAdminTest from './CreateSuperAdminTest';
+
 import { SessionMonitor } from './SessionMonitor';
 import { useToast } from '@/hooks/use-toast';
 
@@ -183,13 +183,9 @@ const AdminDashboard = () => {
       {/* Widen the content area slightly on larger screens without affecting global layout */}
       <div className="container-page spacing-section max-w-[1600px] mx-auto">
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className={`grid w-full grid-cols-3 ${isMobile ? 'text-xs' : 'text-xs sm:text-sm'}`}>
+          <TabsList className={`grid w-full grid-cols-2 ${isMobile ? 'text-xs' : 'text-xs sm:text-sm'}`}>
             <TabsTrigger value="overview">System Overview</TabsTrigger>
             <TabsTrigger value="users">Users & Sessions</TabsTrigger>
-            <TabsTrigger value="test-admin" className="flex items-center gap-1">
-              <UserPlus className="w-3 h-3" />
-              Test Admin
-            </TabsTrigger>
           </TabsList>
 
           {/* System Overview Tab */}
@@ -350,13 +346,6 @@ const AdminDashboard = () => {
             {/* Session Monitor Section */}
             <div className={isMobile ? "mt-4" : "mt-8"}>
               <SessionMonitor />
-            </div>
-          </TabsContent>
-          
-          {/* Test Admin Creation Tab */}
-          <TabsContent value="test-admin" className={isMobile ? "space-y-3" : "space-y-6"}>
-            <div className="flex justify-center items-center min-h-[400px]">
-              <CreateSuperAdminTest />
             </div>
           </TabsContent>
         </Tabs>
