@@ -774,47 +774,32 @@ export type Database = {
       }
       profiles: {
         Row: {
-          classroom: string | null
           created_at: string
-          department: string | null
           email: string
           full_name: string | null
-          grade_level: string | null
-          hire_date: string | null
           id: string
           is_active: boolean | null
           last_login: string | null
-          phone: string | null
           role: string
           updated_at: string
         }
         Insert: {
-          classroom?: string | null
           created_at?: string
-          department?: string | null
           email: string
           full_name?: string | null
-          grade_level?: string | null
-          hire_date?: string | null
           id: string
           is_active?: boolean | null
           last_login?: string | null
-          phone?: string | null
           role?: string
           updated_at?: string
         }
         Update: {
-          classroom?: string | null
           created_at?: string
-          department?: string | null
           email?: string
           full_name?: string | null
-          grade_level?: string | null
-          hire_date?: string | null
           id?: string
           is_active?: boolean | null
           last_login?: string | null
-          phone?: string | null
           role?: string
           updated_at?: string
         }

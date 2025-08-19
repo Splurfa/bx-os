@@ -65,7 +65,7 @@ export const getRoleDisplayName = (role: UserRole): string => {
     case 'teacher':
       return 'Teacher';
     case 'admin':
-      return 'Administrator';
+      return 'Admin';
     case 'super_admin':
       return 'Super Admin';
     default:

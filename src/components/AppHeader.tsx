@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useProfile } from '@/hooks/useProfile';
 import { useNavigate } from 'react-router-dom';
+import { getRoleDisplayName } from '@/lib/permissions';
 
 const AppHeader = () => {
   const { signOut, user } = useAuth();
@@ -69,8 +70,8 @@ const AppHeader = () => {
                 <p className="text-xs leading-none text-muted-foreground">
                   {user?.email}
                 </p>
-                <p className="text-xs leading-none text-muted-foreground capitalize">
-                  {profile?.role || user?.user_metadata?.role || 'teacher'}
+                <p className="text-xs leading-none text-muted-foreground">
+                  {getRoleDisplayName(profile?.role || user?.user_metadata?.role || 'teacher')}
                 </p>
               </div>
             </DropdownMenuLabel>

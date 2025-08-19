@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePermissions } from "@/hooks/usePermissions";
 import { supabase } from "@/integrations/supabase/client";
+import { getRoleDisplayName } from "@/lib/permissions";
 import { UserPlus, Search, MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
@@ -166,18 +167,6 @@ export default function UserManagement() {
     }
   };
 
-  const getRoleDisplayText = (role: string) => {
-    switch (role) {
-      case 'super_admin':
-        return 'Super Admin';
-      case 'admin':
-        return 'Administrator';
-      case 'teacher':
-        return 'Teacher';
-      default:
-        return role;
-    }
-  };
 
   return (
     <div className={isMobile ? "space-y-3" : "space-y-6"}>
@@ -186,7 +175,7 @@ export default function UserManagement() {
         <div>
           <h2 className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>User Management</h2>
           <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
-            {isMobile ? 'Manage users' : 'Manage teachers and administrators'}
+            {isMobile ? 'Manage users' : 'Manage teachers and admins'}
           </p>
         </div>
         
@@ -254,7 +243,7 @@ export default function UserManagement() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="teacher">Teacher</SelectItem>
-                    <SelectItem value="admin">Administrator</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
                     {isSuperAdmin && (
                       <SelectItem value="super_admin">Super Admin</SelectItem>
                     )}
@@ -301,7 +290,7 @@ export default function UserManagement() {
         <Card>
           <CardHeader className={`pb-1 ${isMobile ? 'p-2' : 'pb-2'}`}>
             <CardTitle className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-muted-foreground`}>
-              {isMobile ? 'Admins' : 'Administrators'}
+              {isMobile ? 'Admins' : 'Admins'}
             </CardTitle>
           </CardHeader>
           <CardContent className={isMobile ? "p-2 pt-0" : ""}>
@@ -376,7 +365,7 @@ export default function UserManagement() {
                     {!isMobile && <TableCell className="text-sm">{user.email}</TableCell>}
                     <TableCell>
                       <Badge variant={getRoleColor(user.role)} className={isMobile ? "text-xs px-1.5 py-0.5" : ""}>
-                        {getRoleDisplayText(user.role)}
+                        {getRoleDisplayName(user.role as any)}
                       </Badge>
                     </TableCell>
                     {!isMobile && (
@@ -398,7 +387,7 @@ export default function UserManagement() {
                                 {user.role === 'teacher' && (
                                   <DropdownMenuItem onClick={() => updateUserRole(user.id, 'admin')}>
                                     <Edit className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
-                                    <span className={isMobile ? "text-xs" : ""}>Make Administrator</span>
+                                    <span className={isMobile ? "text-xs" : ""}>Make Admin</span>
                                   </DropdownMenuItem>
                                 )}
                                 {user.role === 'admin' && (
@@ -416,7 +405,7 @@ export default function UserManagement() {
                                 {user.role === 'super_admin' && (
                                   <DropdownMenuItem onClick={() => updateUserRole(user.id, 'admin')}>
                                     <Edit className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
-                                    <span className={isMobile ? "text-xs" : ""}>Make Administrator</span>
+                                    <span className={isMobile ? "text-xs" : ""}>Make Admin</span>
                                   </DropdownMenuItem>
                                 )}
                               </>
