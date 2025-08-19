@@ -478,6 +478,56 @@ export type Database = {
         }
         Relationships: []
       }
+      device_sessions: {
+        Row: {
+          created_at: string
+          device_fingerprint: string
+          device_session_id: string
+          expires_at: string
+          id: string
+          ip_address: unknown | null
+          kiosk_id: number | null
+          last_heartbeat: string | null
+          metadata: Json | null
+          status: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          device_fingerprint: string
+          device_session_id: string
+          expires_at: string
+          id?: string
+          ip_address?: unknown | null
+          kiosk_id?: number | null
+          last_heartbeat?: string | null
+          metadata?: Json | null
+          status?: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          device_fingerprint?: string
+          device_session_id?: string
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          kiosk_id?: number | null
+          last_heartbeat?: string | null
+          metadata?: Json | null
+          status?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "device_sessions_kiosk_id_fkey"
+            columns: ["kiosk_id"]
+            isOneToOne: false
+            referencedRelation: "kiosks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       external_data: {
         Row: {
           academic_data: Json | null
@@ -646,42 +696,63 @@ export type Database = {
       }
       kiosks: {
         Row: {
+          access_url: string | null
           activated_at: string | null
           activated_by: string | null
           created_at: string
+          created_by_admin: string | null
           current_behavior_request_id: string | null
           current_student_id: string | null
+          device_fingerprint: string | null
           device_info: Json | null
+          device_session_id: string | null
           id: number
           is_active: boolean | null
+          last_heartbeat: string | null
           location: string | null
           name: string
+          session_expires_at: string | null
+          session_status: string | null
           updated_at: string
         }
         Insert: {
+          access_url?: string | null
           activated_at?: string | null
           activated_by?: string | null
           created_at?: string
+          created_by_admin?: string | null
           current_behavior_request_id?: string | null
           current_student_id?: string | null
+          device_fingerprint?: string | null
           device_info?: Json | null
+          device_session_id?: string | null
           id?: number
           is_active?: boolean | null
+          last_heartbeat?: string | null
           location?: string | null
           name: string
+          session_expires_at?: string | null
+          session_status?: string | null
           updated_at?: string
         }
         Update: {
+          access_url?: string | null
           activated_at?: string | null
           activated_by?: string | null
           created_at?: string
+          created_by_admin?: string | null
           current_behavior_request_id?: string | null
           current_student_id?: string | null
+          device_fingerprint?: string | null
           device_info?: Json | null
+          device_session_id?: string | null
           id?: number
           is_active?: boolean | null
+          last_heartbeat?: string | null
           location?: string | null
           name?: string
+          session_expires_at?: string | null
+          session_status?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -948,6 +1019,23 @@ export type Database = {
         Args: { p_kiosk_id: number }
         Returns: boolean
       }
+      cleanup_expired_device_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      create_device_session: {
+        Args: {
+          p_device_fingerprint: string
+          p_expires_in_hours?: number
+          p_ip_address?: unknown
+          p_kiosk_id: number
+          p_user_agent?: string
+        }
+        Returns: {
+          access_url: string
+          session_id: string
+        }[]
+      }
       create_user_session: {
         Args: {
           p_device_info?: Json
@@ -960,6 +1048,10 @@ export type Database = {
       end_user_session: {
         Args: { p_session_id: string }
         Returns: undefined
+      }
+      generate_device_session_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
@@ -1000,6 +1092,14 @@ export type Database = {
           p_student_id?: string
         }
         Returns: undefined
+      }
+      validate_device_session: {
+        Args: { p_device_fingerprint: string; p_session_id: string }
+        Returns: {
+          is_valid: boolean
+          kiosk_id: number
+          remaining_seconds: number
+        }[]
       }
       validate_student_birthday_password: {
         Args: { p_password: string; p_student_id: string }

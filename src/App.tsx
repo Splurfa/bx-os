@@ -10,6 +10,7 @@ import TeacherDashboardPage from "./pages/TeacherDashboardPage";
 import KioskOnePage from "./pages/KioskOnePage";
 import KioskTwoPage from "./pages/KioskTwoPage";
 import KioskThreePage from "./pages/KioskThreePage";
+import UniversalKioskPage from "./pages/UniversalKioskPage";
 
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 
@@ -35,6 +36,10 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
+              {/* Dynamic kiosk route with session ID */}
+              <Route path="/kiosk/:sessionId" element={<UniversalKioskPage />} />
+              
+              {/* Legacy static kiosk routes for backward compatibility */}
               <Route path="/kiosk1" element={<KioskOnePage />} />
               <Route path="/kiosk2" element={<KioskTwoPage />} />
               <Route path="/kiosk3" element={<KioskThreePage />} />
