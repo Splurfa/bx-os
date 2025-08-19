@@ -16,7 +16,12 @@ Every sprint execution MUST produce this exact repository structure:
 │   ├── README.md                      ← orientation for Docs folder
 │   ├── SPRINT-WORKFLOW-FRAMEWORK.md  ← system-level instruction (this file)
 │   ├── FINAL-PROJECT-KNOWLEDGE.md    ← high-level canonical project knowledge
-│   └── [ADDITIONAL GLOBAL DOCS]      ← project-wide references only
+│   └── Flowcharts/                   ← system architecture & user journey visuals
+│       ├── README.md                 ← flowchart navigation and organization
+│       ├── Current-State/            ← existing system problems & gaps
+│       ├── Sprint-01-Targets/        ← current sprint deliverable blueprints
+│       ├── Future-Vision/            ← long-term architectural vision
+│       └── User-Journeys/            ← complete stakeholder experience flows
 │
 ├── SPRINT-[SPRINT-NAME]/              ← main sprint container
 │   ├── README.md                      ← sprint overview & execution summary
@@ -31,8 +36,7 @@ Every sprint execution MUST produce this exact repository structure:
 │   ├── IMPLEMENTATION-CHECKLIST.md   ← execution tracking
 │   ├── CURRENT-STATE-SUMMARY.md      ← system state snapshot
 │   ├── SPRINT-FEATURE-REQUIREMENTS.md ← functional specifications
-│   ├── BX-OS-TECHNICAL-CONTEXT.md    ← technical context & constraints
-│   └── Flowcharts/                    ← visual system architecture
+│   └── BX-OS-TECHNICAL-CONTEXT.md    ← technical context & constraints
 ```
 
 ## 📋 Sprint Initialization Protocol
@@ -46,8 +50,8 @@ When starting any new sprint, immediately create:
 2. **Preparation Subfolder**: `SPRINT-[NAME]/Sprint-Prep/`
    - All diagnostic and planning work lives here
    
-3. **Flowcharts Subfolder**: `SPRINT-[NAME]/Flowcharts/`
-   - Visual architecture diagrams and user journey maps
+3. **Flowcharts Subfolder**: `Docs/Flowcharts/`
+   - Visual architecture diagrams and user journey maps (project-wide resource)
 
 ### Step 2: Document Template Generation
 Create these files with appropriate content for each sprint:

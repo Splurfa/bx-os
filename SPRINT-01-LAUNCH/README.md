@@ -48,7 +48,7 @@
 - **IMPLEMENTATION-CHECKLIST.md**: Detailed execution tracking
 - **CURRENT-STATE-SUMMARY.md**: System state at sprint initialization  
 - **BX-OS-TECHNICAL-CONTEXT.md**: Technical constraints and architectural context
-- **Flowcharts/**: Visual system architecture and user journey diagrams
+- **../Docs/Flowcharts/**: Visual system architecture and user journey diagrams
 
 ---
 
