@@ -154,17 +154,16 @@ export const SessionMonitor = () => {
                       {formatDistanceToNow(new Date(session.last_activity), { addSuffix: true })}
                     </TableCell>
                   )}
-                  {(!isMobile && isAdmin) && (
+                   {(!isMobile && isAdmin) && (
                     <TableCell className="text-sm">
-                      {session.device_type?.toLowerCase() === 'teacher' && ['active','idle'].includes(String(session.session_status).toLowerCase()) ? (
+                      {['active','idle'].includes(String(session.session_status).toLowerCase()) ? (
                         <Button
                           variant="destructive"
                           size="sm"
                           onClick={() => handleForceLogout(session)}
                           disabled={!!busy[session.id]}
                         >
-                          
-                          {busy[session.id] ? 'Logging out...' : 'Logout'}
+                          {busy[session.id] ? 'Logging out...' : 'Force Logout'}
                         </Button>
                       ) : (
                         <span className="text-muted-foreground">—</span>

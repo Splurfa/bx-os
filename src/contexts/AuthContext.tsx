@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { getDeviceTypeString, getDetailedDeviceInfo } from '@/lib/deviceDetection';
 
 interface AuthContextType {
   user: User | null;
@@ -33,24 +34,42 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // First get the user's role from profiles table
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, full_name')
         .eq('id', userId)
         .single();
       
       if (profileError) {
-        console.error('Error fetching user role:', profileError);
+        console.error('Error fetching user profile:', profileError);
         return;
       }
       
-      const userRole = profileData?.role || 'teacher'; // fallback to teacher
+      const userRole = profileData?.role || 'teacher';
+      const deviceInfo = getDetailedDeviceInfo();
       
-      // Create session with user's role as device_type
+      // End any existing active sessions for this user first
+      try {
+        await supabase
+          .from('user_sessions')
+          .update({ session_status: 'ended', ended_at: new Date().toISOString() })
+          .eq('user_id', userId)
+          .in('session_status', ['active', 'idle']);
+      } catch (endSessionError) {
+        console.warn('Warning: Could not end previous sessions:', endSessionError);
+      }
+      
+      // Create session with actual device type
       const { data, error } = await supabase.rpc('create_user_session', {
         p_user_id: userId,
-        p_device_type: userRole,
+        p_device_type: deviceInfo.type, // Use actual device type
         p_device_info: { 
-          browser: navigator.userAgent,
-          role: userRole,
+          userAgent: deviceInfo.userAgent,
+          screenWidth: deviceInfo.screenWidth,
+          screenHeight: deviceInfo.screenHeight,
+          touchEnabled: deviceInfo.touchEnabled,
+          platform: deviceInfo.platform,
+          role: userRole, // Store role in device_info instead
+          fullName: profileData?.full_name,
+          sessionSource: 'web_app',
           timestamp: new Date().toISOString()
         },
         p_location: window.location.pathname
@@ -60,6 +79,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUserSessionId(data);
       }
     } catch (error) {
+      console.warn('Session creation failed:', error);
       // Session creation is optional - don't block user flow
     }
   }, []);

@@ -62,12 +62,12 @@ export const useActiveSessions = () => {
         } as ActiveSession;
       });
 
-      // Deduplicate by (user_id, device_identifier || device_type), keep most recent by last_activity
+      // Deduplicate by user_id only (one session per user), keep most recent by last_activity
       const map = new Map<string, ActiveSession>();
       formattedSessions
         .sort((a, b) => new Date(b.last_activity).getTime() - new Date(a.last_activity).getTime())
         .forEach(s => {
-          const key = `${s.user_id}:${s.device_identifier || ''}:${s.device_type}`;
+          const key = s.user_id; // Simple deduplication by user_id
           if (!map.has(key)) {
             map.set(key, s);
           }
