@@ -1,6 +1,6 @@
-# 📊 Flowcharts – System Architecture & Journeys
+# 📊 System Architecture & User Journey Flowcharts
 
-This folder contains visual diagrams mapping the BX-OS system architecture, user flows, and technical journeys across current and future states.
+This folder contains visual diagrams mapping the BX-OS system architecture, user flows, and technical journeys across current and future states for Sprint 01.
 
 ## 📁 Organization
 
@@ -10,13 +10,13 @@ This folder contains visual diagrams mapping the BX-OS system architecture, user
 - `03-current-database-schema.md` - Complete ER diagram of existing tables
 - `04-current-session-management.md` - Broken session tracking & user correlation
 
-### 🟢 Future State: End of Current Sprint
+### 🟢 Future State: End of Sprint 01
 - `05-updated-authentication.md` - Role-based routing & anonymous kiosk access
 - `06-device-instance-management.md` - New dynamic kiosk assignment system
 - `07-updated-kiosk-workflow.md` - Fixed kiosk user journey
 - `08-fixed-session-management.md` - Corrected session architecture
 
-### 🟣 Future State: Full Vision
+### 🟣 Future Vision: Beyond Sprint 01
 - `09-scalable-kiosk-architecture.md` - Multi-school deployment vision
 - `10-behavior-analytics-flow.md` - AI analysis & pattern recognition
 - `11-user-journey-map.md` - Complete student behavior support journey
