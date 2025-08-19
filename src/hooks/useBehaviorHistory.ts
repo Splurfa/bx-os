@@ -26,7 +26,7 @@ export const useBehaviorHistory = () => {
       const { data, error } = await supabase
         .from('behavior_history')
         .select('*')
-        .order('completed_at', { ascending: false });
+        .order('archived_at', { ascending: false });
 
       if (error) throw error;
       setHistory(data || []);

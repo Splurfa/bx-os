@@ -149,7 +149,7 @@ const UniversalKiosk: React.FC<UniversalKioskProps> = ({
     );
   }
 
-  // Priority 3: Session loading state
+  // Priority 3: Session loading state - simplified to prevent flickering
   if (deviceSession.isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -158,17 +158,12 @@ const UniversalKiosk: React.FC<UniversalKioskProps> = ({
             <div className="w-12 h-12 mx-auto mb-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
-            <CardTitle>Validating Access</CardTitle>
+            <CardTitle>Connecting to Kiosk</CardTitle>
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-muted-foreground">
-              Please wait while we validate your kiosk session...
+              Setting up your kiosk experience...
             </p>
-            {hasMultiTabConflict && (
-              <p className="text-sm text-yellow-600 mt-2">
-                ⚠️ Multiple tabs detected - please close other kiosk tabs
-              </p>
-            )}
           </CardContent>
         </Card>
       </div>

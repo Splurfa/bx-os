@@ -71,6 +71,7 @@ export type Database = {
         Row: {
           archived_at: string
           behavior_request_id: string
+          completed_at: string | null
           created_at: string
           family_notified: boolean | null
           follow_up_date: string | null
@@ -86,6 +87,7 @@ export type Database = {
         Insert: {
           archived_at?: string
           behavior_request_id: string
+          completed_at?: string | null
           created_at?: string
           family_notified?: boolean | null
           follow_up_date?: string | null
@@ -101,6 +103,7 @@ export type Database = {
         Update: {
           archived_at?: string
           behavior_request_id?: string
+          completed_at?: string | null
           created_at?: string
           family_notified?: boolean | null
           follow_up_date?: string | null
