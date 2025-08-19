@@ -1023,6 +1023,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      clear_single_behavior_request: {
+        Args: { p_behavior_request_id: string }
+        Returns: undefined
+      }
       create_device_session: {
         Args: {
           p_device_fingerprint: string
