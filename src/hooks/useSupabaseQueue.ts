@@ -337,7 +337,7 @@ export const useSupabaseQueue = () => {
     }
   };
 
-  // Clear queue
+  // Clear queue based on user role  
   const clearQueue = async () => {
     try {
       setClearQueueLoading(true);
@@ -352,19 +352,25 @@ export const useSupabaseQueue = () => {
         .single();
 
       if (profile?.role === 'admin' || profile?.role === 'super_admin') {
-        // Admin can clear all
+        // Admin can clear all queues
         const { error } = await supabase.rpc('admin_clear_all_queues');
         if (error) throw error;
+        toast({
+          title: "Queue Cleared",
+          description: "All student queues have been cleared successfully.",
+        });
       } else {
-        // Teacher can only clear their own
-        const { error } = await supabase
-          .from('behavior_requests')
-          .delete()
-          .eq('teacher_id', user.id);
+        // Teacher can only clear their own queue using proper archiving
+        const { error } = await supabase.rpc('clear_teacher_queue', {
+          p_teacher_id: user.id
+        });
         if (error) throw error;
+        toast({
+          title: "Queue Cleared", 
+          description: "Your student queue has been cleared successfully.",
+        });
       }
 
-      toast({ title: 'Queue cleared.' });
       await fetchQueue();
     } catch (error) {
       console.error('Error clearing queue:', error);

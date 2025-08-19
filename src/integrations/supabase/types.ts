@@ -1027,6 +1027,10 @@ export type Database = {
         Args: { p_behavior_request_id: string }
         Returns: undefined
       }
+      clear_teacher_queue: {
+        Args: { p_teacher_id: string }
+        Returns: undefined
+      }
       create_device_session: {
         Args: {
           p_device_fingerprint: string
