@@ -17,6 +17,7 @@ import { Monitor, PowerOff, Link as LinkIcon, Copy, Clock, Shield, ExternalLink 
 import AppHeader from './AppHeader';
 import QueueDisplay from './QueueDisplay';
 import UserManagement from './UserManagement';
+import KioskDebugPanel from './KioskDebugPanel';
 
 import { SessionMonitor } from './SessionMonitor';
 import { useToast } from '@/hooks/use-toast';
@@ -38,25 +39,45 @@ const AdminDashboard = () => {
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
-  // Device session state
+  // Device session state with localStorage persistence
   const [generatingSession, setGeneratingSession] = useState<number | null>(null);
   const [kioskSessions, setKioskSessions] = useState<Record<number, {
     sessionId: string;
     accessUrl: string;
     expiresAt: Date;
-  }>>({});
+  }>>(() => {
+    // Initialize from localStorage to persist across tab switches
+    try {
+      const stored = localStorage.getItem('admin_kiosk_sessions');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        // Convert expiresAt strings back to Date objects
+        Object.keys(parsed).forEach(key => {
+          parsed[key].expiresAt = new Date(parsed[key].expiresAt);
+        });
+        return parsed;
+      }
+    } catch (error) {
+      console.warn('Failed to load stored kiosk sessions:', error);
+    }
+    return {};
+  });
 
   // Handle kiosk activation toggle
   const handleKioskToggle = async (kioskId: number, isActive: boolean) => {
     try {
       if (isActive) {
         await deactivateKiosk(kioskId);
-        // Clear session when deactivating
-        setKioskSessions(prev => {
-          const updated = { ...prev };
-          delete updated[kioskId];
-          return updated;
-        });
+        // Clear session when deactivating and persist to localStorage
+        const updatedSessions = { ...kioskSessions };
+        delete updatedSessions[kioskId];
+        setKioskSessions(updatedSessions);
+        
+        try {
+          localStorage.setItem('admin_kiosk_sessions', JSON.stringify(updatedSessions));
+        } catch (error) {
+          console.warn('Failed to persist session removal:', error);
+        }
       } else {
         await activateKiosk(kioskId);
       }
@@ -81,15 +102,24 @@ const AdminDashboard = () => {
       
       console.log('📊 Session creation result:', result);
       if (result) {
-        // Store session info locally for display
-        setKioskSessions(prev => ({
-          ...prev,
+        // Store session info locally for display and persist to localStorage
+        const newSessions = {
+          ...kioskSessions,
           [kioskId]: {
             sessionId: result.sessionId,
             accessUrl: result.accessUrl,
             expiresAt: new Date(Date.now() + (expiresInHours * 60 * 60 * 1000))
           }
-        }));
+        };
+        
+        setKioskSessions(newSessions);
+        
+        // Persist to localStorage for cross-tab consistency
+        try {
+          localStorage.setItem('admin_kiosk_sessions', JSON.stringify(newSessions));
+        } catch (error) {
+          console.warn('Failed to persist kiosk sessions:', error);
+        }
 
         console.log('✅ Session stored locally, showing success toast');
         toast({
@@ -198,6 +228,13 @@ const AdminDashboard = () => {
 
           {/* System Overview Tab */}
           <TabsContent value="overview" className={isMobile ? "space-y-3" : "space-y-6"}>
+            {/* Debug Panel for Admins */}
+            {!isMobile && (
+              <div className="mb-4">
+                <KioskDebugPanel />
+              </div>
+            )}
+            
             {/* Unified Kiosk Management */}
             <Card>
               <CardHeader>
@@ -296,33 +333,21 @@ const AdminDashboard = () => {
                               </div>
                             )}
 
-                            {/* Generate Session Button */}
-                            {kiosk.isActive && (!session || isSessionExpired) && (
-                              <div className="flex gap-2">
-                                <Button
-                                  size="sm"
-                                  variant="default"
-                                  className="flex-1 text-xs"
-                                  onClick={() => handleGenerateSession(kiosk.id)}
-                                  disabled={generatingSession === kiosk.id}
-                                >
-                                  <LinkIcon className="w-3 h-3 mr-1" />
-                                  {generatingSession === kiosk.id ? 'Generating...' : 'Generate Access URL'}
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="ghost"
-                                  className="text-xs px-2"
-                                  onClick={() => {
-                                    localStorage.setItem('bypass_multi_tab_detection', 'true');
-                                    toast({ title: "Multi-tab bypass enabled for testing" });
-                                  }}
-                                  title="Enable multi-tab bypass for testing"
-                                >
-                                  🔧
-                                </Button>
-                              </div>
-                            )}
+            {/* Generate Session Button */}
+            {kiosk.isActive && (!session || isSessionExpired) && (
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="default"
+                  className="flex-1 text-xs"
+                  onClick={() => handleGenerateSession(kiosk.id)}
+                  disabled={generatingSession === kiosk.id}
+                >
+                  <LinkIcon className="w-3 h-3 mr-1" />
+                  {generatingSession === kiosk.id ? 'Generating...' : 'Generate Access URL'}
+                </Button>
+              </div>
+            )}
 
                             {/* Inactive Notice */}
                             {!kiosk.isActive && (

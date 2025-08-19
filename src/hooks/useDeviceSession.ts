@@ -72,6 +72,15 @@ export function useDeviceSession(options: UseDeviceSessionOptions = {}) {
         error: result.isValid ? null : 'Session is invalid or expired'
       }));
 
+      // Show warning for fingerprint mismatch but don't block access
+      if (result.fingerprintMismatch) {
+        toast({
+          variant: "default",
+          title: "Device Change Detected",
+          description: "Session recovered successfully despite device fingerprint change.",
+        });
+      }
+
       if (!result.isValid && onSessionExpired) {
         onSessionExpired();
       }

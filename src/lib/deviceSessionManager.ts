@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
  * Device Session Manager - Handles device fingerprinting, session creation, and validation
  */
 export class DeviceSessionManager {
-  private deviceFingerprint: string | null = null;
+  private static readonly FINGERPRINT_KEY = 'device_fingerprint';
 
   /**
    * Generate a device fingerprint based on available browser characteristics
@@ -29,18 +29,29 @@ export class DeviceSessionManager {
       hash = hash & hash; // Convert to 32bit integer
     }
     
-    this.deviceFingerprint = Math.abs(hash).toString(36);
-    return this.deviceFingerprint;
+    const fingerprintHash = Math.abs(hash).toString(36);
+    
+    // Store in localStorage for persistence across tabs
+    localStorage.setItem(DeviceSessionManager.FINGERPRINT_KEY, fingerprintHash);
+    console.log('🔐 Generated and stored device fingerprint:', fingerprintHash);
+    
+    return fingerprintHash;
   }
 
   /**
-   * Get or generate device fingerprint
+   * Get persistent device fingerprint from localStorage or generate new one
    */
   getDeviceFingerprint(): string {
-    if (!this.deviceFingerprint) {
-      return this.generateDeviceFingerprint();
+    // Try to get from localStorage first for cross-tab consistency
+    const stored = localStorage.getItem(DeviceSessionManager.FINGERPRINT_KEY);
+    if (stored) {
+      console.log('🔐 Using stored device fingerprint:', stored);
+      return stored;
     }
-    return this.deviceFingerprint;
+    
+    // Generate new if not found
+    console.log('🔐 No stored fingerprint found, generating new one');
+    return this.generateDeviceFingerprint();
   }
 
   /**
@@ -88,18 +99,19 @@ export class DeviceSessionManager {
   }
 
   /**
-   * Validate an existing device session
+   * Validate an existing device session with graceful fingerprint handling
    */
   async validateDeviceSession(sessionId: string): Promise<{
     isValid: boolean;
     kioskId: number | null;
     remainingSeconds: number;
+    fingerprintMismatch?: boolean;
   }> {
     const deviceFingerprint = this.getDeviceFingerprint();
     
     try {
-      // Use read-only validation first
-      const { data, error } = await supabase.rpc('validate_device_session_readonly', {
+      // Use enhanced validation with fingerprint recovery
+      const { data, error } = await supabase.rpc('validate_device_session_with_recovery', {
         p_session_id: sessionId,
         p_device_fingerprint: deviceFingerprint
       });
@@ -112,10 +124,18 @@ export class DeviceSessionManager {
       if (data && data.length > 0) {
         const result = data[0];
         console.log('✅ Session validation result:', result);
+        
+        // If fingerprint mismatch detected, try to update it
+        if (result.fingerprint_mismatch && result.is_valid) {
+          console.warn('⚠️ Fingerprint mismatch detected, attempting to update...');
+          await this.updateSessionFingerprint(sessionId, deviceFingerprint);
+        }
+        
         return {
           isValid: result.is_valid || false,
           kioskId: result.kiosk_id || null,
-          remainingSeconds: result.remaining_seconds || 0
+          remainingSeconds: result.remaining_seconds || 0,
+          fingerprintMismatch: result.fingerprint_mismatch || false
         };
       }
 
@@ -123,6 +143,29 @@ export class DeviceSessionManager {
     } catch (error) {
       console.error('❌ Session validation failed:', error);
       return { isValid: false, kioskId: null, remainingSeconds: 0 };
+    }
+  }
+
+  /**
+   * Update device fingerprint for existing session
+   */
+  async updateSessionFingerprint(sessionId: string, newFingerprint: string): Promise<boolean> {
+    try {
+      const { data, error } = await supabase.rpc('update_device_session_fingerprint', {
+        p_session_id: sessionId,
+        p_new_fingerprint: newFingerprint
+      });
+
+      if (error) {
+        console.error('❌ Failed to update session fingerprint:', error);
+        return false;
+      }
+
+      console.log('✅ Session fingerprint updated successfully');
+      return data === true;
+    } catch (error) {
+      console.error('❌ Error updating session fingerprint:', error);
+      return false;
     }
   }
 
@@ -263,6 +306,30 @@ export class DeviceSessionManager {
       // If parsing fails, clear everything
       localStorage.removeItem(heartbeatKey);
     }
+  }
+
+  /**
+   * Enable development mode bypass for easier testing
+   */
+  enableDevelopmentMode(): void {
+    localStorage.setItem('kiosk_development_mode', 'true');
+    console.log('🔧 Development mode enabled - bypassing strict validation');
+  }
+
+  /**
+   * Disable development mode bypass
+   */
+  disableDevelopmentMode(): void {
+    localStorage.removeItem('kiosk_development_mode');
+    console.log('🔒 Development mode disabled');
+  }
+
+  /**
+   * Check if development mode is enabled
+   */
+  isDevelopmentModeEnabled(): boolean {
+    return localStorage.getItem('kiosk_development_mode') === 'true' || 
+           process.env.NODE_ENV === 'development';
   }
 
   /**

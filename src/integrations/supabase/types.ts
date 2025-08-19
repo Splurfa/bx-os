@@ -1078,6 +1078,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      update_device_session_fingerprint: {
+        Args: { p_new_fingerprint: string; p_session_id: string }
+        Returns: boolean
+      }
       update_session_heartbeat: {
         Args: { p_session_id: string }
         Returns: boolean
@@ -1101,6 +1105,15 @@ export type Database = {
       validate_device_session_readonly: {
         Args: { p_device_fingerprint: string; p_session_id: string }
         Returns: {
+          is_valid: boolean
+          kiosk_id: number
+          remaining_seconds: number
+        }[]
+      }
+      validate_device_session_with_recovery: {
+        Args: { p_device_fingerprint: string; p_session_id: string }
+        Returns: {
+          fingerprint_mismatch: boolean
           is_valid: boolean
           kiosk_id: number
           remaining_seconds: number
