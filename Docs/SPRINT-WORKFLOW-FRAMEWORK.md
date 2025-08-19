@@ -70,13 +70,37 @@ Create these files with appropriate content for each sprint:
 - `PHASE-3-ALIGNMENT-MAPPING.md` - Technical alignment and dependency mapping
 - `PHASE-4-SPRINT-PLAN.md` - Final execution plan and timeline
 
+### Step 3: Flowchart Architecture Generation
+Create comprehensive visual documentation following the **BX-OS Flowchart Protocol**:
+
+**Current-State Flowcharts (01-04):**
+- `01-current-authentication-routing.md` - Authentication and role-based routing analysis
+- `02-current-kiosk-logic.md` - Kiosk workflow and device management state
+- `03-current-database-schema.md` - Database structure and relationship mapping
+- `04-current-session-management.md` - Session tracking and user correlation
+
+**Sprint-Target Flowcharts (05-08):**
+- `05-updated-authentication.md` - Role-based route protection and UI permissions
+- `06-device-instance-management.md` - Dynamic kiosk assignment and session management
+- `07-updated-kiosk-workflow.md` - Complete end-to-end kiosk user journey
+- `08-fixed-session-management.md` - Corrected session architecture and tracking
+
+**Future-Vision Flowcharts (09-12+):**
+- `09-scalable-kiosk-architecture.md` - Multi-school deployment architecture
+- `10-behavior-analytics-flow.md` - AI analysis and pattern recognition systems
+- `12-system-integration-architecture.md` - External system integrations and APIs
+
+**User-Journey Flowcharts (11+):**
+- `11-user-journey-map.md` - Complete stakeholder experience flows
+
 ## 🔄 Sprint Execution Phases
 
 ### Phase 1: Diagnostic & Structure Setup (Foundation)
 1. **Create Repository Structure** - Generate folders and base documents
-2. **System Health Assessment** - Run diagnostics and document current state
-3. **Documentation Audit** - Score existing documentation accuracy
-4. **Gap Analysis** - Identify architectural prerequisites and blockers
+2. **Generate Flowchart Architecture** - Create complete visual documentation suite
+3. **System Health Assessment** - Run diagnostics and document current state
+4. **Documentation Audit** - Score existing documentation accuracy
+5. **Gap Analysis** - Identify architectural prerequisites and blockers
 
 ### Phase 2: Planning & Alignment (Architecture)
 1. **Intent Synthesis** - Clarify requirements and success criteria
@@ -95,6 +119,98 @@ Create these files with appropriate content for each sprint:
 2. **Integration Testing** - Validate end-to-end workflows and data integrity
 3. **Security Validation** - Confirm authorization boundaries and session management
 4. **Documentation Update** - Ensure implementation status reflects actual system state
+
+## 📊 BX-OS Flowchart Protocol Standards
+
+### Flowchart Category Architecture
+
+**🔴 Current-State (01-04)** - System problems and architectural gaps
+- **Purpose**: Document existing broken functionality and security vulnerabilities
+- **Color Coding**: Red for problems, white for existing functional components
+- **Content Structure**: Problem identification → Impact analysis → System flow diagrams
+- **Implementation Notes**: Add status notes about partial fixes or improvements
+
+**🟢 Sprint-Targets (05-08)** - Current sprint deliverable blueprints  
+- **Purpose**: Define target architecture and implementation requirements
+- **Color Coding**: Green for deliverables, blue for security layers, purple for future integration points
+- **Content Structure**: Target architecture → Implementation requirements → Success criteria
+- **Implementation Status**: Must include ✅ IMPLEMENTED, 🔄 PARTIALLY IMPLEMENTED, ❌ NOT IMPLEMENTED sections
+
+**🟣 Future-Vision (09-12+)** - Long-term architectural vision
+- **Purpose**: Document scalable architecture beyond current sprint
+- **Color Coding**: Purple for future features, blue for integration points
+- **Content Structure**: Vision overview → Architecture principles → Integration strategy
+- **Foundation Reference**: Must reference current sprint implementations as foundation
+
+**🎯 User-Journeys (11+)** - Complete stakeholder experience flows
+- **Purpose**: Map end-to-end user experiences across all system touchpoints
+- **Color Coding**: Role-based colors (teacher, student, admin, anonymous)
+- **Content Structure**: Journey phases → Decision points → System interactions → Success outcomes
+
+### Mermaid Diagram Standards
+
+**Flowchart Syntax Requirements:**
+```mermaid
+flowchart TD
+    A[Clear Action Nodes] --> B{Decision Points}
+    B -->|Condition| C[Outcome]
+    
+    style A fill:#e8f5e8,stroke:#4caf50     // Green - functional
+    style B fill:#fff3e0,stroke:#ff9800     // Orange - decision
+    style C fill:#ffebee,stroke:#d32f2f     // Red - problems
+```
+
+**Color Coding Standards:**
+- **🟢 Green (#e8f5e8,#4caf50)**: Functional components, successful flows
+- **🔴 Red (#ffebee,#d32f2f)**: Broken functionality, security vulnerabilities  
+- **🟠 Orange (#fff3e0,#ff9800)**: Decision points, conditional logic
+- **🔵 Blue (#e3f2fd,#1976d2)**: Security layers, authentication boundaries
+- **🟣 Purple (#f3e5f5,#9c27b0)**: Future features, integration points
+
+**Accessibility Requirements:**
+- All nodes must have descriptive text, not just icons
+- Color coding must be supplemented with text indicators (✅❌🔄)
+- Diagram complexity should not exceed 15 nodes for readability
+
+### Implementation Status Tracking Protocol
+
+**Sprint-Target Flowcharts Must Include:**
+```markdown
+## 📋 Implementation Status
+
+### ✅ IMPLEMENTED
+- `ComponentName.tsx` - Brief functionality description
+- `hookName.ts` - Implementation status note
+
+### 🔄 PARTIALLY IMPLEMENTED  
+- `ExistingComponent.tsx` - What exists vs what's needed
+- `PartialHook.ts` - Specific gaps to address
+
+### ❌ NOT IMPLEMENTED
+- `MissingComponent.tsx` - Required functionality
+- `NeededHook.ts` - Integration requirements
+```
+
+**Status Update Requirements:**
+- Must reflect actual codebase state, not aspirational goals
+- Include specific file references and functionality gaps
+- Update status as implementation progresses throughout sprint
+- Cross-reference with Implementation Checklist for validation
+
+### Cross-Reference Integration Standards
+
+**Required Cross-References:**
+- Current-State problems → Sprint-Target solutions (explicit mapping)
+- Sprint-Target components → Implementation Checklist items
+- Future-Vision features → Current sprint foundation dependencies
+- User-Journey flows → Technical component requirements
+
+**File Reference Format:**
+```markdown
+> **Cross-Reference**: See `SPRINT-01-LAUNCH/IMPLEMENTATION-CHECKLIST.md` Line 45-52
+> **Component Status**: Tracked in `06-device-instance-management.md` Implementation Status
+> **Architecture Context**: Foundation documented in `03-current-database-schema.md`
+```
 
 ## 🏛️ Information Architecture Principles
 

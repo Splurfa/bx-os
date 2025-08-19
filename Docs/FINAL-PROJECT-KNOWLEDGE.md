@@ -153,8 +153,31 @@ The BX-OS platform has **critical security and functionality gaps** preventing p
 
 ## 📄 DOCUMENTATION ARCHITECTURE
 
+### 📊 BX-OS Flowchart Protocol Integration
+All sprint documentation MUST include comprehensive flowchart architecture following the **BX-OS Flowchart Protocol**:
+
+**Current-State Analysis (01-04)**: Document broken functionality with red-coded problem identification
+**Sprint-Target Blueprints (05-08)**: Define deliverable architecture with implementation status tracking  
+**Future-Vision Planning (09-12+)**: Long-term scalability and integration architecture
+**User-Journey Mapping (11+)**: Complete stakeholder experience flows across system touchpoints
+
+### Implementation Status Tracking Standards
+Sprint-Target flowcharts MUST include accurate implementation status:
+- ✅ **IMPLEMENTED**: Components that exist and function correctly in codebase
+- 🔄 **PARTIALLY IMPLEMENTED**: Components that exist but need refinement or have gaps
+- ❌ **NOT IMPLEMENTED**: Components that must be built from scratch
+
+### Cross-Reference Integration Requirements  
+All flowcharts must maintain accurate cross-references to:
+- Sprint Implementation Checklists for validation tracking
+- Technical Context documents for architectural constraints
+- Current-state problems mapped to sprint-target solutions
+- Future-vision integration points building on current sprint foundation
+
 ### Global Documentation (`Docs/`)
-- **SPRINT-WORKFLOW-FRAMEWORK.md**: Reusable sprint template generator
+- **SPRINT-WORKFLOW-FRAMEWORK.md**: Reusable sprint template generator with flowchart protocols
+- **FLOWCHART-TEMPLATE-STANDARDS.md**: Complete template definitions for all flowchart types
+- **FLOWCHART-CONTENT-GENERATION-GUIDE.md**: Content creation standards and quality requirements
 - **Flowcharts/**: System architecture diagrams organized by development phase
 - **FINAL-PROJECT-KNOWLEDGE.md**: This document - canonical project state
 
