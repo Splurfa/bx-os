@@ -6,6 +6,42 @@
 **CORRECTIVE ACTION**: Checklist rebuilt to reflect actual implementation requirements
 **SPRINT FOCUS**: Complete foundational architecture before feature implementation
 
+## 🛠️ PHASE 0.5: KIOSK DEVICE INSTANCE MANAGEMENT SYSTEM ⚠️ **CRITICAL PREREQUISITE**
+
+### Database Schema Enhancement
+- [ ] **Create database migration** for device session tracking columns
+  - `device_session_id UUID` - Unique identifier for device sessions
+  - `device_last_seen TIMESTAMP WITH TIME ZONE` - Last heartbeat timestamp
+  - `device_heartbeat_interval INTEGER DEFAULT 30` - Heartbeat frequency in seconds
+- [ ] **Test migration** against existing kiosk data
+
+### Dynamic Kiosk Architecture Components
+- [ ] **Build `src/components/UniversalKiosk.tsx`** - Single kiosk component for all devices
+- [ ] **Build `src/hooks/useDeviceSession.ts`** - Device session management hook
+- [ ] **Build `src/lib/deviceSessionManager.ts`** - Device identification and binding utilities
+- [ ] **Modify `src/App.tsx`** - Replace static routes with single `/kiosk` route
+- [ ] **Modify `src/contexts/KioskContext.tsx`** - Add device session management functions
+
+### Device-to-Kiosk Binding System
+- [ ] **Implement device session generation** - Browser fingerprinting + timestamp
+- [ ] **Build kiosk assignment logic** - First-come-first-served for available kiosks
+- [ ] **Create device heartbeat system** - 30-second ping to maintain control
+- [ ] **Add admin override capabilities** - Force-release kiosk control
+- [ ] **Implement session validation** - Verify device ownership before operations
+
+### Admin Dashboard Integration
+- [ ] **Modify `src/components/AdminDashboard.tsx`** - Add kiosk access URL generation
+- [ ] **Add device session status display** - Show current device per kiosk
+- [ ] **Create force-release controls** - Admin can override device sessions
+- [ ] **Add real-time kiosk availability** - Status updates for device assignments
+
+### Success Validation
+- [ ] **Test multi-tab prevention** - Multiple browser tabs cannot control same kiosk
+- [ ] **Validate URL generation** - Admin dashboard creates unique access URLs
+- [ ] **Confirm session timeout** - Device sessions cleanup after 2 minutes inactivity
+- [ ] **Test dynamic assignment** - Kiosk assignment works reliably with new routing
+- [ ] **Verify heartbeat system** - Prevents ghost sessions and maintains control
+
 ## 🔐 PHASE 1: FOUNDATIONAL ARCHITECTURE (CRITICAL - 0% COMPLETE)
 
 ### Authentication & Authorization System
@@ -61,27 +97,12 @@
 
 ## 📱 PHASE 2: CORE FUNCTIONALITY RESTORATION (0% COMPLETE)
 
-### Anonymous Kiosk Access Implementation
-- [ ] **Remove Kiosk Authentication Barriers** - Allow student access without login
-  - Status: ❌ BLOCKED - Auth guards preventing access
-  - Priority: CRITICAL
-  - Estimated Time: 2 hours
-  - Dependencies: Role-based authentication system
-  - Files: `src/App.tsx`, RLS policies
-
-- [ ] **Anonymous RLS Policies** - Configure database access for anonymous users
-  - Status: ❌ NOT STARTED
-  - Priority: HIGH
-  - Estimated Time: 2 hours  
-  - Dependencies: Kiosk route configuration
-  - Files: Supabase RLS policies
-
-- [ ] **Device Identification System** - Track anonymous kiosk usage
-  - Status: ❌ NOT STARTED
-  - Priority: MEDIUM
-  - Estimated Time: 3 hours
-  - Dependencies: Anonymous access functional
-  - Files: Kiosk components, queue management
+### Anonymous Kiosk Access Integration
+- [ ] **Validate `/kiosk` route** with Device Instance Management System
+- [ ] **Test anonymous access** with device binding functionality
+- [ ] **Confirm queue management** works with device-based identification
+- [ ] **Verify reflection submission** through device-bound kiosks
+- [ ] **Validate security boundaries** for anonymous operations
 
 ### Notification System Restoration
 - [ ] **NotificationBell Interaction Fix** - Repair dropdown functionality
@@ -200,11 +221,14 @@
 ## 🎯 SPRINT SUCCESS CRITERIA
 
 ### Critical (Must Complete - 0% Achieved)
-- [ ] Teachers cannot access Admin Dashboard
-- [ ] Admins cannot access Teacher Dashboard  
-- [ ] NotificationBell dropdown responds to clicks
-- [ ] Students can access kiosk routes without authentication
-- [ ] Session tracking shows correct user information
+- [ ] **Multiple browser tabs cannot control the same kiosk simultaneously**
+- [ ] **Admin dashboard generates unique kiosk access URLs**
+- [ ] **Teachers cannot access Admin Dashboard**
+- [ ] **Admins cannot access Teacher Dashboard**  
+- [ ] **NotificationBell dropdown responds to clicks**
+- [ ] **Students can access kiosk routes without authentication**
+- [ ] **Session tracking shows correct user information**
+- [ ] **Device sessions automatically timeout after inactivity**
 
 ### High Priority (Should Complete - 0% Achieved)
 - [ ] User management functions restricted to appropriate roles
@@ -221,22 +245,25 @@
 ## 📋 PROGRESS TRACKING
 
 ### Overall Sprint Progress: 0% Complete
+- **Phase 0.5 (Device Instance Management)**: 0/5 sections complete (0%)
 - **Phase 1 (Foundational Architecture)**: 0/7 tasks complete (0%)
 - **Phase 2 (Core Functionality)**: 0/9 tasks complete (0%)  
 - **Phase 3 (User Management)**: 0/3 tasks complete (0%)
 - **Phase 4 (Data Population)**: 0/6 tasks complete (0%)
 
 ### Critical Blockers Identified:
-1. **Authentication System**: Missing role-based protection blocks all secure functionality
-2. **Session Management**: Broken session architecture prevents proper user tracking
-3. **UI Permissions**: Missing permission framework exposes admin functions
-4. **Data Flow Logic**: Incorrect field references break queue management
+1. **Device Instance Management System** - Multi-kiosk conflicts prevent reliable operation
+2. **Authentication System** - Missing role-based protection blocks all secure functionality
+3. **Session Management** - Broken session architecture prevents proper user tracking
+4. **UI Permissions** - Missing permission framework exposes admin functions
+5. **Data Flow Logic** - Incorrect field references break queue management
 
 ### Next Immediate Actions:  
-1. **START**: Create AdminRoute component for role-based protection
-2. **PLAN**: Rebuild session management architecture
-3. **DESIGN**: UI permission framework for component authorization
-4. **FIX**: Student lookup field names in queue management
+1. **START**: Create database migration for device session tracking
+2. **BUILD**: UniversalKiosk component to replace static kiosk routes
+3. **IMPLEMENT**: Device session management to prevent multi-tab conflicts
+4. **CREATE**: AdminRoute component for role-based protection
+5. **PLAN**: Rebuild session management architecture
 
 ## 🚨 CRITICAL IMPLEMENTATION NOTES
 
@@ -247,15 +274,17 @@
 - ✅ PWA infrastructure - install hooks operational
 
 ### What MUST be Built (Missing Critical Systems)
+- ❌ Device Instance Management System - completely missing
 - ❌ Role-based route protection - completely missing
 - ❌ UI permission framework - no component authorization  
 - ❌ Proper session management - current system broken
 - ❌ Anonymous kiosk access - blocked by auth guards
 
 ### What MUST be Fixed (Broken Components)
+- 🔧 Kiosk routing system - static routes cause multi-device conflicts
 - 🔧 NotificationBell interactions - dropdown non-responsive
 - 🔧 Student lookup logic - using wrong field names
 - 🔧 Queue display filtering - hiding active students
 - 🔧 CSV import logic - incompatible with schema
 
-This corrected checklist reflects the **actual system state** and provides realistic progress tracking for sprint completion.
+This corrected checklist reflects the **actual system state** and provides realistic progress tracking for sprint completion with **Device Instance Management System** as the critical first phase.

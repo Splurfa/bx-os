@@ -4,6 +4,43 @@
 
 **IMPORTANT**: All feature implementations require completing the foundational architecture first. The following features cannot be implemented reliably until authentication, authorization, and session management systems are functional.
 
+## 🔐 PHASE 0.5: KIOSK DEVICE INSTANCE MANAGEMENT (CRITICAL PREREQUISITE)
+
+### **Device Session Management**
+**Status**: ❌ CRITICAL ARCHITECTURAL GAP
+**Required Components**:
+- `src/components/UniversalKiosk.tsx` - Single kiosk component
+- `src/hooks/useDeviceSession.ts` - Device session management
+- `src/lib/deviceSessionManager.ts` - Device binding utilities
+- Database migration for device session columns
+
+**Success Criteria**:
+- Single `/kiosk` route with dynamic assignment
+- Device sessions prevent multi-tab conflicts  
+- Admin dashboard generates kiosk access URLs
+- Automatic session cleanup after 2 minutes inactivity
+- Force-release controls for administrators
+
+**Dependencies**: None
+**Blocks**: All kiosk-related functionality
+
+### **Dynamic Kiosk Route System**
+**Status**: ❌ MISSING - Requires Complete Rebuild
+**Required Components**:
+- Replace static `/kiosk1`, `/kiosk2`, `/kiosk3` routes
+- Device-to-kiosk binding algorithm
+- Heartbeat system for session maintenance
+- Admin URL generation system
+
+**Success Criteria**:
+- Prevents kiosk access conflicts across devices
+- Maintains admin control over kiosk assignments
+- Provides secure anonymous access for students
+- Enables reliable device session tracking
+
+**Dependencies**: Database schema enhancement
+**Blocks**: Anonymous kiosk access, admin kiosk management
+
 ## 🔐 PHASE 1: FOUNDATIONAL ARCHITECTURE (PREREQUISITE)
 
 ### Role-Based Authentication System
@@ -51,13 +88,21 @@
 ## 📱 PHASE 2: CORE FEATURE IMPLEMENTATION
 
 ### Anonymous Kiosk Access System
-**Status**: ❌ BLOCKED - Authentication guards prevent student access
-**Prerequisites**: Role-based authentication system complete
+**Status**: ❌ BLOCKED by Device Session Management
+**Prerequisites**: Device Instance Management System complete
 **Components Required**:
-- Remove authentication barriers from kiosk routes (`/kiosk1`, `/kiosk2`, `/kiosk3`)
-- Update RLS policies for anonymous behavior request access
-- Implement device-based identification for queue management
-- Maintain security boundaries for sensitive operations
+- Integration with Device Instance Management System
+- Anonymous access validation with device binding
+- Secure kiosk operations without authentication
+
+**Success Criteria**:
+- Students access `/kiosk` route without authentication
+- Device session management works for anonymous users
+- Anonymous reflection submission through device-bound kiosks
+- Maintained security boundaries for sensitive operations
+
+**Dependencies**: Device Instance Management System, RLS policy updates
+**Blocks**: Student kiosk workflows
 
 **Feature Specifications**:
 - Students access kiosks without login
@@ -217,25 +262,23 @@
 ## 🎯 IMPLEMENTATION SEQUENCE & DEPENDENCIES
 
 ### Critical Path Dependencies
-1. **Authentication Foundation** → All other features blocked without this
-2. **Session Management** → Required for notification system and queue management
-3. **UI Permissions** → Needed for secure feature implementation
-4. **Core Features** → Can proceed in parallel once foundation complete
-5. **Data Population** → Requires stable infrastructure for reliable import
-6. **Enhancements** → Optional improvements after core functionality validated
+1. **Device Instance Management** → Enables secure kiosk access
+2. **Authentication & Authorization** → Enables role-based access control
+3. **Session Management** → Enables user tracking and correlation
+4. **Anonymous Kiosk Access** → Enables student workflows
+5. **Data Population** → Enables realistic testing and validation
 
 ### Feature Interdependencies
-- **Anonymous Kiosk Access** depends on **Role-Based Authentication**
-- **Notification System** depends on **UI Permissions** and **Session Management**
-- **Queue Management** depends on **Session Management** and **Data Flow Fixes**
-- **CSV Import** depends on **All Foundational Architecture**
-- **Google OAuth** depends on **Role-Based Authentication**
-- **Tutorial System** depends on **All Core Features Functional**
+- **Device Session Management** blocks **Anonymous Kiosk Access**
+- **Authentication System** blocks **User Management** and **Session Tracking**
+- **UI Permission Framework** blocks **Admin Dashboard** and **User Management**
+- **Student Queue Management** requires **Anonymous Kiosk Access** and **Session Management**
+- **CSV Import System** requires **Authentication System** for admin access control
 
 ### Risk Mitigation Strategy
-- **Phase 1 First**: Complete all foundational architecture before feature work
-- **Parallel Development**: Core features can be developed simultaneously once foundation exists
-- **Incremental Testing**: Validate each component before moving to dependent features
-- **Rollback Plan**: Maintain ability to revert to current state if critical issues arise
+**Phase 0.5**: Complete Device Instance Management to prevent kiosk conflicts
+**Phase 1-2**: Complete foundational architecture before feature implementation
+**Phase 3-4**: Implement features only after stable foundation is confirmed
+**Testing**: Validate each phase before proceeding to prevent cascade failures
 
-This feature requirements document prioritizes **architectural foundation completion** to ensure reliable feature implementation and system stability.
+**CRITICAL**: System requires **Device Instance Management** and **foundational architecture completion** before any feature work or data population can succeed reliably.
