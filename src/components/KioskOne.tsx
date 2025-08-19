@@ -71,26 +71,17 @@ useEffect(() => {
   }
 }, [updateKioskStudent]);
 
-// Initialize kiosk on mount - ONLY when authenticated
+  // Initialize kiosk on mount - anonymous access allowed
   useEffect(() => {
     if (kioskState === 'setup' && !authLoading) {
       const setupKiosk = async () => {
         try {
-          
           setActivationError(null);
           
-          // Only proceed if user is authenticated
-          if (!user || !session) {
-            console.error('Cannot activate kiosk: No authenticated user');
-            setActivationError('Authentication required to activate kiosk. Please ensure you are logged in.');
-            return;
-          }
-          
-          
+          console.log('Activating kiosk 1 for anonymous student access...');
           const id = await activateKiosk(KIOSK_ID);
           
           if (id) {
-            
             setKioskState('welcome');
           } else {
             console.error('Failed to activate kiosk 1: No ID returned');
@@ -104,7 +95,7 @@ useEffect(() => {
       };
       setupKiosk();
     }
-  }, [kioskState, activateKiosk, user, session, authLoading]);
+  }, [kioskState, activateKiosk, authLoading]);
 
   // Store completed student data to prevent early state transitions
   const [completedStudentData, setCompletedStudentData] = useState<any>(null);
@@ -300,14 +291,14 @@ useEffect(() => {
     }
   };
 
-  // Show consistent loading state to prevent flickering
-  if (authLoading || (loading && kioskState === 'setup') || (kioskState === 'setup' && !activationError)) {
+  // Show loading state during kiosk setup (no auth required)
+  if (loading || (kioskState === 'setup')) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="text-center space-y-4 max-w-md">
           <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
           <p className="text-muted-foreground">
-            {authLoading ? 'Authenticating...' : 'Activating kiosk 1...'}
+            Activating kiosk 1...
           </p>
         </div>
       </div>

@@ -61,26 +61,17 @@ const KioskThree = () => {
   const firstWaitingStudent = getFirstWaitingStudentForKiosk(KIOSK_ID);
   const hasTeacherFeedback = firstWaitingStudent?.reflection?.teacher_feedback;
 
-  // Initialize kiosk on mount - ONLY when authenticated
+  // Initialize kiosk on mount - anonymous access allowed
   useEffect(() => {
     if (kioskState === 'setup' && !authLoading) {
       const setupKiosk = async () => {
         try {
-          
           setActivationError(null);
           
-          // Only proceed if user is authenticated
-          if (!user || !session) {
-            console.error('Cannot activate kiosk: No authenticated user');
-            setActivationError('Authentication required to activate kiosk. Please ensure you are logged in.');
-            return;
-          }
-          
-          
+          console.log('Activating kiosk 3 for anonymous student access...');
           const id = await activateKiosk(KIOSK_ID);
           
           if (id) {
-            
             setKioskState('welcome');
           } else {
             console.error('Failed to activate kiosk 3: No ID returned');
@@ -94,7 +85,7 @@ const KioskThree = () => {
       };
       setupKiosk();
     }
-  }, [kioskState, activateKiosk, user, session, authLoading]);
+  }, [kioskState, activateKiosk, authLoading]);
 
   // Reset state when student changes or completes
   useEffect(() => {
@@ -253,8 +244,8 @@ const KioskThree = () => {
     }
   };
 
-  // Setup/Loading state - wait for auth to be ready
-  if (loading || authLoading || kioskState === 'setup') {
+  // Show loading state during kiosk setup (no auth required)  
+  if (loading || kioskState === 'setup') {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="text-center space-y-4 max-w-md">
@@ -281,8 +272,7 @@ const KioskThree = () => {
             <>
               <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
               <p className="text-muted-foreground">
-                {authLoading ? 'Authenticating...' : 
-                 kioskState === 'setup' ? 'Activating kiosk 3...' : 'Loading kiosk 3...'}
+                Activating kiosk 3...
               </p>
             </>
           )}

@@ -17,7 +17,7 @@ import { Monitor, PowerOff, Link as LinkIcon, Copy, Clock, Shield, ExternalLink 
 import AppHeader from './AppHeader';
 import QueueDisplay from './QueueDisplay';
 import UserManagement from './UserManagement';
-import KioskDebugPanel from './KioskDebugPanel';
+
 
 import { SessionMonitor } from './SessionMonitor';
 import { useToast } from '@/hooks/use-toast';
@@ -228,12 +228,6 @@ const AdminDashboard = () => {
 
           {/* System Overview Tab */}
           <TabsContent value="overview" className={isMobile ? "space-y-3" : "space-y-6"}>
-            {/* Debug Panel for Admins */}
-            {!isMobile && (
-              <div className="mb-4">
-                <KioskDebugPanel />
-              </div>
-            )}
             
             {/* Simplified Kiosk Management */}
             <Card>
