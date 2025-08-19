@@ -2,6 +2,8 @@
 
 **Status**: BROKEN - Session tracking shows wrong data, device type confusion
 
+> **UPDATE (Sprint Prep)**: Partial session management improvements may exist, but core issues with device type/role confusion and session deduplication remain unfixed.
+
 ## Current Session Creation Issues
 
 <lov-mermaid>

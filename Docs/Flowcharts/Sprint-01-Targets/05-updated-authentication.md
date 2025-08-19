@@ -249,6 +249,26 @@ flowchart TD
     style L fill:#e8f5e8,stroke:#4caf50
 </lov-mermaid>
 
+## Implementation Status
+
+### ❌ **NOT IMPLEMENTED** - Required for Sprint
+- **AdminRoute.tsx**: Role-based admin route protection component
+- **TeacherRoute.tsx**: Role-based teacher route protection component
+- **usePermissions.ts**: Component-level authorization hook
+- **permissions.ts**: Permission utility helper functions
+- **Enhanced AuthContext**: Session creation on login
+- **Profile creation trigger**: Auto-profile creation for Google OAuth users
+
+### 🔄 **PARTIALLY IMPLEMENTED** - Needs Refinement
+- **ProtectedRoute component**: Exists but lacks role validation
+- **Google OAuth flow**: Basic authentication works, profile creation may be incomplete
+- **Session tracking**: Infrastructure exists but needs proper correlation
+
+### ✅ **IMPLEMENTED** - Foundation Ready
+- **Database schema**: Profiles and user_sessions tables exist
+- **Basic authentication**: Supabase auth integration working
+- **Route structure**: Basic routing framework in place
+
 ## Sprint Deliverables Summary
 
 ### 🟢 Authentication Components

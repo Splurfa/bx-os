@@ -2,6 +2,8 @@
 
 **Status**: BROKEN - Race conditions, conflicts, no device binding
 
+> **UPDATE (Sprint Prep)**: `UniversalKiosk` component and `useDeviceSession` hook exist in codebase but need refinement. Static route conflicts still present.
+
 ## Current Static Route Implementation
 
 <lov-mermaid>
