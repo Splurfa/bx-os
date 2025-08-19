@@ -73,10 +73,13 @@ const AdminDashboard = () => {
 
   // Generate device session for kiosk
   const handleGenerateSession = async (kioskId: number, expiresInHours: number = 24) => {
+    console.log('🎯 Generate session button clicked for kiosk:', kioskId);
     setGeneratingSession(kioskId);
     try {
+      console.log('📞 Calling deviceSessionManager.createDeviceSession...');
       const result = await deviceSessionManager.createDeviceSession(kioskId, expiresInHours);
       
+      console.log('📊 Session creation result:', result);
       if (result) {
         // Store session info locally for display
         setKioskSessions(prev => ({
@@ -88,19 +91,24 @@ const AdminDashboard = () => {
           }
         }));
 
+        console.log('✅ Session stored locally, showing success toast');
         toast({
           title: "Session Created",
           description: `Generated access URL for Kiosk ${kioskId}. Valid for ${expiresInHours} hours.`
         });
+      } else {
+        console.error('❌ No result returned from device session manager');
+        throw new Error('Failed to create device session - no result returned');
       }
     } catch (error) {
-      console.error('Error generating session:', error);
+      console.error('💥 Error in handleGenerateSession:', error);
       toast({
         variant: "destructive",
         title: "Error", 
-        description: `Failed to generate session for Kiosk ${kioskId}.`
+        description: `Failed to generate session for Kiosk ${kioskId}: ${error instanceof Error ? error.message : 'Unknown error'}`
       });
     } finally {
+      console.log('🏁 Generate session complete, clearing loading state');
       setGeneratingSession(null);
     }
   };

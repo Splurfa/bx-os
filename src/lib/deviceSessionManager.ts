@@ -56,30 +56,39 @@ export class DeviceSessionManager {
     accessUrl: string;
   } | null> {
     try {
+      console.log('🔄 Creating device session for kiosk:', kioskId);
+      const fingerprint = this.getDeviceFingerprint();
+      console.log('🔐 Device fingerprint generated:', fingerprint);
+      
       const { data, error } = await supabase.rpc('create_device_session', {
         p_kiosk_id: kioskId,
-        p_device_fingerprint: this.getDeviceFingerprint(),
+        p_device_fingerprint: fingerprint,
         p_user_agent: navigator.userAgent,
         p_ip_address: null, // Will be handled server-side
         p_expires_in_hours: expiresInHours
       });
 
+      console.log('📡 RPC response:', { data, error });
+
       if (error) {
-        console.error('Failed to create device session:', error);
-        return null;
+        console.error('❌ Failed to create device session:', error);
+        throw new Error(`Failed to create device session: ${error.message}`);
       }
 
       if (data && data.length > 0) {
-        return {
+        const result = {
           sessionId: data[0].session_id,
           accessUrl: data[0].access_url
         };
+        console.log('✅ Device session created successfully:', result);
+        return result;
       }
 
-      return null;
+      console.warn('⚠️ No data returned from device session creation');
+      throw new Error('No session data returned from database');
     } catch (error) {
-      console.error('Error creating device session:', error);
-      return null;
+      console.error('💥 Error creating device session:', error);
+      throw error; // Re-throw instead of returning null to trigger error handling
     }
   }
 
