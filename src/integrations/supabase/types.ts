@@ -78,7 +78,7 @@ export type Database = {
           id: string
           intervention_applied: string | null
           notification_method: string | null
-          reflection_id: string
+          reflection_id: string | null
           resolution_notes: string | null
           resolution_type: string
           student_id: string
@@ -93,7 +93,7 @@ export type Database = {
           id?: string
           intervention_applied?: string | null
           notification_method?: string | null
-          reflection_id: string
+          reflection_id?: string | null
           resolution_notes?: string | null
           resolution_type: string
           student_id: string
@@ -108,7 +108,7 @@ export type Database = {
           id?: string
           intervention_applied?: string | null
           notification_method?: string | null
-          reflection_id?: string
+          reflection_id?: string | null
           resolution_notes?: string | null
           resolution_type?: string
           student_id?: string
