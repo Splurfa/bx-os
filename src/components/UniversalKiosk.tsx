@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { DeviceSessionManager } from '@/lib/deviceSessionManager';
 import { useDeviceSession } from '@/hooks/useDeviceSession';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -159,8 +159,8 @@ const UniversalKiosk: React.FC<UniversalKioskProps> = ({
     );
   }
 
-  // Session error or validation failed
-  if (sessionError || error || !isValid) {
+  // Session error or validation failed - but allow access if just multi-tab warning
+  if (sessionError || (error && !isValid && !error.includes('Multiple tabs'))) {
     const displayError = error || sessionError || 'Session validation failed';
     
     return (
@@ -169,7 +169,7 @@ const UniversalKiosk: React.FC<UniversalKioskProps> = ({
           <CardHeader>
             <div className="flex items-center space-x-2">
               <WifiOff className="h-5 w-5 text-destructive" />
-              <CardTitle>Access Denied</CardTitle>
+              <CardTitle>Session Invalid</CardTitle>
             </div>
             <CardDescription>
               Your kiosk session could not be validated.
@@ -179,6 +179,7 @@ const UniversalKiosk: React.FC<UniversalKioskProps> = ({
             <div className="space-y-4">
               <Alert variant="destructive">
                 <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Access Error</AlertTitle>
                 <AlertDescription>
                   {displayError}
                 </AlertDescription>
@@ -186,21 +187,33 @@ const UniversalKiosk: React.FC<UniversalKioskProps> = ({
               
               <div className="space-y-2">
                 <Button 
-                  onClick={() => {
-                    setError(null);
-                    validateSession();
-                  }}
+                  onClick={() => validateSession()} 
                   className="w-full"
-                  variant="outline"
+                  disabled={isLoading}
                 >
+                  {isLoading ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-foreground mr-2"></div>
+                  ) : null}
                   Try Again
                 </Button>
                 <Button 
+                  variant="outline"
                   onClick={() => navigate('/')} 
                   className="w-full"
                 >
                   Return to Home
                 </Button>
+              </div>
+              
+              <div className="mt-4 p-3 bg-muted rounded-lg">
+                <p className="text-xs text-muted-foreground">
+                  Debug Info:<br/>
+                  Session ID: {sessionId}<br/>
+                  Valid: {isValid ? 'Yes' : 'No'}<br/>
+                  Kiosk ID: {kioskId || 'None'}<br/>
+                  Remaining: {remainingSeconds}s<br/>
+                  Error: {displayError}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -208,7 +221,6 @@ const UniversalKiosk: React.FC<UniversalKioskProps> = ({
       </div>
     );
   }
-
   // Valid session - render the appropriate kiosk component
   if (currentKioskComponent && isValid) {
     const KioskComponent = currentKioskComponent;

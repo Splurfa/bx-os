@@ -164,30 +164,114 @@ export class DeviceSessionManager {
    * Check if device has multiple tabs open (conflict detection)
    */
   checkMultiTabConflict(): boolean {
+    // Development/testing bypass
+    if (process.env.NODE_ENV === 'development' || localStorage.getItem('bypass_multi_tab_detection') === 'true') {
+      console.log('🔧 Multi-tab detection bypassed for development/testing');
+      return false;
+    }
+
     const storageKey = 'kiosk_session_tab_id';
-    const currentTabId = Date.now().toString();
+    const heartbeatKey = 'kiosk_tab_heartbeat';
+    const currentTime = Date.now();
     
-    // Set current tab ID
-    sessionStorage.setItem(storageKey, currentTabId);
-    
-    // Check if another tab is already active
-    const existingTabId = localStorage.getItem(storageKey);
-    
-    if (existingTabId && existingTabId !== currentTabId) {
-      return true; // Conflict detected
+    // Get or create persistent tab ID for this session
+    let currentTabId = sessionStorage.getItem(storageKey);
+    if (!currentTabId) {
+      currentTabId = `tab_${currentTime}_${Math.random().toString(36).substr(2, 9)}`;
+      sessionStorage.setItem(storageKey, currentTabId);
+      console.log('🏷️ Generated new tab ID:', currentTabId);
     }
     
-    // Set as active tab
-    localStorage.setItem(storageKey, currentTabId);
-    return false;
+    // Check for other active tabs by looking at heartbeat data
+    const storedData = localStorage.getItem(heartbeatKey);
+    let activeTabsData: Record<string, number> = {};
+    
+    try {
+      activeTabsData = storedData ? JSON.parse(storedData) : {};
+    } catch (e) {
+      console.warn('Failed to parse tab heartbeat data, resetting');
+      activeTabsData = {};
+    }
+    
+    // Clean up stale tabs (older than 10 seconds)
+    const staleThreshold = currentTime - 10000;
+    Object.keys(activeTabsData).forEach(tabId => {
+      if (activeTabsData[tabId] < staleThreshold) {
+        delete activeTabsData[tabId];
+      }
+    });
+    
+    // Update current tab's heartbeat
+    activeTabsData[currentTabId] = currentTime;
+    localStorage.setItem(heartbeatKey, JSON.stringify(activeTabsData));
+    
+    // Check if there are other active tabs
+    const activeTabs = Object.keys(activeTabsData).filter(tabId => tabId !== currentTabId);
+    const hasConflict = activeTabs.length > 0;
+    
+    if (hasConflict) {
+      console.warn('🚨 Multi-tab conflict detected. Active tabs:', activeTabs);
+    } else {
+      console.log('✅ No multi-tab conflict detected');
+    }
+    
+    return hasConflict;
   }
 
   /**
    * Clear multi-tab tracking
    */
   clearTabTracking(): void {
-    localStorage.removeItem('kiosk_session_tab_id');
-    sessionStorage.removeItem('kiosk_session_tab_id');
+    const storageKey = 'kiosk_session_tab_id';
+    const heartbeatKey = 'kiosk_tab_heartbeat';
+    
+    // Get current tab ID
+    const currentTabId = sessionStorage.getItem(storageKey);
+    
+    // Remove current tab from heartbeat tracking
+    if (currentTabId) {
+      const storedData = localStorage.getItem(heartbeatKey);
+      try {
+        const activeTabsData = storedData ? JSON.parse(storedData) : {};
+        delete activeTabsData[currentTabId];
+        localStorage.setItem(heartbeatKey, JSON.stringify(activeTabsData));
+        console.log('🧹 Cleared tab tracking for:', currentTabId);
+      } catch (e) {
+        console.warn('Failed to update tab heartbeat data during cleanup');
+      }
+    }
+    
+    // Clear session storage
+    sessionStorage.removeItem(storageKey);
+    
+    // Only clear localStorage if no other tabs are active
+    const storedData = localStorage.getItem(heartbeatKey);
+    try {
+      const activeTabsData = storedData ? JSON.parse(storedData) : {};
+      if (Object.keys(activeTabsData).length === 0) {
+        localStorage.removeItem(heartbeatKey);
+        console.log('🧹 All tabs closed, cleared localStorage tracking');
+      }
+    } catch (e) {
+      // If parsing fails, clear everything
+      localStorage.removeItem(heartbeatKey);
+    }
+  }
+
+  /**
+   * Enable bypass for multi-tab detection (for testing/admin)
+   */
+  enableMultiTabBypass(): void {
+    localStorage.setItem('bypass_multi_tab_detection', 'true');
+    console.log('🔓 Multi-tab detection bypass enabled');
+  }
+
+  /**
+   * Disable bypass for multi-tab detection
+   */
+  disableMultiTabBypass(): void {
+    localStorage.removeItem('bypass_multi_tab_detection');
+    console.log('🔒 Multi-tab detection bypass disabled');
   }
 
   /**

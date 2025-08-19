@@ -48,21 +48,17 @@ export function useDeviceSession(options: UseDeviceSessionOptions = {}) {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      // Check for multi-tab conflicts
-      if (deviceSessionManager.checkMultiTabConflict()) {
-        setState(prev => ({ 
-          ...prev, 
-          isLoading: false, 
-          isValid: false,
-          error: 'Multiple tabs detected. Please close other kiosk tabs.'
-        }));
-        onConflictDetected?.();
+      // Check for multi-tab conflicts (non-blocking warning)
+      const hasMultiTabConflict = deviceSessionManager.checkMultiTabConflict();
+      if (hasMultiTabConflict) {
+        console.warn('⚠️ Multi-tab conflict detected, but continuing with session validation');
         toast({
           variant: "destructive",
-          title: "Session Conflict",
-          description: "Multiple tabs detected. Please close other kiosk tabs and refresh."
+          title: "Multiple Tabs Warning",
+          description: "Multiple kiosk tabs detected. For best performance, close other tabs.",
         });
-        return;
+        onConflictDetected?.();
+        // Continue with validation instead of blocking
       }
 
       const result = await deviceSessionManager.validateDeviceSession(sessionId);

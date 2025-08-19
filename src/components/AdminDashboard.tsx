@@ -298,16 +298,30 @@ const AdminDashboard = () => {
 
                             {/* Generate Session Button */}
                             {kiosk.isActive && (!session || isSessionExpired) && (
-                              <Button
-                                size="sm"
-                                variant="default"
-                                className="w-full text-xs"
-                                onClick={() => handleGenerateSession(kiosk.id)}
-                                disabled={generatingSession === kiosk.id}
-                              >
-                                <LinkIcon className="w-3 h-3 mr-1" />
-                                {generatingSession === kiosk.id ? 'Generating...' : 'Generate Access URL'}
-                              </Button>
+                              <div className="flex gap-2">
+                                <Button
+                                  size="sm"
+                                  variant="default"
+                                  className="flex-1 text-xs"
+                                  onClick={() => handleGenerateSession(kiosk.id)}
+                                  disabled={generatingSession === kiosk.id}
+                                >
+                                  <LinkIcon className="w-3 h-3 mr-1" />
+                                  {generatingSession === kiosk.id ? 'Generating...' : 'Generate Access URL'}
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="text-xs px-2"
+                                  onClick={() => {
+                                    localStorage.setItem('bypass_multi_tab_detection', 'true');
+                                    toast({ title: "Multi-tab bypass enabled for testing" });
+                                  }}
+                                  title="Enable multi-tab bypass for testing"
+                                >
+                                  🔧
+                                </Button>
+                              </div>
                             )}
 
                             {/* Inactive Notice */}
