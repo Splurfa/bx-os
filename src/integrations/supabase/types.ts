@@ -977,6 +977,14 @@ export type Database = {
         Args: { p_kiosk_id: number; p_student_id?: string; p_success?: boolean }
         Returns: undefined
       }
+      log_security_event: {
+        Args: {
+          additional_data?: Json
+          event_type: string
+          user_context?: string
+        }
+        Returns: undefined
+      }
       process_csv_to_families_and_students: {
         Args: Record<PropertyKey, never>
         Returns: string
