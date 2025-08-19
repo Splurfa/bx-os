@@ -61,31 +61,31 @@ const KioskTwo = () => {
   const firstWaitingStudent = getFirstWaitingStudentForKiosk(KIOSK_ID);
   const hasTeacherFeedback = firstWaitingStudent?.reflection?.teacher_feedback;
 
-  // Initialize kiosk on mount - anonymous access allowed
+  // Check if kiosk is already active - anonymous access allowed
   useEffect(() => {
     if (kioskState === 'setup' && !authLoading) {
-      const setupKiosk = async () => {
+      const checkKiosk = async () => {
         try {
           setActivationError(null);
           
-          console.log('Activating kiosk 2 for anonymous student access...');
-          const id = await activateKiosk(KIOSK_ID);
+          console.log('Checking if kiosk 2 is available for anonymous student access...');
+          const kiosk = getKioskById(KIOSK_ID);
           
-          if (id) {
+          if (kiosk && kiosk.isActive) {
             setKioskState('welcome');
           } else {
-            console.error('Failed to activate kiosk 2: No ID returned');
-            setActivationError('Failed to activate kiosk 2.');
+            console.log('Kiosk 2 is not activated. Admin must activate it first.');
+            setActivationError('Kiosk 2 is not available. Please ask an administrator to activate it.');
           }
         } catch (error) {
-          console.error('Error during kiosk 2 activation:', error);
+          console.error('Error checking kiosk 2 status:', error);
           const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-          setActivationError(`Kiosk 2 activation failed: ${errorMessage}`);
+          setActivationError(`Kiosk 2 check failed: ${errorMessage}`);
         }
       };
-      setupKiosk();
+      checkKiosk();
     }
-  }, [kioskState, activateKiosk, authLoading]);
+  }, [kioskState, getKioskById, authLoading]);
 
   // Reset state when student changes or completes
   useEffect(() => {

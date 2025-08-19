@@ -71,31 +71,31 @@ useEffect(() => {
   }
 }, [updateKioskStudent]);
 
-  // Initialize kiosk on mount - anonymous access allowed
+  // Check if kiosk is already active - anonymous access allowed
   useEffect(() => {
     if (kioskState === 'setup' && !authLoading) {
-      const setupKiosk = async () => {
+      const checkKiosk = async () => {
         try {
           setActivationError(null);
           
-          console.log('Activating kiosk 1 for anonymous student access...');
-          const id = await activateKiosk(KIOSK_ID);
+          console.log('Checking if kiosk 1 is available for anonymous student access...');
+          const kiosk = getKioskById(KIOSK_ID);
           
-          if (id) {
+          if (kiosk && kiosk.isActive) {
             setKioskState('welcome');
           } else {
-            console.error('Failed to activate kiosk 1: No ID returned');
-            setActivationError('Failed to activate kiosk 1.');
+            console.log('Kiosk 1 is not activated. Admin must activate it first.');
+            setActivationError('Kiosk 1 is not available. Please ask an administrator to activate it.');
           }
         } catch (error) {
-          console.error('Error during kiosk 1 activation:', error);
+          console.error('Error checking kiosk 1 status:', error);
           const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-          setActivationError(`Kiosk 1 activation failed: ${errorMessage}`);
+          setActivationError(`Kiosk 1 check failed: ${errorMessage}`);
         }
       };
-      setupKiosk();
+      checkKiosk();
     }
-  }, [kioskState, activateKiosk, authLoading]);
+  }, [kioskState, getKioskById, authLoading]);
 
   // Store completed student data to prevent early state transitions
   const [completedStudentData, setCompletedStudentData] = useState<any>(null);
