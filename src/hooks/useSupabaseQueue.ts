@@ -378,19 +378,28 @@ export const useSupabaseQueue = () => {
     }
   };
 
-  // Clear single item
+  // Clear single item using proper archiving
   const clearItem = async (behaviorRequestId: string) => {
     try {
-      const { error } = await supabase
-        .from('behavior_requests')
-        .delete()
-        .eq('id', behaviorRequestId);
+      const { error } = await supabase.rpc('clear_single_behavior_request', {
+        p_behavior_request_id: behaviorRequestId
+      });
 
       if (error) throw error;
+
+      toast({
+        title: "Student Removed",
+        description: "Student successfully removed from queue.",
+      });
 
       await fetchQueue();
     } catch (error) {
       console.error('Error clearing item:', error);
+      toast({
+        title: "Error",
+        description: "Failed to remove student from queue. Please try again.",
+        variant: "destructive",
+      });
       throw error;
     }
   };
