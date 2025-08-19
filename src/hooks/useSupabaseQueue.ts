@@ -159,6 +159,25 @@ export const useSupabaseQueue = () => {
       const studentId = data.student.id;
       const familyId = data.student.family_id;
 
+      // Check for existing active/waiting behavior requests for this student
+      const { data: existingRequests, error: checkError } = await supabase
+        .from('behavior_requests')
+        .select('id')
+        .eq('student_id', studentId)
+        .in('status', ['waiting', 'active'])
+        .limit(1);
+
+      if (checkError) throw checkError;
+
+      if (existingRequests && existingRequests.length > 0) {
+        toast({
+          title: "Student Already in Queue",
+          description: `${data.student.first_name} ${data.student.last_name} already has an active behavior request.`,
+          variant: "destructive",
+        });
+        return;
+      }
+
       // Create behavior request
       const { error: requestError } = await supabase
         .from('behavior_requests')

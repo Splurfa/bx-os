@@ -1,7 +1,8 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Check } from "lucide-react";
 import { useStudents } from "@/hooks/useStudents";
+import { supabase } from "@/integrations/supabase/client";
 import type { Student } from "@/hooks/useStudents";
 
 interface StudentSelectionProps {
@@ -12,9 +13,32 @@ interface StudentSelectionProps {
 
 const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentId }: StudentSelectionProps) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [queuedStudentIds, setQueuedStudentIds] = useState<string[]>([]);
   const { students, loading } = useStudents();
 
+  // Fetch students who already have active/waiting behavior requests
+  useEffect(() => {
+    const fetchQueuedStudents = async () => {
+      const { data } = await supabase
+        .from('behavior_requests')
+        .select('student_id')
+        .in('status', ['waiting', 'active']);
+      
+      if (data) {
+        setQueuedStudentIds(data.map(req => req.student_id));
+      }
+    };
+
+    fetchQueuedStudents();
+  }, []);
+
   const filteredStudents = students.filter(student => {
+    // Only show students if there's a search term (at least 1 character)
+    if (searchTerm.length === 0) return false;
+    
+    // Filter out students who already have active behavior requests
+    if (queuedStudentIds.includes(student.id)) return false;
+    
     const fullName = `${student.first_name} ${student.last_name}`.toLowerCase();
     const searchLower = searchTerm.toLowerCase();
     return fullName.includes(searchLower) ||
@@ -42,7 +66,7 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Search for student..."
+            placeholder="Type student name to search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-sm"
@@ -52,7 +76,11 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
       
       {/* Student List */}
       <div className="flex-1 overflow-y-auto bg-background">
-        {selectedStudentId ? (
+        {searchTerm.length === 0 && !selectedStudentId ? (
+          <div className="flex items-center justify-center h-32 text-muted-foreground">
+            <p className="text-sm">Start typing to search for students...</p>
+          </div>
+        ) : selectedStudentId ? (
           // Show only selected student
           filteredStudents
             .filter(student => student.id === selectedStudentId)
