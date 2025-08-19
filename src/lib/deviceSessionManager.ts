@@ -10,28 +10,23 @@ export class DeviceSessionManager {
    * Generate a device fingerprint based on available browser characteristics
    */
   generateDeviceFingerprint(): string {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    ctx!.textBaseline = 'top';
-    ctx!.font = '14px Arial';
-    ctx!.fillText('Device fingerprint', 2, 2);
-    
+    // Create a stable, consistent fingerprint without time-sensitive data
     const fingerprint = [
       navigator.userAgent,
       navigator.language,
       screen.width + 'x' + screen.height,
+      screen.colorDepth,
       new Date().getTimezoneOffset(),
-      canvas.toDataURL(),
-      navigator.hardwareConcurrency || 0,
-      navigator.platform
+      navigator.hardwareConcurrency || 'unknown',
+      navigator.platform || 'unknown'
     ].join('|');
     
-    // Simple hash function
+    // Simple hash function for consistent fingerprint
     let hash = 0;
     for (let i = 0; i < fingerprint.length; i++) {
       const char = fingerprint.charCodeAt(i);
       hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32-bit integer
+      hash = hash & hash; // Convert to 32bit integer
     }
     
     this.deviceFingerprint = Math.abs(hash).toString(36);
@@ -100,29 +95,33 @@ export class DeviceSessionManager {
     kioskId: number | null;
     remainingSeconds: number;
   }> {
+    const deviceFingerprint = this.getDeviceFingerprint();
+    
     try {
-      const { data, error } = await supabase.rpc('validate_device_session', {
+      // Use read-only validation first
+      const { data, error } = await supabase.rpc('validate_device_session_readonly', {
         p_session_id: sessionId,
-        p_device_fingerprint: this.getDeviceFingerprint()
+        p_device_fingerprint: deviceFingerprint
       });
 
       if (error) {
-        console.error('Failed to validate device session:', error);
+        console.error('❌ Session validation error:', error);
         return { isValid: false, kioskId: null, remainingSeconds: 0 };
       }
 
       if (data && data.length > 0) {
         const result = data[0];
+        console.log('✅ Session validation result:', result);
         return {
-          isValid: result.is_valid,
-          kioskId: result.kiosk_id,
-          remainingSeconds: result.remaining_seconds
+          isValid: result.is_valid || false,
+          kioskId: result.kiosk_id || null,
+          remainingSeconds: result.remaining_seconds || 0
         };
       }
 
       return { isValid: false, kioskId: null, remainingSeconds: 0 };
     } catch (error) {
-      console.error('Error validating device session:', error);
+      console.error('❌ Session validation failed:', error);
       return { isValid: false, kioskId: null, remainingSeconds: 0 };
     }
   }
@@ -132,11 +131,19 @@ export class DeviceSessionManager {
    */
   async sendHeartbeat(sessionId: string): Promise<boolean> {
     try {
-      // Heartbeat is automatically sent when validating session
-      const result = await this.validateDeviceSession(sessionId);
-      return result.isValid;
+      const { data, error } = await supabase.rpc('update_session_heartbeat', {
+        p_session_id: sessionId
+      });
+
+      if (error) {
+        console.error('❌ Heartbeat update error:', error);
+        return false;
+      }
+
+      console.log('💓 Heartbeat sent successfully:', data);
+      return data === true;
     } catch (error) {
-      console.error('Error sending heartbeat:', error);
+      console.error('❌ Heartbeat failed:', error);
       return false;
     }
   }
@@ -272,6 +279,13 @@ export class DeviceSessionManager {
   disableMultiTabBypass(): void {
     localStorage.removeItem('bypass_multi_tab_detection');
     console.log('🔒 Multi-tab detection bypass disabled');
+  }
+
+  /**
+   * Check if multi-tab bypass is enabled
+   */
+  isMultiTabBypassEnabled(): boolean {
+    return localStorage.getItem('bypass_multi_tab_detection') === 'true';
   }
 
   /**

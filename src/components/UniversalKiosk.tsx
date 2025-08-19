@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { DeviceSessionManager } from '@/lib/deviceSessionManager';
+import { DeviceSessionManager, deviceSessionManager } from '@/lib/deviceSessionManager';
 import { useDeviceSession } from '@/hooks/useDeviceSession';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Clock, Wifi, WifiOff } from 'lucide-react';
+import { AlertTriangle, Clock, Wifi, WifiOff, Lock, XCircle, AlertCircle } from 'lucide-react';
 
 // Import existing kiosk components
 import KioskOne from '@/components/KioskOne';
@@ -27,75 +27,90 @@ const UniversalKiosk: React.FC<UniversalKioskProps> = ({
   const navigate = useNavigate();
   
   const sessionId = propSessionId || urlSessionId;
+  const extractedSessionId = sessionId;
   
   const [currentKioskComponent, setCurrentKioskComponent] = useState<React.ComponentType | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [kioskError, setKioskError] = useState<string | null>(null);
 
-  const {
-    kioskId,
-    isValid,
-    isLoading,
-    error: sessionError,
-    remainingSeconds,
-    formatRemainingTime,
-    validateSession,
-    clearSession
-  } = useDeviceSession({
+  const deviceSession = useDeviceSession({
     sessionId,
     autoHeartbeat: true,
     heartbeatInterval: 30000,
     onSessionExpired: () => {
-      setError('Your session has expired. Please contact your teacher for a new access link.');
-      clearSession();
+      console.log('Session expired');
     },
     onConflictDetected: () => {
-      setError('Multiple tabs detected. Please close other kiosk tabs and refresh this page.');
+      console.warn('Multi-tab conflict detected');
     }
   });
 
-  // Determine which kiosk component to render based on kioskId
+  // Multi-tab conflict check (non-blocking)
+  const hasMultiTabConflict = deviceSessionManager.checkMultiTabConflict();
+  
   useEffect(() => {
-    if (!isValid || !kioskId) return;
-
-    // Use forced kiosk ID for testing or override
-    const effectiveKioskId = forcedKioskId || kioskId;
-
-    // Map kiosk IDs to components
-    // This mapping can be made more sophisticated as needed
-    switch (effectiveKioskId) {
-      case 1:
-        setCurrentKioskComponent(() => KioskOne);
-        break;
-      case 2:
-        setCurrentKioskComponent(() => KioskTwo);
-        break;
-      case 3:
-        setCurrentKioskComponent(() => KioskThree);
-        break;
-      default:
-        // Default to KioskOne for any other ID
-        setCurrentKioskComponent(() => KioskOne);
-        break;
+    if (hasMultiTabConflict && !deviceSessionManager.isMultiTabBypassEnabled()) {
+      console.warn('⚠️ Multi-tab conflict detected (warning only)');
+      // Don't block access, just warn
     }
-  }, [kioskId, isValid, forcedKioskId]);
+  }, [hasMultiTabConflict]);
 
-  // Invalid session ID format
-  if (sessionId && !DeviceSessionManager.extractSessionIdFromUrl(`/kiosk/${sessionId}`)) {
+  // Handle session ID changes
+  useEffect(() => {
+    const currentSessionId = sessionId || extractedSessionId;
+    
+    if (currentSessionId && currentSessionId !== deviceSession.sessionId) {
+      console.log('🔄 Session ID changed, validating:', currentSessionId);
+      deviceSession.validateSession();
+    }
+  }, [sessionId, extractedSessionId, deviceSession]);
+
+  // Set current kiosk component based on kioskId
+  useEffect(() => {
+    let kioskId = deviceSession.kioskId;
+    
+    if (forcedKioskId) {
+      kioskId = forcedKioskId;
+      console.log('🎯 Using forced kiosk ID:', forcedKioskId);
+    }
+
+    if (kioskId) {
+      const components = {
+        1: KioskOne,
+        2: KioskTwo,
+        3: KioskThree,
+      } as const;
+      
+      const SelectedComponent = components[kioskId as keyof typeof components];
+      if (SelectedComponent) {
+        setCurrentKioskComponent(() => SelectedComponent);
+        console.log(`✅ Kiosk ${kioskId} component selected`);
+      } else {
+        console.error(`❌ No component found for kiosk ID: ${kioskId}`);
+        setKioskError(`Kiosk ${kioskId} is not available`);
+      }
+    } else {
+      setCurrentKioskComponent(null);
+    }
+  }, [deviceSession.kioskId, forcedKioskId]);
+
+  // Handle different states with priority: kiosk error > session validation > loading
+  
+  // Priority 1: Kiosk-specific errors (component not found, etc.)
+  if (kioskError) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-destructive/5 to-destructive/10 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <div className="flex items-center space-x-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
-              <CardTitle>Invalid Access Link</CardTitle>
-            </div>
-            <CardDescription>
-              The access link format is invalid. Please contact your teacher for a valid link.
-            </CardDescription>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Card className="w-full max-w-md mx-4">
+          <CardHeader className="text-center">
+            <AlertCircle className="w-12 h-12 text-destructive mx-auto mb-4" />
+            <CardTitle className="text-destructive">Kiosk Error</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="text-center space-y-4">
+            <p className="text-muted-foreground">{kioskError}</p>
             <Button 
-              onClick={() => navigate('/')} 
+              onClick={() => {
+                setKioskError(null);
+                navigate('/');
+              }}
               className="w-full"
             >
               Return to Home
@@ -106,30 +121,109 @@ const UniversalKiosk: React.FC<UniversalKioskProps> = ({
     );
   }
 
-  // No session ID provided
+  // Priority 2: No session ID provided - show access required
   if (!sessionId) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary/5 to-primary/10 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Card className="w-full max-w-md mx-4">
+          <CardHeader className="text-center">
+            <Lock className="w-12 h-12 text-primary mx-auto mb-4" />
             <CardTitle>Access Required</CardTitle>
-            <CardDescription>
-              You need a valid access link to use this kiosk. Please ask your teacher for an access link.
-            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <Alert>
-                <AlertTriangle className="h-4 w-4" />
-                <AlertDescription>
-                  Kiosk access links are provided by teachers and expire after 24 hours for security.
-                </AlertDescription>
-              </Alert>
+          <CardContent className="text-center space-y-4">
+            <p className="text-muted-foreground">
+              A valid access link is required to use this kiosk.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Please use the access link provided by your teacher or administrator.
+            </p>
+            <Button 
+              onClick={() => navigate('/')}
+              className="w-full"
+            >
+              Return to Home
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Priority 3: Session loading state
+  if (deviceSession.isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Card className="w-full max-w-md mx-4">
+          <CardHeader className="text-center">
+            <div className="w-12 h-12 mx-auto mb-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+            <CardTitle>Validating Access</CardTitle>
+          </CardHeader>
+          <CardContent className="text-center">
+            <p className="text-muted-foreground">
+              Please wait while we validate your kiosk session...
+            </p>
+            {hasMultiTabConflict && (
+              <p className="text-sm text-yellow-600 mt-2">
+                ⚠️ Multiple tabs detected - please close other kiosk tabs
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Priority 4: Invalid session or critical session errors  
+  if (!deviceSession.isValid || deviceSession.error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Card className="w-full max-w-md mx-4">
+          <CardHeader className="text-center">
+            <XCircle className="w-12 h-12 text-destructive mx-auto mb-4" />
+            <CardTitle className="text-destructive">Session Invalid</CardTitle>
+          </CardHeader>
+          <CardContent className="text-center space-y-4">
+            <div className="space-y-2">
+              <p className="text-muted-foreground">
+                Your kiosk session is no longer valid.
+              </p>
+              {deviceSession.error && (
+                <p className="text-sm text-destructive bg-destructive/10 p-2 rounded">
+                  {deviceSession.error}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p>This could happen if:</p>
+              <ul className="text-left space-y-1">
+                <li>• The session has expired</li>
+                <li>• The access link is incorrect</li>
+                <li>• The device fingerprint has changed</li>
+              </ul>
+            </div>
+            {hasMultiTabConflict && (
+              <p className="text-sm text-yellow-600 bg-yellow-50 p-2 rounded">
+                ⚠️ Multiple tabs detected - this may cause access issues
+              </p>
+            )}
+            <div className="flex gap-2">
               <Button 
-                onClick={() => navigate('/')} 
-                className="w-full"
+                onClick={() => {
+                  deviceSession.clearSession();
+                  window.location.reload();
+                }}
+                className="flex-1"
               >
-                Return to Home
+                Try Again
+              </Button>
+              <Button 
+                onClick={() => navigate('/')}
+                variant="outline"
+                className="flex-1"
+              >
+                Return Home
               </Button>
             </div>
           </CardContent>
@@ -138,91 +232,8 @@ const UniversalKiosk: React.FC<UniversalKioskProps> = ({
     );
   }
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-primary/5 to-primary/10 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Validating Access...</CardTitle>
-            <CardDescription>
-              Please wait while we verify your kiosk session.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  // Session error or validation failed - but allow access if just multi-tab warning
-  if (sessionError || (error && !isValid && !error.includes('Multiple tabs'))) {
-    const displayError = error || sessionError || 'Session validation failed';
-    
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-destructive/5 to-destructive/10 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <div className="flex items-center space-x-2">
-              <WifiOff className="h-5 w-5 text-destructive" />
-              <CardTitle>Session Invalid</CardTitle>
-            </div>
-            <CardDescription>
-              Your kiosk session could not be validated.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <Alert variant="destructive">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Access Error</AlertTitle>
-                <AlertDescription>
-                  {displayError}
-                </AlertDescription>
-              </Alert>
-              
-              <div className="space-y-2">
-                <Button 
-                  onClick={() => validateSession()} 
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-foreground mr-2"></div>
-                  ) : null}
-                  Try Again
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => navigate('/')} 
-                  className="w-full"
-                >
-                  Return to Home
-                </Button>
-              </div>
-              
-              <div className="mt-4 p-3 bg-muted rounded-lg">
-                <p className="text-xs text-muted-foreground">
-                  Debug Info:<br/>
-                  Session ID: {sessionId}<br/>
-                  Valid: {isValid ? 'Yes' : 'No'}<br/>
-                  Kiosk ID: {kioskId || 'None'}<br/>
-                  Remaining: {remainingSeconds}s<br/>
-                  Error: {displayError}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-  // Valid session - render the appropriate kiosk component
-  if (currentKioskComponent && isValid) {
+  // Priority 5: Valid session - show kiosk interface  
+  if (currentKioskComponent && deviceSession.isValid) {
     const KioskComponent = currentKioskComponent;
     
     return (
@@ -233,11 +244,11 @@ const UniversalKiosk: React.FC<UniversalKioskProps> = ({
             <div className="flex items-center space-x-4">
               <Badge variant="secondary" className="flex items-center space-x-1">
                 <Wifi className="h-3 w-3" />
-                <span>Kiosk {kioskId} Active</span>
+                <span>Kiosk {deviceSession.kioskId} Active</span>
               </Badge>
               <Badge variant="outline" className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
-                <span>{formatRemainingTime()} remaining</span>
+                <span>{deviceSession.formatRemainingTime()} remaining</span>
               </Badge>
             </div>
             

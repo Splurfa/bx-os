@@ -1078,6 +1078,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      update_session_heartbeat: {
+        Args: { p_session_id: string }
+        Returns: boolean
+      }
       update_student_kiosk_status: {
         Args: {
           p_behavior_request_id?: string
@@ -1087,6 +1091,14 @@ export type Database = {
         Returns: undefined
       }
       validate_device_session: {
+        Args: { p_device_fingerprint: string; p_session_id: string }
+        Returns: {
+          is_valid: boolean
+          kiosk_id: number
+          remaining_seconds: number
+        }[]
+      }
+      validate_device_session_readonly: {
         Args: { p_device_fingerprint: string; p_session_id: string }
         Returns: {
           is_valid: boolean

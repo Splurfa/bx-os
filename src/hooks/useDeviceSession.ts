@@ -151,14 +151,24 @@ export function useDeviceSession(options: UseDeviceSessionOptions = {}) {
    * Send heartbeat
    */
   const sendHeartbeat = useCallback(async () => {
-    if (state.sessionId && state.isValid) {
-      const isStillValid = await deviceSessionManager.sendHeartbeat(state.sessionId);
-      if (!isStillValid) {
-        setState(prev => ({ ...prev, isValid: false }));
-        onSessionExpired?.();
+    if (!state.sessionId) return false;
+    
+    try {
+      const success = await deviceSessionManager.sendHeartbeat(state.sessionId);
+      if (!success && state.isValid) {
+        // Only set error if session was previously valid
+        setState(prev => ({ 
+          ...prev, 
+          error: 'Session heartbeat failed - session may have expired' 
+        }));
       }
+      return success;
+    } catch (error) {
+      console.error('Heartbeat error:', error);
+      // Don't set error state for heartbeat failures - they're not critical
+      return false;
     }
-  }, [state.sessionId, state.isValid, onSessionExpired]);
+  }, [state.sessionId, state.isValid]);
 
   // Initial validation when sessionId changes
   useEffect(() => {
