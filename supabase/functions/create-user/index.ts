@@ -46,15 +46,15 @@ Deno.serve(async (req) => {
       throw new Error('Invalid authentication token')
     }
 
-    // Check if user is admin
+    // Check if user is super admin
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
-    if (profileError || profile?.role !== 'admin') {
-      throw new Error('Unauthorized: Admin access required')
+    if (profileError || profile?.role !== 'super_admin') {
+      throw new Error('Unauthorized: Super Admin access required')
     }
 
     const requestData = await req.json()

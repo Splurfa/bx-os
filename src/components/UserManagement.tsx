@@ -31,7 +31,7 @@ export default function UserManagement() {
   const [isCreating, setIsCreating] = useState(false);
   const { toast } = useToast();
   const isMobile = useIsMobile();
-  const { canCreateUsers } = usePermissions();
+  const { canCreateUsers, canChangeUserRoles, canDeleteUsers, isSuperAdmin } = usePermissions();
 
   // Form state
   const [newUser, setNewUser] = useState({
@@ -157,10 +157,25 @@ export default function UserManagement() {
     switch (role) {
       case 'admin':
         return 'destructive';
-      case 'teacher':
+      case 'super_admin':
         return 'default';
-      default:
+      case 'teacher':
         return 'secondary';
+      default:
+        return 'outline';
+    }
+  };
+
+  const getRoleDisplayText = (role: string) => {
+    switch (role) {
+      case 'super_admin':
+        return 'Super Admin';
+      case 'admin':
+        return 'Administrator';
+      case 'teacher':
+        return 'Teacher';
+      default:
+        return role;
     }
   };
 
@@ -240,6 +255,9 @@ export default function UserManagement() {
                   <SelectContent>
                     <SelectItem value="teacher">Teacher</SelectItem>
                     <SelectItem value="admin">Administrator</SelectItem>
+                    {isSuperAdmin && (
+                      <SelectItem value="super_admin">Super Admin</SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -259,7 +277,7 @@ export default function UserManagement() {
       </div>
 
       {/* Stats */}
-      <div className={`grid grid-cols-3 ${isMobile ? 'gap-2' : 'md:grid-cols-3 gap-4'}`}>
+      <div className={`grid ${isSuperAdmin ? 'grid-cols-4' : 'grid-cols-3'} ${isMobile ? 'gap-2' : 'gap-4'}`}>
         <Card>
           <CardHeader className={`pb-1 ${isMobile ? 'p-2' : 'pb-2'}`}>
             <CardTitle className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-muted-foreground`}>
@@ -290,6 +308,19 @@ export default function UserManagement() {
             <div className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{users.filter(u => u.role === 'admin').length}</div>
           </CardContent>
         </Card>
+        
+        {isSuperAdmin && (
+          <Card>
+            <CardHeader className={`pb-1 ${isMobile ? 'p-2' : 'pb-2'}`}>
+              <CardTitle className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-muted-foreground`}>
+                {isMobile ? 'Super' : 'Super Admins'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className={isMobile ? "p-2 pt-0" : ""}>
+              <div className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>{users.filter(u => u.role === 'super_admin').length}</div>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Search */}
@@ -345,7 +376,7 @@ export default function UserManagement() {
                     {!isMobile && <TableCell className="text-sm">{user.email}</TableCell>}
                     <TableCell>
                       <Badge variant={getRoleColor(user.role)} className={isMobile ? "text-xs px-1.5 py-0.5" : ""}>
-                        {user.role}
+                        {getRoleDisplayText(user.role)}
                       </Badge>
                     </TableCell>
                     {!isMobile && (
@@ -354,43 +385,69 @@ export default function UserManagement() {
                       </TableCell>
                     )}
                     <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size={isMobile ? "sm" : "sm"}>
-                            <MoreHorizontal className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-background border shadow-md">
-                          <DropdownMenuItem onClick={() => updateUserRole(user.id, user.role === 'teacher' ? 'admin' : 'teacher')}>
-                            <Edit className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
-                            <span className={isMobile ? "text-xs" : ""}>
-                              Change to {user.role === 'teacher' ? 'Admin' : 'Teacher'}
-                            </span>
-                          </DropdownMenuItem>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                <Trash2 className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
-                                <span className={isMobile ? "text-xs" : ""}>Delete User</span>
-                              </DropdownMenuItem>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Delete User</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  Are you sure you want to delete {user.full_name}? This action cannot be undone.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => deleteUser(user.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                  Delete
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      {(canChangeUserRoles || canDeleteUsers) && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size={isMobile ? "sm" : "sm"}>
+                              <MoreHorizontal className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="bg-background border shadow-md">
+                            {canChangeUserRoles && (
+                              <>
+                                {user.role === 'teacher' && (
+                                  <DropdownMenuItem onClick={() => updateUserRole(user.id, 'admin')}>
+                                    <Edit className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
+                                    <span className={isMobile ? "text-xs" : ""}>Make Administrator</span>
+                                  </DropdownMenuItem>
+                                )}
+                                {user.role === 'admin' && (
+                                  <>
+                                    <DropdownMenuItem onClick={() => updateUserRole(user.id, 'teacher')}>
+                                      <Edit className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
+                                      <span className={isMobile ? "text-xs" : ""}>Make Teacher</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => updateUserRole(user.id, 'super_admin')}>
+                                      <Edit className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
+                                      <span className={isMobile ? "text-xs" : ""}>Make Super Admin</span>
+                                    </DropdownMenuItem>
+                                  </>
+                                )}
+                                {user.role === 'super_admin' && (
+                                  <DropdownMenuItem onClick={() => updateUserRole(user.id, 'admin')}>
+                                    <Edit className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
+                                    <span className={isMobile ? "text-xs" : ""}>Make Administrator</span>
+                                  </DropdownMenuItem>
+                                )}
+                              </>
+                            )}
+                            {canDeleteUsers && (
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                    <Trash2 className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
+                                    <span className={isMobile ? "text-xs" : ""}>Delete User</span>
+                                  </DropdownMenuItem>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete User</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Are you sure you want to delete {user.full_name}? This action cannot be undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => deleteUser(user.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))

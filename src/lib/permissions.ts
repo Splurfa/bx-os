@@ -10,10 +10,10 @@ const ROLE_HIERARCHY: Record<UserRole, number> = {
 // Permission definitions
 const PERMISSIONS: Record<string, UserRole[]> = {
   // User management
-  'manage_users': ['admin', 'super_admin'],
-  'create_users': ['super_admin'],
-  'delete_users': ['super_admin'],
   'view_user_profiles': ['admin', 'super_admin'],
+  'create_users': ['super_admin'],
+  'change_user_roles': ['super_admin'],
+  'delete_users': ['super_admin'],
   
   // Queue management
   'view_all_queues': ['admin', 'super_admin'],
@@ -67,7 +67,7 @@ export const getRoleDisplayName = (role: UserRole): string => {
     case 'admin':
       return 'Administrator';
     case 'super_admin':
-      return 'Super Administrator';
+      return 'Super Admin';
     default:
       return 'Unknown';
   }
