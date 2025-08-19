@@ -11,24 +11,22 @@ This folder contains visual diagrams mapping the BX-OS system architecture, user
 - `03-current-database-schema.md` - Complete ER diagram of existing tables
 - `04-current-session-management.md` - Broken session tracking & user correlation
 
-### 🟢 Sprint-02-Targets/
-**Purpose**: Document target state deliverables for current sprint (Simplified Implementation)
+### 🟢 Sprint-01-Targets/
+**Purpose**: Document target state deliverables for current sprint
 - `05-updated-authentication.md` - Role-based routing & anonymous kiosk access
-- `06-simplified-kiosk-system.md` - Static URL system for 3 dedicated iPads
-- `07-updated-queue-management.md` - Fixed end-to-end queue workflow
-- `08-middle-school-filtering.md` - Student filtering & data management system
+- `06-device-instance-management.md` - Dynamic kiosk assignment system
+- `07-updated-kiosk-workflow.md` - Fixed end-to-end kiosk user journey
+- `08-fixed-session-management.md` - Corrected session architecture
 
 ### 🟣 Future-Vision/
 **Purpose**: Document long-term architectural vision beyond current sprint
-- `09-scalable-single-school-architecture.md` - Enhanced single-school deployment
-- `10-behavior-analytics-enhancement.md` - AI analysis & pattern recognition
-- `12-school-system-integration.md` - External system integrations
+- `09-scalable-kiosk-architecture.md` - Multi-school deployment vision
+- `10-behavior-analytics-flow.md` - AI analysis & pattern recognition
+- `12-system-integration-architecture.md` - External system integrations
 
 ### 🎯 User-Journeys/
 **Purpose**: Document complete user experience flows across all stakeholders
-- `11-complete-student-journey.md` - Student behavior support journey from kiosk to resolution
-- `12-teacher-workflow-journey.md` - Teacher BSR creation to student review workflow
-- `13-admin-oversight-journey.md` - Administrative oversight and system management
+- `11-user-journey-map.md` - Complete student behavior support journey
 
 ## 🎨 Color Legend
 - 🔴 **Red**: Problematic/broken areas requiring immediate fixes
@@ -55,6 +53,6 @@ This folder contains visual diagrams mapping the BX-OS system architecture, user
 - **Sprint-Targets** show concrete improvements being delivered
 
 ## 🔗 Cross-References
-- Sprint documentation: `SPRINT-02-LAUNCH/README.md`
-- Implementation details: `SPRINT-02-LAUNCH/IMPLEMENTATION-CHECKLIST.md`
-- Technical context: `SPRINT-02-LAUNCH/BX-OS-TECHNICAL-CONTEXT.md`
+- Sprint documentation: `SPRINT-[NAME]/README.md`
+- Implementation details: `SPRINT-[NAME]/IMPLEMENTATION-CHECKLIST.md`
+- Technical context: `SPRINT-[NAME]/BX-OS-TECHNICAL-CONTEXT.md`

@@ -2,6 +2,8 @@
 
 **Status**: BROKEN - Critical architectural failures blocking production
 
+> **UPDATE (Sprint Prep)**: Some Google OAuth profile creation fixes may have been implemented, but core role-based route protection systems are still missing.
+
 ## Current Authentication Flow
 
 <lov-mermaid>
