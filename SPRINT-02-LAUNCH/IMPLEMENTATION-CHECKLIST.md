@@ -10,9 +10,19 @@
 - **Resolution**: Updated clear_teacher_queue() function to handle foreign key constraints properly
 
 ### Bug #2: Kiosk Student Assignment Detection Failure  
-- **Status**: 🔄 INVESTIGATING - Console logs added for debugging
-- **Impact**: Students may not see assigned kiosk sessions
-- **Progress**: RLS policies verified working, queue filtering logic being analyzed
+- **Status**: ✅ RESOLVED - Created dedicated `useKioskQueue` hook for anonymous access
+- **Impact**: Student reflection submission now working end-to-end
+- **Resolution**: Anonymous kiosk access allows queue data fetching without authentication
+
+### Bug #3: Admin Dashboard Role Navigation Issue (NEW)
+- **Status**: 🔴 DISCOVERED DURING TESTING - Admin dashboard auto-navigates to teacher dashboard after reflection submissions
+- **Impact**: Admin users lose dashboard context, require manual refresh
+- **Investigation**: Real-time subscription or role-based routing logic causing unwanted navigation
+
+### Bug #4: Reflection Status Display Issue (NEW)  
+- **Status**: 🔴 DISCOVERED DURING TESTING - Completed reflections not showing "Ready for Review" status
+- **Impact**: Teachers/admins cannot identify which reflections need review
+- **Investigation**: Status update logic and display fields need validation
 
 ## ✅ VALIDATED WORKING SYSTEMS (No Implementation Needed)
 
@@ -44,7 +54,11 @@
 - [ ] Confirm student data quality and accessibility
 
 ### End-to-End Workflow Testing - 1 HOUR
-- [ ] Test complete BSR creation → queue → kiosk completion workflow
+- [x] Test complete BSR creation → queue → kiosk completion workflow ✅ **WORKING (with bugs noted)**
+- [x] ✅ Student reflection submission working end-to-end
+- [x] ✅ Student removed from queue after reflection completion
+- [ ] ❌ Admin dashboard role context stability (Bug #3)
+- [ ] ❌ "Ready for Review" status display (Bug #4)
 - [ ] Validate real-time queue updates across multiple browser sessions  
 - [ ] Test concurrent teacher/admin access scenarios
 - [ ] Verify anonymous kiosk access without authentication barriers
