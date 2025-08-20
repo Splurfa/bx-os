@@ -4,7 +4,7 @@
 
 ## Current Authentication Flow
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[User Access] --> B{Is Authenticated?}
     B -->|No| C[Redirect to /auth]
@@ -26,11 +26,11 @@ flowchart TD
     style C fill:#e8f5e8,stroke:#4caf50
     style I fill:#e8f5e8,stroke:#4caf50
     style J fill:#e8f5e8,stroke:#4caf50
-</lov-mermaid>
+```
 
 ## Role-Based Access Issues
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Authenticated User] --> B[ProtectedRoute Check]
     B --> C{User Role?}
@@ -51,11 +51,11 @@ flowchart TD
     style H fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style I fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style J fill:#ffebee,stroke:#d32f2f,stroke-width:3px
-</lov-mermaid>
+```
 
 ## Google OAuth Session Creation (Broken)
 
-<lov-mermaid>
+```mermaid
 sequenceDiagram
     participant U as User
     participant G as Google OAuth
@@ -71,7 +71,7 @@ sequenceDiagram
     UI->>UI: ❌ Role = "Unknown"
     UI->>UI: ❌ Display Name = "Unknown User"
     Note over UI: Session tracking shows wrong info
-</lov-mermaid>
+```
 
 ## Critical Issues Identified
 

@@ -4,7 +4,7 @@
 
 ## Complete Database Entity Relationship Diagram
 
-<lov-mermaid>
+```mermaid
 erDiagram
     auth_users {
         uuid id PK
@@ -77,11 +77,11 @@ erDiagram
     students ||--o{ behavior_support_requests : "subject of BSR"
     students ||--o{ queue_items : "in queue"
     behavior_support_requests ||--o| queue_items : "generates queue item"
-</lov-mermaid>
+```
 
 ## Current Schema Integration Issues
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Google OAuth User] --> B[auth.users table]
     B --> C{Profile Creation?}
@@ -108,7 +108,7 @@ flowchart TD
     style G fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style L fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style O fill:#ffebee,stroke:#d32f2f,stroke-width:3px
-</lov-mermaid>
+```
 
 ## Data Flow Problems
 

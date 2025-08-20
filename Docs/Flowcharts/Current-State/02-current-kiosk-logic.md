@@ -4,7 +4,7 @@
 
 ## Current Static Route Implementation
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Student Access] --> B[Hard-coded Routes]
     B --> C["/kiosk1"]
@@ -27,11 +27,11 @@ flowchart TD
     style J fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style K fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style L fill:#ffebee,stroke:#d32f2f,stroke-width:3px
-</lov-mermaid>
+```
 
 ## Student Assignment Race Conditions
 
-<lov-mermaid>
+```mermaid
 sequenceDiagram
     participant T1 as Tab 1 (/kiosk1)
     participant T2 as Tab 2 (/kiosk1)
@@ -48,11 +48,11 @@ sequenceDiagram
     T1->>DB: Submit Student A data
     T2->>DB: Submit Student A data
     Note over DB: ❌ Data corruption/conflict
-</lov-mermaid>
+```
 
 ## Current Kiosk Component Logic Issues
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Kiosk Component Loads] --> B[Manual Student Selection]
     B --> C{Student Available?}
@@ -69,11 +69,11 @@ flowchart TD
     style D fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style H fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style I fill:#ffebee,stroke:#d32f2f,stroke-width:3px
-</lov-mermaid>
+```
 
 ## Device Binding Issues
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Device Access] --> B{Device Identified?}
     B -->|No| C[❌ No Device Binding]
@@ -91,11 +91,11 @@ flowchart TD
     style F fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style G fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style H fill:#ffebee,stroke:#d32f2f,stroke-width:3px
-</lov-mermaid>
+```
 
 ## Authentication Barriers for Kiosks
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Student tries to access /kiosk1] --> B[ProtectedRoute Check]
     B --> C{Is Authenticated?}
@@ -114,7 +114,7 @@ flowchart TD
     style G fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style H fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style I fill:#ffebee,stroke:#d32f2f,stroke-width:3px
-</lov-mermaid>
+```
 
 ## Critical Problems Summary
 
