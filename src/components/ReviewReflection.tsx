@@ -69,6 +69,10 @@ const ReviewReflection = ({ item, onApprove, onRequestRevision, onBack }: Review
     }
   };
 
+  // Debug logging to see the actual structure
+  console.log('ReviewReflection item:', item);
+  console.log('item.reflection:', item.reflection);
+  
   const reflection = item.reflection || {
     question_1_response: '',
     question_2_response: '',
