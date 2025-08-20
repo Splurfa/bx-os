@@ -111,7 +111,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A[🎯 Student Ready for Assignment TARGET] --> B{Check Available Kiosks}
-    B --> C[✅ Kiosk 1 (/kiosk1) EXISTS]
+    B --> C[Kiosk 1 EXISTS]
     B --> D[✅ Kiosk 2 (/kiosk2) EXISTS]
     B --> E[✅ Kiosk 3 (/kiosk3) EXISTS]
     

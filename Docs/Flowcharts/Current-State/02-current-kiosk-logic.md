@@ -63,7 +63,7 @@ flowchart TD
     classDef needs_work fill:#f8d7da,stroke:#721c24,color:#721c24
     
     class C,D,I functional
-    class E,G ready  
+    class E,G ready
     class H,J needs_work
 ```
 

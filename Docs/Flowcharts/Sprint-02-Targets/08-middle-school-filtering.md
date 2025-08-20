@@ -39,7 +39,7 @@ flowchart TD
     B --> C{Grade Level Validation}
     
     C -->|Valid grades 6-8| D[🎯 Import Student TARGET]
-    C -->|Invalid (other)| E[Skip Student]
+    C -->|Invalid other| E[Skip Student]
     
     D --> F[🎯 Create Student Record TARGET]
     F --> G[🎯 Assign grade_level Field TARGET] 
