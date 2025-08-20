@@ -151,45 +151,47 @@ sequenceDiagram
 
 ## Journey Phases
 
-### 🔴 Phase 1: Incident & Assignment (5-10 minutes)
+### 🔴 Phase 1: Incident & Assignment (30 seconds)
 **Student Experience:**
 - Incident occurs in classroom/school setting
-- Teacher explains that a BSR will be created
-- Student waits for kiosk assignment notification
-- Receives instruction on which kiosk to visit
+- Teacher immediately creates BSR (15-30 seconds)
+- Student receives immediate kiosk assignment
+- Teacher directs student to specific kiosk
 
 **Emotional State:** Often defensive or confused
-**Support Needed:** Clear communication about process and expectations
+**Support Needed:** Clear, immediate communication about process
 
-### 🟡 Phase 2: Kiosk Reflection (15-25 minutes)
+### 🟡 Phase 2: Kiosk Reflection (5-10 minutes)
 **Student Experience:**
-- Approaches assigned kiosk (iPad station)
+- Immediately approaches assigned kiosk (iPad station)
 - Views teacher's description of behavior
-- Responds to guided reflection questions
+- Responds to four guided reflection questions
 - Reviews and submits responses
 
 **Emotional State:** Transition from resistance to understanding
-**Support Needed:** User-friendly interface and thoughtful question design
+**Support Needed:** User-friendly interface and focused questions
 
-### 🔵 Phase 3: Teacher Review & Feedback (2-24 hours)
+### 🔵 Phase 3: Teacher Review & Return (2-3 minutes)
 **Student Experience:**
-- Waits for teacher to review submission
-- Receives feedback and guidance
-- May need to complete additional reflection
-- Works with teacher on resolution plan
+- Teacher immediately reviews submission
+- Receives immediate feedback and guidance
+- May need brief additional reflection if required
+- Returns to class once approved
 
-**Emotional State:** Anticipation and readiness for feedback
-**Support Needed:** Timely, constructive teacher feedback
+**Emotional State:** Anticipation for immediate feedback
+**Support Needed:** Quick, constructive teacher feedback
 
-### 🟢 Phase 4: Growth & Implementation (Ongoing)
+### 🟢 Phase 4: Immediate Return to Class
 **Student Experience:**
-- Implements agreed-upon strategies
-- Practices new behaviors
-- Receives ongoing support and monitoring
-- Celebrates growth and progress
+- Returns to classroom immediately after approval
+- Continues with regular classroom activities
+- Implements learned strategies in real-time
+- Brief follow-up with teacher as needed
 
-**Emotional State:** Empowered and motivated for positive change
-**Support Needed:** Consistent reinforcement and celebration of progress
+**Emotional State:** Relief and readiness to move forward
+**Support Needed:** Smooth re-entry into classroom environment
+
+**Total Process Time:** 15-20 minutes maximum from incident to return to class
 
 ## Stakeholder Experience Requirements
 

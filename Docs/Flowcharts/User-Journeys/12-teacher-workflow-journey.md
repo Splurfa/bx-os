@@ -195,45 +195,47 @@ flowchart TD
 
 ## Teacher Experience Phases
 
-### 🔴 Phase 1: Incident Response (1-3 minutes)
+### 🔴 Phase 1: Incident Response & BSR Creation (15-30 seconds)
 **Teacher Experience:**
-- Observes behavior that requires intervention
-- Makes decision about BSR necessity
-- Accesses teacher dashboard quickly
-- Begins BSR creation process
+- Observes behavior requiring immediate intervention
+- Instantly decides BSR is necessary
+- Opens app and creates BSR in 15-30 seconds total
+- Immediately sends student to kiosk
 
-**Pain Points:** Time pressure, need for quick access
-**Success Factors:** One-click BSR creation, efficient student search
+**Pain Points:** Must be extremely fast during class management
+**Success Factors:** One-click BSR creation, instant student selection
 
-### 🟡 Phase 2: BSR Documentation (3-5 minutes)
+### 🟡 Phase 2: Student Selection & Assignment (within 15 seconds)
 **Teacher Experience:**
 - Locates correct student from 159 middle schoolers
-- Describes incident clearly and objectively
-- Sets appropriate priority level
-- Submits to queue system
+- Selects student and submits BSR
+- Student immediately assigned to available kiosk
+- Teacher continues with classroom instruction
 
-**Pain Points:** Student search efficiency, form completion time
-**Success Factors:** Smart search, auto-complete, quick priority selection
+**Pain Points:** Must find student quickly without disrupting class
+**Success Factors:** Smart search, auto-complete, immediate queue processing
 
-### 🔵 Phase 3: Monitoring & Waiting (Variable)
+### 🔵 Phase 3: Student Reflection Period (5-10 minutes)
 **Teacher Experience:**
-- Tracks student progress through queue
-- Receives notifications about kiosk assignment
-- Monitors completion status
-- Prepares for review process
+- Continues normal classroom instruction
+- Receives real-time notification when student completes reflection
+- Knows exactly when to review submission
+- No extended waiting or uncertainty
 
-**Pain Points:** Uncertainty about timing, lack of visibility
-**Success Factors:** Real-time updates, clear progress indicators
+**Pain Points:** Need immediate notification when ready for review
+**Success Factors:** Real-time alerts, clear completion status
 
-### 🟢 Phase 4: Review & Growth Planning (5-10 minutes)
+### 🟢 Phase 4: Immediate Review & Approval (2-3 minutes)
 **Teacher Experience:**
-- Reviews student reflection responses
-- Provides meaningful feedback
-- Creates collaborative growth plan
-- Documents outcomes in system
+- Reviews student reflection immediately upon completion
+- Provides quick feedback or approval
+- Student returns to class within minutes
+- Process completes during same class period
 
-**Pain Points:** Quality assessment, constructive feedback creation
-**Success Factors:** Response evaluation tools, feedback templates
+**Pain Points:** Must review quickly to minimize class disruption
+**Success Factors:** Simple approval interface, clear response quality indicators
+
+**Total Teacher Time Investment:** 3-5 minutes spread across class period
 
 ## Teacher Support Requirements
 
