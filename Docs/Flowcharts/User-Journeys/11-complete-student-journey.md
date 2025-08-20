@@ -36,7 +36,7 @@ journey
 
 ## Detailed Student Experience Flow
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Behavior Incident] --> B[Student Awareness]
     B --> C[Wait for Assignment]
@@ -81,11 +81,11 @@ flowchart TD
     style M fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style Q fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style U fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Student Emotional Journey
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Initial Reaction] --> B{Emotional State}
     B -->|Defensive| C[Resistance to Process]
@@ -113,11 +113,11 @@ flowchart TD
     style J fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style M fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style O fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Kiosk Interaction Experience
 
-<lov-mermaid>
+```mermaid
 sequenceDiagram
     participant S as Student
     participant K as Kiosk Interface
@@ -148,7 +148,7 @@ sequenceDiagram
     
     Note over S: Student leaves kiosk
     Note over T: Teacher reviews submission
-</lov-mermaid>
+```
 
 ## Journey Phases
 

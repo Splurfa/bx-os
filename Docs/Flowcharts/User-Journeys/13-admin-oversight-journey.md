@@ -4,7 +4,7 @@
 
 ## Administrative Management Journey
 
-<lov-mermaid>
+```mermaid
 journey
     title Administrative System Oversight Journey
     section Daily Monitoring
@@ -32,11 +32,11 @@ journey
       Plan system enhancements: 5: Admin
       Coordinate professional development: 4: Admin
       Optimize system performance: 4: Admin
-</lov-mermaid>
+```
 
 ## Administrative Dashboard Overview
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Admin Login] --> B[Administrative Dashboard]
     B --> C[System Status Overview]
@@ -68,11 +68,11 @@ flowchart TD
     style G fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style S fill:#fff3e0,stroke:#ff9800,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Real-time System Monitoring
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Real-time Dashboard] --> B[Live System Metrics]
     B --> C[Active Users Count]
@@ -107,11 +107,11 @@ flowchart TD
     style T fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style U fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
     style V fill:#ffebee,stroke:#d32f2f,stroke-width:2px
-</lov-mermaid>
+```
 
 ## User Management Workflow
 
-<lov-mermaid>
+```mermaid
 sequenceDiagram
     participant A as Admin
     participant UM as User Management
@@ -142,11 +142,11 @@ sequenceDiagram
     UM->>DB: Generate activity report
     DB->>UM: Return usage statistics
     UM->>A: Display activity insights
-</lov-mermaid>
+```
 
 ## Analytics & Reporting System
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Analytics Dashboard] --> B[Behavioral Analytics]
     A --> C[System Performance]
@@ -179,11 +179,11 @@ flowchart TD
     style S fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style T fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style U fill:#fff3e0,stroke:#ff9800,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Quality Assurance Monitoring
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Quality Assurance Dashboard] --> B[Process Metrics]
     B --> C[BSR Completion Rates]
@@ -216,7 +216,7 @@ flowchart TD
     style H fill:#fff3e0,stroke:#ff9800,stroke-width:2px
     style K fill:#fff3e0,stroke:#ff9800,stroke-width:2px
     style N fill:#fff3e0,stroke:#ff9800,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Administrative Experience Phases
 

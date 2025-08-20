@@ -4,7 +4,7 @@
 
 ## Teacher BSR Management Journey
 
-<lov-mermaid>
+```mermaid
 journey
     title Teacher Behavior Support Workflow Journey
     section Incident Response
@@ -32,11 +32,11 @@ journey
       Monitor implementation: 4: Teacher
       Document progress: 4: Teacher
       Communicate with family: 4: Teacher
-</lov-mermaid>
+```
 
 ## Detailed Teacher Workflow
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Behavior Incident Observed] --> B[Immediate Response]
     B --> C{Needs BSR?}
@@ -81,11 +81,11 @@ flowchart TD
     style U fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style X fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style Z fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Teacher Dashboard Experience
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Teacher Logs In] --> B[Teacher Dashboard]
     B --> C[Active BSRs Overview]
@@ -117,11 +117,11 @@ flowchart TD
     style P fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style T fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style S fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
-</lov-mermaid>
+```
 
 ## BSR Creation Process
 
-<lov-mermaid>
+```mermaid
 sequenceDiagram
     participant T as Teacher
     participant D as Dashboard
@@ -147,11 +147,11 @@ sequenceDiagram
     Q->>Q: Calculate queue position
     Q->>D: Update teacher dashboard
     D->>T: Show confirmation & queue status
-</lov-mermaid>
+```
 
 ## Review & Feedback Process
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Student Completes Reflection] --> B[Teacher Notification]
     B --> C[Access Student Response]
@@ -192,7 +192,7 @@ flowchart TD
     style Q fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style U fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style W fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Teacher Experience Phases
 
