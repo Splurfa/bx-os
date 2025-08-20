@@ -43,7 +43,7 @@ flowchart TD
     C -->|Significant| E[Create BSR]
     
     E --> F[Access Teacher Dashboard]
-    F --> G[Click "Create New BSR"]
+    F --> G[Click Create New BSR]
     G --> H[Student Selection Interface]
     
     H --> I[Search Student by Name]

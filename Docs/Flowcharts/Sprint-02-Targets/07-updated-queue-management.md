@@ -25,11 +25,10 @@ flowchart TD
     L --> M[🎯 Auto-assign Next Student TARGET]
     
     classDef working fill:#d4edda,stroke:#155724,color:#155724
-    classDef ready fill:#fff3cd,stroke:#856404,color:#856404
+    classDef ready fill:#fff3cd,stroke:#856404,color:#856404  
     classDef target fill:#cce5ff,stroke:#0066cc,color:#0066cc
     
     class B,D,G,I working
-    class ready
     class C,F,H,J,K,L,M target
 ```
 

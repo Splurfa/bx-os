@@ -38,7 +38,7 @@ flowchart TD
     A[✅ CSV Import: hillel_students_2025.csv FILE EXISTS] --> B[✅ Data Import System READY]
     B --> C{Grade Level Validation}
     
-    C -->|Valid (6,7,8)| D[🎯 Import Student TARGET]
+    C -->|Valid grades 6-8| D[🎯 Import Student TARGET]
     C -->|Invalid (other)| E[Skip Student]
     
     D --> F[🎯 Create Student Record TARGET]
