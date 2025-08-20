@@ -1,5 +1,7 @@
 # 🎯 BX-OS PROJECT KNOWLEDGE - VALIDATED SYSTEM STATE
 
+**🔗 SINGLE SOURCE OF TRUTH**: See `CURRENT-SYSTEM-STATUS.md` for current reality and operational status. Always reference the hub FIRST.
+
 ## 🚀 QUICK START FOR AI ASSISTANTS
 
 ### MANDATORY FIRST ACTIONS (30 seconds)
