@@ -15,19 +15,19 @@
 - **Google OAuth Integration**: User creation and profile assignment working
 - **Basic Queue Infrastructure**: Queue display and management components exist
 
-### 🔴 ACTIVE CRITICAL BUGS
+### 🟡 ACTIVE CRITICAL BUGS
 
 #### Bug #1: Queue Clearing Foreign Key Constraint Error
 - **Issue**: Admin "Clear Queue" function fails with foreign key constraint violation
-- **Root Cause**: `behavior_history` table has dependencies that prevent deletion of `behavior_requests`
-- **Impact**: Admins cannot clear queues, blocking queue management workflow
-- **Status**: Needs immediate fix
+- **Root Cause**: Database functions not handling foreign key order correctly (reflections → behavior_requests)
+- **Impact**: Admins cannot clear queues, blocking queue management workflow  
+- **Status**: ✅ FIXED - Updated all queue clearing functions with proper deletion order
 
 #### Bug #2: Kiosk Student Assignment Detection Failure  
-- **Issue**: Kiosk not detecting assigned students despite admin assignment
-- **Root Cause**: Real-time synchronization issue between admin dashboard and kiosk interface
+- **Issue**: Kiosk components not properly detecting assigned students from queue
+- **Root Cause**: RLS policies verified working, investigating queue filtering logic
 - **Impact**: Students assigned to kiosks cannot complete reflections
-- **Status**: Needs immediate fix
+- **Status**: INVESTIGATING - Checking queue filtering and real-time updates
 
 ### ⚠️ AREAS NEEDING VERIFICATION
 - End-to-end BSR workflow (blocked by bugs above)

@@ -432,17 +432,27 @@ export const useSupabaseQueue = () => {
 
   // Get first waiting student for kiosk or student assigned to this kiosk
   const getFirstWaitingStudentForKiosk = (kioskId: number) => {
+    console.log(`🔍 Checking kiosk ${kioskId} for assigned students...`);
+    console.log(`📋 Available queue items:`, items.map(item => ({
+      id: item.id,
+      status: item.status,
+      assigned_kiosk: item.assigned_kiosk,
+      student_name: `${item.student?.first_name || 'Unknown'} ${item.student?.last_name || 'Student'}`
+    })));
+    
     // First check if there's a student already assigned to this specific kiosk
     const assignedToKiosk = items.find(item => 
       item.status === 'active' && item.assigned_kiosk === kioskId
     );
     
     if (assignedToKiosk) {
+      console.log(`✅ Found assigned student for kiosk ${kioskId}:`, assignedToKiosk);
       return assignedToKiosk;
     }
     
     // If no assigned student, find first waiting student
     const waiting = items.find(item => item.status === 'waiting');
+    console.log(`⏳ ${waiting ? 'Found' : 'No'} waiting student for kiosk ${kioskId}:`, waiting);
     return waiting || null;
   };
 
