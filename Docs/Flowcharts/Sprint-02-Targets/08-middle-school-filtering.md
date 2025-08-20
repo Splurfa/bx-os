@@ -68,7 +68,7 @@ flowchart TD
     B --> C[✅ Query Students Database WORKING]
     C --> D[🎯 Apply Grade Level Filter TARGET]
     
-    D --> E[🎯 WHERE grade_level IN ('6','7','8') TARGET]
+    D --> E[🎯 WHERE grade_level IN 6-7-8 TARGET]
     E --> F[🎯 AND active = true TARGET]
     F --> G[✅ ORDER BY last_name, first_name WORKING]
     
