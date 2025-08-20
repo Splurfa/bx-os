@@ -10,9 +10,9 @@ flowchart TD
     B -->|No| C[Redirect to /auth]
     B -->|Yes| D[ProtectedRoute Component]
     D --> E{Route Protection}
-    E --> F["/teacher to ProtectedRoute"]
-    E --> G["/admin to ProtectedRoute"] 
-    E --> H["/kiosk1,2,3 to ProtectedRoute"]
+    E --> F[teacher to ProtectedRoute]
+    E --> G[admin to ProtectedRoute] 
+    E --> H[kiosk1 kiosk2 kiosk3 to ProtectedRoute]
     
     F --> I[Teacher Dashboard]
     G --> J[Admin Dashboard]
@@ -35,7 +35,7 @@ flowchart TD
     A[Authenticated User] --> B[ProtectedRoute Check]
     B --> C{User Role?}
     C --> D[NO ROLE VALIDATION]
-    D --> E["Any User to Any Dashboard"]
+    D --> E[Any User to Any Dashboard]
     
     E --> F[Teacher can access Admin Dashboard]
     E --> G[Admin can access Teacher Dashboard]
@@ -68,8 +68,8 @@ sequenceDiagram
     S->>DB: Create User Record
     Note over DB: No Profile Creation Trigger
     S->>UI: Session Created
-    UI->>UI: Role = "Unknown"
-    UI->>UI: Display Name = "Unknown User"
+    UI->>UI: Role equals Unknown
+    UI->>UI: Display Name equals Unknown User
     Note over UI: Session tracking shows wrong info
 ```
 

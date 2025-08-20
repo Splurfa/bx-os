@@ -14,11 +14,11 @@ flowchart TD
     E -->|Yes| F[Auto-assign to Available Kiosk]
     E -->|No| G[Student Waits in Queue]
     
-    F --> H[Student Status: "assigned"]
-    G --> I[Student Status: "pending"]
+    F --> H[Student Status assigned]
+    G --> I[Student Status pending]
     
     H --> J[Student Completes BSR]
-    J --> K[Student Status: "completed"]
+    J --> K[Student Status completed]
     K --> L[Remove from Queue]
     L --> M[Auto-assign Next Student]
     
@@ -92,12 +92,12 @@ flowchart TD
     D --> F[Insert at End of Queue]
     E --> G[Insert as First in Queue]
     
-    F --> H[Student Status: "pending"]
+    F --> H[Student Status pending]
     G --> I{Kiosk Available?}
     I -->|Yes| J[Auto-assign Immediately]
-    I -->|No| K[Student Status: "pending"]
+    I -->|No| K[Student Status pending]
     
-    J --> L[Student Status: "assigned"]
+    J --> L[Student Status assigned]
     
     style B fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style D fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
@@ -128,9 +128,9 @@ flowchart TD
     H -->|No| M[Assign to Kiosk 3]
     H -->|Yes| N[Kiosk 3 Busy]
     
-    I --> O[Update queue_item: assigned_to = 'kiosk1']
-    K --> P[Update queue_item: assigned_to = 'kiosk2']
-    M --> Q[Update queue_item: assigned_to = 'kiosk3']
+    I --> O[Update queue_item assigned_to kiosk1]
+    K --> P[Update queue_item assigned_to kiosk2]
+    M --> Q[Update queue_item assigned_to kiosk3]
     
     J --> R[Check Next Kiosk]
     L --> R
@@ -164,7 +164,7 @@ flowchart TD
     I --> L[Student ID: 12345]
     J --> M[Grade 7 Student]
     
-    K --> N[No More "Unknown Student"]
+    K --> N[No More Unknown Student]
     
     style C fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style D fill:#e8f5e8,stroke:#4caf50,stroke-width:2px

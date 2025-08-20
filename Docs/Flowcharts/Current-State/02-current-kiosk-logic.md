@@ -7,9 +7,9 @@
 ```mermaid
 flowchart TD
     A[Student Access] --> B[Hard-coded Routes]
-    B --> C["/kiosk1"]
-    B --> D["/kiosk2"] 
-    B --> E["/kiosk3"]
+    B --> C[kiosk1]
+    B --> D[kiosk2] 
+    B --> E[kiosk3]
     
     C --> F[Multi-tab Access Possible]
     D --> G[Multi-tab Access Possible]
@@ -33,8 +33,8 @@ flowchart TD
 
 ```mermaid
 sequenceDiagram
-    participant T1 as Tab 1 (/kiosk1)
-    participant T2 as Tab 2 (/kiosk1)
+    participant T1 as Tab 1 kiosk1
+    participant T2 as Tab 2 kiosk1
     participant Q as Queue System
     participant DB as Database
 
@@ -79,11 +79,11 @@ flowchart TD
     B -->|No| C[No Device Binding]
     B -->|Yes| D[No Session Binding]
     
-    C --> E["Multiple Devices to Same Route"]
-    D --> F["Same Device to Multiple Routes"]
+    C --> E[Multiple Devices to Same Route]
+    D --> F[Same Device to Multiple Routes]
     
-    E --> G["Conflict: Device 1 & 2 on /kiosk1"]
-    F --> H["Conflict: iPad opens /kiosk1 & /kiosk2"]
+    E --> G[Conflict Device 1 and 2 on kiosk1]
+    F --> H[Conflict iPad opens kiosk1 and kiosk2]
     
     style C fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style D fill:#ffebee,stroke:#d32f2f,stroke-width:3px
@@ -97,7 +97,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A[Student tries to access /kiosk1] --> B[ProtectedRoute Check]
+    A[Student tries to access kiosk1] --> B[ProtectedRoute Check]
     B --> C{Is Authenticated?}
     C -->|No| D[Redirect to /auth]
     C -->|Yes| E[Access Denied - Wrong Role]

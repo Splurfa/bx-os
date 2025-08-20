@@ -14,9 +14,9 @@ flowchart TD
     E --> F[QR Code Assignment]
     F --> G[Automatic URL Generation]
     
-    G --> H["/kiosk/device-id-xyz"]
-    G --> I["/kiosk/device-id-abc"]
-    G --> J["/kiosk/device-id-def"]
+    G --> H[kiosk device-id-xyz]
+    G --> I[kiosk device-id-abc]
+    G --> J[kiosk device-id-def]
     
     H --> K[Dynamic Queue Assignment]
     I --> L[Dynamic Queue Assignment]

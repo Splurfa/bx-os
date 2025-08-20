@@ -73,7 +73,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A[Student Accesses iPad] --> B[Navigate to assigned URL]
-    B --> C[/kiosk1, /kiosk2, or /kiosk3]
+    B --> C[kiosk1 kiosk2 or kiosk3]
     C --> D[No Authentication Required]
     
     D --> E[Load Kiosk Component]
@@ -81,7 +81,7 @@ flowchart TD
     F --> G{Student Available?}
     
     G -->|Yes| H[Load Student BSR]
-    G -->|No| I[Display "No Students Assigned"]
+    G -->|No| I[Display No Students Assigned]
     
     H --> J[Student Completes Reflection]
     J --> K[Submit for Teacher Review]

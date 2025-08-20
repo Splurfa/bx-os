@@ -10,9 +10,9 @@ flowchart TD
     B -->|Kiosk Routes| C[Anonymous Access]
     B -->|Dashboard Routes| D{Is Authenticated?}
     
-    C --> E["/kiosk1 to Direct Access"]
-    C --> F["/kiosk2 to Direct Access"]
-    C --> G["/kiosk3 to Direct Access"]
+    C --> E[kiosk1 Direct Access]
+    C --> F[kiosk2 Direct Access]
+    C --> G[kiosk3 Direct Access]
     
     D -->|No| H[Redirect to /auth]
     D -->|Yes| I{User Role?}
@@ -45,12 +45,12 @@ flowchart TD
     
     D --> H{User Role Check}
     H -->|teacher| I[Allow Access]
-    H -->|admin| J["Allow Access (admin can view teacher)"]
+    H -->|admin| J[Allow Access admin can view teacher]
     H -->|other| K[Redirect to unauthorized]
     
     F --> L[Admin Dashboard Functions]
     I --> M[Teacher Dashboard Functions]
-    J --> N[Teacher Dashboard (Admin View)]
+    J --> N[Teacher Dashboard Admin View]
     
     style F fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style I fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
@@ -66,12 +66,12 @@ flowchart TD
 flowchart TD
     A[Component Render] --> B[usePermissions Hook]
     B --> C{Check User Role}
-    C --> D[return hasPermission function]
+    C --> D[return permission check function]
     
     D --> E{UI Element Type}
-    E -->|User Management| F{hasPermission('admin')}
-    E -->|BSR Creation| G{hasPermission('teacher')}
-    E -->|Queue Viewing| H{hasPermission('teacher', 'admin')}
+    E -->|User Management| F{check admin permission}
+    E -->|BSR Creation| G{check teacher permission}
+    E -->|Queue Viewing| H{check teacher or admin permission}
     
     F -->|true| I[Show User Management]
     F -->|false| J[Hide Component]
@@ -104,7 +104,7 @@ sequenceDiagram
     S->>T: Trigger: on_auth_user_created
     T->>P: Create profile record
     T->>P: Set display_name from OAuth
-    T->>P: Set default role = 'teacher'
+    T->>P: Set default role teacher
     S->>UI: Session Created
     UI->>P: Fetch user profile
     P->>UI: Return complete profile

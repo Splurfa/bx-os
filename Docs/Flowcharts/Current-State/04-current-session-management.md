@@ -37,7 +37,7 @@ flowchart TD
     C -->|Exists| E[Profile Created]
     
     D --> F[role = undefined]
-    D --> G[display_name = "Unknown"]
+    D --> G[display_name equals Unknown]
     D --> H[Session shows wrong info]
     
     E --> I[role = assigned]
@@ -58,7 +58,7 @@ flowchart TD
     A[SessionMonitor Component] --> B[Fetch Active Sessions]
     B --> C[useActiveSessions Hook]
     C --> D{User Profile Data?}
-    D -->|Missing| E[Display "Unknown User"]
+    D -->|Missing| E[Display Unknown User]
     D -->|Exists| F[Display Actual Name]
     
     E --> G[Device type logic error]
@@ -78,20 +78,20 @@ flowchart TD
 flowchart TD
     A[Session Creation] --> B[Device Detection]
     B --> C{Device Type Storage}
-    C -->|Incorrect| D[Stores "admin" as device_type]
-    C -->|Correct| E[Stores "iPad" as device_type]
+    C -->|Incorrect| D[Stores admin as device_type]
+    C -->|Correct| E[Stores iPad as device_type]
     
-    D --> F[device_type = "admin"]
-    D --> G[device_type = "teacher"]
+    D --> F[device_type equals admin]
+    D --> G[device_type equals teacher]
     
-    E --> H[device_type = "mobile"]
-    E --> I[device_type = "desktop"]
+    E --> H[device_type equals mobile]
+    E --> I[device_type equals desktop]
     
-    F --> J[UI: "admin device connected"]
-    G --> K[UI: "teacher device connected"]
+    F --> J[UI admin device connected]
+    G --> K[UI teacher device connected]
     
-    H --> L[UI: "mobile device connected"]
-    I --> M[UI: "desktop device connected"]
+    H --> L[UI mobile device connected]
+    I --> M[UI desktop device connected]
     
     style D fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style F fill:#ffebee,stroke:#d32f2f,stroke-width:3px
@@ -116,7 +116,7 @@ sequenceDiagram
     AS->>AS: Treats device_type as role
     AS->>SM: Return malformed session list
     SM->>UI: Display incorrect session info
-    Note over UI: Shows "admin device" instead of user name
+    Note over UI: Shows admin device instead of user name
 ```
 
 ## Missing Profile Creation Trigger

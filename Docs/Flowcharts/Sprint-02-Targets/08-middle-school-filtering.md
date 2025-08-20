@@ -70,7 +70,7 @@ flowchart TD
     B --> C[Query Students Database]
     C --> D[Apply Grade Level Filter]
     
-    D --> E[WHERE grade_level IN (6, 7, 8)]
+    D --> E[WHERE grade_level IN 6 7 8]
     E --> F[AND active = true]
     F --> G[ORDER BY last_name, first_name]
     
@@ -172,7 +172,7 @@ sequenceDiagram
     V->>V: Check for duplicates
     V->>DB: Insert valid records only
     DB->>A: Return import summary
-    A->>A: Display: "159 students imported"
+    A->>A: Display 159 students imported
     Note over A: Show any excluded records
 ```
 

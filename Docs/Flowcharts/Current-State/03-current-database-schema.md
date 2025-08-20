@@ -129,7 +129,7 @@ sequenceDiagram
     Q->>DB: JOIN students + queue_items
     Note over DB: Field name mismatches
     DB->>Q: Return incomplete data
-    Q->>UI: Display "Unknown Student" in queue
+    Q->>UI: Display Unknown Student in queue
 ```
 
 ## Row Level Security Status
