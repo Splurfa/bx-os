@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { TouchOptimizedButton } from "@/components/TouchOptimizedButton";
-import { useSupabaseQueue } from "../hooks/useSupabaseQueue";
+import { useKioskQueue } from "../hooks/useKioskQueue";
 import { useKiosks } from "@/contexts/KioskContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -45,7 +45,7 @@ const KioskOne = () => {
     getFirstWaitingStudentForKiosk, 
     submitReflection,
     updateStudentKioskStatus
-  } = useSupabaseQueue();
+  } = useKioskQueue();
   
   const [kioskState, setKioskState] = useState<'setup' | 'welcome' | 'password' | 'reflection' | 'completed'>('setup');
   const [passwordInput, setPasswordInput] = useState('');
