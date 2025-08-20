@@ -84,7 +84,8 @@ export const useSupabaseQueue = () => {
           *,
           student:students(*),
           reflection:reflections(*)
-        `);
+        `)
+        .neq('status', 'completed'); // Exclude completed items from queue display
 
       // Filter by teacher if not admin
       if (profile?.role === 'teacher') {
@@ -263,6 +264,15 @@ export const useSupabaseQueue = () => {
   // Approve reflection
   const approveReflection = async (behaviorRequestId: string) => {
     try {
+      // Get the behavior request data first
+      const { data: behaviorRequest } = await supabase
+        .from('behavior_requests')
+        .select('*')
+        .eq('id', behaviorRequestId)
+        .single();
+
+      if (!behaviorRequest) throw new Error('Behavior request not found');
+
       // Update reflection to approved
       const { error: reflectionError } = await supabase
         .from('reflections')
@@ -274,13 +284,30 @@ export const useSupabaseQueue = () => {
 
       if (reflectionError) throw reflectionError;
 
-      // Archive the behavior request
-      const { error: archiveError } = await supabase
+      // Create behavior history record
+      const { error: historyError } = await supabase
+        .from('behavior_history')
+        .insert({
+          behavior_request_id: behaviorRequestId,
+          student_id: behaviorRequest.student_id,
+          resolution_type: 'approved',
+          resolution_notes: 'Reflection approved by teacher',
+          completed_at: new Date().toISOString(),
+          archived_at: new Date().toISOString()
+        });
+
+      if (historyError) throw historyError;
+
+      // Update behavior request status to completed
+      const { error: updateError } = await supabase
         .from('behavior_requests')
-        .delete()
+        .update({ 
+          status: 'completed',
+          updated_at: new Date().toISOString()
+        })
         .eq('id', behaviorRequestId);
 
-      if (archiveError) throw archiveError;
+      if (updateError) throw updateError;
 
       toast({
         title: "Reflection Approved",
