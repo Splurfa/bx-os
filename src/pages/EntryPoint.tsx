@@ -189,23 +189,13 @@ const EntryPoint = () => {
                   <span>✓ Available</span>
                 </div>
               </div>
-              {user ? (
-                <Button 
-                  onClick={handleKioskAccess}
-                  className="w-full group-hover:scale-105 transition-transform"
-                  variant="secondary"
-                >
-                  Access Student Kiosk
-                </Button>
-              ) : (
-                <Button 
-                  onClick={() => navigate("/auth")}
-                  className="w-full group-hover:scale-105 transition-transform"
-                  variant="secondary"
-                >
-                  Sign In for Kiosk Access
-                </Button>
-              )}
+              <Button 
+                onClick={handleKioskAccess}
+                className="w-full group-hover:scale-105 transition-transform"
+                variant="secondary"
+              >
+                Access Student Kiosk
+              </Button>
             </CardContent>
           </Card>
         </div>
