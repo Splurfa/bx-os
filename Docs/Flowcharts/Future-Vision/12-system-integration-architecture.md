@@ -4,7 +4,7 @@
 
 ## Student Information System Integration
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[BX-OS System] --> B[SIS Integration Layer]
     B --> C[Student Data Sync]
@@ -31,11 +31,11 @@ flowchart TD
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style P fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style Q fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Communication Platform Integration
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[BX-OS Notifications] --> B[Multi-Channel Communication]
     B --> C[Email Integration]
@@ -63,11 +63,11 @@ flowchart TD
     style J fill:#ffebee,stroke:#d32f2f,stroke-width:2px
     style M fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style P fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-</lov-mermaid>
+```
 
 ## District-Wide Analytics Integration
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[School-Level BX-OS] --> B[District Analytics Hub]
     B --> C[Multi-School Comparison]
@@ -94,11 +94,11 @@ flowchart TD
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style P fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style Q fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Mental Health & Counseling Integration
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[BX-OS Risk Detection] --> B[Mental Health Alert System]
     B --> C[School Counselor Dashboard]
@@ -126,11 +126,11 @@ flowchart TD
     style O fill:#fff3e0,stroke:#ff9800,stroke-width:2px
     style P fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style Q fill:#ffebee,stroke:#d32f2f,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Professional Development Integration
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Teacher Performance Data] --> B[PD Recommendation Engine]
     B --> C[Skill Gap Analysis]
@@ -157,11 +157,11 @@ flowchart TD
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style P fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style Q fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-</lov-mermaid>
+```
 
 ## State Reporting & Compliance Integration
 
-<lov-mermaid>
+```mermaid
 sequenceDiagram
     participant BX as BX-OS
     participant SR as State Reporting
@@ -180,7 +180,7 @@ sequenceDiagram
     
     Note over SR: Automated compliance validation
     SR->>BX: Compliance status update
-</lov-mermaid>
+```
 
 ## Foundation Dependencies
 

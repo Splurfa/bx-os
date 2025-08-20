@@ -4,7 +4,7 @@
 
 ## Student Behavior Support Journey
 
-<lov-mermaid>
+```mermaid
 journey
     title Complete Student Behavior Support Journey
     section Incident Occurs
@@ -32,7 +32,7 @@ journey
       Teacher monitors progress: 4: Teacher
       Family receives communication: 3: Family
       Growth documented in system: 5: System
-</lov-mermaid>
+```
 
 ## Detailed Student Experience Flow
 

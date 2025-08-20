@@ -4,7 +4,7 @@
 
 ## AI-Powered Behavior Analysis
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Student BSR Data] --> B[AI Analysis Engine]
     B --> C[Natural Language Processing]
@@ -32,11 +32,11 @@ flowchart TD
     style J fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style L fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style P fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Predictive Intervention System
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Historical BSR Data] --> B[Machine Learning Model]
     B --> C[Risk Assessment Algorithm]
@@ -68,11 +68,11 @@ flowchart TD
     style I fill:#ffebee,stroke:#d32f2f,stroke-width:2px
     style J fill:#fff3e0,stroke:#ff9800,stroke-width:2px
     style K fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Behavioral Trend Dashboard
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Analytics Dashboard] --> B[School-Wide Trends]
     B --> C[Grade-Level Analysis]
@@ -107,11 +107,11 @@ flowchart TD
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style P fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style S fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Individual Student Analytics
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Individual Student Profile] --> B[Behavioral History Analysis]
     B --> C[Trigger Pattern Identification]
@@ -148,11 +148,11 @@ flowchart TD
     style R fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style S fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style T fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-</lov-mermaid>
+```
 
 ## AI-Generated Insights
 
-<lov-mermaid>
+```mermaid
 sequenceDiagram
     participant BSR as BSR System
     participant AI as AI Engine
@@ -171,7 +171,7 @@ sequenceDiagram
     Note over AI: Real-time pattern recognition
     Note over T: Actionable intervention suggestions
     Note over A: School-wide trend updates
-</lov-mermaid>
+```
 
 ## Foundation Dependencies
 

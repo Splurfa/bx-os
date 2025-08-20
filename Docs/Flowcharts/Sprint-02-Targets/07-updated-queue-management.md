@@ -4,7 +4,7 @@
 
 ## Target Queue Management Flow
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Teacher Creates BSR] --> B[Student Added to Queue]
     B --> C[Queue Position Calculated]
@@ -31,11 +31,11 @@ flowchart TD
     style K fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style L fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style M fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Fixed Student Data Display
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Queue Display Component] --> B[Fetch Queue Items]
     B --> C[JOIN with Students Table]
@@ -55,11 +55,11 @@ flowchart TD
     style I fill:#fff3e0,stroke:#ff9800,stroke-width:2px
     style J fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
     style K fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Real-time Queue Updates
 
-<lov-mermaid>
+```mermaid
 sequenceDiagram
     participant T as Teacher Dashboard
     participant Q as Queue System
@@ -78,11 +78,11 @@ sequenceDiagram
     DB->>RT: ✅ Trigger real-time update
     RT->>T: Update queue display
     RT->>K: Auto-assign next student
-</lov-mermaid>
+```
 
 ## Queue Position Management
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[New BSR Created] --> B[Calculate Queue Position]
     B --> C{Other Students Waiting?}
@@ -104,11 +104,11 @@ flowchart TD
     style E fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style J fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style L fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Kiosk Assignment Logic
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Student Ready for Assignment] --> B{Check Available Kiosks}
     B --> C[Kiosk 1 (/kiosk1)]
@@ -142,11 +142,11 @@ flowchart TD
     style O fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style P fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style Q fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Fixed Student Lookup System
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Student Search/Display] --> B[Query Students Table]
     B --> C[✅ Correct Field Mapping]
@@ -171,7 +171,7 @@ flowchart TD
     style E fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style H fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style N fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Implementation Status
 

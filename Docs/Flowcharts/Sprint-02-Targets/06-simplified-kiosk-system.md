@@ -4,7 +4,7 @@
 
 ## Target Kiosk Architecture
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[159 Middle School Students] --> B[3 Dedicated iPads]
     
@@ -33,11 +33,11 @@ flowchart TD
     style L fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style M fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style N fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Queue-Based Student Assignment Flow
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Teacher Creates BSR] --> B[Student Added to Queue]
     B --> C[Queue Position Assigned]
@@ -66,11 +66,11 @@ flowchart TD
     style L fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style M fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style N fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Anonymous Access Implementation
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Student Accesses iPad] --> B[Navigate to assigned URL]
     B --> C[/kiosk1, /kiosk2, or /kiosk3]
@@ -93,11 +93,11 @@ flowchart TD
     style E fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style H fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style L fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Conflict Prevention System
 
-<lov-mermaid>
+```mermaid
 sequenceDiagram
     participant K1 as Kiosk 1
     participant K2 as Kiosk 2
@@ -117,11 +117,11 @@ sequenceDiagram
     Q->>K2: Assign Student B
     
     Note over K1,K2: ✅ No conflicts - different students assigned
-</lov-mermaid>
+```
 
 ## Middle School Student Filtering
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[All Students in Database] --> B[Grade Level Filter]
     B --> C{Grade Level}
@@ -143,7 +143,7 @@ flowchart TD
     style H fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style I fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style J fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Implementation Status
 

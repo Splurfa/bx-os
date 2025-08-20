@@ -4,7 +4,7 @@
 
 ## Target Student Population Management
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[All Students in Database] --> B[Grade Level Filter]
     B --> C{Grade Level Check}
@@ -29,11 +29,11 @@ flowchart TD
     style I fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style J fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style K fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Student Data Import and Validation
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[CSV Import: hillel_students_2025.csv] --> B[Data Validation]
     B --> C{Grade Level Validation}
@@ -60,11 +60,11 @@ flowchart TD
     style I fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style J fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style M fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Student Selection Interface
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Teacher Creates BSR] --> B[Student Selection Component]
     B --> C[Query Students Database]
@@ -95,11 +95,11 @@ flowchart TD
     style H fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style N fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style P fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Grade-Based Dashboard Analytics
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Admin Dashboard] --> B[Student Analytics]
     B --> C[Grade Level Breakdown]
@@ -125,11 +125,11 @@ flowchart TD
     style F fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style J fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style K fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Homeroom Teacher Integration
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Student Data] --> B[Homeroom Teacher Field]
     B --> C[Teacher Dashboard Filter]
@@ -153,11 +153,11 @@ flowchart TD
     style I fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style K fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style L fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Data Quality Validation
 
-<lov-mermaid>
+```mermaid
 sequenceDiagram
     participant CSV as CSV File
     participant I as Import System
@@ -174,7 +174,7 @@ sequenceDiagram
     DB->>A: Return import summary
     A->>A: Display: "159 students imported"
     Note over A: Show any excluded records
-</lov-mermaid>
+```
 
 ## Implementation Status
 

@@ -4,7 +4,7 @@
 
 ## Enhanced Kiosk Management System
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[School Administration] --> B[Dynamic Kiosk Management]
     B --> C[Add/Remove Kiosk Stations]
@@ -30,11 +30,11 @@ flowchart TD
     style D fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style G fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style N fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Advanced Queue Intelligence
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Intelligent Queue System] --> B[Priority-Based Assignment]
     B --> C[Student Priority Levels]
@@ -61,11 +61,11 @@ flowchart TD
     style B fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style M fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style N fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Enhanced Analytics & Reporting
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Advanced Analytics Engine] --> B[Real-time Dashboards]
     B --> C[Kiosk Utilization Metrics]
@@ -93,11 +93,11 @@ flowchart TD
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style P fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style Q fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Mobile Teacher Interface
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Mobile Teacher App] --> B[Quick BSR Creation]
     B --> C[Voice-to-Text Input]
@@ -124,7 +124,7 @@ flowchart TD
     style C fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style E fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Foundation Dependencies
 
