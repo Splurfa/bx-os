@@ -430,8 +430,18 @@ export const useSupabaseQueue = () => {
     return remainingMins > 0 ? `${diffHours}h ${remainingMins}m` : `${diffHours} hours`;
   };
 
-  // Get first waiting student for kiosk
+  // Get first waiting student for kiosk or student assigned to this kiosk
   const getFirstWaitingStudentForKiosk = (kioskId: number) => {
+    // First check if there's a student already assigned to this specific kiosk
+    const assignedToKiosk = items.find(item => 
+      item.status === 'active' && item.assigned_kiosk === kioskId
+    );
+    
+    if (assignedToKiosk) {
+      return assignedToKiosk;
+    }
+    
+    // If no assigned student, find first waiting student
     const waiting = items.find(item => item.status === 'waiting');
     return waiting || null;
   };
