@@ -246,10 +246,10 @@ export const useSupabaseQueue = () => {
 
       if (reflectionError) throw reflectionError;
 
-      // Update behavior request status
+      // Update behavior request status to 'review' for proper status display
       const { error: updateError } = await supabase
         .from('behavior_requests')
-        .update({ status: 'completed' })
+        .update({ status: 'review' })
         .eq('id', behaviorRequestId);
 
       if (updateError) throw updateError;

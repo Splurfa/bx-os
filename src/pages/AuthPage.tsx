@@ -21,10 +21,16 @@ const AuthPage = () => {
   const [error, setError] = useState('');
   const [routingUser, setRoutingUser] = useState(false);
 
-  // Enhanced redirect with retry logic for role fetching
+  // Prevent unwanted navigation after authentication - only route initially
   useEffect(() => {
     const routeUser = async () => {
       if (!user || routingUser) return;
+      
+      // Only route if we're actually on the auth page (prevents navigation from other pages)
+      if (window.location.pathname !== '/auth' && window.location.pathname !== '/login') {
+        console.log('🛑 Skipping navigation - user not on auth page:', window.location.pathname);
+        return;
+      }
       
       setRoutingUser(true);
       console.log('🔄 Routing user:', user.email, 'ID:', user.id);

@@ -79,11 +79,11 @@ const QueueDisplay = React.memo(({
       // Include active students (assigned to kiosks)
       if (item.status === 'active') return true;
       
-      // Include students ready for review
+      // Include students ready for review (reflection submitted, needs approval)
       if (item.status === 'review') return true;
       
       // Include completed students who need revision
-      if (item.status === 'completed' && item.reflection?.status === 'revision_requested') return true;
+      if (item.status === 'completed' && item.reflection?.revision_requested) return true;
       
       // Exclude all other completed students
       return false;
