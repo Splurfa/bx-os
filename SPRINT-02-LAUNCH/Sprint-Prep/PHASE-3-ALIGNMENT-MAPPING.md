@@ -1,214 +1,181 @@
-# Phase 3: Technical Alignment Mapping - SPRINT-02-LAUNCH
+# Phase 3: Current State → Sprint Target Alignment Mapping
 
-## 🗺️ TECHNICAL DEPENDENCY ARCHITECTURE
+## 🗺️ COMPREHENSIVE ALIGNMENT MATRIX
 
-### Implementation Sequence Requirements
+### Mapping Methodology
+Current State (Validated) → Implementation Gap → Sprint Target → Success Criteria
 
-**FOUNDATION-FIRST APPROACH:** Changes must be implemented in specific order to maintain system integrity during simplification process.
+## 📊 COMPONENT-LEVEL ALIGNMENT MAPPING
 
-## 📋 PHASE-BY-PHASE DEPENDENCY MAPPING
+### Authentication & Authorization System
 
-### Phase 1: Security & Grade Filtering (Prerequisites: None)
-```
-Database Policy Updates
-├── Update RLS policies for anonymous kiosk access
-├── Implement grade-level filtering (6th-8th only)
-└── Validate policy effectiveness
+**Current State (✅ VALIDATED FUNCTIONAL)**
+```typescript
+// AdminRoute: Role-based protection operational  
+if (profile.role !== 'admin' && profile.role !== 'super_admin') {
+  return <Navigate to="/teacher" replace />;
+}
 
-Route Protection Validation  
-├── Test AdminRoute component functionality
-├── Test TeacherRoute component functionality  
-└── Verify anonymous access to kiosk routes
+// TeacherRoute: Multi-role access functional
+if (profile.role !== 'teacher' && profile.role !== 'admin' && profile.role !== 'super_admin') {
+  return <Navigate to="/auth" replace />;
+}
 
-Authentication Integration Testing
-├── Google OAuth flow validation
-├── Role assignment verification
-└── Session management correlation
-```
-
-**Dependencies:** Independent phase - can begin immediately  
-**Validation Required:** Authentication boundaries work correctly before proceeding
-
-### Phase 2: Kiosk Simplification (Prerequisites: Phase 1 Complete)
-```
-Static URL Implementation
-├── Update route configuration for /kiosk/1, /kiosk/2, /kiosk/3
-├── Remove dynamic device assignment logic
-└── Update kiosk component routing
-
-Device Management Cleanup
-├── Remove device fingerprinting code
-├── Eliminate complex session correlation
-└── Clean up unused device detection components
-
-Admin Dashboard Updates
-├── Display static URLs for tech team
-├── Remove dynamic device management UI
-└── Update system configuration interface
+// usePermissions: Component authorization framework operational
+export const usePermissions = () => {
+  return { hasRole, canPerformAction, isAdmin, canViewAllQueues... }
+}
 ```
 
-**Dependencies:** Authentication system must be stable from Phase 1  
-**Risk Mitigation:** Test static routing before removing dynamic components
+**Gap Analysis**: No gaps - system fully functional
+**Sprint Target**: Maintain existing functionality, add testing validation  
+**Success Criteria**: All role-based access continues working under load testing
 
-### Phase 3: Queue Management Fixes (Prerequisites: Phase 2 Complete)
-```
-Admin Function Debugging
-├── Debug admin_clear_all_queues() function
-├── Test queue clearing with history preservation
-└── Validate admin queue management functions
+### Database Schema & Student Management
 
-Student Data Mapping
-├── Fix student lookup field references
-├── Validate first_name/last_name usage
-└── Test student selection workflow
-
-Real-time Update Validation
-├── Test queue updates across interfaces
-├── Validate Supabase subscription functionality
-└── Confirm multi-session synchronization
+**Current State (⚠️ PARTIAL - Missing Columns)**
+```sql
+-- EXISTS: Students table with basic structure
+-- MISSING: Grade level filtering capabilities
+-- MISSING: Active status management
 ```
 
-**Dependencies:** Simplified routing must be stable from Phase 2  
-**Integration Points:** Queue functionality depends on student data integrity
-
-### Phase 4: Data Integration Preparation (Prerequisites: Phase 3 Complete)
-```
-Student Data Filtering
-├── Filter dataset to middle school only (6th-8th grade)
-├── Validate student record completeness
-└── Test filtered data in kiosk selection
-
-Schema Validation
-├── Confirm database schema ready for integration
-├── Test foreign key relationships
-└── Validate data integrity constraints
-
-Integration Point Documentation
-├── Document data import requirements
-├── Map integration touchpoints
-└── Prepare for school system data enrichment
+**Implementation Gap**:
+```sql
+-- REQUIRED: Add filtering columns
+ALTER TABLE students ADD COLUMN grade_level TEXT CHECK (grade_level IN ('6','7','8'));
+ALTER TABLE students ADD COLUMN active BOOLEAN DEFAULT true;
 ```
 
-**Dependencies:** All core functionality must be stable before data preparation  
-**Future Integration:** Sets foundation for external system connections
+**Sprint Target**: Complete schema with grade filtering + populate 159 students
+**Success Criteria**: Query returns exactly 159 active middle school students
 
-## 🔗 COMPONENT INTEGRATION MATRIX
+### Kiosk System & Queue Management
 
-### Critical Component Relationships
+**Current State (✅ INFRASTRUCTURE READY)**
+- Kiosk components exist: `/kiosk1`, `/kiosk2`, `/kiosk3` routes operational
+- Queue infrastructure: QueueDisplay, useSupabaseQueue hooks functional
+- Anonymous routing: Kiosk pages accessible without authentication
 
-#### Authentication Flow Dependencies
-```
-Google OAuth → Profile Creation → Role Assignment → Route Protection
-     ↓              ↓                 ↓               ↓
-   Session      User Record      Permission      Protected Access
-  Tracking      Management        System          Validation
-```
+**Gap Analysis**: Infrastructure complete, needs assignment logic validation
+**Sprint Target**: Validate queue-based assignment and real-time updates
+**Success Criteria**: Students auto-assigned to available kiosks, queue updates in real-time
 
-#### Kiosk Workflow Dependencies  
-```
-Static URL → Anonymous Access → Student Selection → Queue Entry
-     ↓             ↓                   ↓              ↓
-   Routing      No Auth          Grade Filter    Real-time
-  Config       Barriers         (6th-8th)        Updates
-```
+## 🔧 TECHNICAL STACK ALIGNMENT
 
-#### Queue Management Dependencies
-```
-Student Data → Queue Operations → Real-time Updates → Admin Functions
-     ↓              ↓                    ↓               ↓
-   Field          CRUD              Supabase         Clear/Manage
-  Mapping        Operations        Subscriptions      Functions
-```
+### Frontend Architecture (✅ COMPLETE)
+| Component Type | Current Status | Gap | Target | Validation |
+|---------------|----------------|-----|---------|------------|
+| Route Protection | ✅ Working | None | Maintain | Load testing |
+| UI Components | ✅ Functional | Minor polish | Enhance UX | User testing |  
+| State Management | ✅ Operational | Queue testing | Validate | Integration tests |
+| Real-time Updates | ✅ Configured | Load testing | Optimize | Performance tests |
 
-## ⚠️ RISK ASSESSMENT & MITIGATION
+### Backend Integration (✅ MOSTLY COMPLETE)
+| System | Current Status | Gap | Target | Implementation |
+|--------|----------------|-----|---------|----------------|
+| Supabase Client | ✅ Connected | None | Maintain | Monitoring |
+| Authentication | ✅ Google OAuth | None | Maintain | Security audit |  
+| Database Policies | ✅ RLS Active | Testing needed | Validate | Policy review |
+| Real-time Subs | ✅ Configured | Load validation | Optimize | Stress testing |
 
-### High-Risk Integration Points
+## 📋 WORKFLOW ALIGNMENT MATRIX
 
-#### Authentication/Authorization Boundary
-**Risk:** Simplifying authentication might break admin/teacher protection  
-**Mitigation:** Test role-based access thoroughly after each phase  
-**Validation:** Attempt unauthorized access to protected routes
+### Teacher Workflow Mapping
+**Current State → Gap → Target → Success Metric**
 
-#### Real-time Queue Updates
-**Risk:** Queue synchronization might break during simplification  
-**Mitigation:** Test multi-session updates after routing changes  
-**Validation:** Open multiple browser windows, verify live updates
+1. **Login & Authentication**
+   - Current: ✅ Google OAuth working, role assignment functional
+   - Gap: None identified  
+   - Target: Maintain reliability
+   - Success: 100% login success rate
 
-#### Student Data Integrity
-**Risk:** Student filtering might corrupt existing data relationships  
-**Mitigation:** Backup data before filtering, test referential integrity  
-**Validation:** Verify BSR workflow maintains data correlation
+2. **Student Selection**  
+   - Current: ⚠️ Student components exist but missing grade filtering
+   - Gap: Database columns for grade_level filtering
+   - Target: Filter to 159 middle school students only
+   - Success: Only 6th-8th grade students appear in selection
 
-### Medium-Risk Dependencies
+3. **BSR Creation**
+   - Current: ✅ CreateBSRForm component functional
+   - Gap: End-to-end testing needed
+   - Target: Validate complete workflow  
+   - Success: BSR creation → queue → assignment works 100%
 
-#### Static URL Routing
-**Risk:** Route changes might break existing bookmarks or integrations  
-**Mitigation:** Implement redirects from old routes if they exist  
-**Validation:** Test direct navigation to all kiosk URLs
+4. **Queue Monitoring**
+   - Current: ✅ QueueDisplay component exists, real-time subscriptions active
+   - Gap: Multi-teacher concurrent access testing
+   - Target: Reliable real-time updates across sessions
+   - Success: Queue changes sync within 1 second across all teacher sessions
 
-#### Device Session Cleanup
-**Risk:** Removing session tracking might affect analytics or audit trails  
-**Mitigation:** Preserve essential session data, document what's removed  
-**Validation:** Verify admin dashboard shows appropriate session information
+### Student Workflow Mapping  
+**Current State → Gap → Target → Success Metric**
 
-## 🔧 TECHNICAL CONSTRAINT MAPPING
+1. **Kiosk Access**
+   - Current: ✅ Kiosk components exist, anonymous routing functional
+   - Gap: Queue assignment logic validation
+   - Target: Automatic assignment to available kiosk
+   - Success: Students reach assigned kiosk without authentication barriers
 
-### Database Constraints
-- **RLS Policies**: Must maintain data security during simplification
-- **Foreign Keys**: Preserve referential integrity during data filtering
-- **Real-time Subscriptions**: Keep Supabase channels functional during changes
+2. **BSR Completion**
+   - Current: ✅ Kiosk workflow components exist (MoodSlider, BehaviorSelection, etc.)
+   - Gap: Complete workflow testing
+   - Target: Smooth progression through all steps
+   - Success: 95% completion rate without assistance
 
-### Frontend Constraints
-- **React Router**: Maintain clean routing while simplifying URL structure
-- **State Management**: Preserve component state during architecture changes
-- **Mobile Responsiveness**: Ensure iPad compatibility throughout changes
+3. **Queue Progression**  
+   - Current: ✅ Queue infrastructure exists
+   - Gap: Auto-progression testing
+   - Target: Automatic next student assignment
+   - Success: Queue automatically assigns next student after completion
 
-### Integration Constraints
-- **Supabase Client**: Maintain database connection stability
-- **Authentication Provider**: Keep Google OAuth functional during changes
-- **Real-time Features**: Preserve live update functionality
+### Admin Workflow Mapping
+**Current State → Gap → Target → Success Metric**
 
-## 📊 VALIDATION CHECKPOINT MATRIX
+1. **Dashboard Access**  
+   - Current: ✅ AdminRoute protection working, AdminDashboard functional
+   - Gap: None identified
+   - Target: Maintain secure access
+   - Success: Only admin/super_admin users can access
 
-### Phase 1 Validation Gates
-- [ ] Anonymous users can access `/kiosk/1`, `/kiosk/2`, `/kiosk/3`
-- [ ] Admin users can access `/admin` dashboard
-- [ ] Teacher users can access `/teacher` dashboard  
-- [ ] Admin users cannot access non-admin functions
-- [ ] Only 6th-8th grade students appear in kiosk selection
+2. **Queue Management**
+   - Current: ✅ Admin functions exist, queue clearing capabilities present
+   - Gap: Concurrent usage testing  
+   - Target: Reliable admin functions during active use
+   - Success: Queue operations work while teachers/students actively using system
 
-### Phase 2 Validation Gates
-- [ ] Static URLs route correctly to kiosk components
-- [ ] Device fingerprinting code removed without breaking functionality
-- [ ] Admin dashboard displays static URLs for tech team
-- [ ] Kiosk workflow functions identically to previous version
+3. **User Management**
+   - Current: ✅ UserManagement component exists, role-based permissions working
+   - Gap: None identified for current scope
+   - Target: Maintain functionality
+   - Success: User role management continues working properly
 
-### Phase 3 Validation Gates
-- [ ] `admin_clear_all_queues()` function works reliably
-- [ ] Student lookup uses correct field mappings
-- [ ] Real-time queue updates sync across browser windows
-- [ ] Queue operations preserve BSR workflow functionality
+## 🎯 SPRINT EXECUTION PATHWAY
 
-### Phase 4 Validation Gates
-- [ ] Student data filtered to middle school only
-- [ ] Database schema validated for future integration
-- [ ] Complete student workflow tested end-to-end
-- [ ] Integration points documented and validated
+### Phase 1: Database Schema Completion (1 hour)
+**Input**: Current students table without filtering columns
+**Process**: Add grade_level and active columns with proper constraints
+**Output**: Database schema ready for student data import
+**Validation**: Query can filter by grade level and active status
 
-## 🎯 SUCCESS INTEGRATION CRITERIA
+### Phase 2: Student Data Population (1 hour)  
+**Input**: CSV file with 159 middle school students
+**Process**: Import with grade level validation and active status setting
+**Output**: Populated students table with accurate filtering
+**Validation**: Exactly 159 active students in grades 6-8 available for selection
 
-### Technical Success Metrics
-- **Performance**: Page load times under 3 seconds for all interfaces
-- **Reliability**: No critical errors during normal operation
-- **Scalability**: System handles 159 concurrent students efficiently
-- **Maintainability**: Simplified codebase easier to debug and enhance
+### Phase 3: End-to-End Workflow Testing (2 hours)
+**Input**: Functional components and populated data  
+**Process**: Complete BSR creation → queue assignment → kiosk completion workflow
+**Output**: Validated system functionality across all user roles
+**Validation**: All workflows complete successfully under normal and concurrent usage
 
-### Functional Success Metrics
-- **User Experience**: Predictable, consistent access for all user types
-- **Data Integrity**: All student and queue operations preserve data relationships
-- **Security**: Role-based access control functions correctly
-- **Integration Readiness**: Clean foundation for future school system connections
+### Phase 4: Performance & Load Validation (1 hour)
+**Input**: Working system with test data
+**Process**: Concurrent teacher access, multiple kiosk sessions, admin operations
+**Output**: Performance benchmarks and reliability confirmation
+**Validation**: System maintains responsiveness and data integrity under expected load
 
 ---
 
-**ALIGNMENT MAPPING CONCLUSION**: Implementation sequence designed to maintain system stability while systematically simplifying architecture. Each phase builds on validated functionality from previous phases, ensuring reliable operation throughout transition process.
+**ALIGNMENT CONCLUSION**: Strong alignment between current functional state and sprint targets. Most work involves validation and testing rather than new development. High confidence in successful sprint completion within 4-5 hour timeframe.
