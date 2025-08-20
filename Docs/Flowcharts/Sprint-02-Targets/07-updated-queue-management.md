@@ -39,15 +39,15 @@ flowchart TD
 flowchart TD
     A[Queue Display Component] --> B[Fetch Queue Items]
     B --> C[JOIN with Students Table]
-    C --> D[✅ Use Correct Field Names]
+    C --> D[Use Correct Field Names]
     D --> E[first_name + last_name]
     E --> F[Display Full Student Names]
     
     F --> G[Queue Item Status]
     G --> H{Status Type}
-    H -->|pending| I[🟡 Waiting for Kiosk]
-    H -->|assigned| J[🔵 Currently Reflecting]  
-    H -->|completed| K[🟢 Ready for Review]
+    H -->|pending| I[Waiting for Kiosk]
+    H -->|assigned| J[Currently Reflecting]  
+    H -->|completed| K[Ready for Review]
     
     style D fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style E fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
@@ -69,13 +69,13 @@ sequenceDiagram
 
     T->>Q: Create new BSR
     Q->>DB: Insert queue_item
-    DB->>RT: ✅ Trigger real-time update
+    DB->>RT: Trigger real-time update
     RT->>T: Update queue display
     RT->>K: Notify of new student
     
     K->>Q: Student completes BSR
     Q->>DB: Update queue_item status
-    DB->>RT: ✅ Trigger real-time update
+    DB->>RT: Trigger real-time update
     RT->>T: Update queue display
     RT->>K: Auto-assign next student
 ```
@@ -119,14 +119,14 @@ flowchart TD
     D --> G{Currently Assigned Student?}
     E --> H{Currently Assigned Student?}
     
-    F -->|No| I[✅ Assign to Kiosk 1]
-    F -->|Yes| J[❌ Kiosk 1 Busy]
+    F -->|No| I[Assign to Kiosk 1]
+    F -->|Yes| J[Kiosk 1 Busy]
     
-    G -->|No| K[✅ Assign to Kiosk 2]
-    G -->|Yes| L[❌ Kiosk 2 Busy]
+    G -->|No| K[Assign to Kiosk 2]
+    G -->|Yes| L[Kiosk 2 Busy]
     
-    H -->|No| M[✅ Assign to Kiosk 3]
-    H -->|Yes| N[❌ Kiosk 3 Busy]
+    H -->|No| M[Assign to Kiosk 3]
+    H -->|Yes| N[Kiosk 3 Busy]
     
     I --> O[Update queue_item: assigned_to = 'kiosk1']
     K --> P[Update queue_item: assigned_to = 'kiosk2']
@@ -149,7 +149,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A[Student Search/Display] --> B[Query Students Table]
-    B --> C[✅ Correct Field Mapping]
+    B --> C[Correct Field Mapping]
     C --> D[first_name: string]
     C --> E[last_name: string]
     C --> F[student_id: string]
@@ -164,7 +164,7 @@ flowchart TD
     I --> L[Student ID: 12345]
     J --> M[Grade 7 Student]
     
-    K --> N[✅ No More "Unknown Student"]
+    K --> N[No More "Unknown Student"]
     
     style C fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style D fill:#e8f5e8,stroke:#4caf50,stroke-width:2px

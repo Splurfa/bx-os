@@ -74,7 +74,7 @@ flowchart TD
 flowchart TD
     A[Student Accesses iPad] --> B[Navigate to assigned URL]
     B --> C[/kiosk1, /kiosk2, or /kiosk3]
-    C --> D[✅ No Authentication Required]
+    C --> D[No Authentication Required]
     
     D --> E[Load Kiosk Component]
     E --> F[Fetch Assigned Student]
@@ -116,7 +116,7 @@ sequenceDiagram
     Q->>DB: Mark Student B as assigned to Kiosk 2
     Q->>K2: Assign Student B
     
-    Note over K1,K2: ✅ No conflicts - different students assigned
+    Note over K1,K2: No conflicts - different students assigned
 ```
 
 ## Middle School Student Filtering
@@ -125,10 +125,10 @@ sequenceDiagram
 flowchart TD
     A[All Students in Database] --> B[Grade Level Filter]
     B --> C{Grade Level}
-    C -->|6th Grade| D[✅ Include in Queue]
-    C -->|7th Grade| E[✅ Include in Queue]
-    C -->|8th Grade| F[✅ Include in Queue]
-    C -->|Other Grades| G[❌ Exclude from Queue]
+    C -->|6th Grade| D[Include in Queue]
+    C -->|7th Grade| E[Include in Queue]
+    C -->|8th Grade| F[Include in Queue]
+    C -->|Other Grades| G[Exclude from Queue]
     
     D --> H[Middle School Student Pool]
     E --> H

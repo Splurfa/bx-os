@@ -10,15 +10,15 @@ flowchart TD
     B -->|No| C[Redirect to /auth]
     B -->|Yes| D[ProtectedRoute Component]
     D --> E{Route Protection}
-    E --> F["/teacher → ProtectedRoute"]
-    E --> G["/admin → ProtectedRoute"] 
-    E --> H["/kiosk1,2,3 → ProtectedRoute"]
+    E --> F["/teacher to ProtectedRoute"]
+    E --> G["/admin to ProtectedRoute"] 
+    E --> H["/kiosk1,2,3 to ProtectedRoute"]
     
     F --> I[Teacher Dashboard]
     G --> J[Admin Dashboard]
-    H --> K[❌ BLOCKED: Kiosk Pages]
+    H --> K[BLOCKED: Kiosk Pages]
     
-    K --> L[❌ Students Cannot Access]
+    K --> L[Students Cannot Access]
     
     style K fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style L fill:#ffebee,stroke:#d32f2f,stroke-width:3px
@@ -34,12 +34,12 @@ flowchart TD
 flowchart TD
     A[Authenticated User] --> B[ProtectedRoute Check]
     B --> C{User Role?}
-    C --> D[❌ NO ROLE VALIDATION]
-    D --> E[Any User → Any Dashboard]
+    C --> D[NO ROLE VALIDATION]
+    D --> E["Any User to Any Dashboard"]
     
     E --> F[Teacher can access Admin Dashboard]
     E --> G[Admin can access Teacher Dashboard]
-    E --> H[❌ No Component-Level Authorization]
+    E --> H[No Component-Level Authorization]
     
     H --> I[All Functions Visible to All Users]
     I --> J[Security Risk: Unauthorized Actions]
@@ -66,10 +66,10 @@ sequenceDiagram
     U->>G: Initiate Google Login
     G->>S: Return OAuth Token
     S->>DB: Create User Record
-    Note over DB: ❌ No Profile Creation Trigger
+    Note over DB: No Profile Creation Trigger
     S->>UI: Session Created
-    UI->>UI: ❌ Role = "Unknown"
-    UI->>UI: ❌ Display Name = "Unknown User"
+    UI->>UI: Role = "Unknown"
+    UI->>UI: Display Name = "Unknown User"
     Note over UI: Session tracking shows wrong info
 ```
 

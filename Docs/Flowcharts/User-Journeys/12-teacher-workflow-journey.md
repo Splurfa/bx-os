@@ -5,33 +5,32 @@
 ## Teacher BSR Management Journey
 
 ```mermaid
-journey
-    title Teacher Behavior Support Workflow Journey
-    section Incident Response
-      Observe student behavior: 3: Teacher
-      Assess intervention need: 4: Teacher
-      Decide on BSR creation: 5: Teacher
-      Access BSR creation form: 5: Teacher
-    section BSR Creation
-      Select student from list: 5: Teacher
-      Describe behavior incident: 4: Teacher
-      Set priority level: 4: Teacher
-      Submit BSR to queue: 5: Teacher
-    section Student Assignment
-      Monitor queue status: 4: Teacher
-      Receive assignment notification: 5: Teacher
-      Track student progress: 4: Teacher
-      Receive completion alert: 5: Teacher
-    section Review & Feedback
-      Read student reflection: 4: Teacher
-      Evaluate response quality: 4: Teacher
-      Provide constructive feedback: 5: Teacher
-      Approve or request revision: 5: Teacher
-    section Follow-up & Support
-      Create growth plan: 5: Teacher, Student
-      Monitor implementation: 4: Teacher
-      Document progress: 4: Teacher
-      Communicate with family: 4: Teacher
+flowchart TD
+    A[Observe Student Behavior] --> B[Assess Intervention Need]
+    B --> C[Decide on BSR Creation]
+    C --> D[Access BSR Creation Form]
+    D --> E[Select Student from List]
+    E --> F[Describe Behavior Incident]
+    F --> G[Set Priority Level]
+    G --> H[Submit BSR to Queue]
+    H --> I[Monitor Queue Status]
+    I --> J[Receive Assignment Notification]
+    J --> K[Track Student Progress]
+    K --> L[Receive Completion Alert]
+    L --> M[Read Student Reflection]
+    M --> N[Evaluate Response Quality]
+    N --> O[Provide Constructive Feedback]
+    O --> P[Approve or Request Revision]
+    P --> Q[Create Growth Plan]
+    Q --> R[Monitor Implementation]
+    R --> S[Document Progress]
+    S --> T[Communicate with Family]
+    
+    style A fill:#ffebee,stroke:#d32f2f
+    style H fill:#e3f2fd,stroke:#2196f3
+    style L fill:#fff3e0,stroke:#ff9800
+    style O fill:#e8f5e8,stroke:#4caf50
+    style T fill:#f3e5f5,stroke:#9c27b0
 ```
 
 ## Detailed Teacher Workflow

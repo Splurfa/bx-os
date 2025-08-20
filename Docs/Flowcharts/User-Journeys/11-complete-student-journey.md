@@ -5,33 +5,32 @@
 ## Student Behavior Support Journey
 
 ```mermaid
-journey
-    title Complete Student Behavior Support Journey
-    section Incident Occurs
-      Behavior incident happens: 2: Student
-      Teacher observes behavior: 4: Teacher
-      Teacher creates BSR: 5: Teacher
-      Student added to queue: 5: System
-    section Reflection Assignment
-      Student assigned to kiosk: 5: System
-      Student receives reflection prompt: 4: Student
-      Student accesses kiosk station: 3: Student
-      System loads BSR questions: 5: System
-    section Self-Reflection Process
-      Student reads behavior description: 3: Student
-      Student reflects on actions: 4: Student
-      Student completes reflection questions: 4: Student
-      Student submits for review: 5: Student
-    section Review & Feedback
-      Teacher reviews submission: 4: Teacher
-      Teacher provides feedback: 5: Teacher
-      Student receives feedback: 4: Student
-      Resolution plan created: 5: Teacher, Student
-    section Follow-up & Growth
-      Student implements strategies: 4: Student
-      Teacher monitors progress: 4: Teacher
-      Family receives communication: 3: Family
-      Growth documented in system: 5: System
+flowchart TD
+    A[Behavior Incident Happens] --> B[Teacher Observes Behavior]
+    B --> C[Teacher Creates BSR]
+    C --> D[Student Added to Queue]
+    D --> E[Student Assigned to Kiosk]
+    E --> F[Student Receives Reflection Prompt]
+    F --> G[Student Accesses Kiosk Station]
+    G --> H[System Loads BSR Questions]
+    H --> I[Student Reads Behavior Description]
+    I --> J[Student Reflects on Actions]
+    J --> K[Student Completes Reflection Questions]
+    K --> L[Student Submits for Review]
+    L --> M[Teacher Reviews Submission]
+    M --> N[Teacher Provides Feedback]
+    N --> O[Student Receives Feedback]
+    O --> P[Resolution Plan Created]
+    P --> Q[Student Implements Strategies]
+    Q --> R[Teacher Monitors Progress]
+    R --> S[Family Receives Communication]
+    S --> T[Growth Documented in System]
+    
+    style A fill:#ffebee,stroke:#d32f2f
+    style C fill:#e3f2fd,stroke:#2196f3
+    style I fill:#e8f5e8,stroke:#4caf50
+    style N fill:#fff3e0,stroke:#ff9800
+    style T fill:#f3e5f5,stroke:#9c27b0
 ```
 
 ## Detailed Student Experience Flow

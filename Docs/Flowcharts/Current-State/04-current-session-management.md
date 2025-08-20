@@ -9,16 +9,16 @@ flowchart TD
     A[User Login] --> B[Google OAuth Success]
     B --> C[Supabase Session Created]
     C --> D{Session Object Used?}
-    D -->|No| E[❌ Session ignored]
+    D -->|No| E[Session ignored]
     D -->|Yes| F[Session Processing]
     
-    E --> G[❌ No session tracking in DB]
+    E --> G[No session tracking in DB]
     F --> H{Profile Exists?}
-    H -->|No| I[❌ Unknown User]
+    H -->|No| I[Unknown User]
     H -->|Yes| J[Proper User Display]
     
-    G --> K[❌ UI shows wrong info]
-    I --> L[❌ Device type confused with role]
+    G --> K[UI shows wrong info]
+    I --> L[Device type confused with role]
     
     style E fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style G fill:#ffebee,stroke:#d32f2f,stroke-width:3px
@@ -33,12 +33,12 @@ flowchart TD
 flowchart TD
     A[Google OAuth Success] --> B[Supabase User Created]
     B --> C{Profile Creation Trigger?}
-    C -->|Missing| D[❌ No profile record]
+    C -->|Missing| D[No profile record]
     C -->|Exists| E[Profile Created]
     
-    D --> F[❌ role = undefined]
-    D --> G[❌ display_name = "Unknown"]
-    D --> H[❌ Session shows wrong info]
+    D --> F[role = undefined]
+    D --> G[display_name = "Unknown"]
+    D --> H[Session shows wrong info]
     
     E --> I[role = assigned]
     E --> J[display_name = from OAuth]
@@ -58,11 +58,11 @@ flowchart TD
     A[SessionMonitor Component] --> B[Fetch Active Sessions]
     B --> C[useActiveSessions Hook]
     C --> D{User Profile Data?}
-    D -->|Missing| E[❌ Display "Unknown User"]
+    D -->|Missing| E[Display "Unknown User"]
     D -->|Exists| F[Display Actual Name]
     
-    E --> G[❌ Device type logic error]
-    G --> H[❌ Shows device as role]
+    E --> G[Device type logic error]
+    G --> H[Shows device as role]
     
     F --> I[Correct user information]
     I --> J[Proper session list]
@@ -78,20 +78,20 @@ flowchart TD
 flowchart TD
     A[Session Creation] --> B[Device Detection]
     B --> C{Device Type Storage}
-    C -->|Incorrect| D[❌ Stores "admin" as device_type]
+    C -->|Incorrect| D[Stores "admin" as device_type]
     C -->|Correct| E[Stores "iPad" as device_type]
     
-    D --> F[❌ device_type = "admin"]
-    D --> G[❌ device_type = "teacher"]
+    D --> F[device_type = "admin"]
+    D --> G[device_type = "teacher"]
     
     E --> H[device_type = "mobile"]
     E --> I[device_type = "desktop"]
     
-    F --> J[❌ UI: "admin device connected"]
-    G --> K[❌ UI: "teacher device connected"]
+    F --> J[UI: "admin device connected"]
+    G --> K[UI: "teacher device connected"]
     
-    H --> L[✓ UI: "mobile device connected"]
-    I --> M[✓ UI: "desktop device connected"]
+    H --> L[UI: "mobile device connected"]
+    I --> M[UI: "desktop device connected"]
     
     style D fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style F fill:#ffebee,stroke:#d32f2f,stroke-width:3px
@@ -112,8 +112,8 @@ sequenceDiagram
     SM->>AS: Fetch active sessions
     AS->>DB: Query active_sessions table
     DB->>AS: Return session data
-    Note over AS: ❌ useActiveSessions processes incorrectly
-    AS->>AS: ❌ Treats device_type as role
+    Note over AS: useActiveSessions processes incorrectly
+    AS->>AS: Treats device_type as role
     AS->>SM: Return malformed session list
     SM->>UI: Display incorrect session info
     Note over UI: Shows "admin device" instead of user name
@@ -124,12 +124,12 @@ sequenceDiagram
 ```mermaid
 flowchart TD
     A[New User Registration] --> B{Profile Creation Trigger?}
-    B -->|Missing| C[❌ Only auth record created]
+    B -->|Missing| C[Only auth record created]
     B -->|Exists| D[Profile record created]
     
-    C --> E[❌ No role assignment]
-    C --> F[❌ No display name]
-    C --> G[❌ Session tracking fails]
+    C --> E[No role assignment]
+    C --> F[No display name]
+    C --> G[Session tracking fails]
     
     D --> H[Role assigned]
     D --> I[Display name set]
@@ -147,13 +147,13 @@ flowchart TD
 ```mermaid
 flowchart TD
     A[User Login] --> B{Existing Active Session?}
-    B -->|Yes| C[❌ No deduplication logic]
+    B -->|Yes| C[No deduplication logic]
     B -->|No| D[Create new session]
     
-    C --> E[❌ Multiple active sessions]
-    E --> F[❌ Cluttered session list]
-    E --> G[❌ Cannot track real activity]
-    E --> H[❌ Wrong data displayed]
+    C --> E[Multiple active sessions]
+    E --> F[Cluttered session list]
+    E --> G[Cannot track real activity]
+    E --> H[Wrong data displayed]
     
     D --> I[Single active session]
     

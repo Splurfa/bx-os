@@ -10,9 +10,9 @@ flowchart TD
     B -->|Kiosk Routes| C[Anonymous Access]
     B -->|Dashboard Routes| D{Is Authenticated?}
     
-    C --> E[/kiosk1 → Direct Access]
-    C --> F[/kiosk2 → Direct Access]
-    C --> G[/kiosk3 → Direct Access]
+    C --> E["/kiosk1 to Direct Access"]
+    C --> F["/kiosk2 to Direct Access"]
+    C --> G["/kiosk3 to Direct Access"]
     
     D -->|No| H[Redirect to /auth]
     D -->|Yes| I{User Role?}
@@ -40,13 +40,13 @@ flowchart TD
     B --> D[TeacherRoute]
     
     C --> E{User Role Check}
-    E -->|admin| F[✅ Allow Access]
-    E -->|other| G[❌ Redirect to unauthorized]
+    E -->|admin| F[Allow Access]
+    E -->|other| G[Redirect to unauthorized]
     
     D --> H{User Role Check}
-    H -->|teacher| I[✅ Allow Access]
-    H -->|admin| J[✅ Allow Access (admin can view teacher)]
-    H -->|other| K[❌ Redirect to unauthorized]
+    H -->|teacher| I[Allow Access]
+    H -->|admin| J["Allow Access (admin can view teacher)"]
+    H -->|other| K[Redirect to unauthorized]
     
     F --> L[Admin Dashboard Functions]
     I --> M[Teacher Dashboard Functions]
@@ -73,14 +73,14 @@ flowchart TD
     E -->|BSR Creation| G{hasPermission('teacher')}
     E -->|Queue Viewing| H{hasPermission('teacher', 'admin')}
     
-    F -->|true| I[✅ Show User Management]
-    F -->|false| J[❌ Hide Component]
+    F -->|true| I[Show User Management]
+    F -->|false| J[Hide Component]
     
-    G -->|true| K[✅ Show BSR Creation]
-    G -->|false| L[❌ Hide Component]
+    G -->|true| K[Show BSR Creation]
+    G -->|false| L[Hide Component]
     
-    H -->|true| M[✅ Show Queue Display]
-    H -->|false| N[❌ Hide Component]
+    H -->|true| M[Show Queue Display]
+    H -->|false| N[Hide Component]
     
     style I fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style K fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
@@ -101,14 +101,14 @@ sequenceDiagram
     U->>G: Initiate Google Login
     G->>S: Return OAuth Token
     S->>S: Create User Record
-    S->>T: ✅ Trigger: on_auth_user_created
+    S->>T: Trigger: on_auth_user_created
     T->>P: Create profile record
     T->>P: Set display_name from OAuth
     T->>P: Set default role = 'teacher'
     S->>UI: Session Created
     UI->>P: Fetch user profile
     P->>UI: Return complete profile
-    UI->>UI: ✅ Display actual name and role
+    UI->>UI: Display actual name and role
 ```
 
 ## Implementation Status

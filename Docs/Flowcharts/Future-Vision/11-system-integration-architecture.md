@@ -111,7 +111,7 @@ flowchart TD
     
     D --> I[Secure Therapist Communication]
     D --> J[Treatment Plan Coordination]
-    D --> K[Progress Sharing (with consent)]
+    D --> K["Progress Sharing (with consent)"]
     
     E --> L[Emergency Response Team Alert]
     E --> M[Parent/Guardian Immediate Contact]

@@ -12,7 +12,7 @@ flowchart TD
     C -->|grade_level = 6| D[6th Grade Students]
     C -->|grade_level = 7| E[7th Grade Students]
     C -->|grade_level = 8| F[8th Grade Students]
-    C -->|grade_level != 6,7,8| G[❌ Exclude from System]
+    C -->|grade_level != 6,7,8| G[Exclude from System]
     
     D --> H[Middle School Pool]
     E --> H
@@ -38,8 +38,8 @@ flowchart TD
     A[CSV Import: hillel_students_2025.csv] --> B[Data Validation]
     B --> C{Grade Level Validation}
     
-    C -->|Valid (6,7,8)| D[✅ Import Student]
-    C -->|Invalid (other)| E[❌ Skip Student]
+    C -->|Valid (6,7,8)| D[Import Student]
+    C -->|Invalid (other)| E[Skip Student]
     
     D --> F[Create Student Record]
     F --> G[Assign Middle School Flag]

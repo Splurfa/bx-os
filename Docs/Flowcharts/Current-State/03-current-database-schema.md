@@ -85,22 +85,22 @@ erDiagram
 flowchart TD
     A[Google OAuth User] --> B[auth.users table]
     B --> C{Profile Creation?}
-    C -->|Missing| D[❌ No profiles record]
+    C -->|Missing| D[No profiles record]
     C -->|Exists| E[profiles table]
     
-    D --> F[❌ role = null]
-    D --> G[❌ display_name = null]
+    D --> F[role = null]
+    D --> G[display_name = null]
     
     E --> H[Valid User Profile]
     H --> I[BSR Creation]
     H --> J[Session Tracking]
     
     I --> K{Student Lookup}
-    K -->|Field Mismatch| L[❌ Wrong field names used]
+    K -->|Field Mismatch| L[Wrong field names used]
     K -->|Correct| M[Valid BSR]
     
     J --> N{Session Display}
-    N -->|Profile Missing| O[❌ Unknown User]
+    N -->|Profile Missing| O[Unknown User]
     N -->|Profile Exists| P[Correct Display]
     
     style D fill:#ffebee,stroke:#d32f2f,stroke-width:3px
@@ -121,13 +121,13 @@ sequenceDiagram
 
     UI->>S: Search student by name
     S->>DB: Query students table
-    Note over DB: ❌ Using incorrect field mapping
+    Note over DB: Using incorrect field mapping
     DB->>S: Return wrong/no results
     S->>UI: Display incorrect student data
     
     UI->>Q: Fetch queue items
     Q->>DB: JOIN students + queue_items
-    Note over DB: ❌ Field name mismatches
+    Note over DB: Field name mismatches
     DB->>Q: Return incomplete data
     Q->>UI: Display "Unknown Student" in queue
 ```
@@ -138,16 +138,16 @@ sequenceDiagram
 flowchart TD
     A[Database Tables] --> B{RLS Enabled?}
     B -->|Yes| C[Most Tables Protected]
-    B -->|No| D[❌ Some Tables Exposed]
+    B -->|No| D[Some Tables Exposed]
     
     C --> E[profiles: Protected]
     C --> F[students: Protected]
     C --> G[behavior_support_requests: Protected]
     
-    D --> H[❌ Potential Data Exposure]
+    D --> H[Potential Data Exposure]
     
     E --> I{Policy Validation}
-    I -->|Needs Review| J[❌ May be overly permissive]
+    I -->|Needs Review| J[May be overly permissive]
     I -->|Correct| K[Proper Access Control]
     
     style D fill:#ffebee,stroke:#d32f2f,stroke-width:3px

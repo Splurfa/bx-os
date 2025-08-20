@@ -11,9 +11,9 @@ flowchart TD
     B --> D["/kiosk2"] 
     B --> E["/kiosk3"]
     
-    C --> F[❌ Multi-tab Access Possible]
-    D --> G[❌ Multi-tab Access Possible]
-    E --> H[❌ Multi-tab Access Possible]
+    C --> F[Multi-tab Access Possible]
+    D --> G[Multi-tab Access Possible]
+    E --> H[Multi-tab Access Possible]
     
     F --> I[Tab 1: Same Student]
     F --> J[Tab 2: Same Student]
@@ -47,7 +47,7 @@ sequenceDiagram
     Note over T1,T2: Both tabs show same student
     T1->>DB: Submit Student A data
     T2->>DB: Submit Student A data
-    Note over DB: ❌ Data corruption/conflict
+    Note over DB: Data corruption/conflict
 ```
 
 ## Current Kiosk Component Logic Issues
@@ -56,12 +56,12 @@ sequenceDiagram
 flowchart TD
     A[Kiosk Component Loads] --> B[Manual Student Selection]
     B --> C{Student Available?}
-    C -->|No| D[❌ No Auto-Assignment]
+    C -->|No| D[No Auto-Assignment]
     C -->|Yes| E[Manual Assignment]
     
     E --> F[Student Completes BSR]
     F --> G[Submit for Review]
-    G --> H[❌ No Auto-Progress to Next]
+    G --> H[No Auto-Progress to Next]
     
     H --> I[Manual Admin Action Required]
     I --> B
@@ -76,14 +76,14 @@ flowchart TD
 ```mermaid
 flowchart TD
     A[Device Access] --> B{Device Identified?}
-    B -->|No| C[❌ No Device Binding]
-    B -->|Yes| D[❌ No Session Binding]
+    B -->|No| C[No Device Binding]
+    B -->|Yes| D[No Session Binding]
     
-    C --> E[Multiple Devices → Same Route]
-    D --> F[Same Device → Multiple Routes]
+    C --> E["Multiple Devices to Same Route"]
+    D --> F["Same Device to Multiple Routes"]
     
-    E --> G[Conflict: Device 1 & 2 on /kiosk1]
-    F --> H[Conflict: iPad opens /kiosk1 & /kiosk2]
+    E --> G["Conflict: Device 1 & 2 on /kiosk1"]
+    F --> H["Conflict: iPad opens /kiosk1 & /kiosk2"]
     
     style C fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style D fill:#ffebee,stroke:#d32f2f,stroke-width:3px
@@ -99,14 +99,14 @@ flowchart TD
 flowchart TD
     A[Student tries to access /kiosk1] --> B[ProtectedRoute Check]
     B --> C{Is Authenticated?}
-    C -->|No| D[❌ Redirect to /auth]
+    C -->|No| D[Redirect to /auth]
     C -->|Yes| E[Access Denied - Wrong Role]
     
-    D --> F[❌ Student blocked from kiosk]
-    E --> G[❌ Student blocked from kiosk]
+    D --> F[Student blocked from kiosk]
+    E --> G[Student blocked from kiosk]
     
-    F --> H[❌ Kiosk unusable for students]
-    G --> I[❌ Security risk: Cross-user data access]
+    F --> H[Kiosk unusable for students]
+    G --> I["Security risk: Cross-user data access"]
     
     style D fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style E fill:#ffebee,stroke:#d32f2f,stroke-width:3px

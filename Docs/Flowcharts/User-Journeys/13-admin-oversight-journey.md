@@ -5,33 +5,31 @@
 ## Administrative Management Journey
 
 ```mermaid
-journey
-    title Administrative System Oversight Journey
-    section Daily Monitoring
-      Review system dashboard: 5: Admin
-      Monitor queue status: 4: Admin
-      Check kiosk availability: 4: Admin
-      Review overnight activity: 4: Admin
-    section Quality Assurance
-      Audit BSR completion rates: 5: Admin
-      Review teacher response times: 4: Admin
-      Monitor student outcomes: 5: Admin
-      Identify system bottlenecks: 4: Admin
-    section User Management
-      Manage teacher accounts: 5: Admin
-      Review user permissions: 4: Admin
-      Handle access issues: 4: Admin
-      Import new student data: 5: Admin
-    section Analytics & Reporting
-      Generate weekly reports: 5: Admin
-      Analyze behavioral trends: 5: Admin
-      Create compliance reports: 4: Admin
-      Share insights with leadership: 5: Admin
-    section System Improvement
-      Review feedback from users: 4: Admin
-      Plan system enhancements: 5: Admin
-      Coordinate professional development: 4: Admin
-      Optimize system performance: 4: Admin
+flowchart TD
+    A[Review System Dashboard] --> B[Monitor Queue Status]
+    B --> C[Check Kiosk Availability]
+    C --> D[Review Overnight Activity]
+    D --> E[Audit BSR Completion Rates]
+    E --> F[Review Teacher Response Times]
+    F --> G[Monitor Student Outcomes]
+    G --> H[Identify System Bottlenecks]
+    H --> I[Manage Teacher Accounts]
+    I --> J[Review User Permissions]
+    J --> K[Handle Access Issues]
+    K --> L[Import New Student Data]
+    L --> M[Generate Weekly Reports]
+    M --> N[Analyze Behavioral Trends]
+    N --> O[Create Compliance Reports]
+    O --> P[Share Insights with Leadership]
+    P --> Q[Review Feedback from Users]
+    Q --> R[Plan System Enhancements]
+    R --> S[Coordinate Professional Development]
+    S --> T[Optimize System Performance]
+    
+    style A fill:#e3f2fd,stroke:#2196f3
+    style M fill:#e8f5e8,stroke:#4caf50
+    style R fill:#fff3e0,stroke:#ff9800
+    style T fill:#f3e5f5,stroke:#9c27b0
 ```
 
 ## Administrative Dashboard Overview
@@ -99,9 +97,9 @@ flowchart TD
     M --> S{Status Check}
     N --> S
     O --> S
-    S -->|Available| T[✅ Ready for Assignment]
-    S -->|In Use| U[🔵 Student Reflecting]
-    S -->|Offline| V[❌ Needs Attention]
+    S -->|Available| T[Ready for Assignment]
+    S -->|In Use| U[Student Reflecting]
+    S -->|Offline| V[Needs Attention]
     
     style B fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style T fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
@@ -191,16 +189,16 @@ flowchart TD
     B --> E[Student Engagement Quality]
     
     C --> F{Completion Rate Check}
-    F -->|Above 85%| G[✅ Healthy Usage]
-    F -->|Below 85%| H[⚠️ Investigate Issues]
+    F -->|Above 85%| G[Healthy Usage]
+    F -->|Below 85%| H[Investigate Issues]
     
     D --> I{Response Time Check}
-    I -->|Under 24 hours| J[✅ Timely Reviews]
-    I -->|Over 24 hours| K[⚠️ Teacher Support Needed]
+    I -->|Under 24 hours| J[Timely Reviews]
+    I -->|Over 24 hours| K[Teacher Support Needed]
     
     E --> L{Engagement Quality}
-    L -->|High Quality| M[✅ Meaningful Reflections]
-    L -->|Low Quality| N[⚠️ Training Needed]
+    L -->|High Quality| M[Meaningful Reflections]
+    L -->|Low Quality| N[Training Needed]
     
     H --> O[Identify Barriers]
     K --> P[Teacher Support Intervention]
