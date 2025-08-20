@@ -72,12 +72,8 @@ export const KioskProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    // Only fetch kiosks when user is authenticated
-    if (!user) {
-      setLoading(false);
-      return;
-    }
-
+    // Fetch kiosks for both authenticated and anonymous users
+    // Anonymous users need basic kiosk status for kiosk access
     fetchKiosks();
 
     // Set up real-time subscription for kiosks
