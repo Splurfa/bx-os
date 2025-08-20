@@ -195,27 +195,18 @@ flowchart TD
 
 ## Teacher Experience Phases
 
-### 🔴 Phase 1: Incident Response & BSR Creation (15-30 seconds)
+### 🔴 Phase 1: Complete BSR Creation & Assignment (15-30 seconds total)
 **Teacher Experience:**
 - Observes behavior requiring immediate intervention
 - Instantly decides BSR is necessary
-- Opens app and creates BSR in 15-30 seconds total
-- Immediately sends student to kiosk
+- Opens app and locates correct student from 159 middle schoolers
+- Creates BSR description and submits to queue
+- Student immediately assigned to available kiosk and sent out
 
-**Pain Points:** Must be extremely fast during class management
-**Success Factors:** One-click BSR creation, instant student selection
+**Pain Points:** Must complete entire process extremely fast during class management
+**Success Factors:** One-click app access, smart student search, instant queue processing
 
-### 🟡 Phase 2: Student Selection & Assignment (within 15 seconds)
-**Teacher Experience:**
-- Locates correct student from 159 middle schoolers
-- Selects student and submits BSR
-- Student immediately assigned to available kiosk
-- Teacher continues with classroom instruction
-
-**Pain Points:** Must find student quickly without disrupting class
-**Success Factors:** Smart search, auto-complete, immediate queue processing
-
-### 🔵 Phase 3: Student Reflection Period (5-10 minutes)
+### 🟡 Phase 2: Student Reflection Period (5-10 minutes)
 **Teacher Experience:**
 - Continues normal classroom instruction
 - Receives real-time notification when student completes reflection
@@ -225,7 +216,7 @@ flowchart TD
 **Pain Points:** Need immediate notification when ready for review
 **Success Factors:** Real-time alerts, clear completion status
 
-### 🟢 Phase 4: Immediate Review & Approval (2-3 minutes)
+### 🔵 Phase 3: Immediate Review & Approval (2-3 minutes)
 **Teacher Experience:**
 - Reviews student reflection immediately upon completion
 - Provides quick feedback or approval

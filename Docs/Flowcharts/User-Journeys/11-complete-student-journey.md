@@ -154,9 +154,9 @@ sequenceDiagram
 ### 🔴 Phase 1: Incident & Assignment (30 seconds)
 **Student Experience:**
 - Incident occurs in classroom/school setting
-- Teacher immediately creates BSR (15-30 seconds)
-- Student receives immediate kiosk assignment
+- Student receives immediate kiosk assignment notification
 - Teacher directs student to specific kiosk
+- Student leaves classroom for reflection
 
 **Emotional State:** Often defensive or confused
 **Support Needed:** Clear, immediate communication about process
