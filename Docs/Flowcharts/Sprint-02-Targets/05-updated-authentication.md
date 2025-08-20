@@ -4,7 +4,7 @@
 
 ## Target Authentication Flow
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[User Access] --> B{Route Type?}
     B -->|Kiosk Routes| C[Anonymous Access]
@@ -29,11 +29,11 @@ flowchart TD
     style G fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style M fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style N fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Role-Based Route Protection System
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Route Access] --> B{Route Component}
     B --> C[AdminRoute]
@@ -58,11 +58,11 @@ flowchart TD
     style L fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style M fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style N fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Component-Level Permission System
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Component Render] --> B[usePermissions Hook]
     B --> C{Check User Role}
@@ -85,11 +85,11 @@ flowchart TD
     style I fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style K fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style M fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Fixed Google OAuth Profile Creation
 
-<lov-mermaid>
+```mermaid
 sequenceDiagram
     participant U as User
     participant G as Google OAuth
@@ -109,7 +109,7 @@ sequenceDiagram
     UI->>P: Fetch user profile
     P->>UI: Return complete profile
     UI->>UI: ✅ Display actual name and role
-</lov-mermaid>
+```
 
 ## Implementation Status
 

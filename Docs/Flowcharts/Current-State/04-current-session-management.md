@@ -4,7 +4,7 @@
 
 ## Current Session Creation Issues
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[User Login] --> B[Google OAuth Success]
     B --> C[Supabase Session Created]
@@ -14,7 +14,7 @@ flowchart TD
     
     E --> G[❌ No session tracking in DB]
     F --> H{Profile Exists?}
-    H -->|No| I[❌ "Unknown User"]
+    H -->|No| I[❌ Unknown User]
     H -->|Yes| J[Proper User Display]
     
     G --> K[❌ UI shows wrong info]
@@ -25,11 +25,11 @@ flowchart TD
     style I fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style K fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style L fill:#ffebee,stroke:#d32f2f,stroke-width:3px
-</lov-mermaid>
+```
 
 ## Google OAuth Profile Creation (Missing)
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Google OAuth Success] --> B[Supabase User Created]
     B --> C{Profile Creation Trigger?}
@@ -49,11 +49,11 @@ flowchart TD
     style F fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style G fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style H fill:#ffebee,stroke:#d32f2f,stroke-width:3px
-</lov-mermaid>
+```
 
 ## Session Display Problems
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[SessionMonitor Component] --> B[Fetch Active Sessions]
     B --> C[useActiveSessions Hook]
@@ -70,11 +70,11 @@ flowchart TD
     style E fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style G fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style H fill:#ffebee,stroke:#d32f2f,stroke-width:3px
-</lov-mermaid>
+```
 
 ## Device Type vs Role Confusion
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Session Creation] --> B[Device Detection]
     B --> C{Device Type Storage}
@@ -98,11 +98,11 @@ flowchart TD
     style G fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style J fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style K fill:#ffebee,stroke:#d32f2f,stroke-width:3px
-</lov-mermaid>
+```
 
 ## Current SessionMonitor Component Issues
 
-<lov-mermaid>
+```mermaid
 sequenceDiagram
     participant SM as SessionMonitor
     participant AS as useActiveSessions
@@ -117,11 +117,11 @@ sequenceDiagram
     AS->>SM: Return malformed session list
     SM->>UI: Display incorrect session info
     Note over UI: Shows "admin device" instead of user name
-</lov-mermaid>
+```
 
 ## Missing Profile Creation Trigger
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[New User Registration] --> B{Profile Creation Trigger?}
     B -->|Missing| C[❌ Only auth record created]
@@ -140,11 +140,11 @@ flowchart TD
     style E fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style F fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style G fill:#ffebee,stroke:#d32f2f,stroke-width:3px
-</lov-mermaid>
+```
 
 ## Session Deduplication Issues
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[User Login] --> B{Existing Active Session?}
     B -->|Yes| C[❌ No deduplication logic]
@@ -167,7 +167,7 @@ flowchart TD
     style H fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style J fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style K fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Critical Session Management Problems
 

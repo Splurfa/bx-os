@@ -100,7 +100,7 @@ flowchart TD
     K -->|Correct| M[Valid BSR]
     
     J --> N{Session Display}
-    N -->|Profile Missing| O[❌ "Unknown User"]
+    N -->|Profile Missing| O[❌ Unknown User]
     N -->|Profile Exists| P[Correct Display]
     
     style D fill:#ffebee,stroke:#d32f2f,stroke-width:3px
@@ -112,7 +112,7 @@ flowchart TD
 
 ## Data Flow Problems
 
-<lov-mermaid>
+```mermaid
 sequenceDiagram
     participant UI as Frontend
     participant DB as Database
@@ -130,11 +130,11 @@ sequenceDiagram
     Note over DB: ❌ Field name mismatches
     DB->>Q: Return incomplete data
     Q->>UI: Display "Unknown Student" in queue
-</lov-mermaid>
+```
 
 ## Row Level Security Status
 
-<lov-mermaid>
+```mermaid
 flowchart TD
     A[Database Tables] --> B{RLS Enabled?}
     B -->|Yes| C[Most Tables Protected]
@@ -153,7 +153,7 @@ flowchart TD
     style D fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style H fill:#ffebee,stroke:#d32f2f,stroke-width:3px
     style J fill:#fff3e0,stroke:#ff9800,stroke-width:2px
-</lov-mermaid>
+```
 
 ## Critical Database Issues
 
