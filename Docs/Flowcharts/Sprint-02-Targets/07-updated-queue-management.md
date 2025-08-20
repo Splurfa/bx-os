@@ -147,7 +147,7 @@ flowchart TD
 ## Validated Student Lookup System (MOSTLY FUNCTIONAL)
 
 ```mermaid
-flowchat TD
+flowchart TD
     A[✅ Student Search/Display COMPONENT EXISTS] --> B[✅ Query Students Table WORKING]
     B --> C[⚠️ Correct Field Mapping NEEDS VALIDATION]
     C --> D[✅ first_name: string FIELD EXISTS]

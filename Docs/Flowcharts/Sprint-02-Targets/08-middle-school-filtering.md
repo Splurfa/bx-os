@@ -14,7 +14,7 @@ flowchart TD
     C -->|grade_level = '6'| D[🎯 6th Grade Students TARGET]
     C -->|grade_level = '7'| E[🎯 7th Grade Students TARGET]
     C -->|grade_level = '8'| F[🎯 8th Grade Students TARGET]
-    C -->|grade_level != '6','7','8'| G[Exclude from System]
+    C -->|grade_level != 6,7,8| G[Exclude from System]
     
     D --> H[🎯 Middle School Pool TARGET]
     E --> H
