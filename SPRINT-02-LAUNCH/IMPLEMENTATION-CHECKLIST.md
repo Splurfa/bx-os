@@ -23,19 +23,13 @@
 
 ## ⚠️ IMPLEMENTATION GAPS (Sprint Focus)
 
-### Database Schema Enhancement - 1 HOUR
-- [ ] Add grade_level column to students table with constraint CHECK (grade_level IN ('6','7','8'))
-- [ ] Add active column to students table with DEFAULT true
-- [ ] Create active_sessions table for admin monitoring (optional)
-- [ ] Validate schema changes with test queries
+### Student Filtering Configuration - 30 MINUTES
+- [ ] Configure grade filtering UI for grades 6, 7, 8 selection
+- [ ] Test student selection with existing 159 middle school students  
+- [ ] Validate grade-based filtering in kiosk components
+- [ ] Confirm student data quality and accessibility
 
-### Student Data Population - 1 HOUR  
-- [ ] Import 159 middle school students from CSV with proper grade assignments
-- [ ] Validate student data quality and completeness
-- [ ] Test student selection UI with populated data
-- [ ] Confirm grade filtering works correctly
-
-### End-to-End Workflow Testing - 2 HOURS
+### End-to-End Workflow Testing - 1 HOUR
 - [ ] Test complete BSR creation → queue → kiosk completion workflow
 - [ ] Validate real-time queue updates across multiple browser sessions  
 - [ ] Test concurrent teacher/admin access scenarios
@@ -58,10 +52,10 @@
 ## 🎯 SUCCESS CRITERIA
 
 ### Must Complete (Production Blockers)
-- Database schema supports middle school student filtering
-- 159 students populated and available for kiosk selection
+- Student filtering works with existing 690 students (159 middle schoolers)
 - Complete BSR workflow functional end-to-end  
 - Real-time updates work across concurrent sessions
+- Anonymous kiosk access operates without authentication barriers
 
 ### Should Complete (Quality Improvements)
 - System performs well under expected concurrent load
@@ -69,4 +63,4 @@
 - Documentation reflects actual system capabilities
 - Admin monitoring and management functions validated
 
-**SPRINT CONFIDENCE: 95%** - System substantially complete, minor gaps only
+**SPRINT CONFIDENCE: 98%** - System substantially complete, minor testing needed

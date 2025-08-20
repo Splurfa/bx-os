@@ -2,66 +2,63 @@
 
 ## 🎯 VALIDATED SPRINT EXECUTION PLAN
 
-**Sprint Duration**: 4-5 hours  
-**Complexity Assessment**: LOW (Completing implementation gaps in functional system)  
-**Confidence Level**: 95% (Based on validated working authentication, components, and database infrastructure)
+**Sprint Duration**: 2.5 hours  
+**Complexity Assessment**: VERY LOW (Testing and minor configuration of functional system)  
+**Confidence Level**: 98% (Based on verified students, working authentication, and functional components)
 **Process Timeline**: 15-20 minute total student workflow (aligned with flowchart specifications)
 
 ## 📋 PHASE-BY-PHASE EXECUTION SEQUENCE
 
-### Phase 1: Database Schema Completion (1 hour)
-**Status**: CRITICAL - Required for student filtering  
-**Dependencies**: None - can start immediately
+### Phase 1: Student Filtering Setup (30 minutes)
+**Status**: READY - 690 students exist with grade column, 159 are middle schoolers  
+**Dependencies**: None - existing data ready for use
 
 #### Tasks
 ```sql
--- 1.1 Add student filtering columns (15 minutes)
-ALTER TABLE students 
-ADD COLUMN grade_level TEXT CHECK (grade_level IN ('6','7','8')),
-ADD COLUMN active BOOLEAN DEFAULT true;
+-- 1.1 Verify existing student data (5 minutes)
+SELECT COUNT(*) FROM students; -- Should return: 690 students
+SELECT COUNT(*) FROM students WHERE grade IN ('6','7','8'); -- Should return: 159 middle schoolers
+SELECT DISTINCT grade FROM students ORDER BY grade; -- Review available grades
 
--- 1.2 Create session tracking if needed (15 minutes)  
-CREATE TABLE IF NOT EXISTS active_sessions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  kiosk_id TEXT CHECK (kiosk_id IN ('kiosk1','kiosk2','kiosk3')),
-  student_id UUID REFERENCES students(id),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  is_active BOOLEAN DEFAULT true
-);
+-- 1.2 Test grade filtering logic (10 minutes)  
+-- Confirm UI filtering works with existing grade column
+-- Test student selection dropdown with middle school filter
 
--- 1.3 Update RLS policies for new columns (15 minutes)
--- Ensure proper security for grade filtering
+-- 1.3 Validate kiosk student selection (10 minutes)
+-- Ensure kiosk components can access filtered student list
+-- Test student assignment to behavior requests
 
--- 1.4 Validation testing (15 minutes)
-SELECT COUNT(*) FROM students WHERE grade_level IN ('6','7','8') AND active = true;
+-- 1.4 Optional session tracking setup (5 minutes)
+-- Create active_sessions table if admin monitoring desired
+-- Not required for core functionality
 ```
 
-**Success Criteria**: Database queries can filter by grade level and active status
-**Validation Method**: Run test queries, verify no errors, confirm column existence
+**Success Criteria**: Student selection UI shows 159 middle school students when filtered
+**Validation Method**: Test filtering in UI, verify correct student count and grade values
 
-### Phase 2: Student Data Population (1 hour)
-**Status**: HIGH PRIORITY - Enables student selection  
+### Phase 2: Data Validation & Testing (30 minutes)
+**Status**: READY - 159 middle school students confirmed in database  
 **Dependencies**: Phase 1 complete
 
 #### Tasks
 ```typescript
-// 2.1 Process CSV data with grade validation (30 minutes)
-// Import 159 students with proper grade_level assignments
-// Set active = true for current enrollment
+// 2.1 Validate existing student data quality (10 minutes)
+// Confirm all 159 middle schoolers have proper grade values
+// Check for data completeness and accessibility
 
-// 2.2 Data quality validation (15 minutes)
-// Verify all 159 students have grade_level in ['6','7','8']
-// Confirm no duplicate student IDs
+// 2.2 Test student selection UI (10 minutes)
+// Test grade filtering with existing students
+// Verify dropdown shows correct middle school students
 
-// 2.3 Integration testing (15 minutes)  
-// Test student selection components
-// Verify grade filtering works in UI
+// 2.3 Integration testing with BSR workflow (10 minutes)  
+// Test student assignment to behavior requests
+// Verify end-to-end student selection process
 ```
 
-**Success Criteria**: Exactly 159 active middle school students available for selection
-**Validation Method**: Query count, test UI selection, verify grade filtering
+**Success Criteria**: UI filtering shows exactly 159 middle school students and works properly
+**Validation Method**: Test filtering functionality, verify correct student data display
 
-### Phase 3: End-to-End Workflow Validation (2 hours)
+### Phase 3: End-to-End Workflow Validation (1 hour)
 **Status**: MEDIUM PRIORITY - Testing existing functionality  
 **Dependencies**: Phase 2 complete
 
@@ -90,23 +87,23 @@ SELECT COUNT(*) FROM students WHERE grade_level IN ('6','7','8') AND active = tr
 **Success Criteria**: All workflows complete without errors, real-time updates work
 **Validation Method**: Complete end-to-end testing, concurrent user simulation
 
-### Phase 4: Performance & Deployment Validation (1 hour)
+### Phase 4: Performance & Deployment Validation (30 minutes)
 **Status**: LOW PRIORITY - Quality assurance  
 **Dependencies**: Phase 3 complete
 
 #### Tasks
 ```typescript
-// 4.1 Load testing (20 minutes)
+// 4.1 Load testing (15 minutes)
 // 3 concurrent kiosk sessions + 2 teacher sessions + 1 admin
 // Monitor response times and system stability
 
-// 4.2 Error handling validation (20 minutes)
+// 4.2 Error handling validation (10 minutes)
 // Test network interruption scenarios
 // Validate graceful degradation
 
-// 4.3 Documentation update (20 minutes)
+// 4.3 Documentation update (5 minutes)
 // Update deployment guide with validated system state
-// Document admin configuration procedures
+// Document final configuration
 ```
 
 **Success Criteria**: System stable under expected load, error handling graceful
@@ -229,8 +226,8 @@ const validateSuccess = () => {
 ## 📋 SPRINT COMPLETION CRITERIA
 
 ### Functional Requirements (Must Complete)
-- [ ] Database schema supports grade filtering (grade_level column)
-- [ ] 159 middle school students populated and available for selection  
+- [ ] Student filtering works with existing grade column for 159 middle schoolers
+- [ ] UI properly displays and filters existing 690 students
 - [ ] End-to-end BSR workflow functions without errors
 - [ ] Real-time queue updates work across multiple sessions
 - [ ] Admin queue management functions operational
@@ -250,13 +247,12 @@ const validateSuccess = () => {
 
 ## ⏱️ TIME ALLOCATION & RESOURCE PLANNING
 
-### Sprint Timeline (4-5 hours)
+### Sprint Timeline (2.5 hours)
 ```
-Hour 1: Database schema completion + initial validation
-Hour 2: Student data import + data quality validation  
-Hour 3: BSR workflow testing + authentication validation
-Hour 4: Real-time updates + concurrent access testing
-Hour 5: Performance validation + documentation update (if needed)
+30 min: Student filtering setup + validation with existing data
+30 min: Data validation testing + UI functionality verification  
+1 hour: BSR workflow testing + authentication validation + real-time updates
+30 min: Performance validation + concurrent access testing + documentation
 ```
 
 ### Resource Requirements
