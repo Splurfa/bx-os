@@ -5,29 +5,29 @@
 ### MANDATORY FIRST ACTIONS (30 seconds)
 **ALWAYS DO THESE BEFORE ANY IMPLEMENTATION:**
 
-1. **🔍 VALIDATED SYSTEM REALITY**
-   - **SINGLE MIDDLE SCHOOL** deployment (159 students, grades 6-8)
-   - **3 DEDICATED iPads** as fixed kiosks with static URLs
-   - **WORKING AUTHENTICATION**: AdminRoute, TeacherRoute, usePermissions functional
-   - **FUNCTIONAL COMPONENTS**: Most system components operational, minor gaps to complete
+1. **🔍 REALITY CHECK FIRST**
+   - Read `SPRINT-02-LAUNCH/CURRENT-STATE-SUMMARY.md` for current system state
+   - Check `SPRINT-02-LAUNCH/IMPLEMENTATION-CHECKLIST.md` for completion status
+   - Run `Docs/AI-ASSISTANT-SPRINT-PROTOCOL.md` entry checklist validation
 
-2. **⚡ VALIDATION TOOLS**
+2. **⚡ IMMEDIATE VALIDATION TOOLS**
    ```sql
-   -- Verify active users and roles (should show 4 users)
-   SELECT role, COUNT(*) FROM profiles GROUP BY role;
-   
-   -- Check student data readiness (add grade_level column first)
-   SELECT COUNT(*) FROM students;
-   
-   -- Validate queue infrastructure
-   SELECT * FROM behavior_requests WHERE status = 'pending' LIMIT 5;
+   -- Verify database connection and user state
+   SELECT COUNT(*) FROM auth.users;
+   SELECT * FROM profiles WHERE role = 'admin' LIMIT 3;
+   SELECT * FROM active_sessions WHERE is_active = true LIMIT 5;
    ```
 
-3. **🎯 SPRINT COMPLETION FOCUS**
-   - **Database Enhancement**: Add `grade_level` and `active` columns to students table
-   - **Student Data Import**: Populate 159 middle school students with grade assignments
-   - **End-to-End Testing**: Validate complete BSR → Queue → Kiosk → Completion workflow
-   - **Production Validation**: Performance testing and deployment readiness
+3. **🎯 CRITICAL FILE PRIORITIES**
+   - Navigate to `src/components/AdminRoute.tsx` - Does it exist? Does it work?
+   - Examine `src/components/TeacherRoute.tsx` - Does it exist? Does it work? 
+   - Verify `src/hooks/usePermissions.ts` - Does it exist? Does it work?
+   - Test `src/components/NotificationBell.tsx` - Does dropdown work on click?
+
+4. **📋 SPRINT STATUS VALIDATION**
+   - Check `SPRINT-02-LAUNCH/IMPLEMENTATION-CHECKLIST.md` for claimed vs actual status
+   - Use `Docs/REALITY-TESTING-INTEGRATION.md` tools to verify claims
+   - Never trust documentation - always verify code functionality
 
 ## 📋 VALIDATED SYSTEM STATE (Updated 8/20/2025)
 
