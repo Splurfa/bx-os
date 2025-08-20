@@ -171,7 +171,7 @@ export const useKioskQueue = () => {
       // Update behavior request status
       const { error: updateError } = await supabase
         .from('behavior_requests')
-        .update({ status: 'completed' })
+        .update({ status: 'review' })
         .eq('id', behaviorRequestId);
 
       if (updateError) throw updateError;
