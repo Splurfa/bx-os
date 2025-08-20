@@ -70,10 +70,10 @@ const ReviewReflection = ({ item, onApprove, onRequestRevision, onBack }: Review
   };
 
   const reflection = item.reflection || {
-    question1: '',
-    question2: '',
-    question3: '',
-    question4: ''
+    question_1_response: '',
+    question_2_response: '',
+    question_3_response: '',
+    question_4_response: ''
   };
 
   return (
@@ -105,7 +105,7 @@ const ReviewReflection = ({ item, onApprove, onRequestRevision, onBack }: Review
       <div className="flex-1 overflow-auto pb-28 px-4">
         <div className="space-y-3 py-4">
           {questions.map((question, index) => {
-            const answerKey = `question${index + 1}` as keyof typeof reflection;
+            const answerKey = `question_${index + 1}_response` as keyof typeof reflection;
             const answer = reflection[answerKey] as string;
             
             return (
