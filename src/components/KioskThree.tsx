@@ -42,10 +42,16 @@ const KioskThree = () => {
   const { activateKiosk, getKioskById, updateKioskStudent } = useKiosks();
   const { 
     loading, 
+    refreshQueue,
     getFirstWaitingStudentForKiosk, 
     submitReflection,
     updateStudentKioskStatus
   } = useSupabaseQueue();
+  
+  // Force refresh on mount to ensure latest data
+  useEffect(() => {
+    refreshQueue();
+  }, [refreshQueue]);
   
   const [kioskState, setKioskState] = useState<'setup' | 'welcome' | 'password' | 'reflection' | 'completed'>('setup');
   const [passwordInput, setPasswordInput] = useState('');
@@ -69,6 +75,10 @@ const KioskThree = () => {
           setActivationError(null);
           
           console.log('Checking if kiosk 3 is available for anonymous student access...');
+          
+          // Force refresh the queue to get latest data
+          await refreshQueue();
+          
           const kiosk = getKioskById(KIOSK_ID);
           
           if (kiosk && kiosk.isActive) {
