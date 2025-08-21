@@ -1024,7 +1024,12 @@ export type Database = {
     Functions: {
       admin_clear_all_queues: {
         Args: Record<PropertyKey, never>
-        Returns: undefined
+        Returns: {
+          cleared_kiosks_count: number
+          deleted_reflections_count: number
+          deleted_request_ids: string[]
+          deleted_requests_count: number
+        }[]
       }
       assign_waiting_students_to_kiosk: {
         Args: { p_kiosk_id: number }
@@ -1044,7 +1049,12 @@ export type Database = {
       }
       clear_teacher_queue: {
         Args: { p_teacher_id: string }
-        Returns: undefined
+        Returns: {
+          cleared_kiosks_count: number
+          deleted_reflections_count: number
+          deleted_request_ids: string[]
+          deleted_requests_count: number
+        }[]
       }
       create_device_session: {
         Args: {

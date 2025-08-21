@@ -379,22 +379,24 @@ export const useSupabaseQueue = () => {
         .single();
 
       if (profile?.role === 'admin' || profile?.role === 'super_admin') {
-        // Admin can clear all queues
-        const { error } = await supabase.rpc('admin_clear_all_queues');
+        // Admin can clear all queues with new return format
+        const { data, error } = await supabase.rpc('admin_clear_all_queues');
         if (error) throw error;
+        console.log('Admin clear completed:', data);
         toast({
           title: "Queue Cleared",
-          description: "All student queues have been cleared successfully.",
+          description: `Cleared ${data?.[0]?.deleted_requests_count || 0} requests successfully.`,
         });
       } else {
-        // Teacher can only clear their own queue using proper archiving
-        const { error } = await supabase.rpc('clear_teacher_queue', {
+        // Teacher can only clear their own queue with new return format
+        const { data, error } = await supabase.rpc('clear_teacher_queue', {
           p_teacher_id: user.id
         });
         if (error) throw error;
+        console.log('Teacher clear completed:', data);
         toast({
           title: "Queue Cleared", 
-          description: "Your student queue has been cleared successfully.",
+          description: `Cleared ${data?.[0]?.deleted_requests_count || 0} requests successfully.`,
         });
       }
 
