@@ -25,10 +25,11 @@
 
 #### Bug #1: Queue Clearing Foreign Key Constraint Error
 - **Issue**: Admin "Clear Queue" function fails with foreign key constraint violation
-- **Root Cause**: Database functions not handling foreign key order correctly (reflections → behavior_requests)
+- **Root Cause**: Database functions not handling foreign key order correctly - trying to delete referenced data before archiving
 - **Impact**: Admins cannot clear queues, blocking queue management workflow  
-- **Status**: ✅ FIXED - Rewrote `admin_clear_all_queues()` with 5-step deletion sequence
-- **Solution**: Clear kiosks → Archive with NULL reflection_id → Update history → Delete reflections → Delete requests
+- **Status**: ✅ FIXED - Updated both `admin_clear_all_queues()` and `clear_teacher_queue()` with proper deletion sequence
+- **Solution**: Clear kiosks → Archive to history with NULL reflection_id → Delete reflections → Delete behavior_requests
+- **Testing**: Verified functions work correctly across different queue states (empty, with/without reflections)
 
 #### Bug #2: Kiosk Student Assignment Detection Failure  
 - **Issue**: Kiosk components not properly detecting assigned students from queue
