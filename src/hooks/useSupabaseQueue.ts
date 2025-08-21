@@ -104,7 +104,8 @@ export const useSupabaseQueue = () => {
         position: index + 1,
         timestamp: new Date(item.created_at),
         behaviors: item.behavior_type ? item.behavior_type.split(', ') : [],
-        assigned_kiosk_id: item.assigned_kiosk
+        assigned_kiosk_id: item.assigned_kiosk,
+        urgent: item.priority_level === 'high'
       } as BehaviorRequest)) || [];
 
       setItems(transformedData);

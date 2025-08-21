@@ -1,6 +1,6 @@
 
 import React, { useMemo } from "react";
-import { User, CheckCircle, Monitor, XCircle } from "lucide-react";
+import { AlertTriangle, User, CheckCircle, Monitor, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import LiveTimer from "./LiveTimer";
@@ -153,11 +153,14 @@ const QueueDisplay = React.memo(({
           <div
             key={item.id}
             className={`grid grid-cols-[minmax(0,1fr)_auto] grid-rows-2 gap-x-2 ${itemPadding} border-b border-border last:border-b-0 ${
-              (item as any).urgent ? 'bg-queue-urgent/10 border-queue-urgent/20' : (isActive ? 'bg-primary/5' : 'bg-background')
+              (item as any).urgent ? 'bg-queue-urgent/10 border-queue-urgent/20 border-l-4 border-l-queue-urgent' : (isActive ? 'bg-primary/5' : 'bg-background')
             }`}
           >
             {/* Row 1, Col 1: Student name (mobile abbreviated) + behavior dots */}
             <div className="col-[1] row-[1] flex items-center min-w-0 gap-2">
+              {(item as any).urgent && (
+                <AlertTriangle className="h-4 w-4 text-queue-urgent shrink-0" />
+              )}
               {(() => {
                 const fullName = item.student?.name || 'Unknown Student';
                 const parts = fullName.trim().split(/\s+/);
@@ -186,6 +189,11 @@ const QueueDisplay = React.memo(({
               <span className="whitespace-nowrap">
                 <LiveTimer startTime={item.timestamp || new Date(item.created_at)} />
               </span>
+              {(item as any).urgent && (
+                <Badge variant="destructive" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
+                  URGENT
+                </Badge>
+              )}
               {('assigned_kiosk_id' in item) && item.assigned_kiosk_id && item.status !== 'review' && (
                 <Badge variant="outline" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
                   <Monitor className="h-3 w-3 mr-1" />
