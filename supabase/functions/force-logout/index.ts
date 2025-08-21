@@ -106,7 +106,7 @@ Deno.serve(async (req) => {
     // Soft end all active/idle sessions for this user in our table
     const { error: sessionUpdateError } = await adminClient
       .from('user_sessions')
-      .update({ session_status: 'ended', updated_at: new Date().toISOString() })
+      .update({ session_status: 'ended', ended_at: new Date().toISOString() })
       .eq('user_id', userId)
       .in('session_status', ['active', 'idle'])
 
