@@ -30,6 +30,26 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
     };
 
     fetchQueuedStudents();
+
+    // Set up real-time subscription for behavior requests to update excluded students
+    const channel = supabase
+      .channel('behavior_requests_student_selection')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'behavior_requests'
+        },
+        () => {
+          fetchQueuedStudents();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const filteredStudents = students.filter(student => {
