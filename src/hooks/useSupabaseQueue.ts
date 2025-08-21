@@ -63,21 +63,11 @@ export const useSupabaseQueue = () => {
 
   // Fetch queue items
   const fetchQueue = useCallback(async () => {
-    if (!user?.id) {
-      setLoading(false);
-      return;
-    }
-
     try {
       setLoading(true);
       
-      // Get user role for filtering
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-
+      // For kiosks (anonymous users), fetch all active and waiting items
+      // For authenticated users, filter by role
       let query = supabase
         .from('behavior_requests')
         .select(`
@@ -87,9 +77,18 @@ export const useSupabaseQueue = () => {
         `)
         .neq('status', 'completed'); // Exclude completed items from queue display
 
-      // Filter by teacher if not admin
-      if (profile?.role === 'teacher') {
-        query = query.eq('teacher_id', user.id);
+      // Only filter by teacher if user is authenticated and is a teacher
+      if (user?.id) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+
+        // Filter by teacher if not admin
+        if (profile?.role === 'teacher') {
+          query = query.eq('teacher_id', user.id);
+        }
       }
 
       const { data, error } = await query.order('created_at', { ascending: true });
