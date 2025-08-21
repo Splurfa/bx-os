@@ -206,6 +206,36 @@ sequenceDiagram
 - Implement kiosk assignment tracking
 - Test session correlation with kiosk components
 
+## Database Transaction & Cleanup Solutions
+
+### ✅ FK Constraint Resolution (Recently Implemented)
+**Problem**: Queue clearing operations failed due to foreign key constraints between `behavior_support_requests` and `reflections` tables.
+
+**Solution**: CTE-based transaction approach with proper FK handling:
+```sql
+-- CTE transaction with FK constraint guards
+WITH archived_bsrs AS (
+  INSERT INTO behavior_history (
+    original_bsr_id, student_id, created_by, status, description, 
+    student_reflection, teacher_feedback, created_at, updated_at, archived_at
+  )
+  SELECT id, student_id, created_by, status, description, 
+         student_reflection, teacher_feedback, created_at, updated_at, now()
+  FROM behavior_support_requests
+  WHERE status IN ('completed', 'reviewed')
+  RETURNING original_bsr_id
+),
+deleted_reflections AS (
+  DELETE FROM reflections 
+  WHERE bsr_id IN (SELECT original_bsr_id FROM archived_bsrs)
+  RETURNING bsr_id
+)
+DELETE FROM behavior_support_requests 
+WHERE id IN (SELECT original_bsr_id FROM archived_bsrs);
+```
+
+**Validation**: Queue clearing operations now complete successfully without FK constraint errors.
+
 ## Cross-References
 - **Sprint Target**: `../Sprint-02-Targets/08-middle-school-filtering.md`
 - **Implementation Status**: `../../SPRINT-02-LAUNCH/IMPLEMENTATION-CHECKLIST.md`  
