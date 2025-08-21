@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
       auth: { autoRefreshToken: false, persistSession: false }
     })
 
-    // Verify caller is authenticated and is an admin
+    // Verify caller is authenticated
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) throw new Error('Missing Authorization header')
 
@@ -30,13 +30,16 @@ Deno.serve(async (req) => {
     const { data: { user }, error: userErr } = await adminClient.auth.getUser(jwt)
     if (userErr || !user) throw new Error('Invalid auth token')
 
-    const { data: roleRow, error: roleErr } = await adminClient
+    // Get caller's role
+    const { data: callerProfile, error: callerErr } = await adminClient
       .from('profiles')
-      .select('role')
+      .select('role, full_name')
       .eq('id', user.id)
       .single()
-    if (roleErr) throw roleErr
-    if (roleRow?.role !== 'admin') throw new Error('Unauthorized: admin only')
+    if (callerErr) throw callerErr
+    if (!callerProfile?.role || !['admin', 'super_admin'].includes(callerProfile.role)) {
+      throw new Error('Unauthorized: admin or super_admin role required')
+    }
 
     if (action === 'logout_session') {
       if (!sessionId) throw new Error('sessionId is required for logout_session')
@@ -52,6 +55,32 @@ Deno.serve(async (req) => {
 
     // Default: logout_user (revoke tokens for the user and end active sessions records)
     if (!userId) throw new Error('userId is required for logout_user')
+
+    // Get target user's role for permission checking
+    const { data: targetProfile, error: targetErr } = await adminClient
+      .from('profiles')
+      .select('role, full_name')
+      .eq('id', userId)
+      .single()
+    if (targetErr) throw new Error('Target user not found or inaccessible')
+
+    // Check permission hierarchy
+    const canForceLogout = (callerRole: string, targetRole: string) => {
+      // Teachers cannot force logout anyone
+      if (callerRole === 'teacher') return false;
+      // Admins can only force logout teachers
+      if (callerRole === 'admin' && targetRole === 'teacher') return true;
+      // Super admins can force logout teachers and admins
+      if (callerRole === 'super_admin' && (targetRole === 'teacher' || targetRole === 'admin')) return true;
+      return false;
+    }
+
+    if (!canForceLogout(callerProfile.role, targetProfile.role)) {
+      console.log(`Permission denied: ${callerProfile.role} cannot force logout ${targetProfile.role}`)
+      throw new Error(`Permission denied: ${callerProfile.role} users cannot force logout ${targetProfile.role} users`)
+    }
+
+    console.log(`Force logout initiated: ${callerProfile.full_name} (${callerProfile.role}) logging out ${targetProfile.full_name} (${targetProfile.role})`)
 
     // Attempt to revoke user tokens across devices (compatibility with different supabase-js versions)
     let revokeFailedMessage: string | null = null;
@@ -75,14 +104,44 @@ Deno.serve(async (req) => {
     }
 
     // Soft end all active/idle sessions for this user in our table
-    await adminClient
+    const { error: sessionUpdateError } = await adminClient
       .from('user_sessions')
       .update({ session_status: 'ended', updated_at: new Date().toISOString() })
       .eq('user_id', userId)
       .in('session_status', ['active', 'idle'])
 
+    if (sessionUpdateError) {
+      console.error('Failed to update session status:', sessionUpdateError)
+      throw new Error('Failed to end user sessions in database')
+    }
+
+    // Log the force logout action for audit purposes
+    await adminClient
+      .from('user_sessions')
+      .insert({
+        user_id: user.id,
+        device_type: 'admin_action',
+        device_info: {
+          action: 'force_logout',
+          target_user_id: userId,
+          target_user_name: targetProfile.full_name,
+          target_user_role: targetProfile.role,
+          caller_role: callerProfile.role,
+          timestamp: new Date().toISOString()
+        },
+        location: 'Admin Force Logout',
+        session_status: 'audit_log'
+      })
+
+    console.log(`Force logout completed: ${targetProfile.full_name} (${targetProfile.role}) logged out by ${callerProfile.full_name} (${callerProfile.role})`)
+
     return new Response(
-      JSON.stringify({ success: true, message: 'User forcibly logged out' }),
+      JSON.stringify({ 
+        success: true, 
+        message: `${targetProfile.full_name} has been forcibly logged out`,
+        target_user: targetProfile.full_name,
+        target_role: targetProfile.role
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   } catch (err: any) {

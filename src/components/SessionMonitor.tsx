@@ -9,6 +9,8 @@ import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { useProfile } from '@/hooks/useProfile';
+import { usePermissions } from '@/hooks/usePermissions';
+import { canForceLogoutUser, getRoleDisplayName } from '@/lib/permissions';
 import { supabase } from '@/integrations/supabase/client';
 
 const getDeviceIcon = (deviceType: string) => {
@@ -37,14 +39,20 @@ export const SessionMonitor = () => {
   const { sessions, loading, refetch } = useActiveSessions();
   const isMobile = useIsMobile();
   const { profile } = useProfile();
-  const isAdmin = profile?.role === 'admin';
+  const { canPerformAction } = usePermissions();
+  const canForceLogout = canPerformAction('force_logout_users');
   const { toast } = useToast();
   const [busy, setBusy] = useState<Record<string, boolean>>({});
 
   const handleForceLogout = async (s: any) => {
-    if (!isAdmin) return;
-    const proceed = window.confirm(`Force logout ${s.user_name || s.user_email}?`);
+    if (!canForceLogout || !canForceLogoutUser(profile?.role, s.user_role)) return;
+    
+    const roleDisplay = getRoleDisplayName(s.user_role);
+    const proceed = window.confirm(
+      `Force logout ${s.user_name || s.user_email} (${roleDisplay})?\n\nThis will immediately end all of their active sessions.`
+    );
     if (!proceed) return;
+    
     try {
       setBusy((b) => ({ ...b, [s.id]: true }));
       const { data, error } = await supabase.functions.invoke('force-logout', {
@@ -53,10 +61,17 @@ export const SessionMonitor = () => {
       if (error || (data && data.success === false)) {
         throw new Error(error?.message || data?.error || 'Failed to force logout');
       }
-      toast({ title: 'User logged out', description: `${s.user_name || s.user_email} has been logged out.` });
+      toast({ 
+        title: 'User logged out', 
+        description: data?.message || `${s.user_name || s.user_email} has been logged out.` 
+      });
       await refetch?.();
     } catch (e: any) {
-      toast({ title: 'Logout failed', description: e?.message || 'Unable to logout user', variant: 'destructive' as any });
+      toast({ 
+        title: 'Logout failed', 
+        description: e?.message || 'Unable to logout user', 
+        variant: 'destructive' as any 
+      });
     } finally {
       setBusy((b) => ({ ...b, [s.id]: false }));
     }
@@ -108,9 +123,10 @@ export const SessionMonitor = () => {
                 <TableHead className={isMobile ? "text-xs" : ""}>
                   Status
                 </TableHead>
+                {!isMobile && <TableHead>Role</TableHead>}
                 {!isMobile && <TableHead>Login Time</TableHead>}
                 {!isMobile && <TableHead>Last Activity</TableHead>}
-                {(!isMobile && isAdmin) && <TableHead>Actions</TableHead>}
+                {(!isMobile && canForceLogout) && <TableHead>Actions</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -146,6 +162,11 @@ export const SessionMonitor = () => {
                   </TableCell>
                   {!isMobile && (
                     <TableCell className="text-sm">
+                      {getRoleDisplayName(session.user_role as any)}
+                    </TableCell>
+                  )}
+                  {!isMobile && (
+                    <TableCell className="text-sm">
                       {formatDistanceToNow(new Date(session.login_time), { addSuffix: true })}
                     </TableCell>
                   )}
@@ -154,9 +175,10 @@ export const SessionMonitor = () => {
                       {formatDistanceToNow(new Date(session.last_activity), { addSuffix: true })}
                     </TableCell>
                   )}
-                   {(!isMobile && isAdmin) && (
+                   {(!isMobile && canForceLogout) && (
                     <TableCell className="text-sm">
-                      {['active','idle'].includes(String(session.session_status).toLowerCase()) ? (
+                      {['active','idle'].includes(String(session.session_status).toLowerCase()) && 
+                       canForceLogoutUser(profile?.role, session.user_role as any) ? (
                         <Button
                           variant="destructive"
                           size="sm"
@@ -166,7 +188,9 @@ export const SessionMonitor = () => {
                           {busy[session.id] ? 'Logging out...' : 'Force Logout'}
                         </Button>
                       ) : (
-                        <span className="text-muted-foreground">—</span>
+                        <span className="text-muted-foreground">
+                          {!canForceLogoutUser(profile?.role, session.user_role as any) ? 'No permission' : '—'}
+                        </span>
                       )}
                     </TableCell>
                   )}

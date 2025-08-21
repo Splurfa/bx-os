@@ -12,6 +12,7 @@ interface ActiveSession {
   session_status: string;
   user_email: string;
   user_name: string;
+  user_role: string;
 }
 
 export const useActiveSessions = () => {
@@ -40,7 +41,7 @@ export const useActiveSessions = () => {
       // Then get the profiles for those users
       const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
-        .select('id, email, full_name')
+        .select('id, email, full_name, role')
         .in('id', userIds);
 
       if (profilesError) throw profilesError;
@@ -58,7 +59,8 @@ export const useActiveSessions = () => {
           last_activity: session.last_activity,
           session_status: session.session_status,
           user_email: profile?.email || 'Unknown',
-          user_name: profile?.full_name || 'Unknown User'
+          user_name: profile?.full_name || 'Unknown User',
+          user_role: profile?.role || 'unknown'
         } as ActiveSession;
       });
 
