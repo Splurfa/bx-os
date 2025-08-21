@@ -6,14 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePermissions } from "@/hooks/usePermissions";
 import { supabase } from "@/integrations/supabase/client";
 import { getRoleDisplayName } from "@/lib/permissions";
-import { UserPlus, Search, MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { Search, MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface User {
@@ -28,20 +27,9 @@ export default function UserManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
   const { toast } = useToast();
   const isMobile = useIsMobile();
-  const { canCreateUsers, canChangeUserRoles, canDeleteUsers, isSuperAdmin } = usePermissions();
-
-  // Form state
-  const [newUser, setNewUser] = useState({
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-    role: "teacher"
-  });
+  const { canChangeUserRoles, canDeleteUsers, isSuperAdmin } = usePermissions();
 
   const fetchUsers = async () => {
     try {
@@ -62,46 +50,6 @@ export default function UserManagement() {
     }
   };
 
-  const createUser = async () => {
-    if (!newUser.email || !newUser.password || !newUser.firstName || !newUser.lastName) {
-      toast({
-        description: "Missing required fields",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsCreating(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('create-user', {
-        body: {
-          email: newUser.email,
-          password: newUser.password,
-          firstName: newUser.firstName,
-          lastName: newUser.lastName,
-          role: newUser.role
-        }
-      });
-
-      if (error) throw error;
-
-      if (data.success) {
-        setNewUser({ email: "", password: "", firstName: "", lastName: "", role: "teacher" });
-        setIsCreateModalOpen(false);
-        fetchUsers();
-      } else {
-        throw new Error(data.error || 'Failed to create user');
-      }
-    } catch (error) {
-      toast({
-        title: "Error creating user",
-        description: error instanceof Error ? error.message : "Unknown error occurred",
-        variant: "destructive",
-      });
-    } finally {
-      setIsCreating(false);
-    }
-  };
 
   const updateUserRole = async (userId: string, newRole: string) => {
     try {
@@ -175,94 +123,9 @@ export default function UserManagement() {
         <div>
           <h2 className={`${isMobile ? 'text-lg' : 'text-2xl'} font-bold`}>User Management</h2>
           <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
-            {isMobile ? 'Manage users' : 'Manage teachers and admins'}
+            {isMobile ? 'Manage users via Google OAuth' : 'Manage teachers and admins (users join via Google OAuth)'}
           </p>
         </div>
-        
-        {canCreateUsers && (
-          <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-            <DialogTrigger asChild>
-              <Button size={isMobile ? "sm" : "default"} className={isMobile ? "text-xs px-2" : ""}>
-                <UserPlus className={`${isMobile ? 'h-3 w-3 mr-1' : 'h-4 w-4 mr-2'}`} />
-                {isMobile ? 'Add' : 'Add User'}
-              </Button>
-            </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create New User</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input
-                    id="firstName"
-                    value={newUser.firstName}
-                    onChange={(e) => setNewUser(prev => ({ ...prev, firstName: e.target.value }))}
-                    placeholder="Enter first name"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input
-                    id="lastName"
-                    value={newUser.lastName}
-                    onChange={(e) => setNewUser(prev => ({ ...prev, lastName: e.target.value }))}
-                    placeholder="Enter last name"
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={newUser.email}
-                  onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
-                  placeholder="Enter email address"
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={newUser.password}
-                  onChange={(e) => setNewUser(prev => ({ ...prev, password: e.target.value }))}
-                  placeholder="Enter password"
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="role">Role</Label>
-                <Select value={newUser.role} onValueChange={(value) => setNewUser(prev => ({ ...prev, role: value }))}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="teacher">Teacher</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    {isSuperAdmin && (
-                      <SelectItem value="super_admin">Super Admin</SelectItem>
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="flex justify-end space-x-2 pt-4">
-                <Button variant="outline" onClick={() => setIsCreateModalOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={createUser} disabled={isCreating}>
-                  {isCreating ? "Creating..." : "Create User"}
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-        )}
       </div>
 
       {/* Stats */}
