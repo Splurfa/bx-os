@@ -26,6 +26,10 @@ const TeacherRoute = ({ children }: TeacherRouteProps) => {
   }
 
   if (!profile || (profile.role !== 'teacher' && profile.role !== 'admin' && profile.role !== 'super_admin')) {
+    // Redirect to admin dashboard if user has admin role but accessed teacher route
+    if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+      return <Navigate to="/admin-dashboard" replace />;
+    }
     return <Navigate to="/auth" replace />;
   }
 

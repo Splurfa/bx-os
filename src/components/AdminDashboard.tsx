@@ -21,10 +21,29 @@ import UserManagement from './UserManagement';
 
 import { SessionMonitor } from './SessionMonitor';
 import { useToast } from '@/hooks/use-toast';
+import { useProfile } from '@/hooks/useProfile';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
+  const { profile } = useProfile();
+  const navigate = useNavigate();
   const { kiosks, activateKiosk, deactivateKiosk, deactivateAllKiosks, refreshKiosks, loading: kioskLoading } = useKiosks();
+
+  // Defensive role checking - ensure admin is on correct dashboard
+  useEffect(() => {
+    if (profile && user) {
+      if (profile.role !== 'admin' && profile.role !== 'super_admin') {
+        console.warn('🚫 Non-admin user detected on admin dashboard, redirecting:', profile.role);
+        if (profile.role === 'teacher') {
+          navigate('/teacher', { replace: true });
+        } else {
+          navigate('/auth', { replace: true });
+        }
+      }
+    }
+  }, [profile, user, navigate]);
   const { 
     items, 
     loading: queueLoading, 

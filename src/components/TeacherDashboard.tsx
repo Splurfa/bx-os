@@ -10,10 +10,26 @@ import BSRModal from "./BSRModal";
 import ReviewReflection from "./ReviewReflection";
 import { Loader2 } from "lucide-react";
 import { useSupabaseQueue } from "../hooks/useSupabaseQueue";
+import { useProfile } from '@/hooks/useProfile';
+import { useEffect } from 'react';
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
   const { signOut, user } = useAuth();
+  const { profile } = useProfile();
+
+  // Defensive role checking - ensure user has access to teacher dashboard
+  useEffect(() => {
+    if (profile && user) {
+      if (profile.role !== 'teacher' && profile.role !== 'admin' && profile.role !== 'super_admin') {
+        console.warn('🚫 Unauthorized user detected on teacher dashboard, redirecting:', profile.role);
+        navigate('/auth', { replace: true });
+      } else if (profile.role === 'admin' || profile.role === 'super_admin') {
+        // Admin users accessing teacher dashboard - this is allowed but log it
+        console.log('ℹ️ Admin user accessing teacher dashboard:', profile.role);
+      }
+    }
+  }, [profile, user, navigate]);
   const [showBSRModal, setShowBSRModal] = useState(false);
   const [selectedReflection, setSelectedReflection] = useState(null);
   const { 

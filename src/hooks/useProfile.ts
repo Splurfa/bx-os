@@ -105,8 +105,18 @@ export const useProfile = () => {
             table: 'profiles',
             filter: `id=eq.${user.id}`
           },
-          () => {
+          (payload) => {
+            console.log('📡 Profile change detected:', payload);
             fetchProfile();
+            
+            // If role changed, trigger a re-evaluation of current route
+            if (payload.eventType === 'UPDATE' && payload.new?.role !== payload.old?.role) {
+              console.log('🔄 Role change detected, triggering navigation check');
+              // Emit custom event for components to react to role changes
+              window.dispatchEvent(new CustomEvent('roleChange', { 
+                detail: { newRole: payload.new?.role, oldRole: payload.old?.role }
+              }));
+            }
           }
         )
         .subscribe();

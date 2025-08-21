@@ -26,7 +26,11 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
   }
 
   if (!profile || (profile.role !== 'admin' && profile.role !== 'super_admin')) {
-    return <Navigate to="/teacher" replace />;
+    // Redirect to appropriate dashboard based on actual role
+    if (profile?.role === 'teacher') {
+      return <Navigate to="/teacher" replace />;
+    }
+    return <Navigate to="/auth" replace />;
   }
 
   return <>{children}</>;

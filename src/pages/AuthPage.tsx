@@ -21,16 +21,10 @@ const AuthPage = () => {
   const [error, setError] = useState('');
   const [routingUser, setRoutingUser] = useState(false);
 
-  // Prevent unwanted navigation after authentication - only route initially
+  // Route user based on role - simplified to eliminate race conditions
   useEffect(() => {
     const routeUser = async () => {
       if (!user || routingUser) return;
-      
-      // Only route if we're actually on the auth page (prevents navigation from other pages)
-      if (window.location.pathname !== '/auth' && window.location.pathname !== '/login') {
-        console.log('🛑 Skipping navigation - user not on auth page:', window.location.pathname);
-        return;
-      }
       
       setRoutingUser(true);
       console.log('🔄 Routing user:', user.email, 'ID:', user.id);
@@ -110,29 +104,9 @@ const AuthPage = () => {
 
     if (error) {
       setError(error.message);
-    } else {
-      // Route based on user role after successful sign in
-      try {
-        const { data: { user: signedInUser } } = await supabase.auth.getUser();
-        if (signedInUser) {
-          const { data } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', signedInUser.id)
-            .single();
-          const role = data?.role || 'teacher';
-          // Route based on role - super_admin and admin go to admin dashboard
-          if (role === 'super_admin' || role === 'admin') {
-            navigate('/admin-dashboard', { replace: true });
-          } else {
-            navigate('/teacher', { replace: true });
-          }
-        } else {
-          navigate('/teacher', { replace: true });
-        }
-      } catch {
-        navigate('/teacher', { replace: true });
-      }
+      } else {
+        // User will be routed by the useEffect above after successful sign in
+        console.log('✅ Sign in successful, letting useEffect handle routing');
     }
 
     setLoading(false);
