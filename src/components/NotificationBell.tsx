@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Bell, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Bell, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -13,15 +13,12 @@ import { formatDistanceToNow } from 'date-fns';
 
 interface NotificationItem {
   id: string;
-  type: 'behavior_request' | 'reflection_submitted' | 'reflection_approved' | 'system';
-  title: string;
+  type: 'reflection_ready_for_review';
   message: string;
   timestamp: string;
   read: boolean;
-  priority: 'low' | 'medium' | 'high';
-  studentName?: string;
-  teacherName?: string;
-  kioskId?: number;
+  priority: 'high';
+  data?: any;
 }
 
 interface NotificationBellProps {
@@ -44,198 +41,129 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Generate notifications from behavior requests and reflections
-  const generateNotifications = (behaviorRequests: any[], reflections: any[]): NotificationItem[] => {
-    const notifications: NotificationItem[] = [];
-
-    // Behavior request notifications (for admins and assigned teachers)
-    behaviorRequests.forEach(request => {
-      if (userRole === 'admin' || userRole === 'super_admin' || request.teacher_id === user?.id) {
-        const studentName = `${request.student?.first_name || ''} ${request.student?.last_name || ''}`.trim() || 
-                           'Unknown Student';
-
-        if (request.status === 'waiting') {
-          notifications.push({
-            id: `request-${request.id}`,
-            type: 'behavior_request',
-            title: 'New Behavior Request',
-            message: `${studentName} is waiting for reflection`,
-            timestamp: request.created_at,
-            read: false,
-            priority: request.priority_level === 'high' ? 'high' : 'medium',
-            studentName,
-            teacherName: request.teacher_name,
-            kioskId: request.assigned_kiosk
-          });
-        }
-
-        if (request.status === 'active' && request.assigned_kiosk) {
-          notifications.push({
-            id: `active-${request.id}`,
-            type: 'behavior_request',
-            title: 'Student at Kiosk',
-            message: `${studentName} is completing reflection at Kiosk ${request.assigned_kiosk}`,
-            timestamp: request.updated_at,
-            read: false,
-            priority: 'medium',
-            studentName,
-            teacherName: request.teacher_name,
-            kioskId: request.assigned_kiosk
-          });
-        }
-      }
-    });
-
-    // Reflection notifications (for teachers and admins)
+  // Generate simplified notifications - only reflection ready for review
+  const generateNotifications = useCallback((
+    reflections: any[]
+  ): NotificationItem[] => {
+    const notificationItems: NotificationItem[] = [];
+    
+    // Only show reflections that are submitted and ready for teacher review
     reflections.forEach(reflection => {
-      const behaviorRequest = behaviorRequests.find(req => req.id === reflection.behavior_request_id);
-      if (!behaviorRequest) return;
-
-      const studentName = `${behaviorRequest.student?.first_name || ''} ${behaviorRequest.student?.last_name || ''}`.trim() || 
-                         'Unknown Student';
-
-      if (userRole === 'admin' || userRole === 'super_admin' || behaviorRequest.teacher_id === user?.id) {
-        if (!reflection.teacher_approved && !reflection.revision_requested) {
-          notifications.push({
-            id: `reflection-${reflection.id}`,
-            type: 'reflection_submitted',
-            title: 'Reflection Submitted',
-            message: `${studentName} has submitted their reflection for review`,
-            timestamp: reflection.submitted_at || reflection.created_at,
+      if (reflection.submitted_at && !reflection.teacher_approved && !reflection.revision_requested) {
+        const behaviorRequest = reflection.behavior_request;
+        if (behaviorRequest?.student) {
+          notificationItems.push({
+            id: `ref-${reflection.id}`,
+            type: 'reflection_ready_for_review',
+            message: `${behaviorRequest.student.first_name} ${behaviorRequest.student.last_name} completed their reflection - ready for review`,
+            timestamp: reflection.submitted_at,
             read: false,
-            priority: 'medium',
-            studentName,
-            teacherName: behaviorRequest.teacher_name
-          });
-        }
-
-        if (reflection.teacher_approved) {
-          notifications.push({
-            id: `approved-${reflection.id}`,
-            type: 'reflection_approved',
-            title: 'Reflection Approved',
-            message: `${studentName}'s reflection has been approved`,
-            timestamp: reflection.reviewed_at || reflection.updated_at,
-            read: false,
-            priority: 'low',
-            studentName,
-            teacherName: behaviorRequest.teacher_name
+            priority: 'high',
+            data: { reflectionId: reflection.id, behaviorRequestId: reflection.behavior_request_id }
           });
         }
       }
     });
 
-    // Sort by timestamp (newest first) and limit
-    return notifications
-      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-      .slice(0, maxNotifications);
-  };
+    // Sort by timestamp (newest first)
+    return notificationItems
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  }, []);
 
-  // Fetch notifications from database
-  const fetchNotifications = async () => {
+  // Fetch notifications data
+  const fetchNotifications = useCallback(async () => {
     try {
       setLoading(true);
+      
+      // Get current user
+      if (!user) return;
 
-      // Fetch behavior requests
-      const { data: behaviorRequests, error: requestsError } = await supabase
-        .from('behavior_requests')
+      // Check if user has notification settings enabled for this type
+      const { data: notificationSettings } = await supabase
+        .from('notification_settings')
+        .select('enabled')
+        .eq('user_id', user.id)
+        .eq('notification_type', 'reflection_ready_for_review')
+        .single();
+
+      // If notifications are disabled, show empty state
+      if (notificationSettings && !notificationSettings.enabled) {
+        setNotifications([]);
+        setLoading(false);
+        return;
+      }
+
+      // Only fetch reflections for teacher's behavior requests that need review
+      const { data: reflections, error: refError } = await supabase
+        .from('reflections')
         .select(`
           *,
-          student:students(*)
+          behavior_request:behavior_requests!inner(
+            *,
+            student:students(*)
+          )
         `)
-        .order('created_at', { ascending: false })
-        .limit(100);
+        .eq('behavior_request.teacher_id', user.id)
+        .not('submitted_at', 'is', null)
+        .eq('teacher_approved', false)
+        .eq('revision_requested', false)
+        .order('submitted_at', { ascending: false });
 
-      if (requestsError) throw requestsError;
+      if (refError) {
+        console.error('Error fetching reflections:', refError);
+        return;
+      }
 
-      // Fetch reflections
-      const { data: reflections, error: reflectionsError } = await supabase
-        .from('reflections')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(100);
-
-      if (reflectionsError) throw reflectionsError;
-
-      const generatedNotifications = generateNotifications(behaviorRequests || [], reflections || []);
-      setNotifications(generatedNotifications);
+      // Generate notifications
+      const newNotifications = generateNotifications(reflections || []);
+      setNotifications(newNotifications);
 
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error('Error in fetchNotifications:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, generateNotifications]);
 
   // Set up real-time subscriptions
   useEffect(() => {
     fetchNotifications();
-
-    // Subscribe to behavior_requests changes
-    const behaviorRequestsChannel = supabase
-      .channel('behavior_requests_notifications')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'behavior_requests'
-        },
-        () => {
-          fetchNotifications();
-        }
-      )
-      .subscribe();
-
-    // Subscribe to reflections changes
-    const reflectionsChannel = supabase
+    
+    // Only subscribe to reflections changes since that's all we care about
+    const reflectionsSubscription = supabase
       .channel('reflections_notifications')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'reflections'
-        },
+      .on('postgres_changes', 
+        { 
+          event: 'UPDATE', 
+          schema: 'public', 
+          table: 'reflections',
+          filter: 'submitted_at=not.is.null'
+        }, 
         () => {
           fetchNotifications();
         }
       )
       .subscribe();
 
-    // Cleanup subscriptions
     return () => {
-      supabase.removeChannel(behaviorRequestsChannel);
-      supabase.removeChannel(reflectionsChannel);
+      supabase.removeChannel(reflectionsSubscription);
     };
-  }, [user?.id, userRole]);
+  }, [fetchNotifications]);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
+  // Get appropriate icon for notification type
   const getNotificationIcon = (type: NotificationItem['type']) => {
     switch (type) {
-      case 'behavior_request':
-        return <AlertTriangle className="h-4 w-4 text-orange-500" />;
-      case 'reflection_submitted':
-        return <Clock className="h-4 w-4 text-blue-500" />;
-      case 'reflection_approved':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case 'reflection_ready_for_review':
+        return <FileText className="h-4 w-4 text-green-500" />;
       default:
         return <Bell className="h-4 w-4 text-gray-500" />;
     }
   };
 
   const getPriorityColor = (priority: NotificationItem['priority']) => {
-    switch (priority) {
-      case 'high':
-        return 'border-l-red-500 bg-red-50';
-      case 'medium':
-        return 'border-l-orange-500 bg-orange-50';
-      case 'low':
-        return 'border-l-blue-500 bg-blue-50';
-      default:
-        return 'border-l-gray-500 bg-gray-50';
-    }
+    return 'border-l-green-500 bg-green-50';
   };
 
   const markAsRead = (notificationId: string) => {
@@ -288,7 +216,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
               )}
             </CardTitle>
             <CardDescription className="text-sm">
-              Real-time behavior management updates
+              Reflections ready for review
             </CardDescription>
           </CardHeader>
           
@@ -302,7 +230,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
                 </div>
               ) : notifications.length === 0 ? (
                 <div className="p-4 text-center text-sm text-muted-foreground">
-                  No notifications yet
+                  No reflections ready for review
                 </div>
               ) : (
                 <div className="space-y-1">
@@ -319,10 +247,10 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
                               <p className={`text-sm font-medium ${!notification.read ? 'text-foreground' : 'text-muted-foreground'}`}>
-                                {notification.title}
+                                Reflection Ready
                               </p>
                               {!notification.read && (
-                                <div className="h-2 w-2 bg-blue-500 rounded-full flex-shrink-0" />
+                                <div className="h-2 w-2 bg-green-500 rounded-full flex-shrink-0" />
                               )}
                             </div>
                             <p className="text-xs text-muted-foreground mt-1">
@@ -332,11 +260,6 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
                               <p className="text-xs text-muted-foreground">
                                 {formatDistanceToNow(new Date(notification.timestamp), { addSuffix: true })}
                               </p>
-                              {notification.kioskId && (
-                                <Badge variant="outline" className="text-xs">
-                                  Kiosk {notification.kioskId}
-                                </Badge>
-                              )}
                             </div>
                           </div>
                         </div>
