@@ -167,4 +167,4 @@ When working on BX-OS, always consider:
 
 ---
 
-*This knowledge base reflects the current state of BX-OS as of January 2025 and our established development methodology.*
+*This knowledge base reflects the current state of BX-OS as of 08/21/2025 and our established development methodology.*
