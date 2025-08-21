@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import AppHeader from "./AppHeader";
@@ -30,8 +30,10 @@ const TeacherDashboard = () => {
       }
     }
   }, [profile, user, navigate]);
+  
   const [showBSRModal, setShowBSRModal] = useState(false);
   const [selectedReflection, setSelectedReflection] = useState(null);
+  const studentSelectionRefreshRef = useRef<(() => void) | null>(null);
   const { 
     items, 
     loading, 
@@ -57,6 +59,12 @@ const TeacherDashboard = () => {
       urgent: data.urgent,
       notes: data.notes
     });
+    
+    // Immediately refresh student selection to exclude the newly submitted student
+    if (studentSelectionRefreshRef.current) {
+      studentSelectionRefreshRef.current();
+    }
+    
     setShowBSRModal(false);
   };
 
@@ -120,6 +128,7 @@ const TeacherDashboard = () => {
         isOpen={showBSRModal}
         onClose={closeBSRModal}
         onSubmit={handleBSRSubmit}
+        studentSelectionRefreshRef={studentSelectionRefreshRef}
       />
     </div>
   );

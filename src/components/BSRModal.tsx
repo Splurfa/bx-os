@@ -11,9 +11,10 @@ interface BSRModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
+  studentSelectionRefreshRef?: React.MutableRefObject<(() => void) | null>;
 }
 
-const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
+const BSRModal = ({ isOpen, onClose, onSubmit, studentSelectionRefreshRef }: BSRModalProps) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [teacherMood, setTeacherMood] = useState(50);
@@ -88,6 +89,7 @@ const BSRModal = ({ isOpen, onClose, onSubmit }: BSRModalProps) => {
               onStudentSelect={handleStudentSelect}
               onStudentDeselect={handleStudentDeselect}
               selectedStudentId={selectedStudent?.id}
+              onRefresh={studentSelectionRefreshRef}
             />
           </div>
           

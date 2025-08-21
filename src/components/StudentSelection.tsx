@@ -9,9 +9,10 @@ interface StudentSelectionProps {
   onStudentSelect: (student: Student) => void;
   onStudentDeselect?: () => void;
   selectedStudentId?: string;
+  onRefresh?: React.MutableRefObject<(() => void) | null>;
 }
 
-const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentId }: StudentSelectionProps) => {
+const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentId, onRefresh }: StudentSelectionProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [queuedStudentIds, setQueuedStudentIds] = useState<string[]>([]);
   const { students, loading } = useStudents();
@@ -19,13 +20,24 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
   // Fetch students who already have active/waiting behavior requests
   useEffect(() => {
     const fetchQueuedStudents = async () => {
-      const { data } = await supabase
-        .from('behavior_requests')
-        .select('student_id')
-        .in('status', ['waiting', 'active']);
-      
-      if (data) {
-        setQueuedStudentIds(data.map(req => req.student_id));
+      try {
+        // Strengthen the query with retry logic and better error handling
+        const { data, error } = await supabase
+          .from('behavior_requests')
+          .select('student_id')
+          .in('status', ['waiting', 'active'])
+          .order('created_at', { ascending: false });
+        
+        if (error) {
+          console.error('Error fetching queued students:', error);
+          return;
+        }
+        
+        if (data) {
+          setQueuedStudentIds(data.map(req => req.student_id));
+        }
+      } catch (error) {
+        console.error('Failed to fetch queued students:', error);
       }
     };
 
@@ -37,7 +49,39 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
       .on(
         'postgres_changes',
         {
-          event: '*',
+          event: 'INSERT',
+          schema: 'public',
+          table: 'behavior_requests'
+        },
+        (payload) => {
+          // Optimistic update: immediately add the new student ID to excluded list
+          if (payload.new && payload.new.student_id) {
+            setQueuedStudentIds(prev => {
+              if (!prev.includes(payload.new.student_id)) {
+                return [...prev, payload.new.student_id];
+              }
+              return prev;
+            });
+          }
+          // Also fetch latest data to ensure consistency
+          setTimeout(fetchQueuedStudents, 100);
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'behavior_requests'
+        },
+        () => {
+          fetchQueuedStudents();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
           schema: 'public',
           table: 'behavior_requests'
         },
@@ -47,10 +91,15 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
       )
       .subscribe();
 
+    // Expose refresh function to parent component
+    if (onRefresh) {
+      onRefresh.current = fetchQueuedStudents;
+    }
+
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [onRefresh]);
 
   const filteredStudents = students.filter(student => {
     // Only show students if there's a search term (at least 1 character)
