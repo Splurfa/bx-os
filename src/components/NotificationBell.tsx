@@ -8,7 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { TouchOptimizedButton } from './TouchOptimizedButton';
+import { notificationService } from '@/services/notificationService';
 import { formatDistanceToNow } from 'date-fns';
 
 interface NotificationItem {
@@ -40,6 +40,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [previousNotificationCount, setPreviousNotificationCount] = useState(0);
 
   // Generate simplified notifications - only reflection ready for review
   const generateNotifications = useCallback((
@@ -116,7 +117,23 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
 
       // Generate notifications
       const newNotifications = generateNotifications(reflections || []);
+      
+      // Check if we have new notifications and trigger audio/push
+      const currentUnreadCount = newNotifications.filter(n => !n.read).length;
+      if (currentUnreadCount > previousNotificationCount && previousNotificationCount > 0) {
+        // We have new notifications - trigger audio/push
+        if (user && newNotifications.length > 0) {
+          const latestNotification = newNotifications[0];
+          notificationService.handleNewNotification(
+            user.id,
+            'New Reflection Ready',
+            latestNotification.message
+          );
+        }
+      }
+      
       setNotifications(newNotifications);
+      setPreviousNotificationCount(currentUnreadCount);
 
     } catch (error) {
       console.error('Error in fetchNotifications:', error);
@@ -181,11 +198,10 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <TouchOptimizedButton
+        <Button
           variant="ghost"
           size="sm"
           className={`relative ${className}`}
-          touchTargetSize="default"
         >
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
@@ -196,11 +212,11 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
               {unreadCount > 99 ? '99+' : unreadCount}
             </Badge>
           )}
-        </TouchOptimizedButton>
+        </Button>
       </PopoverTrigger>
       
       <PopoverContent 
-        className="w-80 p-0 bg-background border shadow-lg z-50" 
+        className="w-80 p-0 bg-background border shadow-lg z-[100]" 
         align="end"
         side="bottom"
         sideOffset={8}
