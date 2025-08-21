@@ -30,6 +30,12 @@ For each iPad:
 - **No Authentication**: Students access kiosks anonymously
 - **Admin Access**: Separate URLs require authentication
 
+### Step 4: Notification System Setup
+- **Staff PWA Installation**: Install BX-OS as PWA for enhanced notifications
+- **Push Notification Permissions**: Guide staff through browser notification setup
+- **Audio Notification Settings**: Configure in-app audio notifications
+- **User Notification Guide**: Reference `Docs/USER-NOTIFICATION-GUIDE.md` for complete setup
+
 ## 🎯 System Capabilities
 
 ### Student Access (Anonymous)
@@ -73,6 +79,7 @@ For each iPad:
 
 ---
 
-**System Status**: ✅ Production Ready
+**System Status**: ✅ Production Ready (pending pre-deployment bug fixes)
 **Deployment Method**: Static URLs (no session management complexity)
 **Security**: Anonymous kiosk access, authenticated admin/teacher access
+**Notifications**: Bell dropdown, audio/push notifications operational with user controls

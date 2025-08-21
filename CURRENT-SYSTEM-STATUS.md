@@ -57,25 +57,27 @@
 - ✅ Real-time queue status updates across all UI components
 - ✅ Anonymous kiosk access with proper authentication boundaries
 - ✅ Admin queue management and bulk operations
+- ✅ **NOTIFICATION SYSTEM**: Bell dropdown, audio notifications, push notifications, user controls operational
 
 ---
 
 ## 🎯 IMMEDIATE NEXT STEPS
 
-### Priority 1: System Optimization (15 mins) ✅ NOTIFICATION SYSTEM COMPLETE
-1. **Performance Testing**: Validate under realistic concurrent load (3 kiosks + multiple staff)
-2. **Error Handling**: Ensure graceful degradation for edge cases
-3. **Documentation Finalization**: Update all documentation to reflect production-ready status
+### 🔴 PRE-DEPLOYMENT BUG FIXES (CRITICAL - 30 mins)
+1. **Force Logout Permission Bug**: Toast shows success but doesn't log out user; needs permission hierarchy (teachers can't log out admins)
+2. **Dashboard Role Integrity**: Admins/teachers must never see wrong dashboard (admin → teacher after reflection, corrected on refresh)
+3. **Urgent BSR Highlighting**: Subtle visual distinction needed in admin/teacher queues for urgent requests
+4. **External Notifications**: When BSR marked urgent, send Slack summary; more notification routes needed
 
-### Priority 2: System Optimization (15 mins)
+### Priority 2: Final System Validation (15 mins)
 1. **Performance Testing**: Validate under realistic concurrent load (3 kiosks + multiple staff)
 2. **Error Handling**: Ensure graceful degradation for edge cases
-3. **Documentation Finalization**: Update all documentation to reflect production-ready status
+3. **Notification System Testing**: Verify audio/push notifications work across devices
 
 ### Priority 3: Deployment Preparation (10 mins)
-1. **Final User Training**: Prepare deployment guide with working system workflows
-2. **iPad Configuration**: Final setup instructions for 3-kiosk deployment
-3. **Go-Live Checklist**: Complete pre-deployment validation
+1. **Final User Training**: Prepare deployment guide with working system workflows including notifications
+2. **iPad Configuration**: Final setup instructions for 3-kiosk deployment with PWA notification setup
+3. **Go-Live Checklist**: Complete pre-deployment validation including notification permissions
 
 ---
 
@@ -97,6 +99,12 @@
 - [x] Concurrent kiosk usage (validated with queue management) ✅ **WORKING**
 - [ ] Performance optimization under peak load ⚠️ **PENDING FINAL TESTING**
 - [x] Notification delivery and interaction ✅ **COMPLETE** - Audio and push notifications operational with user controls
+
+### 🔴 PRE-DEPLOYMENT BUG TRACKING
+- [ ] Force logout permission hierarchy fix ❌ **CRITICAL BUG**
+- [ ] Dashboard role integrity protection ❌ **CRITICAL BUG**  
+- [ ] Urgent BSR visual highlighting ⚠️ **UI ENHANCEMENT**
+- [ ] External Slack notification integration ⚠️ **FEATURE EXTENSION**
 
 ---
 

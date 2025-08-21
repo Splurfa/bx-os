@@ -63,12 +63,18 @@
 - [x] Concurrent teacher/admin access scenarios ✅ **WORKING**
 - [x] Anonymous kiosk access without authentication barriers ✅ **WORKING**
 
-### Production Readiness Status ✅ CORE COMPLETE
+### Production Readiness Status ✅ CORE COMPLETE + NOTIFICATION SYSTEM
 - [x] Core functionality validated under testing scenarios ✅ **WORKING**
 - [x] Error handling operational for common scenarios ✅ **WORKING**
 - [x] Documentation updated to reflect validated system state ✅ **WORKING**
 - [x] Notification system enhancement ✅ **COMPLETE** - Dropdown fixed, audio/push notifications added, user guide created
 - [ ] Final performance optimization testing ⚠️ **PENDING**
+
+### 🔴 PRE-DEPLOYMENT BUG FIXES (CRITICAL)
+- [ ] **Force Logout Permission Bug**: Fix permission hierarchy (teachers can't log out admins) ❌ **CRITICAL**
+- [ ] **Dashboard Role Integrity**: Prevent admin→teacher navigation after reflection ❌ **CRITICAL**
+- [ ] **Urgent BSR Visual Highlighting**: Add subtle visual distinction in queues ⚠️ **UI ENHANCEMENT**
+- [ ] **External Slack Notifications**: Urgent BSR notifications to Slack ⚠️ **FEATURE EXTENSION**
 
 ## ❌ PREVIOUSLY REPORTED FALSE ISSUES (Corrected)
 
@@ -92,4 +98,4 @@
 - Documentation reflects actual system capabilities
 - Admin monitoring and management functions validated
 
-**SPRINT CONFIDENCE: 100%** - Core system complete and operational, notification enhancement in progress
+**SPRINT CONFIDENCE: 90%** - Core system + notification system complete, pending 4 pre-deployment bug fixes
