@@ -142,9 +142,10 @@ export const useSupabaseQueue = () => {
   const addToQueue = async (data: {
     student: Student;
     behaviors: string[];
-    mood: string;
+    mood: string | number;
     urgent?: boolean;
     notes?: string;
+    contextId?: string;
   }) => {
     try {
       if (!user) {

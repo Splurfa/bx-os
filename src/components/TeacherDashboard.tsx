@@ -6,7 +6,7 @@ import AppHeader from "./AppHeader";
 import EmptyState from "./EmptyState";
 import FloatingActionButton from "./FloatingActionButton";
 import QueueDisplay from "./QueueDisplay";
-import BSRModal from "./BSRModal";
+import CreateBSRForm from "./CreateBSRForm";
 import ReviewReflection from "./ReviewReflection";
 import { Loader2 } from "lucide-react";
 import { useSupabaseQueue } from "../hooks/useSupabaseQueue";
@@ -31,7 +31,7 @@ const TeacherDashboard = () => {
     }
   }, [profile, user, navigate]);
   
-  const [showBSRModal, setShowBSRModal] = useState(false);
+  const [showCreateBSR, setShowCreateBSR] = useState(false);
   const [selectedReflection, setSelectedReflection] = useState(null);
   const studentSelectionRefreshRef = useRef<(() => void) | null>(null);
   const { 
@@ -43,29 +43,42 @@ const TeacherDashboard = () => {
     formatTimeElapsed 
   } = useSupabaseQueue();
 
-  const openBSRModal = () => {
-    setShowBSRModal(true);
+  const openCreateBSR = () => {
+    setShowCreateBSR(true);
   };
 
-  const closeBSRModal = () => {
-    setShowBSRModal(false);
+  const closeCreateBSR = () => {
+    setShowCreateBSR(false);
   };
 
-  const handleBSRSubmit = async (data: any) => {
+  const handleBSRSubmit = async (data: {
+    studentName: string;
+    contextId: string;
+    behaviors: string[];
+    teacherMood: number;
+    urgencyLevel: string;
+    note: string;
+  }) => {
+    // Convert the new BSR form data to the format expected by addToQueue
+    const studentData = {
+      id: `temp-${Date.now()}`, 
+      first_name: data.studentName.split(' ')[0] || data.studentName,
+      last_name: data.studentName.split(' ').slice(1).join(' ') || '',
+      family_id: 'temp-family-id',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
     await addToQueue({
-      student: data.student,
+      student: studentData,
       behaviors: data.behaviors,
-      mood: String(data.mood),
-      urgent: data.urgent,
-      notes: data.notes
+      mood: data.teacherMood,
+      urgent: data.urgencyLevel === 'urgent',
+      notes: data.note,
+      contextId: data.contextId
     });
     
-    // Immediately refresh student selection to exclude the newly submitted student
-    if (studentSelectionRefreshRef.current) {
-      studentSelectionRefreshRef.current();
-    }
-    
-    setShowBSRModal(false);
+    setShowCreateBSR(false);
   };
 
   const handleSelectReflection = (item: any) => {
@@ -85,6 +98,16 @@ const TeacherDashboard = () => {
       setSelectedReflection(null);
     }
   };
+
+  // Show CreateBSRForm when creating new BSR
+  if (showCreateBSR) {
+    return (
+      <CreateBSRForm
+        onSubmit={handleBSRSubmit}
+        onCancel={closeCreateBSR}
+      />
+    );
+  }
 
   // Show reflection review if selected
   if (selectedReflection) {
@@ -122,14 +145,7 @@ const TeacherDashboard = () => {
         )}
       </main>
       
-      <FloatingActionButton onClick={openBSRModal} />
-
-      <BSRModal
-        isOpen={showBSRModal}
-        onClose={closeBSRModal}
-        onSubmit={handleBSRSubmit}
-        studentSelectionRefreshRef={studentSelectionRefreshRef}
-      />
+      <FloatingActionButton onClick={openCreateBSR} />
     </div>
   );
 };
