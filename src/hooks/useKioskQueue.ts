@@ -26,6 +26,10 @@ export interface BehaviorRequest {
   assigned_kiosk_id?: number;
   location?: string;
   time_of_incident?: string;
+  antecedent_context_id?: string;
+  urgency_level?: 'standard' | 're_integration' | 'urgent';
+  teacher_mood?: number;
+  note?: string;
   created_at: string;
   updated_at: string;
   student?: Student;
@@ -33,6 +37,11 @@ export interface BehaviorRequest {
   position?: number;
   timestamp?: Date;
   behaviors?: string[];
+  antecedent_context?: {
+    id: string;
+    label: string;
+    key: string;
+  };
 }
 
 export interface Reflection {
@@ -70,7 +79,8 @@ export const useKioskQueue = () => {
         .select(`
           *,
           student:students(*),
-          reflection:reflections(*)
+          reflection:reflections(*),
+          antecedent_context:antecedent_contexts(id, key, label)
         `)
         .order('created_at', { ascending: true });
 

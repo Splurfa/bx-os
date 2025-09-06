@@ -30,17 +30,34 @@ CREATE TABLE students (
 );
 ```
 
-#### behavior_support_requests
+#### behavior_requests
 ```sql
-CREATE TABLE behavior_support_requests (
+CREATE TABLE behavior_requests (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   student_id UUID REFERENCES students NOT NULL,
   teacher_id UUID REFERENCES profiles NOT NULL,
-  behavior_category TEXT NOT NULL,
+  behavior_type TEXT NOT NULL,
   description TEXT,
-  status TEXT DEFAULT 'pending',
+  antecedent_context_id UUID REFERENCES antecedent_contexts,
+  urgency_level TEXT DEFAULT 'standard' CHECK (urgency_level IN ('standard','re_integration','urgent')),
+  teacher_mood INTEGER CHECK (teacher_mood BETWEEN 1 AND 5),
+  note TEXT,
+  status TEXT DEFAULT 'waiting',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  completed_at TIMESTAMP WITH TIME ZONE
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+```
+
+#### antecedent_contexts
+```sql
+CREATE TABLE antecedent_contexts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  key TEXT UNIQUE NOT NULL,
+  label TEXT NOT NULL,
+  description TEXT,
+  sort_order INTEGER NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 ```
 

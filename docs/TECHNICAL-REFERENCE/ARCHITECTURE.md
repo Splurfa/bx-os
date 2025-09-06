@@ -171,13 +171,27 @@ students (
 )
 
 -- Behavioral support request tracking
-behavior_support_requests (
+behavior_requests (
   id UUID PRIMARY KEY,
   student_id UUID REFERENCES students,
   teacher_id UUID REFERENCES profiles,
-  behavior_category TEXT,
+  behavior_type TEXT,
   description TEXT,
-  status TEXT DEFAULT 'pending',
+  antecedent_context_id UUID REFERENCES antecedent_contexts,
+  urgency_level TEXT DEFAULT 'standard',
+  teacher_mood INTEGER,
+  note TEXT,
+  status TEXT DEFAULT 'waiting',
+  created_at TIMESTAMP
+)
+
+-- Antecedent context reference table
+antecedent_contexts (
+  id UUID PRIMARY KEY,
+  key TEXT UNIQUE,
+  label TEXT,
+  description TEXT,
+  sort_order INTEGER,
   created_at TIMESTAMP
 )
 

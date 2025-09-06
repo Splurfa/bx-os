@@ -67,6 +67,36 @@ export type Database = {
           },
         ]
       }
+      antecedent_contexts: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          key: string
+          label: string
+          sort_order: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          key: string
+          label: string
+          sort_order: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          key?: string
+          label?: string
+          sort_order?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       behavior_history: {
         Row: {
           archived_at: string
@@ -186,51 +216,70 @@ export type Database = {
       }
       behavior_requests: {
         Row: {
+          antecedent_context_id: string | null
           assigned_kiosk: number | null
           behavior_type: string
           created_at: string
           description: string
           id: string
           location: string | null
+          note: string | null
           priority_level: string | null
           status: string
           student_id: string
           teacher_id: string | null
+          teacher_mood: number | null
           teacher_name: string
           time_of_incident: string | null
           updated_at: string
+          urgency_level: string | null
         }
         Insert: {
+          antecedent_context_id?: string | null
           assigned_kiosk?: number | null
           behavior_type: string
           created_at?: string
           description: string
           id?: string
           location?: string | null
+          note?: string | null
           priority_level?: string | null
           status?: string
           student_id: string
           teacher_id?: string | null
+          teacher_mood?: number | null
           teacher_name: string
           time_of_incident?: string | null
           updated_at?: string
+          urgency_level?: string | null
         }
         Update: {
+          antecedent_context_id?: string | null
           assigned_kiosk?: number | null
           behavior_type?: string
           created_at?: string
           description?: string
           id?: string
           location?: string | null
+          note?: string | null
           priority_level?: string | null
           status?: string
           student_id?: string
           teacher_id?: string | null
+          teacher_mood?: number | null
           teacher_name?: string
           time_of_incident?: string | null
           updated_at?: string
+          urgency_level?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "behavior_requests_antecedent_context_id_fkey"
+            columns: ["antecedent_context_id"]
+            isOneToOne: false
+            referencedRelation: "antecedent_contexts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "behavior_requests_student_id_fkey"
             columns: ["student_id"]
