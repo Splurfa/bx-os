@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, User, BookOpen, Eye, CheckCircle } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import ActivitySelection from "./ActivitySelection";
 import BehaviorSelection from "./BehaviorSelection";
@@ -70,21 +75,28 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
     );
   };
 
+  const [showUrgencyDialog, setShowUrgencyDialog] = useState(false);
+
   const handleSubmit = async () => {
     if (selectedStudent && selectedContext && selectedBehaviors.length > 0) {
-      setIsSubmitting(true);
-      try {
-        onSubmit({
-          student: selectedStudent,
-          contextId: selectedContext,
-          behaviors: selectedBehaviors,
-          teacherMood,
-          urgencyLevel,
-          note
-        });
-      } finally {
-        setIsSubmitting(false);
-      }
+      setShowUrgencyDialog(true);
+    }
+  };
+
+  const handleUrgencySubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      onSubmit({
+        student: selectedStudent!,
+        contextId: selectedContext,
+        behaviors: selectedBehaviors,
+        teacherMood,
+        urgencyLevel,
+        note
+      });
+    } finally {
+      setIsSubmitting(false);
+      setShowUrgencyDialog(false);
     }
   };
 
@@ -99,141 +111,175 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
   };
 
   return (
-    <div className="h-screen bg-background p-3 flex flex-col">
-      <div className="max-w-2xl mx-auto space-y-3 flex-1 flex flex-col">
-        {/* Header */}
-        <div className="flex items-center space-x-4">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={onCancel}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Create Behavior Support Report</h1>
-            <p className="text-muted-foreground">Step {step} of 4</p>
+    <>
+      <div className="h-screen bg-background p-2 flex flex-col">
+        <div className="max-w-2xl mx-auto space-y-2 flex-1 flex flex-col">
+          {/* Header */}
+          <div className="flex items-center space-x-3">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={onCancel}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              Back
+            </Button>
+            <div>
+              <h1 className="text-lg font-bold text-foreground">Create BSR</h1>
+              <p className="text-xs text-muted-foreground">Step {step} of 4</p>
+            </div>
           </div>
-        </div>
 
-        {/* Progress Bar */}
-        <div className="w-full bg-muted rounded-full h-2">
-          <div 
-            className="bg-gradient-primary h-2 rounded-full transition-all duration-300"
-            style={{ width: `${(step / 4) * 100}%` }}
-          ></div>
-        </div>
+          {/* Progress Bar */}
+          <div className="w-full bg-muted rounded-full h-1">
+            <div 
+              className="bg-primary h-1 rounded-full transition-all duration-300"
+              style={{ width: `${(step / 4) * 100}%` }}
+            ></div>
+          </div>
 
-        {/* Step 1: Student Name */}
-        {step === 1 && (
-          <Card className="p-3 bg-gradient-card shadow-card animate-slide-up flex-1 flex flex-col">
-            <div className="text-center space-y-3 flex-1 flex flex-col">
-              <div>
-                <h2 className="text-lg font-semibold text-foreground mb-1">Student Information</h2>
-                <p className="text-sm text-muted-foreground">Select a student</p>
-              </div>
-              <div className="flex-1 min-h-0">
-                <StudentSelection
-                  onStudentSelect={setSelectedStudent}
-                  onStudentDeselect={() => setSelectedStudent(null)}
-                  selectedStudentId={selectedStudent?.id}
-                />
+          {/* Step 1: Student Name */}
+          {step === 1 && (
+            <div className="border border-border rounded p-2 flex-1 flex flex-col">
+              <div className="text-center space-y-2 flex-1 flex flex-col">
+                <div>
+                  <h2 className="text-base font-semibold text-foreground">Student</h2>
+                  <p className="text-xs text-muted-foreground">Select a student</p>
+                </div>
+                <div className="flex-1 min-h-0">
+                  <StudentSelection
+                    onStudentSelect={setSelectedStudent}
+                    onStudentDeselect={() => setSelectedStudent(null)}
+                    selectedStudentId={selectedStudent?.id}
+                  />
+                </div>
               </div>
             </div>
-          </Card>
-        )}
+          )}
 
-        {/* Step 2: Context Selection */}
-        {step === 2 && (
-          <Card className="p-3 bg-gradient-card shadow-card animate-slide-up flex-1 flex flex-col">
-            <div className="text-center space-y-3 flex-1 flex flex-col">
-              <div>
-                <h2 className="text-lg font-semibold text-foreground mb-1">Activity Context</h2>
-                <p className="text-sm text-muted-foreground">What was happening when the behavior occurred?</p>
-              </div>
-              <div className="flex-1 min-h-0">
-                <ActivitySelection
-                  selectedContext={selectedContext}
-                  onContextSelect={setSelectedContext}
-                />
+          {/* Step 2: Context Selection */}
+          {step === 2 && (
+            <div className="border border-border rounded p-2 flex-1 flex flex-col">
+              <div className="text-center space-y-2 flex-1 flex flex-col">
+                <div>
+                  <h2 className="text-base font-semibold text-foreground">Context</h2>
+                  <p className="text-xs text-muted-foreground">What was happening?</p>
+                </div>
+                <div className="flex-1 min-h-0">
+                  <ActivitySelection
+                    selectedContext={selectedContext}
+                    onContextSelect={setSelectedContext}
+                  />
+                </div>
               </div>
             </div>
-          </Card>
-        )}
+          )}
 
-        {/* Step 3: Behavior Selection */}
-        {step === 3 && (
-          <Card className="p-3 bg-gradient-card shadow-card animate-slide-up flex-1 flex flex-col">
-            <div className="text-center space-y-3 flex-1 flex flex-col">
-              <div>
-                <h2 className="text-lg font-semibold text-foreground mb-1">Behavior Categories</h2>
-                <p className="text-sm text-muted-foreground">Select all that apply</p>
+          {/* Step 3: Behavior Selection */}
+          {step === 3 && (
+            <div className="border border-border rounded p-2 flex-1 flex flex-col">
+              <div className="text-center space-y-2 flex-1 flex flex-col">
+                <div>
+                  <h2 className="text-base font-semibold text-foreground">Behaviors</h2>
+                  <p className="text-xs text-muted-foreground">Select all that apply</p>
+                </div>
+                <div className="flex-1 min-h-0">
+                  <BehaviorSelection
+                    selectedBehaviors={selectedBehaviors}
+                    onBehaviorToggle={handleBehaviorToggle}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 4: Review & Submit */}
+          {step === 4 && (
+            <div className="border border-border rounded flex-1 flex flex-col">
+              <div className="text-center py-2 px-2 border-b">
+                <h2 className="text-base font-semibold text-foreground">Review</h2>
+                <p className="text-xs text-muted-foreground">Finalize your report</p>
               </div>
               <div className="flex-1 min-h-0">
-                <BehaviorSelection
+                <ReviewScreen
+                  studentName={selectedStudent ? `${selectedStudent.first_name} ${selectedStudent.last_name}` : ''}
+                  contextLabel={contextLabel}
                   selectedBehaviors={selectedBehaviors}
-                  onBehaviorToggle={handleBehaviorToggle}
+                  teacherMood={teacherMood}
+                  urgencyLevel={urgencyLevel}
+                  note={note}
+                  onTeacherMoodChange={setTeacherMood}
+                  onUrgencyLevelChange={setUrgencyLevel}
+                  onNoteChange={setNote}
+                  onSubmit={handleSubmit}
+                  isSubmitting={isSubmitting}
                 />
               </div>
             </div>
-          </Card>
-        )}
+          )}
 
-        {/* Step 4: Review & Submit */}
-        {step === 4 && (
-          <Card className="bg-gradient-card shadow-card animate-slide-up flex-1 flex flex-col">
-            <div className="text-center py-3 px-3 border-b">
-              <h2 className="text-lg font-semibold text-foreground">Review & Submit</h2>
-              <p className="text-sm text-muted-foreground">Finalize your report</p>
+          {/* Navigation - Fixed to bottom */}
+          {step < 4 && (
+            <div className="sticky bottom-0 bg-background p-2 border-t border-border flex justify-between">
+              {step > 1 && (
+                <Button 
+                  variant="outline" 
+                  onClick={() => setStep(step - 1)}
+                  className="min-w-20"
+                  disabled={isSubmitting}
+                >
+                  Previous
+                </Button>
+              )}
+              
+              <div className="ml-auto">
+                <Button 
+                  onClick={() => setStep(step + 1)}
+                  disabled={!canProceed() || isSubmitting}
+                  className="min-w-20"
+                >
+                  {step === 3 ? 'Review' : 'Next'}
+                </Button>
+              </div>
             </div>
-            <div className="flex-1 min-h-0">
-              <ReviewScreen
-                studentName={selectedStudent ? `${selectedStudent.first_name} ${selectedStudent.last_name}` : ''}
-                contextLabel={contextLabel}
-                selectedBehaviors={selectedBehaviors}
-                teacherMood={teacherMood}
-                urgencyLevel={urgencyLevel}
-                note={note}
-                onTeacherMoodChange={setTeacherMood}
-                onUrgencyLevelChange={setUrgencyLevel}
-                onNoteChange={setNote}
-                onSubmit={handleSubmit}
-                isSubmitting={isSubmitting}
-              />
-            </div>
-          </Card>
-        )}
+          )}
+        </div>
+      </div>
 
-        {/* Navigation - Fixed to bottom */}
-        {step < 4 && (
-          <div className="sticky bottom-0 bg-background p-3 border-t border-border flex justify-between">
-            {step > 1 && (
-              <Button 
-                variant="outline" 
-                onClick={() => setStep(step - 1)}
-                className="min-w-20"
-                disabled={isSubmitting}
-              >
-                Previous
+      {/* Urgency Selection Dialog */}
+      <Dialog open={showUrgencyDialog} onOpenChange={setShowUrgencyDialog}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Select submission type</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <RadioGroup value={urgencyLevel} onValueChange={setUrgencyLevel}>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="standard" id="standard" />
+                <Label htmlFor="standard" className="text-sm">Standard (regular processing)</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="re_integration" id="re_integration" />
+                <Label htmlFor="re_integration" className="text-sm">Re-integration (priority return)</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="urgent" id="urgent" />
+                <Label htmlFor="urgent" className="text-sm">Urgent (immediate attention)</Label>
+              </div>
+            </RadioGroup>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="outline" onClick={() => setShowUrgencyDialog(false)}>
+                Cancel
               </Button>
-            )}
-            
-            <div className="ml-auto">
-              <Button 
-                onClick={() => setStep(step + 1)}
-                disabled={!canProceed() || isSubmitting}
-                className="bg-gradient-primary text-white shadow-button hover:shadow-elevated transition-all duration-200 min-w-20"
-              >
-                {step === 3 ? 'Review' : 'Next'}
+              <Button onClick={handleUrgencySubmit} disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Submit'}
               </Button>
             </div>
           </div>
-        )}
-
-      </div>
-    </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

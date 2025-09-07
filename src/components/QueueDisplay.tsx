@@ -184,7 +184,7 @@ const QueueDisplay = React.memo(({
               </div>
             </div>
 
-            {/* Row 2, Col 1: Timer + Context + Kiosk (mobile = K1) */}
+            {/* Row 2, Col 1: Timer + Kiosk (K1, K2, K3) */}
             <div className="col-[1] row-[2] flex items-center gap-2 text-xs text-muted-foreground min-w-0">
               <span className="whitespace-nowrap">
                 <LiveTimer startTime={item.timestamp || new Date(item.created_at)} />
@@ -196,9 +196,7 @@ const QueueDisplay = React.memo(({
               )}
               {('assigned_kiosk_id' in item) && item.assigned_kiosk_id && item.status !== 'review' && (
                 <Badge variant="outline" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
-                  <Monitor className="h-3 w-3 mr-1" />
-                  <span className="md:hidden">K{item.assigned_kiosk_id}</span>
-                  <span className="hidden md:inline">Kiosk {item.assigned_kiosk_id}</span>
+                  K{item.assigned_kiosk_id}
                 </Badge>
               )}
             </div>

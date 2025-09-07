@@ -47,15 +47,15 @@ const ActivitySelection = ({ selectedContext, onContextSelect }: ActivitySelecti
   }
 
   return (
-    <div className="h-full bg-background">
-      <div className="grid grid-cols-2 gap-2 p-2 h-full">
+    <div className="h-full bg-background overflow-hidden">
+      <div className="grid grid-cols-2 gap-1 p-1 h-full">
         {contexts.map((context) => {
           const isSelected = selectedContext === context.id;
-          const baseClasses = "h-full min-h-16 p-2 border-2 rounded-lg text-xs font-medium flex items-center justify-center transition-all cursor-pointer text-center hover:shadow-sm";
+          const baseClasses = "h-full min-h-12 p-1 border rounded text-xs flex items-center justify-center transition-all cursor-pointer text-center";
           
           const buttonClasses = isSelected 
-            ? `${baseClasses} bg-primary border-primary text-primary-foreground shadow-sm`
-            : `${baseClasses} bg-card border-border text-foreground hover:border-muted-foreground`;
+            ? `${baseClasses} bg-primary border-primary text-primary-foreground`
+            : `${baseClasses} border-border text-foreground hover:border-muted-foreground`;
 
           return (
             <button
@@ -64,10 +64,10 @@ const ActivitySelection = ({ selectedContext, onContextSelect }: ActivitySelecti
               className={buttonClasses}
               title={context.description}
             >
-              <div className="text-center space-y-1">
-                <div className="font-semibold">{context.label}</div>
+              <div className="text-center">
+                <div className="font-medium">{context.label}</div>
                 {context.description && (
-                  <div className="text-xs opacity-80 line-clamp-2">
+                  <div className="text-xs opacity-70 mt-0.5 line-clamp-1">
                     {context.description}
                   </div>
                 )}
