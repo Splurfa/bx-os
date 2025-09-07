@@ -114,7 +114,7 @@ const ReviewScreen = ({
                 return (
                   <span 
                     key={index} 
-                    className={`px-2 py-1 rounded-full text-sm font-medium border ${classes}`}
+                    className={`px-1.5 py-0.5 rounded-full text-sm font-medium border ${classes}`}
                   >
                     {label}
                   </span>
@@ -136,27 +136,8 @@ const ReviewScreen = ({
         </div>
       </div>
 
-      {/* Submit Button and Notes Section */}
+      {/* Notes and Submit Section */}
       <div className="p-4 space-y-4 bg-background border-t border-border">
-        <Button 
-          onClick={onSubmit}
-          disabled={isSubmitting}
-          className="w-full h-12 bg-gradient-primary text-white shadow-lg hover:shadow-elevated transition-all duration-200"
-          size="lg"
-        >
-          {isSubmitting ? (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              Submitting...
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <span>📤</span>
-              Submit Request
-            </div>
-          )}
-        </Button>
-        
         {/* Notes Section */}
         <div className="space-y-2">
           <Label htmlFor="notes" className="text-sm font-medium text-foreground">
@@ -170,6 +151,23 @@ const ReviewScreen = ({
             className="min-h-[80px] resize-none"
           />
         </div>
+        
+        {/* Submit Button - Anchored to bottom */}
+        <Button 
+          onClick={onSubmit}
+          disabled={isSubmitting}
+          className="w-full h-12 bg-gradient-primary text-white shadow-lg hover:shadow-elevated transition-all duration-200"
+          size="lg"
+        >
+          {isSubmitting ? (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Submitting...
+            </div>
+          ) : (
+            "Submit Request"
+          )}
+        </Button>
       </div>
     </div>
   );
