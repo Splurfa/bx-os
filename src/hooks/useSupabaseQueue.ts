@@ -76,8 +76,7 @@ export const useSupabaseQueue = () => {
           *,
           student:students(*),
           reflection:reflections(*),
-          antecedent_context:antecedent_contexts(id, key, label),
-          teacher_profile:profiles!teacher_id(full_name)
+          antecedent_context:antecedent_contexts(id, key, label)
         `)
         .neq('status', 'completed'); // Exclude completed items from queue display
 
@@ -99,9 +98,31 @@ export const useSupabaseQueue = () => {
 
       if (error) throw error;
 
+      // Fetch teacher profiles for admin dashboard
+      const teacherIds = data?.map(item => item.teacher_id).filter(Boolean) || [];
+      let teacherProfiles = {};
+      
+      if (teacherIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id, full_name')
+          .in('id', teacherIds);
+        
+        teacherProfiles = profiles?.reduce((acc, profile) => {
+          acc[profile.id] = profile;
+          return acc;
+        }, {}) || {};
+      }
+
+      // Add teacher profile data to each behavior request
+      const dataWithTeachers = data?.map(item => ({
+        ...item,
+        teacher_profile: teacherProfiles[item.teacher_id] || null
+      })) || [];
+
       // PRIORITY QUEUE BEHAVIOR: Urgent/Re-integration items are intentionally pushed to top
       // This ensures urgent items appear at top of queue regardless of creation time
-      const sortedData = data?.sort((a: any, b: any) => {
+      const sortedData = dataWithTeachers?.sort((a: any, b: any) => {
         const urgencyOrder = { urgent: 3, re_integration: 2, standard: 1 };
         const aUrgency = urgencyOrder[a.urgency_level as keyof typeof urgencyOrder] || 1;
         const bUrgency = urgencyOrder[b.urgency_level as keyof typeof urgencyOrder] || 1;
