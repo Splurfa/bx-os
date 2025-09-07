@@ -87,25 +87,21 @@ const ReviewScreen = ({
 
   return (
     <div className="h-full flex flex-col bg-background">
-      {/* Content Area */}
-      <div className="flex-1 p-6 space-y-6">
-        {/* Summary Section - No redundant heading */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-4">
-            <span className="text-foreground font-semibold text-sm min-w-[72px]">Student:</span>
-            <Badge className="px-2 py-1 bg-primary text-primary-foreground text-sm">
-              {studentName}
-            </Badge>
+      {/* Content Area with compact spacing like QueueDisplay */}
+      <div className="flex-1 p-2 space-y-2">
+        {/* Summary Section - QueueDisplay compact style */}
+        <div className="space-y-1 p-2 bg-background border-b border-border">
+          <div className="flex items-center gap-2">
+            <span className="text-foreground font-medium text-sm min-w-[60px]">Student:</span>
+            <span className="text-foreground text-sm">{studentName}</span>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-foreground font-semibold text-sm min-w-[72px]">Context:</span>
-            <Badge variant="secondary" className="px-2 py-1 bg-secondary text-secondary-foreground text-sm">
-              {contextLabel}
-            </Badge>
+          <div className="flex items-center gap-2">
+            <span className="text-foreground font-medium text-sm min-w-[60px]">Context:</span>
+            <span className="text-foreground text-sm">{contextLabel}</span>
           </div>
-          <div className="flex items-start gap-4">
-            <span className="text-foreground font-semibold text-sm min-w-[72px] mt-0.5">Behaviors:</span>
-            <div className="flex flex-wrap gap-1.5">
+          <div className="flex items-start gap-2">
+            <span className="text-foreground font-medium text-sm min-w-[60px] mt-0.5">Behaviors:</span>
+            <div className="flex flex-wrap gap-1">
               {selectedBehaviors.map((behaviorId, index) => {
                 const behavior = behaviors.find(b => b.id === behaviorId);
                 const label = behavior ? behavior.label : behaviorId;
@@ -124,10 +120,10 @@ const ReviewScreen = ({
           </div>
         </div>
 
-        {/* Teacher Mood Section - Centered */}
-        <div className="space-y-4 pt-2">
+        {/* Teacher Mood Section - Compact */}
+        <div className="space-y-2 p-2">
           <h4 className="text-center text-base font-semibold text-foreground">Current Mood</h4>
-          <div className="px-4">
+          <div className="px-2">
             <MoodSlider
               value={moodToPercentage(teacherMood)}
               onChange={handleMoodChange}
@@ -136,8 +132,8 @@ const ReviewScreen = ({
         </div>
       </div>
 
-      {/* Notes and Submit Section */}
-      <div className="p-4 space-y-4 bg-background border-t border-border">
+      {/* Notes and Submit Section - Compact like QueueDisplay */}
+      <div className="p-2 space-y-2 bg-background border-t border-border">
         {/* Notes Section */}
         <div className="space-y-2">
           <Label htmlFor="notes" className="text-sm font-medium text-foreground">

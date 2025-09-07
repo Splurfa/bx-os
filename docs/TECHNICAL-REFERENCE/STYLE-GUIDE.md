@@ -1,63 +1,123 @@
 # BX-OS Typography & Style Guide
 
 ## Overview
-This style guide documents BX-OS typography hierarchy and design patterns, emphasizing preservation of existing optimized components while standardizing inconsistencies.
+This style guide uses **QueueDisplay** as the benchmark for compact, production-ready typography patterns across BX-OS. The QueueDisplay component represents optimal spacing, sizing, and hierarchy for mobile-first design.
 
-## Typography Hierarchy
+## Typography Hierarchy (Based on QueueDisplay Standards)
 
-### Header Hierarchy
-- **H1 (Page Titles)**: `text-xl font-bold` - Main page titles, app header
-- **H2 (Section Headings)**: `text-lg font-semibold` - Major content sections
-- **H3 (Subsection Headings)**: `text-base font-semibold` - Minor sections ("Current Mood", step headers)
-- **H4 (Labels)**: `text-sm font-medium` or `text-sm font-semibold` - Form labels, data labels
-- **Body (Content)**: `text-sm font-normal` - General content, descriptions
-- **Caption (Chips/Badges)**: `text-xs font-medium` - Small chips, metadata
+### Core Typography Scale
+- **H1 (Page Titles)**: `text-xl font-bold` - Main page titles only
+- **H2 (Section Headings)**: `text-base font-semibold` - Major content sections  
+- **Student Names/Primary Content**: `text-sm font-medium` - Primary identifiers, main content
+- **Labels/Secondary Content**: `text-sm font-medium` - Form labels, data labels
+- **Status Badges/Chips**: `text-xs font-medium px-1.5 py-0.5` - All badges, chips, metadata
+- **Timer/Supporting Info**: `text-xs text-muted-foreground` - Supporting information
 
-### Visual Hierarchy Rules
-1. **Labels must be more prominent than their associated chips/badges**
-2. **Content text should be readable and accessible**
-3. **Headers should establish clear information architecture**
+### QueueDisplay Benchmark Patterns
+
+#### Badge Sizing (STANDARD)
+```tsx
+// Status badges - QueueDisplay standard
+<Badge variant="outline" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
+  Assigned
+</Badge>
+
+// Behavior chips - compact dots preferred, or small badges
+<div className="w-2 h-2 rounded-full bg-behavior-color" />
+```
+
+#### Spacing Patterns (STANDARD)
+```tsx
+// Teacher layout (compact) - QueueDisplay standard
+itemPadding: 'gap-y-0.5 px-2 py-1'
+listClass: 'space-y-0.5'
+containerClass: 'space-y-1'
+
+// Grid gaps - tight spacing
+gap-x-2, gap-0.5, gap-1
+```
+
+#### Typography Hierarchy (STANDARD)
+```tsx
+// Student name - QueueDisplay standard
+<h3 className="text-sm font-medium text-foreground">
+  Student Name
+</h3>
+
+// Timer/supporting info - QueueDisplay standard
+<span className="text-xs text-muted-foreground">
+  0:03
+</span>
+
+// Labels for compact display
+<span className="text-sm font-medium">Label:</span>
+```
 
 ## Component-Specific Guidelines
 
-### Optimized Components (DO NOT CHANGE)
-These components have been carefully optimized and should be preserved:
+### Optimized Components (PRESERVE EXACTLY)
+- **QueueDisplay.tsx**: Perfect benchmark - DO NOT CHANGE
+- **StudentSelection.tsx**: Typography matches QueueDisplay patterns  
+- **BehaviorSelection.tsx**: Button sizing and readability optimized
 
-- **QueueDisplay.tsx**: Typography and spacing are production-ready
-- **StudentSelection.tsx**: Visual hierarchy is properly established
-- **BehaviorSelection.tsx**: Button readability is optimized
-- **Badge components**: Existing badge systems are working well
+### Components Requiring QueueDisplay Alignment
+- **ReviewScreen.tsx**: Chips should match QueueDisplay badge sizing (`text-xs px-1.5 py-0.5`)
+- **CreateBSRForm.tsx**: Headers follow hierarchy but keep content readable
+- **AppHeader.tsx**: Page title prominence balanced with compact navigation
 
-### Components Requiring Standardization
-- **CreateBSRForm.tsx**: Standardize page title and section headings
-- **EmptyState.tsx**: Ensure consistent header hierarchy
-- **ReviewScreen.tsx**: Fix chip-to-label hierarchy relationship
+## Compact Design Principles
 
-## Design Tokens Usage
-- Use semantic tokens from `index.css` and `tailwind.config.ts`
-- Always use HSL color functions
-- Avoid direct color values in components
-- Leverage design system gradients and shadows
+### 1. Badge/Chip Consistency
+- **All status indicators**: `text-xs px-1.5 py-0.5`
+- **All behavior tags**: Either `w-2 h-2` dots or `text-xs` badges
+- **No oversized chips**: Everything subordinate to main content
 
-## Implementation Strategy
-- **Surgical changes only**: Fix specific hierarchy issues without breaking working patterns
-- **Preserve existing optimized interfaces**: Don't change what's working
-- **Document exceptions**: Some components have specialized requirements
-- **Maintain consistency**: Apply standards consistently across similar use cases
+### 2. Spacing Efficiency  
+- **Grid gaps**: `gap-x-2` for columns, `gap-0.5` to `gap-1` for tight elements
+- **Padding**: `px-2 py-1` for list items, `px-1.5 py-0.5` for badges
+- **Container spacing**: `space-y-1` maximum between sections
 
-## Badge & Chip Systems
-- **Primary chips** (selected): `text-xs font-medium px-2 py-0.5`
-- **Secondary badges**: `text-xs font-normal px-2 py-0.5`
-- **Labels for chips**: `text-sm font-semibold` (more prominent than associated chips)
+### 3. Typography Hierarchy
+- **Primary content**: `text-sm font-medium` (student names, main data)
+- **Labels**: `text-sm font-medium` or `text-sm font-semibold` (brief emphasis)
+- **Supporting info**: `text-xs text-muted-foreground` (timers, metadata)
+- **Status/chips**: `text-xs font-medium` (all badges and tags)
 
-## When NOT to Change Typography
-- If the component is already production-ready and optimized
-- If the typography serves a specific functional purpose
-- If changing would break established user workflows
-- If the component has specialized interface requirements
+## Layout Direction Standards
+
+### Mobile-First Grid Patterns (QueueDisplay Standard)
+```tsx
+// Compact 2-column, 2-row grid
+className="grid grid-cols-[minmax(0,1fr)_auto] grid-rows-2 gap-x-2"
+
+// Row/column assignments
+col-[1] row-[1]  // Main content, top
+col-[1] row-[2]  // Supporting info, bottom  
+col-[2] row-[1]  // Actions, top-right
+col-[2] row-[2]  // Secondary status, bottom-right
+```
+
+### Responsive Patterns
+- **Mobile**: Abbreviated names, compact badges, minimal padding
+- **Desktop**: Full names visible, same badge sizing maintained
+- **Consistent**: Badge sizes never change between breakpoints
+
+## Implementation Rules
+
+### ✅ DO
+- Use QueueDisplay badge sizing (`text-xs px-1.5 py-0.5`) everywhere
+- Match QueueDisplay spacing patterns for consistency  
+- Keep mobile-first compact approach across all screens
+- Use behavior dots (2x2) when possible instead of text chips
+
+### ❌ DON'T  
+- Make badges larger than `text-xs` unless absolutely necessary
+- Use loose spacing that breaks mobile layout density
+- Change QueueDisplay patterns - they're the proven standard
+- Create oversized chips that compete with main content
 
 ## Success Criteria
-- Clear visual hierarchy between page titles, sections, labels, and content
-- Labels are more prominent than their associated chips/badges
-- Consistent header patterns across similar components
-- Preserved functionality of optimized components
+- All badge/chip sizing matches QueueDisplay exactly
+- Spacing maintains mobile-first density across screens  
+- Typography hierarchy supports QueueDisplay's proven readability
+- Layout efficiency matches production queue interface standards
