@@ -56,7 +56,7 @@ const TeacherDashboard = () => {
     contextId: string;
     behaviors: string[];
     teacherMood: number;
-    urgencyLevel: string;
+    urgencyLevel: 'standard' | 're_integration' | 'urgent';
     note: string;
   }) => {
     await addToQueue({
@@ -64,6 +64,7 @@ const TeacherDashboard = () => {
       behaviors: data.behaviors,
       mood: data.teacherMood,
       urgent: data.urgencyLevel === 'urgent',
+      urgencyLevel: data.urgencyLevel,
       notes: data.note,
       contextId: data.contextId
     });

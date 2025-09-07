@@ -24,6 +24,7 @@ export interface BehaviorRequest {
   teacher_name: string;
   status: 'waiting' | 'active' | 'completed' | 'review';
   priority_level?: string;
+  urgency_level?: 'standard' | 're_integration' | 'urgent';
   assigned_kiosk?: number;
   assigned_kiosk_id?: number;
   location?: string;
@@ -35,6 +36,7 @@ export interface BehaviorRequest {
   position?: number;
   timestamp?: Date;
   behaviors?: string[];
+  urgent?: boolean;
 }
 
 export interface Reflection {
@@ -96,7 +98,21 @@ export const useSupabaseQueue = () => {
 
       if (error) throw error;
 
-      const transformedData = data?.map((item: any, index: number) => ({
+      // Sort by urgency priority: urgent → re_integration → standard, then by created_at
+      const sortedData = data?.sort((a: any, b: any) => {
+        const urgencyOrder = { urgent: 3, re_integration: 2, standard: 1 };
+        const aUrgency = urgencyOrder[a.urgency_level as keyof typeof urgencyOrder] || 1;
+        const bUrgency = urgencyOrder[b.urgency_level as keyof typeof urgencyOrder] || 1;
+        
+        if (aUrgency !== bUrgency) {
+          return bUrgency - aUrgency; // Higher urgency first
+        }
+        
+        // Same urgency, sort by created_at (oldest first)
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      });
+
+      const transformedData = sortedData?.map((item: any, index: number) => ({
         ...item,
         student: item.student,
         reflection: Array.isArray(item.reflection) 
@@ -106,7 +122,8 @@ export const useSupabaseQueue = () => {
         timestamp: new Date(item.created_at),
         behaviors: item.behavior_type ? item.behavior_type.split(', ') : [],
         assigned_kiosk_id: item.assigned_kiosk,
-        urgent: item.priority_level === 'high'
+        urgent: item.priority_level === 'high',
+        urgency_level: item.urgency_level || 'standard'
       } as BehaviorRequest)) || [];
 
       setItems(transformedData);
@@ -145,6 +162,7 @@ export const useSupabaseQueue = () => {
     behaviors: string[];
     mood: string | number;
     urgent?: boolean;
+    urgencyLevel?: 'standard' | 're_integration' | 'urgent';
     notes?: string;
     contextId?: string;
   }) => {
@@ -181,6 +199,9 @@ export const useSupabaseQueue = () => {
         return;
       }
 
+      // Determine urgency level
+      const urgencyLevel = data.urgencyLevel || (data.urgent ? 'urgent' : 'standard');
+      
       // Create behavior request
       const { error: requestError } = await supabase
         .from('behavior_requests')
@@ -191,14 +212,22 @@ export const useSupabaseQueue = () => {
           description: data.notes || 'Behavior incident',
           teacher_name: user.email?.split('@')[0] || 'Teacher',
           status: 'waiting',
-          priority_level: data.urgent ? 'high' : 'medium',
+          priority_level: urgencyLevel === 'urgent' ? 'high' : urgencyLevel === 're_integration' ? 'medium' : 'medium',
           antecedent_context_id: data.contextId || null,
           teacher_mood: typeof data.mood === 'number' ? data.mood : parseInt(String(data.mood)) || null,
-          urgency_level: data.urgent ? 'urgent' : 'standard',
+          urgency_level: urgencyLevel,
           note: data.notes || null
         }]);
 
       if (requestError) throw requestError;
+
+      // Trigger urgency-specific notifications
+      await triggerUrgencyNotifications(urgencyLevel, {
+        studentName: `${data.student.first_name} ${data.student.last_name}`,
+        teacherName: user.email?.split('@')[0] || 'Teacher',
+        behaviors: data.behaviors,
+        contextId: data.contextId
+      });
 
       toast({
         title: "Student Added",
@@ -506,6 +535,47 @@ export const useSupabaseQueue = () => {
       await fetchQueue();
     } catch (error) {
       console.error('Error updating kiosk status:', error);
+    }
+  };
+
+  // Trigger urgency-specific notifications
+  const triggerUrgencyNotifications = async (
+    urgencyLevel: string,
+    data: {
+      studentName: string;
+      teacherName: string;
+      behaviors: string[];
+      contextId?: string;
+    }
+  ) => {
+    try {
+      const title = urgencyLevel === 'urgent' 
+        ? '🚨 URGENT BSR Created'
+        : urgencyLevel === 're_integration'
+        ? '⚠️ Re-Integration BSR Created'
+        : '📝 Standard BSR Created';
+
+      const message = `${data.studentName} - ${data.behaviors.join(', ')} (${data.teacherName})`;
+
+      // Call notification edge function based on urgency
+      if (urgencyLevel === 'urgent' || urgencyLevel === 're_integration') {
+        await supabase.functions.invoke('send-urgency-notifications', {
+          body: {
+            urgencyLevel,
+            title,
+            message,
+            data
+          }
+        });
+      }
+
+      // Always trigger in-app notifications
+      if (user?.id) {
+        const { notificationService } = await import('@/services/notificationService');
+        await notificationService.handleNewNotification(user.id, title, message);
+      }
+    } catch (error) {
+      console.warn('Failed to trigger urgency notifications:', error);
     }
   };
 

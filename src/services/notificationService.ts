@@ -147,20 +147,83 @@ export class NotificationService {
     }
   }
 
-  async handleNewNotification(userId: string, title: string, message: string) {
+  async handleNewNotification(userId: string, title: string, message: string, urgencyLevel?: string) {
     const settings = await this.getUserNotificationSettings(userId);
 
-    // Play audio notification if enabled
+    // Play urgency-specific audio notification if enabled
     if (settings.audio_enabled) {
-      await this.playNotificationSound();
+      await this.playUrgencyNotificationSound(urgencyLevel);
     }
 
     // Show push notification if enabled and permission granted
     if (settings.push_enabled) {
       await this.showPushNotification(title, {
         body: message,
-        data: { userId, timestamp: Date.now() }
+        data: { userId, timestamp: Date.now(), urgency: urgencyLevel },
+        icon: this.getUrgencyIcon(urgencyLevel),
+        requireInteraction: urgencyLevel === 'urgent'
       });
+    }
+  }
+
+  private async playUrgencyNotificationSound(urgencyLevel?: string) {
+    if (!this.audioContext || !this.notificationSound) {
+      console.warn('Audio not available');
+      return;
+    }
+
+    try {
+      // Resume audio context if suspended
+      if (this.audioContext.state === 'suspended') {
+        await this.audioContext.resume();
+      }
+
+      const source = this.audioContext.createBufferSource();
+      source.buffer = this.notificationSound;
+      
+      // Create gain node for volume control based on urgency
+      const gainNode = this.audioContext.createGain();
+      source.connect(gainNode);
+      gainNode.connect(this.audioContext.destination);
+
+      // Set volume based on urgency level
+      switch (urgencyLevel) {
+        case 'urgent':
+          gainNode.gain.value = 1.0; // Full volume
+          // Play twice for urgent notifications
+          source.start();
+          setTimeout(() => {
+            const source2 = this.audioContext!.createBufferSource();
+            source2.buffer = this.notificationSound;
+            const gainNode2 = this.audioContext!.createGain();
+            source2.connect(gainNode2);
+            gainNode2.connect(this.audioContext!.destination);
+            gainNode2.gain.value = 1.0;
+            source2.start();
+          }, 300);
+          break;
+        case 're_integration':
+          gainNode.gain.value = 0.8; // Slightly lower volume
+          source.start();
+          break;
+        default:
+          gainNode.gain.value = 0.6; // Standard volume
+          source.start();
+          break;
+      }
+    } catch (error) {
+      console.warn('Failed to play urgency notification sound:', error);
+    }
+  }
+
+  private getUrgencyIcon(urgencyLevel?: string): string {
+    switch (urgencyLevel) {
+      case 'urgent':
+        return '/icon-urgent-192x192.png';
+      case 're_integration':
+        return '/icon-reintegration-192x192.png';
+      default:
+        return '/icon-192x192.png';
     }
   }
 }

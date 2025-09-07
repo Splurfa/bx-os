@@ -22,7 +22,7 @@ interface CreateBSRFormProps {
     contextId: string;
     behaviors: string[]; 
     teacherMood: number;
-    urgencyLevel: string;
+    urgencyLevel: 'standard' | 're_integration' | 'urgent';
     note: string;
   }) => void;
   onCancel: () => void;
@@ -42,7 +42,7 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
   const [selectedContext, setSelectedContext] = useState('');
   const [selectedBehaviors, setSelectedBehaviors] = useState<string[]>([]);
   const [teacherMood, setTeacherMood] = useState(3);
-  const [urgencyLevel, setUrgencyLevel] = useState('standard');
+  const [urgencyLevel, setUrgencyLevel] = useState<'standard' | 're_integration' | 'urgent'>('standard');
   const [note, setNote] = useState('');
   const [step, setStep] = useState(1);
   const [contextLabel, setContextLabel] = useState('');
@@ -204,7 +204,7 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
                   urgencyLevel={urgencyLevel}
                   note={note}
                   onTeacherMoodChange={setTeacherMood}
-                  onUrgencyLevelChange={setUrgencyLevel}
+                  onUrgencyLevelChange={(urgency) => setUrgencyLevel(urgency as 'standard' | 're_integration' | 'urgent')}
                   onNoteChange={setNote}
                   onSubmit={handleSubmit}
                   isSubmitting={isSubmitting}
@@ -248,7 +248,7 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
             <DialogTitle>Select submission type</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
-            <RadioGroup value={urgencyLevel} onValueChange={setUrgencyLevel}>
+            <RadioGroup value={urgencyLevel} onValueChange={(value) => setUrgencyLevel(value as 'standard' | 're_integration' | 'urgent')}>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="standard" id="standard" />
                 <Label htmlFor="standard" className="text-sm">Standard (regular processing)</Label>

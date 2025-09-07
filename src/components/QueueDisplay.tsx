@@ -71,6 +71,30 @@ const QueueDisplay = React.memo(({
   const listClass = layout === 'teacher' ? 'space-y-0.5' : 'space-y-1.5';
   const itemPadding = layout === 'teacher' ? 'gap-y-0.5 px-2 py-1' : 'gap-y-1.5 px-4 py-3';
 
+  // Get urgency background class
+  const getUrgencyBackgroundClass = (urgencyLevel?: string) => {
+    switch (urgencyLevel) {
+      case 'urgent':
+        return 'bg-urgency-urgent border-red-200';
+      case 're_integration':
+        return 'bg-urgency-reintegration border-yellow-200';
+      default:
+        return 'bg-urgency-standard';
+    }
+  };
+
+  // Get urgency badge
+  const getUrgencyBadge = (urgencyLevel?: string) => {
+    switch (urgencyLevel) {
+      case 'urgent':
+        return <Badge variant="destructive" className="text-xs">Urgent</Badge>;
+      case 're_integration':
+        return <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800 border-yellow-300">Re-Integration</Badge>;
+      default:
+        return null;
+    }
+  };
+
   const sortedItems = useMemo(() => {
     const activeItems = items.filter(item => {
       // Include waiting students
@@ -90,10 +114,20 @@ const QueueDisplay = React.memo(({
     });
     
     return [...activeItems].sort((a, b) => {
-      // Priority order: review status first, then waiting, then by timestamp
+      // First priority: Items needing review
       if (a.status === 'review' && b.status !== 'review') return -1;
       if (b.status === 'review' && a.status !== 'review') return 1;
       
+      // Second priority: Urgency level
+      const urgencyOrder = { urgent: 3, re_integration: 2, standard: 1 };
+      const aUrgency = urgencyOrder[(a as any).urgency_level as keyof typeof urgencyOrder] || 1;
+      const bUrgency = urgencyOrder[(b as any).urgency_level as keyof typeof urgencyOrder] || 1;
+      
+      if (aUrgency !== bUrgency) {
+        return bUrgency - aUrgency; // Higher urgency first
+      }
+      
+      // Finally: Creation time (oldest first)
       const aTime = a.timestamp?.getTime() || new Date(a.created_at).getTime();
       const bTime = b.timestamp?.getTime() || new Date(b.created_at).getTime();
       return aTime - bTime;
@@ -153,8 +187,8 @@ const QueueDisplay = React.memo(({
           <div
             key={item.id}
             className={`grid grid-cols-[minmax(0,1fr)_auto] grid-rows-2 gap-x-2 ${itemPadding} border-b border-border last:border-b-0 ${
-              (item as any).urgent ? 'bg-queue-urgent/10 border-queue-urgent/20 border-l-4 border-l-queue-urgent' : (isActive ? 'bg-primary/5' : 'bg-background')
-            }`}
+              getUrgencyBackgroundClass((item as any).urgency_level)
+            } ${(item as any).urgent ? 'border-l-4 border-l-queue-urgent' : ''} ${isActive ? 'bg-primary/5' : ''}`}
           >
             {/* Row 1, Col 1: Student name (mobile abbreviated) + behavior dots */}
             <div className="col-[1] row-[1] flex items-center min-w-0 gap-2">
@@ -189,11 +223,7 @@ const QueueDisplay = React.memo(({
               <span className="whitespace-nowrap">
                 <LiveTimer startTime={item.timestamp || new Date(item.created_at)} />
               </span>
-              {(item as any).urgency_level === 'urgent' && (
-                <Badge variant="destructive" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
-                  URGENT
-                </Badge>
-              )}
+              {getUrgencyBadge((item as any).urgency_level)}
               {('assigned_kiosk_id' in item) && item.assigned_kiosk_id && item.status !== 'review' && (
                 <Badge variant="outline" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
                   K{item.assigned_kiosk_id}

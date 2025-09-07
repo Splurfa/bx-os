@@ -86,6 +86,11 @@ export default {
 					waiting: 'hsl(var(--queue-waiting))',
 					completed: 'hsl(var(--queue-completed))',
 					urgent: 'hsl(var(--queue-urgent))'
+				},
+				urgency: {
+					standard: 'hsl(var(--urgency-standard))',
+					reintegration: 'hsl(var(--urgency-reintegration))',
+					urgent: 'hsl(var(--urgency-urgent))'
 				}
 			},
 			boxShadow: {

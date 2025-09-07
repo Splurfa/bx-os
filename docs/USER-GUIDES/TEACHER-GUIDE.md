@@ -19,6 +19,40 @@ As a teacher using BX-OS, you can quickly create Behavioral Support Requests (BS
 
 ## Creating Behavioral Support Requests (BSRs)
 
+### Urgency Level Decision Guide
+
+Before creating a BSR, consider the appropriate urgency level:
+
+#### 🟢 Standard (Most Common)
+- **When to Use**: Regular classroom behavior incidents
+- **Examples**: 
+  - Talking out of turn during instruction
+  - Not following classroom procedures
+  - Minor social disagreements
+  - Difficulty staying on task
+- **Processing**: Normal queue order, in-app notifications only
+- **Response Time**: Processed as kiosks become available
+
+#### 🟡 Re-Integration (Priority Processing)
+- **When to Use**: Students returning from suspension or requiring priority support
+- **Examples**:
+  - First day back from suspension
+  - Student with active behavior plan check-in
+  - Follow-up session from previous major incident
+  - Transition support after significant event
+- **Processing**: Higher queue priority, Slack notifications to counseling team
+- **Response Time**: Expedited assignment when kiosk available
+
+#### 🔴 Urgent (Immediate Attention)
+- **When to Use**: Critical incidents requiring immediate intervention
+- **Examples**:
+  - Safety concerns for student or others
+  - Escalating behavior that could become dangerous
+  - Student in crisis requiring immediate de-escalation
+  - Threats or aggressive behavior
+- **Processing**: Highest priority, immediate Slack + email notifications to all admins
+- **Response Time**: Immediate assignment, overrides normal queue order
+
 ### Step-by-Step BSR Creation
 
 #### 1. Initiate BSR Creation
@@ -45,10 +79,16 @@ Select the appropriate behavior that prompted the BSR:
 - **Time context**: When the incident happened
 - **Additional notes**: Any relevant background information
 
-#### 5. Submit BSR
-- **Review information**: Double-check student and behavior selection
+#### 5. Select Urgency Level
+- **Choose appropriate level**: Use the urgency decision guide above
+- **Standard**: For typical classroom behavior incidents
+- **Re-Integration**: For students requiring priority support
+- **Urgent**: For critical incidents requiring immediate attention
+
+#### 6. Submit BSR
+- **Review information**: Double-check student, behavior, and urgency selection
 - **Click "Submit BSR"**: Request will be added to the queue
-- **Confirmation**: You'll see the BSR appear in your active queue
+- **Confirmation**: You'll see the BSR appear in your active queue with urgency indicator
 
 ### Understanding BSR Status
 
@@ -57,6 +97,11 @@ Select the appropriate behavior that prompted the BSR:
 - **Assigned**: Student assigned to specific kiosk (Kiosk 1, 2, or 3)
 - **In Progress**: Student actively completing reflection
 - **Completed**: Student finished reflection and returned to class
+
+#### Urgency Visual Indicators
+- **Standard**: Default white background
+- **Re-Integration**: Light yellow background with "Re-Integration" badge
+- **Urgent**: Light red background with "Urgent" badge and alert icon
 
 #### Queue Position
 - **Position number**: Shows student's place in line for next available kiosk
