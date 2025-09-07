@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { TouchOptimizedButton } from "@/components/TouchOptimizedButton";
 import { useKioskQueue } from "../hooks/useKioskQueue";
 import { useKiosks } from "@/contexts/KioskContext";
+import { formatBirthdateForPassword } from "@/lib/dateUtils";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -176,8 +177,10 @@ useEffect(() => {
   };
 
   const handlePasswordSubmit = async () => {
+    const birthdateInfo = formatBirthdateForPassword(firstWaitingStudent?.student?.date_of_birth);
+    
     if (!passwordInput || passwordInput.length !== 4) {
-      toast.error('Please enter your 4-digit birthday (MMDD format). For example: 0315 for March 15th');
+      toast.error(`Please enter your 4-digit birthday (MMDD format). For example: ${birthdateInfo.errorExample}`);
       return;
     }
 
@@ -207,7 +210,8 @@ useEffect(() => {
           p_success: false
         });
         
-        toast.error('Incorrect birthday. Please enter MMDD format (e.g., 0315 for March 15th)');
+        const birthdateInfo = formatBirthdateForPassword(firstWaitingStudent?.student?.date_of_birth);
+        toast.error(`Incorrect birthday. Please enter MMDD format (e.g., ${birthdateInfo.errorExample})`);
         return;
       }
 
@@ -424,26 +428,36 @@ useEffect(() => {
                   <p className="text-muted-foreground mb-4">
                     Please enter your birthday password to get started with your reflection.
                   </p>
-                  <p className="text-sm text-muted-foreground/70 mb-6">
-                    Use 4 digits: month and day (MMDD)<br/>
-                    Example: March 15th = 0315
-                  </p>
+                  {(() => {
+                    const birthdateInfo = formatBirthdateForPassword(firstWaitingStudent?.student?.date_of_birth);
+                    return (
+                      <p className="text-sm text-muted-foreground/70 mb-6">
+                        Use 4 digits: month and day (MMDD)<br/>
+                        {birthdateInfo.helperText}
+                      </p>
+                    );
+                  })()}
                 </div>
                 
                 <div className="space-y-4">
-                  <Input
-                    type="tel"
-                    placeholder="MMDD (e.g., 0315)"
-                    value={passwordInput}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, '').slice(0, 4);
-                      setPasswordInput(value);
-                    }}
-                    onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
-                    className="text-lg py-6 text-center tracking-widest"
-                    maxLength={4}
-                    autoFocus
-                  />
+                  {(() => {
+                    const birthdateInfo = formatBirthdateForPassword(firstWaitingStudent?.student?.date_of_birth);
+                    return (
+                      <Input
+                        type="tel"
+                        placeholder={birthdateInfo.placeholder}
+                        value={passwordInput}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                          setPasswordInput(value);
+                        }}
+                        onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                        className="text-lg py-6 text-center tracking-widest"
+                        maxLength={4}
+                        autoFocus
+                      />
+                    );
+                  })()}
                   {passwordError && (
                     <p className="text-sm text-destructive">{passwordError}</p>
                   )}

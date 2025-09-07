@@ -9,6 +9,7 @@ export interface Student {
   grade?: string;
   class_name?: string;
   family_id: string;
+  date_of_birth?: string | null;
   created_at: string;
   updated_at: string;
 }
