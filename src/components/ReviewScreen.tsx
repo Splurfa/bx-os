@@ -92,19 +92,19 @@ const ReviewScreen = ({
         {/* Summary Section - No redundant heading */}
         <div className="space-y-4">
           <div className="flex items-center gap-4">
-            <span className="text-foreground font-medium text-base min-w-[72px]">Student:</span>
+            <span className="text-foreground font-semibold text-sm min-w-[72px]">Student:</span>
             <Badge className="px-2 py-1 bg-primary text-primary-foreground text-sm">
               {studentName}
             </Badge>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-foreground font-medium text-base min-w-[72px]">Context:</span>
+            <span className="text-foreground font-semibold text-sm min-w-[72px]">Context:</span>
             <Badge variant="secondary" className="px-2 py-1 bg-secondary text-secondary-foreground text-sm">
               {contextLabel}
             </Badge>
           </div>
           <div className="flex items-start gap-4">
-            <span className="text-foreground font-medium text-base min-w-[72px] mt-0.5">Behaviors:</span>
+            <span className="text-foreground font-semibold text-sm min-w-[72px] mt-0.5">Behaviors:</span>
             <div className="flex flex-wrap gap-1.5">
               {selectedBehaviors.map((behaviorId, index) => {
                 const behavior = behaviors.find(b => b.id === behaviorId);
@@ -114,7 +114,7 @@ const ReviewScreen = ({
                 return (
                   <span 
                     key={index} 
-                    className={`px-1.5 py-0.5 rounded-full text-sm font-medium border ${classes}`}
+                    className={`px-1.5 py-0.5 rounded-full text-xs font-medium border ${classes}`}
                   >
                     {label}
                   </span>

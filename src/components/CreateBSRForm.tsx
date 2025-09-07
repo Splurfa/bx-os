@@ -126,7 +126,7 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
               Back
             </Button>
             <div>
-              <h1 className="text-lg font-bold text-foreground">Create BSR</h1>
+              <h1 className="text-xl font-bold text-foreground">Create BSR</h1>
               <p className="text-xs text-muted-foreground">Step {step} of 4</p>
             </div>
           </div>
@@ -143,7 +143,7 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
           {step === 1 && (
             <div className="flex-1 flex flex-col">
               <div className="text-center mb-4">
-                <h2 className="text-lg font-semibold text-foreground">Student</h2>
+                <h2 className="text-base font-semibold text-foreground">Student</h2>
                 <p className="text-sm text-muted-foreground">Select a student</p>
               </div>
               <div className="flex-1 min-h-0">
@@ -160,7 +160,7 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
           {step === 2 && (
             <div className="flex-1 flex flex-col">
               <div className="text-center mb-4">
-                <h2 className="text-lg font-semibold text-foreground">Context</h2>
+                <h2 className="text-base font-semibold text-foreground">Context</h2>
                 <p className="text-sm text-muted-foreground">What was happening?</p>
               </div>
               <div className="flex-1 min-h-0">
@@ -176,7 +176,7 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
           {step === 3 && (
             <div className="flex-1 flex flex-col">
               <div className="text-center mb-4">
-                <h2 className="text-lg font-semibold text-foreground">Behaviors</h2>
+                <h2 className="text-base font-semibold text-foreground">Behaviors</h2>
                 <p className="text-sm text-muted-foreground">Select all that apply</p>
               </div>
               <div className="flex-1 min-h-0">
@@ -192,7 +192,7 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
           {step === 4 && (
             <div className="flex-1 flex flex-col">
               <div className="text-center mb-4">
-                <h2 className="text-lg font-semibold text-foreground">Review</h2>
+                <h2 className="text-base font-semibold text-foreground">Review</h2>
                 <p className="text-sm text-muted-foreground">Finalize your report</p>
               </div>
               <div className="flex-1 min-h-0">

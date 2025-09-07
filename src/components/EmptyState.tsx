@@ -13,7 +13,7 @@ const EmptyState = () => {
           </div>
         </div>
         <div className="slide-up stagger-2">
-          <h2 className="text-xl font-semibold text-gray-900 tracking-tight mb-1">
+          <h2 className="text-xl font-bold text-foreground tracking-tight mb-1">
             No Active Requests
           </h2>
           <p className="text-gray-600 mb-6 leading-relaxed text-base">
