@@ -98,17 +98,18 @@ export const useSupabaseQueue = () => {
 
       if (error) throw error;
 
-      // Sort by urgency priority: urgent → re_integration → standard, then by created_at (oldest first)
+      // PRIORITY QUEUE BEHAVIOR: Urgent/Re-integration items are intentionally pushed to top
+      // This ensures urgent items appear at top of queue regardless of creation time
       const sortedData = data?.sort((a: any, b: any) => {
         const urgencyOrder = { urgent: 3, re_integration: 2, standard: 1 };
         const aUrgency = urgencyOrder[a.urgency_level as keyof typeof urgencyOrder] || 1;
         const bUrgency = urgencyOrder[b.urgency_level as keyof typeof urgencyOrder] || 1;
         
         if (aUrgency !== bUrgency) {
-          return bUrgency - aUrgency; // Higher urgency first
+          return bUrgency - aUrgency; // Higher urgency first (pushes urgent/re_integration to top)
         }
         
-        // Same urgency, sort by created_at (oldest first - ascending order)
+        // Same urgency level: sort by created_at (oldest first within same urgency)
         const aTime = new Date(a.created_at).getTime();
         const bTime = new Date(b.created_at).getTime();
         console.log(`Sorting: ${a.student?.first_name} (${a.created_at}) vs ${b.student?.first_name} (${b.created_at}), result: ${aTime - bTime}`);
