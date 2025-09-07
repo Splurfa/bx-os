@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { User, ArrowRight, CheckCircle, Loader2, Eye, EyeOff, Monitor } from "lucide-react";
+import { User, ArrowRight, CheckCircle, Loader2, Eye, EyeOff, Monitor, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,8 @@ import { useKiosks } from "@/contexts/KioskContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import KioskDebugPanel from "@/components/KioskDebugPanel";
+import { deviceSessionManager } from "@/lib/deviceSessionManager";
 
 const KIOSK_ID = 1;
 
@@ -57,9 +59,49 @@ const KioskOne = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activationError, setActivationError] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(10);
+  const [showDebugPanel, setShowDebugPanel] = useState(false);
+  const [debugClickCount, setDebugClickCount] = useState(0);
   
   const firstWaitingStudent = getFirstWaitingStudentForKiosk(KIOSK_ID);
-const hasTeacherFeedback = firstWaitingStudent?.reflection?.teacher_feedback;
+  const hasTeacherFeedback = firstWaitingStudent?.reflection?.teacher_feedback;
+  const isDevelopmentMode = deviceSessionManager.isDevelopmentModeEnabled();
+
+  // Handle debug panel access with 5 clicks on kiosk header
+  const handleDebugAccess = () => {
+    const newCount = debugClickCount + 1;
+    setDebugClickCount(newCount);
+    
+    if (newCount >= 5) {
+      setShowDebugPanel(true);
+      setDebugClickCount(0);
+      toast("Debug panel activated");
+    } else if (newCount >= 3) {
+      toast(`Debug access: ${5 - newCount} more clicks`);
+    }
+    
+    // Reset count after 3 seconds of inactivity
+    setTimeout(() => setDebugClickCount(0), 3000);
+  };
+
+  // Keyboard shortcut for debug access (Ctrl+D)
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === 'd') {
+        event.preventDefault();
+        if (!deviceSessionManager.isDevelopmentModeEnabled()) {
+          deviceSessionManager.enableDevelopmentMode();
+          deviceSessionManager.enableMultiTabBypass();
+          toast("Development mode enabled via keyboard");
+        } else {
+          setShowDebugPanel(prev => !prev);
+          toast(showDebugPanel ? "Debug panel hidden" : "Debug panel shown");
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showDebugPanel]);
 
 const updateKioskStudentRef = useRef(updateKioskStudent);
 
@@ -337,20 +379,40 @@ useEffect(() => {
       <div className="min-h-screen bg-background flex flex-col">
         {/* Kiosk Header */}
         <div className="p-4 bg-primary/5 border-b">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-              <Monitor className="h-4 w-4 text-primary" />
+          <div className="flex items-center justify-between">
+            <div 
+              className="flex items-center gap-3 cursor-pointer"
+              onClick={handleDebugAccess}
+            >
+              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                <Monitor className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground">
+                  Student Kiosk #1
+                  {isDevelopmentMode && (
+                    <span className="ml-2 text-xs bg-yellow-500/20 text-yellow-700 px-1 rounded">DEV</span>
+                  )}
+                </h3>
+                <p className="text-xs text-muted-foreground">Ready for next student</p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-foreground">Student Kiosk #1</h3>
-              <p className="text-xs text-muted-foreground">Ready for next student</p>
-            </div>
+            {showDebugPanel && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowDebugPanel(false)}
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </div>
         
         <div className="flex-1 flex items-center justify-center p-4">
-          <div className="w-full max-w-md">
-            <Card className="p-12 text-center bg-gradient-card shadow-elevated w-full">
+          <div className="flex gap-4 w-full max-w-4xl">
+            <div className="flex-1">
+              <Card className="p-12 text-center bg-gradient-card shadow-elevated w-full">
               <div className="space-y-6">
                 <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
                   <User className="h-10 w-10 text-primary" />
@@ -385,6 +447,12 @@ useEffect(() => {
               </div>
             </Card>
           </div>
+          {showDebugPanel && (
+            <div className="w-72">
+              <KioskDebugPanel />
+            </div>
+          )}
+          </div>
         </div>
       </div>
     );
@@ -396,20 +464,40 @@ useEffect(() => {
       <div className="min-h-screen bg-background flex flex-col">
         {/* Kiosk Header */}
         <div className="p-4 bg-primary/5 border-b">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-              <Monitor className="h-4 w-4 text-primary" />
+          <div className="flex items-center justify-between">
+            <div 
+              className="flex items-center gap-3 cursor-pointer"
+              onClick={handleDebugAccess}
+            >
+              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                <Monitor className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground">
+                  Student Kiosk #1
+                  {isDevelopmentMode && (
+                    <span className="ml-2 text-xs bg-yellow-500/20 text-yellow-700 px-1 rounded">DEV</span>
+                  )}
+                </h3>
+                <p className="text-xs text-muted-foreground">Password verification</p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-foreground">Student Kiosk #1</h3>
-              <p className="text-xs text-muted-foreground">Password verification</p>
-            </div>
+            {showDebugPanel && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowDebugPanel(false)}
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </div>
         
         <div className="flex-1 flex items-center justify-center p-4">
-          <div className="w-full max-w-md">
-            <Card className="p-8 bg-gradient-card shadow-elevated w-full">
+          <div className="flex gap-4 w-full max-w-4xl">
+            <div className="flex-1">
+              <Card className="p-8 bg-gradient-card shadow-elevated w-full">
               <div className="space-y-6">
                 <div className="text-center">
                   <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
@@ -461,8 +549,14 @@ useEffect(() => {
                     Go Back
                   </TouchOptimizedButton>
                 </div>
-                </div>
+              </div>
             </Card>
+          </div>
+          {showDebugPanel && (
+            <div className="w-72">
+              <KioskDebugPanel />
+            </div>
+          )}
           </div>
         </div>
       </div>
@@ -475,20 +569,40 @@ useEffect(() => {
       <div className="min-h-screen bg-background flex flex-col">
         {/* Kiosk Header */}
         <div className="p-4 bg-primary/5 border-b">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-              <Monitor className="h-4 w-4 text-primary" />
+          <div className="flex items-center justify-between">
+            <div 
+              className="flex items-center gap-3 cursor-pointer"
+              onClick={handleDebugAccess}
+            >
+              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                <Monitor className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground">
+                  Student Kiosk #1
+                  {isDevelopmentMode && (
+                    <span className="ml-2 text-xs bg-yellow-500/20 text-yellow-700 px-1 rounded">DEV</span>
+                  )}
+                </h3>
+                <p className="text-xs text-muted-foreground">Reflection completed</p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-foreground">Student Kiosk #1</h3>
-              <p className="text-xs text-muted-foreground">Reflection completed</p>
-            </div>
+            {showDebugPanel && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowDebugPanel(false)}
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </div>
         
         <div className="flex-1 flex items-center justify-center p-4">
-          <div className="w-full max-w-md">
-            <Card className="p-12 text-center bg-gradient-card shadow-elevated max-w-md w-full">
+          <div className="flex gap-4 w-full max-w-4xl">
+            <div className="flex-1">
+              <Card className="p-12 text-center bg-gradient-card shadow-elevated w-full">
               <div className="space-y-6">
                 <div className="mx-auto w-20 h-20 bg-queue-completed/10 rounded-full flex items-center justify-center">
                   <CheckCircle className="h-10 w-10 text-queue-completed" />
@@ -514,6 +628,12 @@ useEffect(() => {
                 </div>
               </div>
             </Card>
+          </div>
+          {showDebugPanel && (
+            <div className="w-72">
+              <KioskDebugPanel />
+            </div>
+          )}
           </div>
         </div>
       </div>
