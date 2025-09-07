@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import MoodSlider from "./MoodSlider";
-import NotesModal from "./NotesModal";
 
 interface ReviewScreenProps {
   studentName: string;
@@ -87,49 +88,46 @@ const ReviewScreen = ({
   return (
     <div className="h-full flex flex-col bg-background">
       {/* Content Area */}
-      <div className="flex-1 p-4 space-y-3">
-        {/* Summary Section */}
-        <div className="space-y-3">
-          <h3 className="text-base font-semibold text-foreground">📋 Review Summary</h3>
-          <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <span className="text-muted-foreground text-sm w-16">Student:</span>
-              <Badge className="px-3 py-1.5 bg-primary text-primary-foreground text-sm">
-                {studentName}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-muted-foreground text-sm w-16">Context:</span>
-              <Badge variant="secondary" className="px-3 py-1.5 bg-secondary text-secondary-foreground text-sm">
-                {contextLabel}
-              </Badge>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="text-muted-foreground text-sm w-16 mt-0.5">Behaviors:</span>
-              <div className="flex flex-wrap gap-1.5">
-                {selectedBehaviors.map((behaviorId, index) => {
-                  const behavior = behaviors.find(b => b.id === behaviorId);
-                  const label = behavior ? behavior.label : behaviorId;
-                  const classes = getBehaviorClasses(behaviorId);
-                  
-                  return (
-                    <span 
-                      key={index} 
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium border ${classes}`}
-                    >
-                      {label}
-                    </span>
-                  );
-                })}
-              </div>
+      <div className="flex-1 p-6 space-y-6">
+        {/* Summary Section - No redundant heading */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-4">
+            <span className="text-foreground font-medium text-base min-w-[72px]">Student:</span>
+            <Badge className="px-2 py-1 bg-primary text-primary-foreground text-sm">
+              {studentName}
+            </Badge>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-foreground font-medium text-base min-w-[72px]">Context:</span>
+            <Badge variant="secondary" className="px-2 py-1 bg-secondary text-secondary-foreground text-sm">
+              {contextLabel}
+            </Badge>
+          </div>
+          <div className="flex items-start gap-4">
+            <span className="text-foreground font-medium text-base min-w-[72px] mt-0.5">Behaviors:</span>
+            <div className="flex flex-wrap gap-1.5">
+              {selectedBehaviors.map((behaviorId, index) => {
+                const behavior = behaviors.find(b => b.id === behaviorId);
+                const label = behavior ? behavior.label : behaviorId;
+                const classes = getBehaviorClasses(behaviorId);
+                
+                return (
+                  <span 
+                    key={index} 
+                    className={`px-2 py-1 rounded-full text-sm font-medium border ${classes}`}
+                  >
+                    {label}
+                  </span>
+                );
+              })}
             </div>
           </div>
         </div>
 
-        {/* Teacher Mood Section */}
-        <div className="space-y-3">
-          <h4 className="text-base font-semibold text-foreground">🎯 Your Current Mood</h4>
-          <div className="px-2">
+        {/* Teacher Mood Section - Centered */}
+        <div className="space-y-4 pt-2">
+          <h4 className="text-center text-base font-semibold text-foreground">Current Mood</h4>
+          <div className="px-4">
             <MoodSlider
               value={moodToPercentage(teacherMood)}
               onChange={handleMoodChange}
@@ -138,31 +136,39 @@ const ReviewScreen = ({
         </div>
       </div>
 
-      {/* Action Bar - 70/30 Split */}
-      <div className="p-4 bg-background border-t border-border">
-        <div className="flex gap-3">
-          <Button 
-            onClick={onSubmit}
-            disabled={isSubmitting}
-            className="flex-[7] h-12 bg-gradient-primary text-white shadow-lg hover:shadow-elevated transition-all duration-200"
-            size="lg"
-          >
-            {isSubmitting ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Submitting...
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <span>📤</span>
-                Submit Request
-              </div>
-            )}
-          </Button>
-          
-          <div className="flex-[3]">
-            <NotesModal note={note} onNoteChange={onNoteChange} />
-          </div>
+      {/* Submit Button and Notes Section */}
+      <div className="p-4 space-y-4 bg-background border-t border-border">
+        <Button 
+          onClick={onSubmit}
+          disabled={isSubmitting}
+          className="w-full h-12 bg-gradient-primary text-white shadow-lg hover:shadow-elevated transition-all duration-200"
+          size="lg"
+        >
+          {isSubmitting ? (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Submitting...
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span>📤</span>
+              Submit Request
+            </div>
+          )}
+        </Button>
+        
+        {/* Notes Section */}
+        <div className="space-y-2">
+          <Label htmlFor="notes" className="text-sm font-medium text-foreground">
+            Additional Notes
+          </Label>
+          <Textarea
+            id="notes"
+            placeholder="Add any additional context or observations..."
+            value={note}
+            onChange={(e) => onNoteChange(e.target.value)}
+            className="min-h-[80px] resize-none"
+          />
         </div>
       </div>
     </div>
