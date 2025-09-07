@@ -86,28 +86,26 @@ const ReviewScreen = ({
 
   return (
     <div className="h-full flex flex-col bg-background">
-      {/* Content Area - No Scrolling */}
-      <div className="flex-1 p-4 space-y-4">
-        {/* Summary Section - Flat Design */}
+      {/* Content Area */}
+      <div className="flex-1 p-4 space-y-3">
+        {/* Summary Section */}
         <div className="space-y-3">
-          <h3 className="text-base font-semibold text-foreground border-b border-border pb-2">
-            📋 Review Summary
-          </h3>
+          <h3 className="text-base font-semibold text-foreground">📋 Review Summary</h3>
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <span className="text-muted-foreground text-sm w-16">Student:</span>
-              <Badge className="bg-primary text-primary-foreground">
+              <Badge className="px-3 py-1.5 bg-primary text-primary-foreground text-sm">
                 {studentName}
               </Badge>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <span className="text-muted-foreground text-sm w-16">Context:</span>
-              <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
+              <Badge variant="secondary" className="px-3 py-1.5 bg-secondary text-secondary-foreground text-sm">
                 {contextLabel}
               </Badge>
             </div>
-            <div className="space-y-2">
-              <span className="text-muted-foreground text-sm">Behaviors:</span>
+            <div className="flex items-start gap-3">
+              <span className="text-muted-foreground text-sm w-16 mt-0.5">Behaviors:</span>
               <div className="flex flex-wrap gap-1.5">
                 {selectedBehaviors.map((behaviorId, index) => {
                   const behavior = behaviors.find(b => b.id === behaviorId);
@@ -117,7 +115,7 @@ const ReviewScreen = ({
                   return (
                     <span 
                       key={index} 
-                      className={`px-2 py-1 rounded-full text-xs font-medium border ${classes}`}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium border ${classes}`}
                     >
                       {label}
                     </span>
@@ -128,11 +126,9 @@ const ReviewScreen = ({
           </div>
         </div>
 
-        {/* Teacher Mood Section - Compact */}
+        {/* Teacher Mood Section */}
         <div className="space-y-3">
-          <h4 className="text-base font-semibold text-foreground border-b border-border pb-2">
-            🎯 Your Current Mood
-          </h4>
+          <h4 className="text-base font-semibold text-foreground">🎯 Your Current Mood</h4>
           <div className="px-2">
             <MoodSlider
               value={moodToPercentage(teacherMood)}
@@ -140,45 +136,34 @@ const ReviewScreen = ({
             />
           </div>
         </div>
-
-        {/* Notes Section - Streamlined */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between border-b border-border pb-2">
-            <h4 className="text-base font-semibold text-foreground">
-              📝 Notes
-            </h4>
-            <NotesModal note={note} onNoteChange={onNoteChange} />
-          </div>
-          {note && (
-            <div className="px-3 py-2 bg-muted/30 rounded-lg">
-              <p className="text-sm text-foreground">
-                {note.length > 100 ? `${note.substring(0, 100)}...` : note}
-              </p>
-            </div>
-          )}
-        </div>
       </div>
 
-      {/* Submit Button - Anchored to Bottom */}
+      {/* Action Bar - 70/30 Split */}
       <div className="p-4 bg-background border-t border-border">
-        <Button 
-          onClick={onSubmit}
-          disabled={isSubmitting}
-          className="w-full h-12 bg-gradient-primary text-white shadow-lg hover:shadow-elevated transition-all duration-200"
-          size="lg"
-        >
-          {isSubmitting ? (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              Submitting Request...
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <span>📤</span>
-              Submit Request
-            </div>
-          )}
-        </Button>
+        <div className="flex gap-3">
+          <Button 
+            onClick={onSubmit}
+            disabled={isSubmitting}
+            className="flex-[7] h-12 bg-gradient-primary text-white shadow-lg hover:shadow-elevated transition-all duration-200"
+            size="lg"
+          >
+            {isSubmitting ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Submitting...
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <span>📤</span>
+                Submit Request
+              </div>
+            )}
+          </Button>
+          
+          <div className="flex-[3]">
+            <NotesModal note={note} onNoteChange={onNoteChange} />
+          </div>
+        </div>
       </div>
     </div>
   );
