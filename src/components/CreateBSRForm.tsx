@@ -99,8 +99,8 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-2xl mx-auto space-y-6">
+    <div className="h-screen bg-background p-3 flex flex-col">
+      <div className="max-w-2xl mx-auto space-y-3 flex-1 flex flex-col">
         {/* Header */}
         <div className="flex items-center space-x-4">
           <Button 
@@ -128,16 +128,13 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
 
         {/* Step 1: Student Name */}
         {step === 1 && (
-          <Card className="p-8 bg-gradient-card shadow-card animate-slide-up">
-            <div className="text-center space-y-6">
-              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                <User className="h-8 w-8 text-primary" />
-              </div>
+          <Card className="p-3 bg-gradient-card shadow-card animate-slide-up flex-1 flex flex-col">
+            <div className="text-center space-y-3 flex-1 flex flex-col">
               <div>
-                <h2 className="text-xl font-semibold text-foreground mb-2">Student Information</h2>
-                <p className="text-muted-foreground">Enter the student's name</p>
+                <h2 className="text-lg font-semibold text-foreground mb-1">Student Information</h2>
+                <p className="text-sm text-muted-foreground">Select a student</p>
               </div>
-              <div className="h-96">
+              <div className="flex-1 min-h-0">
                 <StudentSelection
                   onStudentSelect={setSelectedStudent}
                   onStudentDeselect={() => setSelectedStudent(null)}
@@ -150,16 +147,13 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
 
         {/* Step 2: Context Selection */}
         {step === 2 && (
-          <Card className="p-8 bg-gradient-card shadow-card animate-slide-up">
-            <div className="text-center space-y-6">
-              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                <BookOpen className="h-8 w-8 text-primary" />
-              </div>
+          <Card className="p-3 bg-gradient-card shadow-card animate-slide-up flex-1 flex flex-col">
+            <div className="text-center space-y-3 flex-1 flex flex-col">
               <div>
-                <h2 className="text-xl font-semibold text-foreground mb-2">Activity Context</h2>
-                <p className="text-muted-foreground">What was the class doing when the behavior occurred?</p>
+                <h2 className="text-lg font-semibold text-foreground mb-1">Activity Context</h2>
+                <p className="text-sm text-muted-foreground">What was happening when the behavior occurred?</p>
               </div>
-              <div className="max-h-96">
+              <div className="flex-1 min-h-0">
                 <ActivitySelection
                   selectedContext={selectedContext}
                   onContextSelect={setSelectedContext}
@@ -171,16 +165,13 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
 
         {/* Step 3: Behavior Selection */}
         {step === 3 && (
-          <Card className="p-8 bg-gradient-card shadow-card animate-slide-up">
-            <div className="text-center space-y-6">
-              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                <Eye className="h-8 w-8 text-primary" />
-              </div>
+          <Card className="p-3 bg-gradient-card shadow-card animate-slide-up flex-1 flex flex-col">
+            <div className="text-center space-y-3 flex-1 flex flex-col">
               <div>
-                <h2 className="text-xl font-semibold text-foreground mb-2">Behavior Categories</h2>
-                <p className="text-muted-foreground">Select all behaviors that apply (multiple allowed)</p>
+                <h2 className="text-lg font-semibold text-foreground mb-1">Behavior Categories</h2>
+                <p className="text-sm text-muted-foreground">Select all that apply</p>
               </div>
-              <div className="max-h-96">
+              <div className="flex-1 min-h-0">
                 <BehaviorSelection
                   selectedBehaviors={selectedBehaviors}
                   onBehaviorToggle={handleBehaviorToggle}
@@ -192,38 +183,37 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
 
         {/* Step 4: Review & Submit */}
         {step === 4 && (
-          <Card className="bg-gradient-card shadow-card animate-slide-up">
-            <div className="text-center py-6 px-4 border-b">
-              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <CheckCircle className="h-8 w-8 text-primary" />
-              </div>
-              <h2 className="text-xl font-semibold text-foreground">Review & Submit</h2>
-              <p className="text-muted-foreground">Review your selections and provide additional details</p>
+          <Card className="bg-gradient-card shadow-card animate-slide-up flex-1 flex flex-col">
+            <div className="text-center py-3 px-3 border-b">
+              <h2 className="text-lg font-semibold text-foreground">Review & Submit</h2>
+              <p className="text-sm text-muted-foreground">Finalize your report</p>
             </div>
-            <ReviewScreen
-              studentName={selectedStudent ? `${selectedStudent.first_name} ${selectedStudent.last_name}` : ''}
-              contextLabel={contextLabel}
-              selectedBehaviors={selectedBehaviors}
-              teacherMood={teacherMood}
-              urgencyLevel={urgencyLevel}
-              note={note}
-              onTeacherMoodChange={setTeacherMood}
-              onUrgencyLevelChange={setUrgencyLevel}
-              onNoteChange={setNote}
-              onSubmit={handleSubmit}
-              isSubmitting={isSubmitting}
-            />
+            <div className="flex-1 min-h-0">
+              <ReviewScreen
+                studentName={selectedStudent ? `${selectedStudent.first_name} ${selectedStudent.last_name}` : ''}
+                contextLabel={contextLabel}
+                selectedBehaviors={selectedBehaviors}
+                teacherMood={teacherMood}
+                urgencyLevel={urgencyLevel}
+                note={note}
+                onTeacherMoodChange={setTeacherMood}
+                onUrgencyLevelChange={setUrgencyLevel}
+                onNoteChange={setNote}
+                onSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
+              />
+            </div>
           </Card>
         )}
 
-        {/* Navigation */}
+        {/* Navigation - Fixed to bottom */}
         {step < 4 && (
-          <div className="flex justify-between">
+          <div className="sticky bottom-0 bg-background p-3 border-t border-border flex justify-between">
             {step > 1 && (
               <Button 
                 variant="outline" 
                 onClick={() => setStep(step - 1)}
-                className="min-w-24"
+                className="min-w-20"
                 disabled={isSubmitting}
               >
                 Previous
@@ -234,7 +224,7 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
               <Button 
                 onClick={() => setStep(step + 1)}
                 disabled={!canProceed() || isSubmitting}
-                className="bg-gradient-primary text-white shadow-button hover:shadow-elevated transition-all duration-200 min-w-24"
+                className="bg-gradient-primary text-white shadow-button hover:shadow-elevated transition-all duration-200 min-w-20"
               >
                 {step === 3 ? 'Review' : 'Next'}
               </Button>
@@ -242,34 +232,6 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
           </div>
         )}
 
-        {/* Quick Summary for steps 2-3 */}
-        {(step === 2 || step === 3) && selectedStudent && (
-          <Card className="p-4 bg-muted/50 border-dashed">
-            <div className="text-center space-y-2">
-              <p className="text-sm text-muted-foreground">Current Selection:</p>
-              <div className="flex flex-wrap gap-2 justify-center">
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary text-primary-foreground">
-                  {selectedStudent.first_name} {selectedStudent.last_name}
-                </span>
-                {step >= 2 && contextLabel && (
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
-                    {contextLabel}
-                  </span>
-                )}
-                {step >= 3 && selectedBehaviors.length > 0 && (
-                  selectedBehaviors.map((behavior, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground"
-                    >
-                      {behavior}
-                    </span>
-                  ))
-                )}
-              </div>
-            </div>
-          </Card>
-        )}
       </div>
     </div>
   );

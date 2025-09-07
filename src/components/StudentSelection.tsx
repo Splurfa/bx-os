@@ -130,24 +130,24 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
   return (
     <div className="flex flex-col h-full bg-background">
       {/* Search and filter */}
-      <div className="p-4 border-b border-border bg-background">
-        <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      <div className="p-2 border-b border-border bg-background">
+        <div className="relative">
+          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Type student name to search..."
+            placeholder="Type student name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-sm"
+            className="w-full pl-8 pr-3 py-2 bg-background border border-input rounded text-xs focus:outline-none focus:ring-1 focus:ring-ring"
           />
         </div>
       </div>
       
-      {/* Student List */}
-      <div className="flex-1 overflow-y-auto bg-background">
+      {/* Student List - Fixed height, no scrolling */}
+      <div className="flex-1 bg-background max-h-60 overflow-hidden">
         {searchTerm.length === 0 && !selectedStudentId ? (
-          <div className="flex items-center justify-center h-32 text-muted-foreground">
-            <p className="text-sm">Start typing to search for students...</p>
+          <div className="flex items-center justify-center h-20 text-muted-foreground">
+            <p className="text-xs">Start typing to search...</p>
           </div>
         ) : selectedStudentId ? (
           // Show only selected student
@@ -157,30 +157,30 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
               <div
                 key={student.id}
                 onClick={() => handleStudentClick(student)}
-                className="flex items-center justify-between p-3 border-b border-border cursor-pointer transition-colors bg-primary/10"
+                className="flex items-center justify-between p-2 border-b border-border cursor-pointer transition-colors bg-primary/10"
               >
                 <div>
-                  <h4 className="font-medium text-foreground text-sm">{student.first_name} {student.last_name}</h4>
-                  <p className="text-xs text-muted-foreground">{student.grade} Grade • Class {student.class_name}</p>
+                  <h4 className="font-medium text-foreground text-xs">{student.first_name} {student.last_name}</h4>
+                  <p className="text-xs text-muted-foreground">{student.grade} • {student.class_name}</p>
                 </div>
-                <div className="w-5 h-5 rounded-full border-2 bg-primary border-primary flex items-center justify-center transition-all">
-                  <Check className="w-3 h-3 text-white" strokeWidth={2.5} />
+                <div className="w-4 h-4 rounded-full border-2 bg-primary border-primary flex items-center justify-center">
+                  <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
                 </div>
               </div>
             ))
         ) : (
-          // Show all filtered students
-          filteredStudents.map((student) => (
+          // Show max 5 filtered students
+          filteredStudents.slice(0, 5).map((student) => (
             <div
               key={student.id}
               onClick={() => handleStudentClick(student)}
-              className="flex items-center justify-between p-3 border-b border-border cursor-pointer transition-colors hover:bg-muted/50"
+              className="flex items-center justify-between p-2 border-b border-border cursor-pointer transition-colors hover:bg-muted/50"
             >
               <div>
-                <h4 className="font-medium text-foreground text-sm">{student.first_name} {student.last_name}</h4>
-                <p className="text-xs text-muted-foreground">{student.grade} Grade • Class {student.class_name}</p>
+                <h4 className="font-medium text-foreground text-xs">{student.first_name} {student.last_name}</h4>
+                <p className="text-xs text-muted-foreground">{student.grade} • {student.class_name}</p>
               </div>
-              <div className="w-5 h-5 rounded-full border-2 border-muted-foreground flex items-center justify-center transition-all">
+              <div className="w-4 h-4 rounded-full border-2 border-muted-foreground flex items-center justify-center">
               </div>
             </div>
           ))

@@ -47,11 +47,11 @@ const ActivitySelection = ({ selectedContext, onContextSelect }: ActivitySelecti
   }
 
   return (
-    <div className="h-full overflow-y-auto bg-background">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 h-full">
+    <div className="h-full bg-background">
+      <div className="grid grid-cols-2 gap-2 p-2 h-full">
         {contexts.map((context) => {
           const isSelected = selectedContext === context.id;
-          const baseClasses = "h-full min-h-24 p-4 border-2 rounded-lg text-sm font-medium flex items-center justify-center transition-all cursor-pointer text-center hover:shadow-sm";
+          const baseClasses = "h-full min-h-16 p-2 border-2 rounded-lg text-xs font-medium flex items-center justify-center transition-all cursor-pointer text-center hover:shadow-sm";
           
           const buttonClasses = isSelected 
             ? `${baseClasses} bg-primary border-primary text-primary-foreground shadow-sm`

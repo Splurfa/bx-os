@@ -69,7 +69,7 @@ const QueueDisplay = React.memo(({
 }: QueueDisplayProps) => {
   const containerClass = layout === 'teacher' ? 'space-y-1' : 'space-y-3';
   const listClass = layout === 'teacher' ? 'space-y-0.5' : 'space-y-1.5';
-  const itemPadding = layout === 'teacher' ? 'gap-y-0.5 px-3 py-1.5' : 'gap-y-1.5 px-4 py-3';
+  const itemPadding = layout === 'teacher' ? 'gap-y-0.5 px-2 py-1' : 'gap-y-1.5 px-4 py-3';
 
   const sortedItems = useMemo(() => {
     const activeItems = items.filter(item => {
@@ -193,26 +193,6 @@ const QueueDisplay = React.memo(({
                 <Badge variant="destructive" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
                   URGENT
                 </Badge>
-              )}
-              {(item as any).antecedent_context && (
-                <Badge variant="secondary" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
-                  {(item as any).antecedent_context.label}
-                </Badge>
-              )}
-              {(item as any).teacher_mood && (
-                <span className="flex items-center gap-1">
-                  <span className="text-xs">Mood:</span>
-                  <div className="flex">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className={`w-1.5 h-1.5 rounded-full ${
-                          i < (item as any).teacher_mood ? 'bg-yellow-400' : 'bg-gray-300'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </span>
               )}
               {('assigned_kiosk_id' in item) && item.assigned_kiosk_id && item.status !== 'review' && (
                 <Badge variant="outline" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
