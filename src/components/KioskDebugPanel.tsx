@@ -132,9 +132,6 @@ const KioskDebugPanel: React.FC<KioskDebugPanelProps> = ({ className }) => {
             <Eye className="w-3 h-3 mt-0.5 flex-shrink-0" />
             <span>
               Development mode bypasses fingerprint validation and multi-tab detection for easier testing.
-              {isDevelopmentMode && (
-                <><br /><strong>Testing password "0000" is available for all students.</strong></>
-              )}
             </span>
           </div>
         </div>

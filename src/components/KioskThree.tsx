@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { User, ArrowRight, CheckCircle, Loader2, Eye, EyeOff, Monitor, Settings } from "lucide-react";
+import { User, ArrowRight, CheckCircle, Loader2, Eye, EyeOff, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,8 +12,6 @@ import { useKiosks } from "@/contexts/KioskContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import KioskDebugPanel from "@/components/KioskDebugPanel";
-import { deviceSessionManager } from "@/lib/deviceSessionManager";
 
 const KIOSK_ID = 3;
 
@@ -65,49 +64,9 @@ const KioskThree = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activationError, setActivationError] = useState<string | null>(null);
   const [currentStudentName, setCurrentStudentName] = useState<string | null>(null);
-  const [showDebugPanel, setShowDebugPanel] = useState(false);
-  const [debugClickCount, setDebugClickCount] = useState(0);
   
   const firstWaitingStudent = getFirstWaitingStudentForKiosk(KIOSK_ID);
   const hasTeacherFeedback = firstWaitingStudent?.reflection?.teacher_feedback;
-  const isDevelopmentMode = deviceSessionManager.isDevelopmentModeEnabled();
-
-  // Handle debug panel access with 5 clicks on kiosk header
-  const handleDebugAccess = () => {
-    const newCount = debugClickCount + 1;
-    setDebugClickCount(newCount);
-    
-    if (newCount >= 5) {
-      setShowDebugPanel(true);
-      setDebugClickCount(0);
-      toast("Debug panel activated");
-    } else if (newCount >= 3) {
-      toast(`Debug access: ${5 - newCount} more clicks`);
-    }
-    
-    // Reset count after 3 seconds of inactivity
-    setTimeout(() => setDebugClickCount(0), 3000);
-  };
-
-  // Keyboard shortcut for debug access (Ctrl+D)
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.key === 'd') {
-        event.preventDefault();
-        if (!deviceSessionManager.isDevelopmentModeEnabled()) {
-          deviceSessionManager.enableDevelopmentMode();
-          deviceSessionManager.enableMultiTabBypass();
-          toast("Development mode enabled via keyboard");
-        } else {
-          setShowDebugPanel(prev => !prev);
-          toast(showDebugPanel ? "Debug panel hidden" : "Debug panel shown");
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [showDebugPanel]);
 
   // Check if kiosk is already active - anonymous access allowed
   useEffect(() => {
@@ -339,40 +298,20 @@ const KioskThree = () => {
       <div className="min-h-screen bg-background flex flex-col">
         {/* Kiosk Header */}
         <div className="p-4 bg-primary/5 border-b">
-          <div className="flex items-center justify-between">
-            <div 
-              className="flex items-center gap-3 cursor-pointer"
-              onClick={handleDebugAccess}
-            >
-              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                <Monitor className="h-4 w-4 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-foreground">
-                  Student Kiosk #3
-                  {isDevelopmentMode && (
-                    <span className="ml-2 text-xs bg-yellow-500/20 text-yellow-700 px-1 rounded">DEV</span>
-                  )}
-                </h3>
-                <p className="text-xs text-muted-foreground">Ready for next student</p>
-              </div>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+              <Monitor className="h-4 w-4 text-primary" />
             </div>
-            {showDebugPanel && (
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => setShowDebugPanel(false)}
-              >
-                <Settings className="h-4 w-4" />
-              </Button>
-            )}
+            <div>
+              <h3 className="font-semibold text-foreground">Student Kiosk #3</h3>
+              <p className="text-xs text-muted-foreground">Ready for next student</p>
+            </div>
           </div>
         </div>
         
         <div className="flex-1 flex items-center justify-center p-4">
-          <div className="flex gap-4 w-full max-w-4xl">
-            <div className="flex-1">
-              <Card className="p-12 text-center bg-gradient-card shadow-elevated w-full">
+          <div className="w-full max-w-4xl">
+            <Card className="p-12 text-center bg-gradient-card shadow-elevated w-full">
               <div className="space-y-6">
                 <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
                   <User className="h-10 w-10 text-primary" />
@@ -382,21 +321,21 @@ const KioskThree = () => {
                   <h2 className="text-3xl font-bold text-foreground mb-3">Student Reflection Kiosk</h2>
                   {firstWaitingStudent ? (
                     <div className="space-y-4">
-<div className="space-y-4">
-  <p className="text-lg text-muted-foreground">
-    Hello, <span className="font-semibold text-foreground">{firstWaitingStudent.student.name}</span>
-  </p>
-  <p className="text-muted-foreground">
-    You've been asked to complete a behavior reflection. Click below to begin.
-  </p>
-  <Button 
-    onClick={() => setKioskState('password')}
-    className="w-full bg-gradient-primary text-white shadow-button hover:shadow-elevated transition-all duration-200"
-    size="lg"
-  >
-    Begin Reflection
-  </Button>
-</div>
+                      <div className="space-y-4">
+                        <p className="text-lg text-muted-foreground">
+                          Hello, <span className="font-semibold text-foreground">{firstWaitingStudent.student.name}</span>
+                        </p>
+                        <p className="text-muted-foreground">
+                          You've been asked to complete a behavior reflection. Click below to begin.
+                        </p>
+                        <Button 
+                          onClick={() => setKioskState('password')}
+                          className="w-full bg-gradient-primary text-white shadow-button hover:shadow-elevated transition-all duration-200"
+                          size="lg"
+                        >
+                          Begin Reflection
+                        </Button>
+                      </div>
                     </div>
                   ) : (
                     <p className="text-muted-foreground">
@@ -406,12 +345,6 @@ const KioskThree = () => {
                 </div>
               </div>
             </Card>
-          </div>
-          {showDebugPanel && (
-            <div className="w-72">
-              <KioskDebugPanel />
-            </div>
-          )}
           </div>
         </div>
       </div>
@@ -484,9 +417,9 @@ const KioskThree = () => {
                   <TouchOptimizedButton 
                     variant="outline"
                     onClick={() => setKioskState('welcome')}
-                    className="w-full"
+                    className="w-full py-4"
                   >
-                    Go Back
+                    Back
                   </TouchOptimizedButton>
                 </div>
               </div>
@@ -497,79 +430,78 @@ const KioskThree = () => {
     );
   }
 
-  // Completion view with auto-reset countdown
+  // Completion screen
   if (kioskState === 'completed') {
-    const [countdown, setCountdown] = useState(10);
-    
-    useEffect(() => {
-      const timer = setInterval(() => {
-        setCountdown(prev => prev - 1);
-      }, 1000);
-      return () => clearInterval(timer);
-    }, []);
-
     return (
-      <div className="min-h-screen bg-background flex flex-col">
-        {/* Kiosk Header */}
-        <div className="p-4 bg-primary/5 border-b">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-              <Monitor className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground">Student Kiosk #3</h3>
-              <p className="text-xs text-muted-foreground">Reflection completed</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex-1 flex items-center justify-center p-4">
-          <div className="w-full max-w-md">
-            <Card className="p-12 text-center bg-gradient-card shadow-elevated max-w-md w-full">
-              <div className="space-y-6">
-                <div className="mx-auto w-20 h-20 bg-queue-completed/10 rounded-full flex items-center justify-center">
-                  <CheckCircle className="h-10 w-10 text-queue-completed" />
-                </div>
-                
-                <div>
-                  <h2 className="text-2xl font-bold text-foreground mb-2">Reflection Complete!</h2>
-                  <p className="text-muted-foreground">Thank you for your thoughtful responses.</p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="p-4 bg-muted/50 rounded-lg">
-                    <p className="text-sm text-muted-foreground">
-                      Your reflection has been submitted for teacher review. Please return to class when instructed.
-                    </p>
-                  </div>
-                  
-                  <div className="text-center">
-                    <p className="text-sm text-muted-foreground">
-                      Returning to welcome screen in <span className="font-semibold">{countdown}</span> seconds...
-                    </p>
-                  </div>
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <Card className="p-8 text-center bg-gradient-card shadow-elevated">
+            <div className="space-y-6">
+              <div className="mx-auto w-20 h-20 bg-success/10 rounded-full flex items-center justify-center">
+                <CheckCircle className="h-12 w-12 text-success" />
+              </div>
+              
+              <div className="space-y-2">
+                <h2 className="text-2xl font-bold text-primary">Reflection Complete!</h2>
+                <p className="text-muted-foreground">
+                  Thank you {currentStudentName ? currentStudentName.split(' ')[0] : ''} for completing your reflection.
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Your teacher will review your responses and provide feedback.
+                </p>
+              </div>
+              
+              <div className="p-4 bg-muted/30 rounded-lg">
+                <p className="text-sm text-muted-foreground mb-2">
+                  Returning to main screen in
+                </p>
+                <div className="text-2xl font-bold text-primary">
+                  10
                 </div>
               </div>
-            </Card>
-          </div>
+            </div>
+          </Card>
         </div>
       </div>
     );
   }
 
-  // Reflection form
+  // Reflection questions
+  const currentQuestionData = questions[currentQuestion];
+  const allQuestionsAnswered = questions.every(q => answers[q.id]?.trim().length > 10);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Kiosk Header */}
-      <div className="p-4 bg-primary/5 border-b">
+      {/* Header */}
+      <div className="p-4 bg-primary/5 border-b sticky top-0 z-10">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold text-primary">Kiosk Three</h1>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline">
+              {firstWaitingStudent ? firstWaitingStudent.student.first_name : 'Available'}
+            </Badge>
+            <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+          </div>
+        </div>
+        
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-              <Monitor className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground">Student Kiosk #3</h3>
-              <p className="text-xs text-muted-foreground">Reflection in progress</p>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-muted-foreground">
+              Question {currentQuestion + 1} of {questions.length}
+            </span>
+            <div className="flex gap-1">
+              {questions.map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full ${
+                    index === currentQuestion
+                      ? 'bg-primary'
+                      : answers[questions[index].id]?.trim().length > 10
+                      ? 'bg-success'
+                      : 'bg-muted'
+                  }`}
+                />
+              ))}
             </div>
           </div>
           <div className="text-sm text-muted-foreground">
@@ -577,111 +509,89 @@ const KioskThree = () => {
           </div>
         </div>
       </div>
-      
-      <div className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-2xl">
-          <Card className="p-8 bg-gradient-card shadow-elevated w-full">
+
+      {/* Main content */}
+      <div className="flex-1 p-6">
+        <div className="max-w-4xl mx-auto">
+          <Card className="p-8 bg-gradient-card shadow-elevated">
             <div className="space-y-6">
-              {/* Progress */}
-              <div className="text-center">
-                <h2 className="text-2xl font-bold text-foreground mb-2">Behavior Reflection</h2>
-                <p className="text-muted-foreground mb-4">Question {currentQuestion + 1} of {questions.length}</p>
-                <div className="w-full bg-muted rounded-full h-2">
-                  <div 
-                    className="bg-gradient-primary h-2 rounded-full transition-all duration-300" 
-                    style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
-                  />
-                </div>
+              <div className="space-y-3">
+                <h2 className="text-xl font-semibold text-foreground">
+                  {currentQuestionData.text}
+                </h2>
+                <p className="text-muted-foreground">
+                  {currentQuestionData.helper}
+                </p>
               </div>
-
-              {/* Teacher Feedback */}
-              {hasTeacherFeedback && (
-                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <User className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-blue-900 mb-1">Teacher Feedback</h4>
-                      <p className="text-sm text-blue-800">{hasTeacherFeedback}</p>
-                      <p className="text-xs text-blue-600 mt-2">Please keep this feedback in mind as you complete your reflection.</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Question */}
+              
               <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">
-                    {questions[currentQuestion].text}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {questions[currentQuestion].helper}
-                  </p>
+                <Label htmlFor="answer" className="text-sm font-medium">
+                  Your answer (minimum 10 characters)
+                </Label>
+                <Textarea
+                  id="answer"
+                  placeholder="Take your time to think about your response..."
+                  value={answers[currentQuestionData.id] || ''}
+                  onChange={(e) => handleAnswerChange(currentQuestionData.id, e.target.value)}
+                  className="min-h-[200px] text-base leading-relaxed"
+                  autoFocus
+                />
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>
+                    {answers[currentQuestionData.id]?.length || 0} characters
+                  </span>
+                  <span className={answers[currentQuestionData.id]?.trim().length >= 10 ? 'text-success' : ''}>
+                    {answers[currentQuestionData.id]?.trim().length >= 10 ? '✓ Minimum reached' : 'Keep writing...'}
+                  </span>
                 </div>
-
-                <div>
-                  <Textarea
-                    value={answers[questions[currentQuestion].id] || ''}
-                    onChange={(e) => handleAnswerChange(questions[currentQuestion].id, e.target.value)}
-                    placeholder="Type your response here..."
-                    className="min-h-[120px] text-base"
-                  />
-                  <div className="flex justify-between items-center mt-2">
-                    <p className="text-xs text-muted-foreground">
-                      {answers[questions[currentQuestion].id]?.length || 0} characters
-                    </p>
-                    {!canProceedToNext() && (
-                      <p className="text-xs text-muted-foreground">
-                        Please write at least 10 characters
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Navigation */}
-              <div className="flex justify-between pt-4">
-                <Button
-                  variant="outline"
-                  onClick={handlePrevious}
-                  disabled={currentQuestion === 0}
-                >
-                  Previous
-                </Button>
-
-                {currentQuestion === questions.length - 1 ? (
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={!canProceedToNext() || isSubmitting}
-                    className="bg-gradient-primary text-white shadow-button hover:shadow-elevated transition-all duration-200"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Submitting...
-                      </>
-                    ) : (
-                      <>
-                        Submit Reflection
-                        <CheckCircle className="h-4 w-4 ml-2" />
-                      </>
-                    )}
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={handleNext}
-                    disabled={!canProceedToNext()}
-                    className="bg-gradient-primary text-white shadow-button hover:shadow-elevated transition-all duration-200"
-                  >
-                    Next
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                )}
               </div>
             </div>
           </Card>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <div className="p-6 bg-muted/20 border-t">
+        <div className="max-w-4xl mx-auto flex justify-between">
+          <TouchOptimizedButton
+            variant="outline"
+            onClick={handlePrevious}
+            disabled={currentQuestion === 0}
+            className="px-8"
+          >
+            Previous
+          </TouchOptimizedButton>
+          
+          <div className="flex gap-3">
+            {currentQuestion === questions.length - 1 ? (
+              <TouchOptimizedButton
+                onClick={handleSubmit}
+                disabled={!allQuestionsAnswered || isSubmitting}
+                className="px-8 bg-gradient-primary text-white"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    Submit Reflection
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </>
+                )}
+              </TouchOptimizedButton>
+            ) : (
+              <TouchOptimizedButton
+                onClick={handleNext}
+                disabled={!canProceedToNext()}
+                className="px-8"
+              >
+                Next
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </TouchOptimizedButton>
+            )}
+          </div>
         </div>
       </div>
     </div>
