@@ -130,6 +130,7 @@ const QueueDisplay = React.memo(({
       // Finally: Creation time (oldest first - ascending order)
       const aTime = a.timestamp?.getTime() || new Date(a.created_at).getTime();
       const bTime = b.timestamp?.getTime() || new Date(b.created_at).getTime();
+      console.log(`QueueDisplay sorting: ${(a as any).student?.first_name} (${a.created_at}) vs ${(b as any).student?.first_name} (${b.created_at}), result: ${aTime - bTime}`);
       return aTime - bTime; // Oldest first
     });
   }, [items]);

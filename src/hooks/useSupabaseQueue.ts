@@ -94,7 +94,7 @@ export const useSupabaseQueue = () => {
         }
       }
 
-      const { data, error } = await query.order('created_at', { ascending: true });
+      const { data, error } = await query.order('created_at', { ascending: true }); // Oldest first
 
       if (error) throw error;
 
@@ -109,7 +109,10 @@ export const useSupabaseQueue = () => {
         }
         
         // Same urgency, sort by created_at (oldest first - ascending order)
-        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        const aTime = new Date(a.created_at).getTime();
+        const bTime = new Date(b.created_at).getTime();
+        console.log(`Sorting: ${a.student?.first_name} (${a.created_at}) vs ${b.student?.first_name} (${b.created_at}), result: ${aTime - bTime}`);
+        return aTime - bTime;
       });
 
       const transformedData = sortedData?.map((item: any, index: number) => ({
