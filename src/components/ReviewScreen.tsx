@@ -87,20 +87,24 @@ const ReviewScreen = ({
 
   return (
     <div className="h-full flex flex-col bg-background">
-      {/* Content Area with compact spacing like QueueDisplay */}
-      <div className="flex-1 p-2 space-y-2">
-        {/* Summary Section - QueueDisplay compact style */}
-        <div className="space-y-1 p-2 bg-background border-b border-border">
+      {/* Content Area with professional spacing */}
+      <div className="flex-1 p-4 space-y-4">
+        {/* Summary Section - Professional card style */}
+        <div className="space-y-3 p-4 bg-card border border-border rounded-lg shadow-sm">
           <div className="flex items-center gap-2">
-            <span className="text-foreground font-medium text-sm min-w-[60px]">Student:</span>
-            <span className="text-foreground text-sm">{studentName}</span>
+            <span className="text-sm font-medium text-muted-foreground min-w-[60px]">Student:</span>
+            <Badge variant="outline" className="text-xs font-medium">
+              {studentName}
+            </Badge>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-foreground font-medium text-sm min-w-[60px]">Context:</span>
-            <span className="text-foreground text-sm">{contextLabel}</span>
+            <span className="text-sm font-medium text-muted-foreground min-w-[60px]">Context:</span>
+            <Badge variant="secondary" className="text-xs font-medium">
+              {contextLabel}
+            </Badge>
           </div>
           <div className="flex items-start gap-2">
-            <span className="text-foreground font-medium text-sm min-w-[60px] mt-0.5">Behaviors:</span>
+            <span className="text-sm font-medium text-muted-foreground min-w-[60px] mt-0.5">Behaviors:</span>
             <div className="flex flex-wrap gap-1">
               {selectedBehaviors.map((behaviorId, index) => {
                 const behavior = behaviors.find(b => b.id === behaviorId);
@@ -108,20 +112,20 @@ const ReviewScreen = ({
                 const classes = getBehaviorClasses(behaviorId);
                 
                 return (
-                  <span 
+                  <Badge 
                     key={index} 
-                    className={`px-1.5 py-0.5 rounded-full text-xs font-medium border ${classes}`}
+                    className={`text-xs px-1.5 py-0.5 border ${classes}`}
                   >
                     {label}
-                  </span>
+                  </Badge>
                 );
               })}
             </div>
           </div>
         </div>
 
-        {/* Teacher Mood Section - Compact */}
-        <div className="space-y-2 p-2">
+        {/* Teacher Mood Section - Professional spacing */}
+        <div className="space-y-3 p-4 bg-card border border-border rounded-lg shadow-sm">
           <h4 className="text-center text-base font-semibold text-foreground">Current Mood</h4>
           <div className="px-2">
             <MoodSlider
@@ -132,8 +136,8 @@ const ReviewScreen = ({
         </div>
       </div>
 
-      {/* Notes and Submit Section - Compact like QueueDisplay */}
-      <div className="p-2 space-y-2 bg-background border-t border-border">
+      {/* Notes and Submit Section - Professional spacing */}
+      <div className="p-4 space-y-4 bg-background border-t border-border">
         {/* Notes Section */}
         <div className="space-y-2">
           <Label htmlFor="notes" className="text-sm font-medium text-foreground">
@@ -148,7 +152,7 @@ const ReviewScreen = ({
           />
         </div>
         
-        {/* Submit Button - Anchored to bottom */}
+        {/* Submit Button - Professional styling */}
         <Button 
           onClick={onSubmit}
           disabled={isSubmitting}
