@@ -127,10 +127,10 @@ const QueueDisplay = React.memo(({
         return bUrgency - aUrgency; // Higher urgency first
       }
       
-      // Finally: Creation time (oldest first)
+      // Finally: Creation time (oldest first - ascending order)
       const aTime = a.timestamp?.getTime() || new Date(a.created_at).getTime();
       const bTime = b.timestamp?.getTime() || new Date(b.created_at).getTime();
-      return aTime - bTime;
+      return aTime - bTime; // Oldest first
     });
   }, [items]);
 

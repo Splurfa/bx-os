@@ -98,7 +98,7 @@ export const useSupabaseQueue = () => {
 
       if (error) throw error;
 
-      // Sort by urgency priority: urgent → re_integration → standard, then by created_at
+      // Sort by urgency priority: urgent → re_integration → standard, then by created_at (oldest first)
       const sortedData = data?.sort((a: any, b: any) => {
         const urgencyOrder = { urgent: 3, re_integration: 2, standard: 1 };
         const aUrgency = urgencyOrder[a.urgency_level as keyof typeof urgencyOrder] || 1;
@@ -108,7 +108,7 @@ export const useSupabaseQueue = () => {
           return bUrgency - aUrgency; // Higher urgency first
         }
         
-        // Same urgency, sort by created_at (oldest first)
+        // Same urgency, sort by created_at (oldest first - ascending order)
         return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
       });
 
