@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import MoodSlider from "./MoodSlider";
@@ -19,13 +18,49 @@ interface ReviewScreenProps {
   isSubmitting?: boolean;
 }
 
-const urgencyOptions = [
-  { value: 'standard', label: 'Standard', description: 'Regular processing' },
-  { value: 're_integration', label: 'Re-integration', description: 'Priority return to class' },
-  { value: 'urgent', label: 'Urgent', description: 'Immediate attention needed' }
+const behaviors = [
+  { 
+    id: 'disruptive', 
+    label: 'Disruptive', 
+    selectedClasses: 'bg-behavior-disruptive border-behavior-disruptive text-white shadow-sm',
+    unselectedClasses: 'bg-behavior-disruptive-light border-behavior-disruptive-light text-behavior-disruptive'
+  },
+  { 
+    id: 'social-emotional', 
+    label: 'Social-Emotional', 
+    selectedClasses: 'bg-behavior-social border-behavior-social text-white shadow-sm',
+    unselectedClasses: 'bg-behavior-social-light border-behavior-social-light text-behavior-social'
+  },
+  { 
+    id: 'avoidance', 
+    label: 'Avoidance', 
+    selectedClasses: 'bg-behavior-avoidance border-behavior-avoidance text-white shadow-sm',
+    unselectedClasses: 'bg-behavior-avoidance-light border-behavior-avoidance-light text-behavior-avoidance'
+  },
+  { 
+    id: 'eloping', 
+    label: 'Eloping', 
+    selectedClasses: 'bg-behavior-eloping border-behavior-eloping text-white shadow-sm',
+    unselectedClasses: 'bg-behavior-eloping-light border-behavior-eloping-light text-behavior-eloping'
+  },
+  { 
+    id: 'minor-physical', 
+    label: 'Minor-Physical', 
+    selectedClasses: 'bg-behavior-minor-physical border-behavior-minor-physical text-white shadow-sm',
+    unselectedClasses: 'bg-behavior-minor-physical-light border-behavior-minor-physical-light text-behavior-minor-physical'
+  },
+  { 
+    id: 'major-physical', 
+    label: 'Major-Physical', 
+    selectedClasses: 'bg-behavior-major-physical border-behavior-major-physical text-white shadow-sm',
+    unselectedClasses: 'bg-behavior-major-physical-light border-behavior-major-physical-light text-behavior-major-physical'
+  }
 ];
 
-const moodLabels = ['Very Calm', 'Calm', 'Neutral', 'Frustrated', 'Very Frustrated'];
+const getBehaviorClasses = (behaviorId: string) => {
+  const behavior = behaviors.find(b => b.id === behaviorId);
+  return behavior ? behavior.selectedClasses : 'bg-primary text-primary-foreground';
+};
 
 const ReviewScreen = ({
   studentName,
@@ -51,49 +86,54 @@ const ReviewScreen = ({
 
   return (
     <div className="h-full flex flex-col bg-background">
-      {/* Content Area - Scrollable */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        {/* Summary Section - Enhanced with Colors */}
-        <div className="bg-gradient-to-r from-primary/5 to-secondary/5 border border-primary/20 rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+      {/* Content Area - No Scrolling */}
+      <div className="flex-1 p-4 space-y-4">
+        {/* Summary Section - Flat Design */}
+        <div className="space-y-3">
+          <h3 className="text-base font-semibold text-foreground border-b border-border pb-2">
             📋 Review Summary
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-muted-foreground text-sm">Student:</span>
-              <Badge variant="default" className="bg-primary/10 text-primary border-primary/20">
+              <span className="text-muted-foreground text-sm w-16">Student:</span>
+              <Badge className="bg-primary text-primary-foreground">
                 {studentName}
               </Badge>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-muted-foreground text-sm">Context:</span>
-              <Badge variant="secondary" className="bg-secondary/10 text-secondary-foreground border-secondary/20">
+              <span className="text-muted-foreground text-sm w-16">Context:</span>
+              <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
                 {contextLabel}
               </Badge>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="space-y-2">
               <span className="text-muted-foreground text-sm">Behaviors:</span>
-              <div className="flex flex-wrap gap-2">
-                {selectedBehaviors.map((behavior, index) => (
-                  <Badge 
-                    key={index} 
-                    variant="outline" 
-                    className="bg-accent/10 text-accent-foreground border-accent/30"
-                  >
-                    {behavior}
-                  </Badge>
-                ))}
+              <div className="flex flex-wrap gap-1.5">
+                {selectedBehaviors.map((behaviorId, index) => {
+                  const behavior = behaviors.find(b => b.id === behaviorId);
+                  const label = behavior ? behavior.label : behaviorId;
+                  const classes = getBehaviorClasses(behaviorId);
+                  
+                  return (
+                    <span 
+                      key={index} 
+                      className={`px-2 py-1 rounded-full text-xs font-medium border ${classes}`}
+                    >
+                      {label}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Teacher Mood - Enhanced with Colorful Slider */}
-        <div className="bg-gradient-to-r from-secondary/5 to-accent/5 border border-secondary/20 rounded-lg p-4">
-          <h4 className="text-base font-medium text-foreground mb-4 flex items-center gap-2">
+        {/* Teacher Mood Section - Compact */}
+        <div className="space-y-3">
+          <h4 className="text-base font-semibold text-foreground border-b border-border pb-2">
             🎯 Your Current Mood
           </h4>
-          <div className="bg-background/80 rounded-lg p-4 border border-border/50">
+          <div className="px-2">
             <MoodSlider
               value={moodToPercentage(teacherMood)}
               onChange={handleMoodChange}
@@ -101,24 +141,18 @@ const ReviewScreen = ({
           </div>
         </div>
 
-        {/* Notes Section - Enhanced */}
-        <div className="bg-gradient-to-r from-accent/5 to-primary/5 border border-accent/20 rounded-lg p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h4 className="text-base font-medium text-foreground flex items-center gap-2">
-              📝 Additional Notes
+        {/* Notes Section - Streamlined */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between border-b border-border pb-2">
+            <h4 className="text-base font-semibold text-foreground">
+              📝 Notes
             </h4>
             <NotesModal note={note} onNoteChange={onNoteChange} />
           </div>
-          {note ? (
-            <div className="bg-background/80 rounded-lg p-3 border border-border/50">
-              <p className="text-sm text-muted-foreground">
-                {note.length > 120 ? `${note.substring(0, 120)}...` : note}
-              </p>
-            </div>
-          ) : (
-            <div className="bg-muted/20 rounded-lg p-3 border border-dashed border-muted-foreground/30">
-              <p className="text-sm text-muted-foreground text-center">
-                No additional notes added
+          {note && (
+            <div className="px-3 py-2 bg-muted/30 rounded-lg">
+              <p className="text-sm text-foreground">
+                {note.length > 100 ? `${note.substring(0, 100)}...` : note}
               </p>
             </div>
           )}
