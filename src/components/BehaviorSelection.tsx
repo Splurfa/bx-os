@@ -49,7 +49,7 @@ const BehaviorSelection = ({ selectedBehaviors, onBehaviorToggle }: BehaviorSele
       <div className="grid grid-cols-2 grid-rows-3 gap-3 p-4 h-full">
         {behaviors.map((behavior) => {
           const isSelected = selectedBehaviors.includes(behavior.id);
-          const baseClasses = "h-full p-3 border-2 rounded-lg text-xs font-medium flex items-center justify-center transition-all cursor-pointer text-center";
+          const baseClasses = "h-full p-4 border-2 rounded-lg text-sm font-medium flex items-center justify-center transition-all cursor-pointer text-center";
           
           const buttonClasses = isSelected 
             ? `${baseClasses} ${behavior.selectedClasses}`

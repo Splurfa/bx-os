@@ -112,8 +112,8 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
 
   return (
     <>
-      <div className="h-screen bg-background p-2 flex flex-col">
-        <div className="max-w-2xl mx-auto space-y-2 flex-1 flex flex-col">
+      <div className="h-screen bg-background p-4 flex flex-col">
+        <div className="space-y-4 flex-1 flex flex-col">
           {/* Header */}
           <div className="flex items-center space-x-3">
             <Button 
@@ -141,65 +141,59 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
 
           {/* Step 1: Student Name */}
           {step === 1 && (
-            <div className="border border-border rounded p-2 flex-1 flex flex-col">
-              <div className="text-center space-y-2 flex-1 flex flex-col">
-                <div>
-                  <h2 className="text-base font-semibold text-foreground">Student</h2>
-                  <p className="text-xs text-muted-foreground">Select a student</p>
-                </div>
-                <div className="flex-1 min-h-0">
-                  <StudentSelection
-                    onStudentSelect={setSelectedStudent}
-                    onStudentDeselect={() => setSelectedStudent(null)}
-                    selectedStudentId={selectedStudent?.id}
-                  />
-                </div>
+            <div className="flex-1 flex flex-col">
+              <div className="text-center mb-4">
+                <h2 className="text-lg font-semibold text-foreground">Student</h2>
+                <p className="text-sm text-muted-foreground">Select a student</p>
+              </div>
+              <div className="flex-1 min-h-0">
+                <StudentSelection
+                  onStudentSelect={setSelectedStudent}
+                  onStudentDeselect={() => setSelectedStudent(null)}
+                  selectedStudentId={selectedStudent?.id}
+                />
               </div>
             </div>
           )}
 
           {/* Step 2: Context Selection */}
           {step === 2 && (
-            <div className="border border-border rounded p-2 flex-1 flex flex-col">
-              <div className="text-center space-y-2 flex-1 flex flex-col">
-                <div>
-                  <h2 className="text-base font-semibold text-foreground">Context</h2>
-                  <p className="text-xs text-muted-foreground">What was happening?</p>
-                </div>
-                <div className="flex-1 min-h-0">
-                  <ActivitySelection
-                    selectedContext={selectedContext}
-                    onContextSelect={setSelectedContext}
-                  />
-                </div>
+            <div className="flex-1 flex flex-col">
+              <div className="text-center mb-4">
+                <h2 className="text-lg font-semibold text-foreground">Context</h2>
+                <p className="text-sm text-muted-foreground">What was happening?</p>
+              </div>
+              <div className="flex-1 min-h-0">
+                <ActivitySelection
+                  selectedContext={selectedContext}
+                  onContextSelect={setSelectedContext}
+                />
               </div>
             </div>
           )}
 
           {/* Step 3: Behavior Selection */}
           {step === 3 && (
-            <div className="border border-border rounded p-2 flex-1 flex flex-col">
-              <div className="text-center space-y-2 flex-1 flex flex-col">
-                <div>
-                  <h2 className="text-base font-semibold text-foreground">Behaviors</h2>
-                  <p className="text-xs text-muted-foreground">Select all that apply</p>
-                </div>
-                <div className="flex-1 min-h-0">
-                  <BehaviorSelection
-                    selectedBehaviors={selectedBehaviors}
-                    onBehaviorToggle={handleBehaviorToggle}
-                  />
-                </div>
+            <div className="flex-1 flex flex-col">
+              <div className="text-center mb-4">
+                <h2 className="text-lg font-semibold text-foreground">Behaviors</h2>
+                <p className="text-sm text-muted-foreground">Select all that apply</p>
+              </div>
+              <div className="flex-1 min-h-0">
+                <BehaviorSelection
+                  selectedBehaviors={selectedBehaviors}
+                  onBehaviorToggle={handleBehaviorToggle}
+                />
               </div>
             </div>
           )}
 
           {/* Step 4: Review & Submit */}
           {step === 4 && (
-            <div className="border border-border rounded flex-1 flex flex-col">
-              <div className="text-center py-2 px-2 border-b">
-                <h2 className="text-base font-semibold text-foreground">Review</h2>
-                <p className="text-xs text-muted-foreground">Finalize your report</p>
+            <div className="flex-1 flex flex-col">
+              <div className="text-center mb-4">
+                <h2 className="text-lg font-semibold text-foreground">Review</h2>
+                <p className="text-sm text-muted-foreground">Finalize your report</p>
               </div>
               <div className="flex-1 min-h-0">
                 <ReviewScreen
@@ -221,7 +215,7 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
 
           {/* Navigation - Fixed to bottom */}
           {step < 4 && (
-            <div className="sticky bottom-0 bg-background p-2 border-t border-border flex justify-between">
+            <div className="sticky bottom-0 bg-background p-4 border-t border-border flex justify-between">
               {step > 1 && (
                 <Button 
                   variant="outline" 
