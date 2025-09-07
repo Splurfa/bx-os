@@ -73,7 +73,8 @@ export const useSupabaseQueue = () => {
         .select(`
           *,
           student:students(*),
-          reflection:reflections(*)
+          reflection:reflections(*),
+          antecedent_context:antecedent_contexts(id, key, label)
         `)
         .neq('status', 'completed'); // Exclude completed items from queue display
 
@@ -190,7 +191,11 @@ export const useSupabaseQueue = () => {
           description: data.notes || 'Behavior incident',
           teacher_name: user.email?.split('@')[0] || 'Teacher',
           status: 'waiting',
-          priority_level: data.urgent ? 'high' : 'medium'
+          priority_level: data.urgent ? 'high' : 'medium',
+          antecedent_context_id: data.contextId || null,
+          teacher_mood: typeof data.mood === 'number' ? data.mood : parseInt(String(data.mood)) || null,
+          urgency_level: data.urgent ? 'urgent' : 'standard',
+          note: data.notes || null
         }]);
 
       if (requestError) throw requestError;

@@ -184,15 +184,35 @@ const QueueDisplay = React.memo(({
               </div>
             </div>
 
-            {/* Row 2, Col 1: Timer + Kiosk (mobile = K1) */}
+            {/* Row 2, Col 1: Timer + Context + Kiosk (mobile = K1) */}
             <div className="col-[1] row-[2] flex items-center gap-2 text-xs text-muted-foreground min-w-0">
               <span className="whitespace-nowrap">
                 <LiveTimer startTime={item.timestamp || new Date(item.created_at)} />
               </span>
-              {(item as any).urgent && (
+              {(item as any).urgency_level === 'urgent' && (
                 <Badge variant="destructive" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
                   URGENT
                 </Badge>
+              )}
+              {(item as any).antecedent_context && (
+                <Badge variant="secondary" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
+                  {(item as any).antecedent_context.label}
+                </Badge>
+              )}
+              {(item as any).teacher_mood && (
+                <span className="flex items-center gap-1">
+                  <span className="text-xs">Mood:</span>
+                  <div className="flex">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          i < (item as any).teacher_mood ? 'bg-yellow-400' : 'bg-gray-300'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </span>
               )}
               {('assigned_kiosk_id' in item) && item.assigned_kiosk_id && item.status !== 'review' && (
                 <Badge variant="outline" className="text-xs px-1.5 py-0.5 whitespace-nowrap">

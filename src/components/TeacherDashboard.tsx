@@ -52,25 +52,15 @@ const TeacherDashboard = () => {
   };
 
   const handleBSRSubmit = async (data: {
-    studentName: string;
+    student: any;
     contextId: string;
     behaviors: string[];
     teacherMood: number;
     urgencyLevel: string;
     note: string;
   }) => {
-    // Convert the new BSR form data to the format expected by addToQueue
-    const studentData = {
-      id: `temp-${Date.now()}`, 
-      first_name: data.studentName.split(' ')[0] || data.studentName,
-      last_name: data.studentName.split(' ').slice(1).join(' ') || '',
-      family_id: 'temp-family-id',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-
     await addToQueue({
-      student: studentData,
+      student: data.student,
       behaviors: data.behaviors,
       mood: data.teacherMood,
       urgent: data.urgencyLevel === 'urgent',

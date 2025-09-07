@@ -7,11 +7,13 @@ import { Label } from "@/components/ui/label";
 import ActivitySelection from "./ActivitySelection";
 import BehaviorSelection from "./BehaviorSelection";
 import ReviewScreen from "./ReviewScreen";
+import StudentSelection from "./StudentSelection";
 import { supabase } from "@/integrations/supabase/client";
+import type { Student } from "@/hooks/useStudents";
 
 interface CreateBSRFormProps {
   onSubmit: (data: { 
-    studentName: string; 
+    student: Student; 
     contextId: string;
     behaviors: string[]; 
     teacherMood: number;
@@ -31,7 +33,7 @@ const behaviors = [
 ];
 
 const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
-  const [studentName, setStudentName] = useState('');
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [selectedContext, setSelectedContext] = useState('');
   const [selectedBehaviors, setSelectedBehaviors] = useState<string[]>([]);
   const [teacherMood, setTeacherMood] = useState(3);
@@ -69,11 +71,11 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
   };
 
   const handleSubmit = async () => {
-    if (studentName && selectedContext && selectedBehaviors.length > 0) {
+    if (selectedStudent && selectedContext && selectedBehaviors.length > 0) {
       setIsSubmitting(true);
       try {
         onSubmit({
-          studentName,
+          student: selectedStudent,
           contextId: selectedContext,
           behaviors: selectedBehaviors,
           teacherMood,
@@ -88,7 +90,7 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
 
   const canProceed = () => {
     switch (step) {
-      case 1: return studentName.trim() !== '';
+      case 1: return selectedStudent !== null;
       case 2: return selectedContext !== '';
       case 3: return selectedBehaviors.length > 0;
       case 4: return true; // Review screen
@@ -135,20 +137,12 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
                 <h2 className="text-xl font-semibold text-foreground mb-2">Student Information</h2>
                 <p className="text-muted-foreground">Enter the student's name</p>
               </div>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="studentName" className="text-sm font-medium text-foreground">
-                    Student Name
-                  </Label>
-                  <Input
-                    id="studentName"
-                    value={studentName}
-                    onChange={(e) => setStudentName(e.target.value)}
-                    placeholder="Enter student's full name"
-                    className="mt-2 text-center text-lg"
-                    autoFocus
-                  />
-                </div>
+              <div className="h-96">
+                <StudentSelection
+                  onStudentSelect={setSelectedStudent}
+                  onStudentDeselect={() => setSelectedStudent(null)}
+                  selectedStudentId={selectedStudent?.id}
+                />
               </div>
             </div>
           </Card>
@@ -207,7 +201,7 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
               <p className="text-muted-foreground">Review your selections and provide additional details</p>
             </div>
             <ReviewScreen
-              studentName={studentName}
+              studentName={selectedStudent ? `${selectedStudent.first_name} ${selectedStudent.last_name}` : ''}
               contextLabel={contextLabel}
               selectedBehaviors={selectedBehaviors}
               teacherMood={teacherMood}
@@ -249,13 +243,13 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
         )}
 
         {/* Quick Summary for steps 2-3 */}
-        {(step === 2 || step === 3) && studentName && (
+        {(step === 2 || step === 3) && selectedStudent && (
           <Card className="p-4 bg-muted/50 border-dashed">
             <div className="text-center space-y-2">
               <p className="text-sm text-muted-foreground">Current Selection:</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary text-primary-foreground">
-                  {studentName}
+                  {selectedStudent.first_name} {selectedStudent.last_name}
                 </span>
                 {step >= 2 && contextLabel && (
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
