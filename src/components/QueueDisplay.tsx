@@ -89,7 +89,7 @@ const QueueDisplay = React.memo(({
       case 'urgent':
         return <Badge variant="destructive" className="text-xs">Urgent</Badge>;
       case 're_integration':
-        return <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800 border-yellow-300">Re-Integration</Badge>;
+        return <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800 border-yellow-300">Integration</Badge>;
       default:
         return null;
     }
@@ -305,21 +305,19 @@ const QueueDisplay = React.memo(({
               )}
             </div>
 
-            {/* Row 2, Col 2: Teacher last name chip (hidden if missing) */}
+            {/* Row 2, Col 2: Teacher last name chip (admin dashboard only) */}
             {showTeacherLastNameChip && (() => {
-              // For admin view, we need to derive teacher info from behavior request
-              // This would typically come from a JOIN with profiles table
               const teacherData = (item as any).teacher_profile;
               
-              if (teacherData) {
-                const lastName = teacherData.last_name || 
-                  (teacherData.full_name ? teacherData.full_name.trim().split(/\s+/).slice(-1)[0] : '') ||
-                  (teacherData.email ? teacherData.email.split('@')[0].split('.').slice(-1)[0] : '');
+              if (teacherData?.full_name) {
+                const lastName = teacherData.full_name.trim().split(/\s+/).slice(-1)[0];
                 
                 return lastName ? (
-                  <Badge variant="outline" className="text-xs px-1.5 py-0.5 justify-self-end whitespace-nowrap">
-                    {lastName}
-                  </Badge>
+                  <div className="col-[2] row-[2] flex justify-end">
+                    <Badge variant="outline" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
+                      {lastName}
+                    </Badge>
+                  </div>
                 ) : null;
               }
               

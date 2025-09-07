@@ -76,7 +76,8 @@ export const useSupabaseQueue = () => {
           *,
           student:students(*),
           reflection:reflections(*),
-          antecedent_context:antecedent_contexts(id, key, label)
+          antecedent_context:antecedent_contexts(id, key, label),
+          teacher_profile:profiles!teacher_id(full_name)
         `)
         .neq('status', 'completed'); // Exclude completed items from queue display
 
