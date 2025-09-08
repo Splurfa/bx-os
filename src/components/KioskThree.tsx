@@ -71,6 +71,7 @@ const KioskThree = () => {
 
   // Check if kiosk is already active - anonymous access allowed
   useEffect(() => {
+    // Only run activation check when actually in setup state and not transitioning from completed
     if (kioskState === 'setup' && !authLoading) {
       const checkKiosk = async () => {
         try {
@@ -134,10 +135,11 @@ const KioskThree = () => {
     }
   }, [kioskState]);
 
-  // Auto-reset after completion
+  // Auto-reset after completion - go directly to welcome to avoid setup flash
   useEffect(() => {
     if (kioskState === 'completed') {
       const resetTimer = setTimeout(() => {
+        // Go directly to welcome state to avoid triggering setup check
         setKioskState('welcome');
         setPasswordInput('');
         setPasswordError('');
