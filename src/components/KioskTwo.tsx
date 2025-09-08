@@ -92,7 +92,8 @@ const KioskTwo = () => {
   // Reset state when student changes or completes
   useEffect(() => {
     // Add debouncing to prevent rapid calls
-    if (!firstWaitingStudent && kioskState !== 'setup') {
+    // Don't reset if we're in completed state - let the completion screen auto-reset handle it
+    if (!firstWaitingStudent && kioskState !== 'setup' && kioskState !== 'completed') {
       setKioskState('welcome');
       setPasswordInput('');
       setPasswordError('');
