@@ -22,7 +22,7 @@
 - **UI Components**: shadcn/ui with custom design system variants
 
 ### Data Model
-- **159 middle school students** with family/guardian relationships
+- **690+ total students** (159 middle school students) with family/guardian relationships
 - **15+ database tables** with comprehensive RLS policies
 - **Validated workflow patterns** with automatic assignment logic
 - **Real-time queue management** with conflict prevention
