@@ -17,21 +17,33 @@ export const formatBirthdateForPassword = (dateOfBirth: string | null): {
   }
 
   try {
-    const date = new Date(dateOfBirth);
-    if (isNaN(date.getTime())) {
-      throw new Error('Invalid date');
+    // Parse date string manually to avoid timezone conversion issues
+    // dateOfBirth format: "2012-12-12"
+    const dateParts = dateOfBirth.split('-');
+    if (dateParts.length !== 3) {
+      throw new Error('Invalid date format');
+    }
+    
+    const year = parseInt(dateParts[0]);
+    const month = parseInt(dateParts[1]);
+    const day = parseInt(dateParts[2]);
+    
+    // Validate the parsed values
+    if (isNaN(year) || isNaN(month) || isNaN(day) || 
+        month < 1 || month > 12 || day < 1 || day > 31) {
+      throw new Error('Invalid date values');
     }
 
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    const mmdd = `${month}${day}`;
+    const monthStr = month.toString().padStart(2, '0');
+    const dayStr = day.toString().padStart(2, '0');
+    const mmdd = `${monthStr}${dayStr}`;
 
     const monthNames = [
       'January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
-    const monthName = monthNames[date.getMonth()];
-    const dayWithSuffix = getDayWithSuffix(date.getDate());
+    const monthName = monthNames[month - 1]; // month is 1-indexed, array is 0-indexed
+    const dayWithSuffix = getDayWithSuffix(day);
 
     return {
       placeholder: `MMDD (e.g., ${mmdd})`,
