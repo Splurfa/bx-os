@@ -240,7 +240,7 @@ const QueueDisplay = React.memo(({
                     size="sm"
                     variant="default"
                     onClick={() => onSelectReflection(item)}
-                    className="text-xs whitespace-nowrap"
+                    className="text-xs whitespace-nowrap h-7 px-2"
                   >
                     {layout !== 'teacher' && <CheckCircle className="h-3 w-3 mr-1" />}
                     Review
