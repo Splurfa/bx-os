@@ -159,10 +159,10 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
                 onClick={() => handleStudentClick(student)}
                 className="flex items-center justify-between p-4 border-b border-border cursor-pointer transition-colors bg-primary/10"
               >
-                <div>
-                  <h4 className="font-medium text-foreground text-sm">{student.first_name} {student.last_name}</h4>
-                  <p className="text-sm text-muted-foreground">{student.grade} • {student.class_name}</p>
-                </div>
+                 <div>
+                   <h4 className="font-medium text-foreground text-sm">{student.first_name} {student.last_name}</h4>
+                   <p className="text-sm text-muted-foreground">{student.grade} grade</p>
+                 </div>
                 <div className="w-4 h-4 rounded-full border-2 bg-primary border-primary flex items-center justify-center">
                   <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
                 </div>
@@ -176,10 +176,10 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
               onClick={() => handleStudentClick(student)}
               className="flex items-center justify-between p-4 border-b border-border cursor-pointer transition-colors hover:bg-muted/50"
             >
-              <div>
-                <h4 className="font-medium text-foreground text-sm">{student.first_name} {student.last_name}</h4>
-                <p className="text-sm text-muted-foreground">{student.grade} • {student.class_name}</p>
-              </div>
+               <div>
+                 <h4 className="font-medium text-foreground text-sm">{student.first_name} {student.last_name}</h4>
+                 <p className="text-sm text-muted-foreground">{student.grade} grade</p>
+               </div>
               <div className="w-4 h-4 rounded-full border-2 border-muted-foreground flex items-center justify-center">
               </div>
             </div>

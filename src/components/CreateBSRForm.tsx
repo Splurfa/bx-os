@@ -215,28 +215,26 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
 
           {/* Navigation - Fixed to bottom */}
           {step < 4 && (
-            <div className="sticky bottom-0 bg-background p-4 border-t border-border flex justify-between">
-              {step > 1 && (
-                <Button 
-                  variant="outline" 
-                  onClick={() => setStep(step - 1)}
-                  className="min-w-20"
-                  disabled={isSubmitting}
-                >
-                  Previous
-                </Button>
-              )}
-              
-              <div className="ml-auto">
-                <Button 
-                  onClick={() => setStep(step + 1)}
-                  disabled={!canProceed() || isSubmitting}
-                  className="min-w-20"
-                >
-                  {step === 3 ? 'Review' : 'Next'}
-                </Button>
-              </div>
-            </div>
+           <div className="sticky bottom-0 bg-background p-4 border-t border-border flex justify-center gap-4">
+             {step > 1 && (
+               <Button 
+                 variant="outline" 
+                 onClick={() => setStep(step - 1)}
+                 className="min-w-24 flex-1 max-w-32"
+                 disabled={isSubmitting}
+               >
+                 Previous
+               </Button>
+             )}
+             
+             <Button 
+               onClick={() => setStep(step + 1)}
+               disabled={!canProceed() || isSubmitting}
+               className="min-w-24 flex-1 max-w-32"
+             >
+               {step === 3 ? 'Review' : 'Next'}
+             </Button>
+           </div>
           )}
         </div>
       </div>
