@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +13,7 @@ import ActivitySelection from "./ActivitySelection";
 import BehaviorSelection from "./BehaviorSelection";
 import ReviewScreen from "./ReviewScreen";
 import StudentSelection from "./StudentSelection";
+import StickyFooter from "./StickyFooter";
 import { supabase } from "@/integrations/supabase/client";
 import type { Student } from "@/hooks/useStudents";
 
@@ -47,6 +48,7 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
   const [step, setStep] = useState(1);
   const [contextLabel, setContextLabel] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAdvancing, setIsAdvancing] = useState(false);
 
   // Fetch context label when context is selected
   useEffect(() => {
@@ -66,6 +68,31 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
 
     fetchContextLabel();
   }, [selectedContext]);
+
+  // Auto-advancement logic for seamless workflow
+  const handleAutoAdvance = useCallback(() => {
+    setIsAdvancing(true);
+    setTimeout(() => {
+      setStep(prev => prev + 1);
+      setIsAdvancing(false);
+    }, 300); // Smooth delay for visual feedback
+  }, []);
+
+  // Enhanced student selection with auto-advancement
+  const handleStudentSelect = useCallback((student: Student) => {
+    setSelectedStudent(student);
+    if (step === 1) {
+      handleAutoAdvance();
+    }
+  }, [step, handleAutoAdvance]);
+
+  // Enhanced context selection with auto-advancement  
+  const handleContextSelect = useCallback((contextId: string) => {
+    setSelectedContext(contextId);
+    if (step === 2) {
+      handleAutoAdvance();
+    }
+  }, [step, handleAutoAdvance]);
 
   const handleBehaviorToggle = (behaviorId: string) => {
     setSelectedBehaviors(prev => 
@@ -148,9 +175,11 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
               </div>
               <div className="flex-1 min-h-0">
                 <StudentSelection
-                  onStudentSelect={setSelectedStudent}
+                  onStudentSelect={handleStudentSelect}
                   onStudentDeselect={() => setSelectedStudent(null)}
                   selectedStudentId={selectedStudent?.id}
+                  autoAdvance={true}
+                  onAutoAdvance={handleAutoAdvance}
                 />
               </div>
             </div>
@@ -166,7 +195,9 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
               <div className="flex-1 min-h-0">
                 <ActivitySelection
                   selectedContext={selectedContext}
-                  onContextSelect={setSelectedContext}
+                  onContextSelect={handleContextSelect}
+                  autoAdvance={true}
+                  onAutoAdvance={handleAutoAdvance}
                 />
               </div>
             </div>
@@ -213,28 +244,21 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
             </div>
           )}
 
-          {/* Navigation - Fixed to bottom */}
-          {step < 4 && (
-           <div className="sticky bottom-0 bg-background p-4 border-t border-border flex justify-center gap-4">
-             {step > 1 && (
-               <Button 
-                 variant="outline" 
-                 onClick={() => setStep(step - 1)}
-                 className="min-w-24 flex-1 max-w-32"
-                 disabled={isSubmitting}
-               >
-                 Previous
-               </Button>
-             )}
-             
-             <Button 
-               onClick={() => setStep(step + 1)}
-               disabled={!canProceed() || isSubmitting}
-               className="min-w-24 flex-1 max-w-32"
-             >
-               {step === 3 ? 'Review' : 'Next'}
-             </Button>
-           </div>
+          {/* Navigation - Only show StickyFooter on behavior selection step */}
+          {step === 3 && (
+            <StickyFooter
+              primaryAction={{
+                label: "Review",
+                onClick: () => setStep(4),
+                disabled: selectedBehaviors.length === 0 || isSubmitting || isAdvancing,
+                variant: selectedBehaviors.length > 0 ? "default" : "outline"
+              }}
+              secondaryAction={{
+                label: "Previous",
+                onClick: () => setStep(2),
+                variant: "outline"
+              }}
+            />
           )}
         </div>
       </div>

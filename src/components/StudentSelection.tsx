@@ -10,9 +10,11 @@ interface StudentSelectionProps {
   onStudentDeselect?: () => void;
   selectedStudentId?: string;
   onRefresh?: React.MutableRefObject<(() => void) | null>;
+  autoAdvance?: boolean;
+  onAutoAdvance?: () => void;
 }
 
-const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentId, onRefresh }: StudentSelectionProps) => {
+const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentId, onRefresh, autoAdvance, onAutoAdvance }: StudentSelectionProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [queuedStudentIds, setQueuedStudentIds] = useState<string[]>([]);
   const { students, loading } = useStudents();

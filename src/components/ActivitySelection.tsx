@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 interface ActivitySelectionProps {
   selectedContext: string;
   onContextSelect: (contextId: string) => void;
+  autoAdvance?: boolean;
+  onAutoAdvance?: () => void;
 }
 
 interface AntecedentContext {
@@ -14,7 +16,7 @@ interface AntecedentContext {
   sort_order: number;
 }
 
-const ActivitySelection = ({ selectedContext, onContextSelect }: ActivitySelectionProps) => {
+const ActivitySelection = ({ selectedContext, onContextSelect, autoAdvance, onAutoAdvance }: ActivitySelectionProps) => {
   const [contexts, setContexts] = useState<AntecedentContext[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -60,8 +62,16 @@ const ActivitySelection = ({ selectedContext, onContextSelect }: ActivitySelecti
           return (
             <button
               key={context.id}
-              onClick={() => onContextSelect(context.id)}
-              className={buttonClasses}
+              onClick={() => {
+                onContextSelect(context.id);
+                // Auto-advancement with visual feedback
+                if (autoAdvance) {
+                  setTimeout(() => {
+                    onAutoAdvance?.();
+                  }, 200);
+                }
+              }}
+              className={`${buttonClasses} animate-fade-in ${isSelected ? 'animate-scale-in' : 'hover-scale'}`}
               title={context.description}
             >
               <div className="text-center">
