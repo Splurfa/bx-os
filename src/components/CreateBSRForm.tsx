@@ -69,30 +69,45 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
     fetchContextLabel();
   }, [selectedContext]);
 
-  // Auto-advancement logic for seamless workflow
-  const handleAutoAdvance = useCallback(() => {
+  // Auto-advancement logic for seamless workflow with step validation
+  const handleAutoAdvance = useCallback((fromStep: number) => {
+    console.log(`Auto-advance requested from step ${fromStep}, current step: ${step}`);
+    
+    // Only allow advancement from steps 1 and 2
+    if (fromStep !== step || (step !== 1 && step !== 2)) {
+      console.log(`Auto-advance blocked: invalid step transition from ${fromStep} to ${step + 1}`);
+      return;
+    }
+
     setIsAdvancing(true);
     setTimeout(() => {
-      setStep(prev => prev + 1);
+      setStep(prev => {
+        console.log(`Advancing from step ${prev} to ${prev + 1}`);
+        return prev + 1;
+      });
       setIsAdvancing(false);
-    }, 300); // Smooth delay for visual feedback
-  }, []);
+    }, 300);
+  }, [step]);
 
   // Enhanced student selection with auto-advancement
   const handleStudentSelect = useCallback((student: Student) => {
     setSelectedStudent(student);
+    // Only auto-advance if we're on step 1
     if (step === 1) {
-      handleAutoAdvance();
+      console.log('Student selected, auto-advancing from step 1');
+      handleAutoAdvance(1);
     }
-  }, [step, handleAutoAdvance]);
+  }, [handleAutoAdvance, step]);
 
   // Enhanced context selection with auto-advancement  
   const handleContextSelect = useCallback((contextId: string) => {
     setSelectedContext(contextId);
+    // Only auto-advance if we're on step 2
     if (step === 2) {
-      handleAutoAdvance();
+      console.log('Context selected, auto-advancing from step 2');
+      handleAutoAdvance(2);
     }
-  }, [step, handleAutoAdvance]);
+  }, [handleAutoAdvance, step]);
 
   const handleBehaviorToggle = (behaviorId: string) => {
     setSelectedBehaviors(prev => 
@@ -178,8 +193,6 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
                   onStudentSelect={handleStudentSelect}
                   onStudentDeselect={() => setSelectedStudent(null)}
                   selectedStudentId={selectedStudent?.id}
-                  autoAdvance={true}
-                  onAutoAdvance={handleAutoAdvance}
                 />
               </div>
             </div>
@@ -196,8 +209,6 @@ const CreateBSRForm = ({ onSubmit, onCancel }: CreateBSRFormProps) => {
                 <ActivitySelection
                   selectedContext={selectedContext}
                   onContextSelect={handleContextSelect}
-                  autoAdvance={true}
-                  onAutoAdvance={handleAutoAdvance}
                 />
               </div>
             </div>
