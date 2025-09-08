@@ -57,39 +57,13 @@ export const QueueIntegrityMonitor: React.FC = () => {
     try {
       let repairsApplied = 0;
 
-      // Apply repairs based on suggestions
-      for (const suggestion of suggestions) {
-        if (suggestion.repair_type === 'clear_orphaned_kiosk') {
-          // Clear orphaned kiosk assignment
-          const { error } = await supabase.rpc('update_student_kiosk_status_atomic', {
-            p_kiosk_id: suggestion.kiosk_id,
-            p_student_id: null,
-            p_behavior_request_id: null
-          });
-          if (error) throw error;
-          repairsApplied++;
-        } else if (suggestion.repair_type === 'reset_orphaned_request') {
-          // Reset orphaned behavior request
-          const { error } = await supabase
-            .from('behavior_requests')
-            .update({ 
-              status: 'waiting', 
-              assigned_kiosk: null 
-            })
-            .eq('id', suggestion.behavior_request_id);
-          if (error) throw error;
-          repairsApplied++;
-        }
-      }
-
-      // Trigger reassignment after repairs
-      if (repairsApplied > 0) {
-        await supabase.rpc('reassign_waiting_students');
-      }
+      // Apply repairs using the dedicated RPC function
+      const { data: repairResult, error: repairError } = await supabase.rpc('apply_queue_integrity_repairs');
+      if (repairError) throw repairError;
 
       toast({
         title: "Repairs Applied",
-        description: `Successfully applied ${repairsApplied} repairs.`,
+        description: repairResult || "Queue integrity repairs completed successfully.",
       });
 
       // Recheck integrity

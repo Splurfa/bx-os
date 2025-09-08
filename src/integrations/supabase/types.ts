@@ -1080,6 +1080,10 @@ export type Database = {
           deleted_requests_count: number
         }[]
       }
+      apply_queue_integrity_repairs: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       assign_waiting_students_to_kiosk: {
         Args: { p_kiosk_id: number }
         Returns: undefined
