@@ -5,15 +5,37 @@
 ### AdminRoute
 ```typescript
 // Role-based route protection for administrators
-export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
-  const { profile, loading } = useProfile();
-  
-  if (loading) return <div>Loading...</div>;
-  
-  if (!profile || !['admin', 'super_admin'].includes(profile.role)) {
-    return <Navigate to="/unauthorized" replace />;
+import { useAuth } from '@/contexts/AuthContext';
+import { useProfile } from '@/hooks/useProfile';
+import { Navigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+
+interface AdminRouteProps {
+  children: React.ReactNode;
+}
+
+const AdminRoute = ({ children }: AdminRouteProps) => {
+  const { user, loading: authLoading } = useAuth();
+  const { profile, loading: profileLoading } = useProfile();
+
+  const loading = authLoading || profileLoading;
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
-  
+
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'super_admin')) {
+    return <Navigate to="/auth" replace />;
+  }
+
   return <>{children}</>;
 };
 ```
@@ -21,15 +43,41 @@ export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
 ### TeacherRoute  
 ```typescript
 // Route protection for teachers and above
-export const TeacherRoute = ({ children }: { children: React.ReactNode }) => {
-  const { profile, loading } = useProfile();
-  
-  if (loading) return <div>Loading...</div>;
-  
-  if (!profile || !['teacher', 'admin', 'super_admin'].includes(profile.role)) {
-    return <Navigate to="/unauthorized" replace />;
+import { useAuth } from '@/contexts/AuthContext';
+import { useProfile } from '@/hooks/useProfile';
+import { Navigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+
+interface TeacherRouteProps {
+  children: React.ReactNode;
+}
+
+const TeacherRoute = ({ children }: TeacherRouteProps) => {
+  const { user, loading: authLoading } = useAuth();
+  const { profile, loading: profileLoading } = useProfile();
+
+  const loading = authLoading || profileLoading;
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
-  
+
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (!profile || (profile.role !== 'teacher' && profile.role !== 'admin' && profile.role !== 'super_admin')) {
+    // Redirect to admin dashboard if user has admin role but accessed teacher route
+    if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+      return <Navigate to="/admin-dashboard" replace />;
+    }
+    return <Navigate to="/auth" replace />;
+  }
+
   return <>{children}</>;
 };
 ```
@@ -124,20 +172,35 @@ export const usePermissions = () => {
 ### useSupabaseQueue
 ```typescript
 // Real-time queue management
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+
 export const useSupabaseQueue = () => {
   const [queueItems, setQueueItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   useEffect(() => {
     const fetchQueue = async () => {
-      const { data } = await supabase
-        .from('queue_items')
-        .select(`
-          *,
-          students(first_name, last_name, student_id),
-          behavior_support_requests(behavior_category, description)
-        `)
-        .order('created_at');
-      setQueueItems(data || []);
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('behavior_requests')
+          .select(`
+            *,
+            students(first_name, last_name, grade),
+            kiosks(id, name, is_active),
+            reflections(id, submitted_at, teacher_approved)
+          `)
+          .order('created_at', { ascending: false });
+          
+        if (error) throw error;
+        setQueueItems(data || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     };
     
     fetchQueue();
@@ -145,7 +208,11 @@ export const useSupabaseQueue = () => {
     const subscription = supabase
       .channel('queue_updates')
       .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'queue_items' },
+        { event: '*', schema: 'public', table: 'behavior_requests' },
+        () => fetchQueue()
+      )
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'reflections' },
         () => fetchQueue()
       )
       .subscribe();
@@ -153,6 +220,6 @@ export const useSupabaseQueue = () => {
     return () => subscription.unsubscribe();
   }, []);
   
-  return { data: queueItems };
+  return { data: queueItems, loading, error };
 };
 ```

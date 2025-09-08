@@ -7,7 +7,7 @@ As a teacher using BX-OS, you can quickly create Behavioral Support Requests (BS
 ## Getting Started
 
 ### Accessing Teacher Dashboard
-1. **Navigate to**: `[your-domain]/teacher-dashboard`
+1. **Navigate to**: `[your-domain]/teacher`
 2. **Login**: Click "Sign in with Google" using your school Google account
 3. **Verify access**: You should see the teacher dashboard with BSR creation tools
 

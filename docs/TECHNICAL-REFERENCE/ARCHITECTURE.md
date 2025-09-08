@@ -195,16 +195,30 @@ antecedent_contexts (
   created_at TIMESTAMP
 )
 
--- Real-time queue management
-queue_items (
+-- Kiosk station management
+kiosks (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  is_active BOOLEAN DEFAULT false,
+  current_student_id UUID REFERENCES students,
+  current_behavior_request_id UUID REFERENCES behavior_requests,
+  last_heartbeat TIMESTAMP DEFAULT now(),
+  created_at TIMESTAMP DEFAULT now()
+)
+
+-- Student reflection responses
+reflections (
   id UUID PRIMARY KEY,
-  bsr_id UUID REFERENCES behavior_support_requests,
   student_id UUID REFERENCES students,
-  kiosk_id INTEGER,
-  position INTEGER,
-  status TEXT DEFAULT 'waiting',
-  assigned_at TIMESTAMP,
-  completed_at TIMESTAMP
+  behavior_request_id UUID REFERENCES behavior_requests,
+  mood_rating INTEGER,
+  question_1_response TEXT,
+  question_2_response TEXT,
+  question_3_response TEXT,
+  question_4_response TEXT,
+  submitted_at TIMESTAMP DEFAULT now(),
+  teacher_approved BOOLEAN DEFAULT false,
+  teacher_feedback TEXT
 )
 ```
 
@@ -241,19 +255,19 @@ CREATE POLICY "BSR visibility" ON behavior_support_requests
 
 ### Subscription Architecture
 ```typescript
-// Real-time queue updates
+// Real-time behavior request updates
 const { data: queueItems } = useSupabaseQuery({
-  queryKey: ['queue_items'],
+  queryKey: ['behavior_requests'],
   queryFn: async () => {
     const { data } = await supabase
-      .from('queue_items')
+      .from('behavior_requests')
       .select(`
         *,
-        students(first_name, last_name, student_id),
-        behavior_support_requests(behavior_category, description)
+        students(first_name, last_name, grade),
+        kiosks(id, name, is_active),
+        reflections(id, submitted_at, teacher_approved)
       `)
-      .eq('status', 'waiting')
-      .order('created_at');
+      .order('created_at', { ascending: false });
     return data;
   }
 });
@@ -261,11 +275,17 @@ const { data: queueItems } = useSupabaseQuery({
 // Subscribe to real-time changes
 useEffect(() => {
   const subscription = supabase
-    .channel('queue_changes')
+    .channel('behavior_request_changes')
     .on('postgres_changes', 
-      { event: '*', schema: 'public', table: 'queue_items' },
+      { event: '*', schema: 'public', table: 'behavior_requests' },
       (payload) => {
-        queryClient.invalidateQueries(['queue_items']);
+        queryClient.invalidateQueries(['behavior_requests']);
+      }
+    )
+    .on('postgres_changes', 
+      { event: '*', schema: 'public', table: 'reflections' },
+      (payload) => {
+        queryClient.invalidateQueries(['behavior_requests']);
       }
     )
     .subscribe();

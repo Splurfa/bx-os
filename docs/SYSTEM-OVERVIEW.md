@@ -52,7 +52,7 @@ BX-OS (Behavior Excellence Operating System) is a production-ready digital platf
 - **Supabase backend** with real-time subscriptions
 - **Row-level security** ensuring data privacy
 - **Google OAuth integration** for staff authentication
-- **690+ student records** with grade-level filtering
+- **159 middle school student records** with grade-level filtering
 
 ### User Interface
 - **Mobile-first responsive design** optimized for iPads

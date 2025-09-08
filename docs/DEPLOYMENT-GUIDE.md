@@ -66,7 +66,7 @@ Settings > Accessibility > Guided Access
 ## Step 3: Teacher Onboarding (60 minutes)
 
 ### Teacher Account Setup
-1. **Teachers navigate to**: `[your-domain]/teacher-dashboard`
+1. **Teachers navigate to**: `[your-domain]/teacher`
 2. **Login via Google OAuth** with school Google account
 3. **Verify automatic role assignment** to "teacher"
 4. **Test BSR creation workflow**:
