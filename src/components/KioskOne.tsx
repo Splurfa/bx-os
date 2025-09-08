@@ -110,20 +110,19 @@ useEffect(() => {
     // Only sync assignment while on the welcome screen
     if (kioskState !== 'welcome') return;
 
-    // Add debouncing to prevent rapid calls
-    const timeoutId = setTimeout(() => {
-      if (!firstWaitingStudent) {
-        console.log('🏠 No student waiting - staying on welcome');
-        // Clear kiosk assignment while idle
-        updateKioskStudentRef.current(KIOSK_ID, undefined, undefined);
-      } else {
-        console.log('👤 Student assigned to kiosk:', firstWaitingStudent.student.name);
-        // Only update kiosk assignment, keep status as 'waiting' until user interacts
-        updateKioskStudentRef.current(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
-      }
-    }, 100); // 100ms debounce
-
-    return () => clearTimeout(timeoutId);
+    if (!firstWaitingStudent) {
+      console.log('🏠 No student waiting - staying on welcome');
+      // Clear kiosk assignment while idle using atomic function
+      updateKioskStudentRef.current(KIOSK_ID, undefined, undefined).catch(error => {
+        console.warn('Failed to clear kiosk assignment:', error);
+      });
+    } else {
+      console.log('👤 Student assigned to kiosk:', firstWaitingStudent.student.name);
+      // Only update kiosk assignment using atomic function
+      updateKioskStudentRef.current(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id).catch(error => {
+        console.warn('Failed to assign student to kiosk:', error);
+      });
+    }
   }, [firstWaitingStudent?.id, kioskState]);
 
   // Timer for reflection process
