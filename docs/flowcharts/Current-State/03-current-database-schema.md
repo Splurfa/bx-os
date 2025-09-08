@@ -27,44 +27,69 @@ erDiagram
     
     students {
         uuid id PK "✅ FUNCTIONAL"
+        uuid family_id FK "✅ Links to families"
         string first_name "✅ Working"
         string last_name "✅ Working"
-        string student_id "✅ Working"
-        TEXT grade_level "⚠️ MISSING - Need for filtering"
-        string homeroom_teacher "✅ Working"
-        boolean active "⚠️ MISSING - Need for filtering"
+        string name "✅ Working (optional)"
+        string grade "✅ Working (6th, 7th, 8th)"
+        string class_name "✅ Working (current: same as grade)"
+        date date_of_birth "✅ Working"
+        string student_id_external "✅ Working (optional)"
         timestamp created_at "✅ Auto-generated"
         timestamp updated_at "✅ Auto-managed"
     }
     
-    behavior_support_requests {
+    behavior_requests {
         uuid id PK "✅ FUNCTIONAL"
         uuid student_id FK "✅ Links to students"
-        uuid created_by FK "✅ Links to profiles"
-        string status "✅ Working"
+        uuid teacher_id FK "✅ Links to profiles"
+        string teacher_name "✅ Working"
+        string behavior_type "✅ Working"
         text description "✅ Working"
-        text student_reflection "✅ Working"
-        text teacher_feedback "✅ Working"
+        string location "✅ Working (optional)"
+        timestamp time_of_incident "✅ Working"
+        uuid antecedent_context_id FK "✅ Links to contexts"
+        string status "✅ Working (waiting/active/completed)"
+        integer assigned_kiosk "✅ Working (1,2,3)"
         timestamp created_at "✅ Auto-generated"
         timestamp updated_at "✅ Auto-managed"
     }
     
-    queue_items {
-        uuid id PK "✅ FUNCTIONAL"
-        uuid student_id FK "✅ Links to students"
-        uuid bsr_id FK "✅ Links to BSRs"
-        string status "✅ Working (pending/assigned/completed)"
-        int queue_position "✅ Working"
+    kiosks {
+        integer id PK "✅ FUNCTIONAL"
+        string name "✅ Working (Kiosk 1, 2, 3)"
+        string location "✅ Working (optional)"
+        boolean is_active "✅ Working"
+        uuid current_student_id FK "✅ Links to students"
+        uuid current_behavior_request_id FK "✅ Links to requests"
+        string device_session_id "✅ Working"
+        timestamp session_expires_at "✅ Working"
         timestamp created_at "✅ Auto-generated"
-        timestamp assigned_at "✅ Working"
-        timestamp completed_at "✅ Working"
+        timestamp updated_at "✅ Auto-managed"
+    }
+    
+    reflections {
+        uuid id PK "✅ FUNCTIONAL"
+        uuid behavior_request_id FK "✅ Links to behavior_requests"
+        uuid student_id FK "✅ Links to students"
+        integer mood_rating "✅ Working (1-5)"
+        text question_1_response "✅ Working"
+        text question_2_response "✅ Working"
+        text question_3_response "✅ Working"
+        text question_4_response "✅ Working"
+        text teacher_feedback "✅ Working"
+        boolean teacher_approved "✅ Working"
+        timestamp submitted_at "✅ Working"
+        timestamp created_at "✅ Auto-generated"
     }
 
     auth_users ||--|| profiles : "has profile"
-    profiles ||--o{ behavior_support_requests : "creates BSRs"
-    students ||--o{ behavior_support_requests : "subject of BSR"
-    students ||--o{ queue_items : "in queue"
-    behavior_support_requests ||--|| queue_items : "generates queue item"
+    profiles ||--o{ behavior_requests : "creates BSRs"
+    students ||--o{ behavior_requests : "subject of BSR"
+    students ||--o{ kiosks : "assigned to kiosks"
+    behavior_requests ||--o| kiosks : "assigned to kiosk"
+    behavior_requests ||--|| reflections : "generates reflection"
+    students ||--o{ reflections : "submits reflections"
 ```
 
 ## Validated Database State
@@ -79,13 +104,15 @@ SELECT role, COUNT(*) FROM profiles GROUP BY role;
 SELECT COUNT(*) FROM auth.users; -- Returns: 4 users
 ```
 
-### ✅ Core Tables (FUNCTIONAL - Minor Gaps)
+### ✅ Core Tables (FULLY FUNCTIONAL)
 ```sql  
--- VALIDATED: Students table exists with data structure
--- MISSING: grade_level column for middle school filtering
--- MISSING: active column for enrollment status
+-- VALIDATED: Students table complete with all required fields
+-- ✅ PRESENT: grade column for middle school filtering (6th, 7th, 8th)
+-- ✅ PRESENT: class_name column (currently mirrors grade for test data)
+-- ✅ PRESENT: family_id foreign key relationship working
 
--- VALIDATED: Queue system infrastructure ready
+-- VALIDATED: Kiosk assignment system infrastructure ready
+-- ✅ PRESENT: Real-time queue management via kiosks table
 -- All foreign key relationships working properly
 ```
 
@@ -140,35 +167,30 @@ flowchart TD
 - **Role-Based Access**: Security policies enforce proper data access
 - **Real-time Subscriptions**: Supabase real-time updates operational
 
-### ⚠️ MINOR GAPS (Require Schema Enhancement)  
+### ✅ SCHEMA COMPLETE (No Additions Required)  
 ```sql
--- Required schema additions for middle school filtering:
-ALTER TABLE students ADD COLUMN grade_level TEXT CHECK (grade_level IN ('6','7','8'));
-ALTER TABLE students ADD COLUMN active BOOLEAN DEFAULT true;
+-- Current schema supports full middle school functionality:
+-- ✅ grade column exists with values: '6th', '7th', '8th'
+-- ✅ class_name column exists (ready for future client SIS differentiation)
+-- ✅ kiosks table provides session tracking and assignment management
+-- ✅ device_sessions table handles kiosk authentication and heartbeat monitoring
 
--- Optional session tracking (if admin monitoring desired):
-CREATE TABLE active_sessions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  kiosk_id TEXT CHECK (kiosk_id IN ('kiosk1','kiosk2','kiosk3')),
-  student_id UUID REFERENCES students(id),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  is_active BOOLEAN DEFAULT true
-);
+-- Note: class_name currently mirrors grade for test data
+-- Future client integration will populate with actual homeroom/class assignments
 ```
 
-## Previous Documentation Errors: CORRECTED
+## Documentation Status: CORRECTED
 
-❌ **FALSE CLAIM**: "Profile creation broken, missing trigger"  
-✅ **REALITY**: Profile creation working properly (4 users with correct roles)
+✅ **ACCURATE**: Database schema documentation now matches actual implementation  
+✅ **ACCURATE**: All table names, column names, and relationships verified against live database
+✅ **ACCURATE**: Students table includes all required fields (grade, class_name, family_id)
+✅ **ACCURATE**: Kiosk assignment system functional via kiosks table (not queue_items)
+✅ **ACCURATE**: Real-time subscriptions working through kiosks table updates
 
-❌ **FALSE CLAIM**: "Field name mismatches causing JOIN failures"  
-✅ **REALITY**: Database queries working, student lookup operational
-
-❌ **FALSE CLAIM**: "Session correlation broken, showing Unknown User"  
-✅ **REALITY**: User-profile correlation working (validated via query results)
-
-❌ **FALSE CLAIM**: "RLS policies need complete review"  
-✅ **REALITY**: Security policies operational, users seeing appropriate data
+### Client Data Integration Notes
+- `class_name` column ready for future client SIS integration
+- Current test data shows redundancy (class_name = grade) which is expected
+- Production will differentiate between grade level and specific homeroom assignments
 
 ## Data Integration Capabilities
 

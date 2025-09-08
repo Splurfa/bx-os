@@ -8,9 +8,11 @@
 ```sql
 CREATE TABLE profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES auth.users NOT NULL,
-  email TEXT,
+  email TEXT NOT NULL,
+  full_name TEXT,
   role TEXT DEFAULT 'teacher' CHECK (role IN ('teacher', 'admin', 'super_admin')),
+  is_active BOOLEAN DEFAULT true,
+  last_login TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
@@ -20,13 +22,21 @@ CREATE TABLE profiles (
 ```sql
 CREATE TABLE students (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  student_id TEXT UNIQUE NOT NULL,
+  family_id UUID REFERENCES families NOT NULL,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
-  grade INTEGER CHECK (grade IN (6, 7, 8)),
-  homeroom TEXT,
-  is_active BOOLEAN DEFAULT true,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+  name TEXT,
+  grade TEXT,
+  class_name TEXT,
+  date_of_birth DATE,
+  student_id_external TEXT,
+  notes TEXT,
+  special_needs TEXT,
+  medications TEXT,
+  allergies TEXT,
+  gender TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 ```
 
@@ -35,14 +45,19 @@ CREATE TABLE students (
 CREATE TABLE behavior_requests (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   student_id UUID REFERENCES students NOT NULL,
-  teacher_id UUID REFERENCES profiles NOT NULL,
+  teacher_id UUID REFERENCES profiles,
+  teacher_name TEXT NOT NULL,
   behavior_type TEXT NOT NULL,
-  description TEXT,
+  description TEXT NOT NULL,
+  location TEXT,
+  time_of_incident TIMESTAMP WITH TIME ZONE DEFAULT now(),
   antecedent_context_id UUID REFERENCES antecedent_contexts,
   urgency_level TEXT DEFAULT 'standard' CHECK (urgency_level IN ('standard','re_integration','urgent')),
+  priority_level TEXT DEFAULT 'medium',
   teacher_mood INTEGER CHECK (teacher_mood BETWEEN 1 AND 5),
   note TEXT,
   status TEXT DEFAULT 'waiting',
+  assigned_kiosk INTEGER,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
@@ -61,18 +76,45 @@ CREATE TABLE antecedent_contexts (
 );
 ```
 
-#### queue_items
+#### kiosks
 ```sql
-CREATE TABLE queue_items (
+CREATE TABLE kiosks (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  location TEXT,
+  is_active BOOLEAN DEFAULT false,
+  current_student_id UUID REFERENCES students,
+  current_behavior_request_id UUID REFERENCES behavior_requests,
+  device_session_id TEXT,
+  device_fingerprint TEXT,
+  session_expires_at TIMESTAMP WITH TIME ZONE,
+  session_status TEXT DEFAULT 'inactive',
+  access_url TEXT,
+  last_heartbeat TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+```
+
+#### reflections
+```sql
+CREATE TABLE reflections (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  bsr_id UUID REFERENCES behavior_support_requests NOT NULL,
+  behavior_request_id UUID REFERENCES behavior_requests NOT NULL,
   student_id UUID REFERENCES students NOT NULL,
-  kiosk_id INTEGER CHECK (kiosk_id IN (1, 2, 3)),
-  position INTEGER,
-  status TEXT DEFAULT 'waiting',
-  assigned_at TIMESTAMP WITH TIME ZONE,
-  completed_at TIMESTAMP WITH TIME ZONE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+  mood_rating INTEGER CHECK (mood_rating BETWEEN 1 AND 5),
+  question_1_response TEXT,
+  question_2_response TEXT,
+  question_3_response TEXT,
+  question_4_response TEXT,
+  teacher_feedback TEXT,
+  teacher_approved BOOLEAN DEFAULT false,
+  revision_requested BOOLEAN DEFAULT false,
+  ai_analysis JSONB,
+  submitted_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  reviewed_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 ```
 
@@ -102,21 +144,30 @@ CREATE POLICY "Staff can view students" ON students
   );
 ```
 
-### BSR Management
+### Behavior Requests Management
 ```sql
--- Teachers can create BSRs
-CREATE POLICY "Teachers can create BSRs" ON behavior_support_requests
-  FOR INSERT WITH CHECK (
-    teacher_id = (SELECT id FROM profiles WHERE user_id = auth.uid())
-  );
+-- Teachers can create behavior requests
+CREATE POLICY "Teachers can create behavior requests" ON behavior_requests
+  FOR INSERT WITH CHECK (teacher_id = auth.uid());
 
--- BSR visibility to creator and admins
-CREATE POLICY "BSR visibility" ON behavior_support_requests
+-- Teachers can view their own behavior requests, admins can view all
+CREATE POLICY "Teachers can view their own behavior requests" ON behavior_requests
   FOR SELECT USING (
-    teacher_id = (SELECT id FROM profiles WHERE user_id = auth.uid())
+    teacher_id = auth.uid() 
     OR EXISTS (
       SELECT 1 FROM profiles 
-      WHERE user_id = auth.uid() 
+      WHERE id = auth.uid() 
+      AND role IN ('admin', 'super_admin')
+    )
+  );
+
+-- Teachers can update their own behavior requests, admins can update all
+CREATE POLICY "Teachers can update their own behavior requests" ON behavior_requests
+  FOR UPDATE USING (
+    teacher_id = auth.uid() 
+    OR EXISTS (
+      SELECT 1 FROM profiles 
+      WHERE id = auth.uid() 
       AND role IN ('admin', 'super_admin')
     )
   );
@@ -126,11 +177,11 @@ CREATE POLICY "BSR visibility" ON behavior_support_requests
 
 ### Queue Updates
 ```typescript
-// Subscribe to queue changes
+// Subscribe to kiosk changes for queue updates
 const subscription = supabase
-  .channel('queue_changes')
+  .channel('queue_updates')
   .on('postgres_changes', 
-    { event: '*', schema: 'public', table: 'queue_items' },
+    { event: '*', schema: 'public', table: 'kiosks' },
     (payload) => {
       // Handle real-time queue updates
       queryClient.invalidateQueries(['queue']);
@@ -143,16 +194,19 @@ const subscription = supabase
 ```typescript
 // Monitor kiosk-specific assignments
 const kioskSubscription = supabase
-  .channel(`kiosk_${kioskId}`)
+  .channel(`kiosk_assignment`)
   .on('postgres_changes',
     { 
       event: '*', 
       schema: 'public', 
-      table: 'queue_items',
-      filter: `kiosk_id=eq.${kioskId}`
+      table: 'kiosks',
+      filter: `id=eq.${kioskId}`
     },
     (payload) => {
       // Update kiosk interface with new assignment
+      if (payload.new?.current_student_id) {
+        // Load student workflow
+      }
     }
   )
   .subscribe();
