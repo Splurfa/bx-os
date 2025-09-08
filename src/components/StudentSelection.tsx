@@ -22,10 +22,11 @@ const StudentSelection = ({ onStudentSelect, onStudentDeselect, selectedStudentI
     const fetchQueuedStudents = async () => {
       try {
         // Strengthen the query with retry logic and better error handling
+        // Exclude ALL non-completed students from selection (waiting, active, review)
         const { data, error } = await supabase
           .from('behavior_requests')
           .select('student_id')
-          .in('status', ['waiting', 'active'])
+          .neq('status', 'completed')
           .order('created_at', { ascending: false });
         
         if (error) {
