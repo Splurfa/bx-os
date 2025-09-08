@@ -9,6 +9,7 @@ interface DeviceSessionState {
   remainingSeconds: number;
   isLoading: boolean;
   error: string | null;
+  minLoadingTime: boolean;
 }
 
 interface UseDeviceSessionOptions {
@@ -36,7 +37,8 @@ export function useDeviceSession(options: UseDeviceSessionOptions = {}) {
     isValid: false,
     remainingSeconds: 0,
     isLoading: false,
-    error: null
+    error: null,
+    minLoadingTime: false
   });
 
   /**
@@ -45,7 +47,12 @@ export function useDeviceSession(options: UseDeviceSessionOptions = {}) {
   const validateSession = useCallback(async (sessionId: string) => {
     if (!sessionId) return;
 
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
+    setState(prev => ({ ...prev, isLoading: true, error: null, minLoadingTime: true }));
+
+    // Ensure minimum loading time to prevent flash
+    const minLoadingTimer = setTimeout(() => {
+      setState(prev => ({ ...prev, minLoadingTime: false }));
+    }, 500);
 
     try {
       // Check for multi-tab conflicts (non-blocking warning)
@@ -63,14 +70,18 @@ export function useDeviceSession(options: UseDeviceSessionOptions = {}) {
 
       const result = await deviceSessionManager.validateDeviceSession(sessionId);
 
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        isValid: result.isValid,
-        kioskId: result.kioskId,
-        remainingSeconds: result.remainingSeconds,
-        error: result.isValid ? null : 'Session is invalid or expired'
-      }));
+      // Wait for minimum loading time before updating state
+      setTimeout(() => {
+        setState(prev => ({
+          ...prev,
+          isLoading: false,
+          isValid: result.isValid,
+          kioskId: result.kioskId,
+          remainingSeconds: result.remainingSeconds,
+          error: result.isValid ? null : 'Session is invalid or expired',
+          minLoadingTime: false
+        }));
+      }, state.minLoadingTime ? 500 : 0);
 
       // Show warning for fingerprint mismatch but don't block access
       if (result.fingerprintMismatch) {
@@ -86,14 +97,20 @@ export function useDeviceSession(options: UseDeviceSessionOptions = {}) {
       }
 
     } catch (error) {
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        isValid: false,
-        error: 'Failed to validate session'
-      }));
+      // Wait for minimum loading time before showing error
+      setTimeout(() => {
+        setState(prev => ({
+          ...prev,
+          isLoading: false,
+          isValid: false,
+          error: 'Failed to validate session',
+          minLoadingTime: false
+        }));
+      }, state.minLoadingTime ? 500 : 0);
       console.error('Session validation error:', error);
     }
+
+    return () => clearTimeout(minLoadingTimer);
   }, [onSessionExpired, onConflictDetected, toast]);
 
   /**
@@ -152,7 +169,8 @@ export function useDeviceSession(options: UseDeviceSessionOptions = {}) {
       isValid: false,
       remainingSeconds: 0,
       isLoading: false,
-      error: null
+      error: null,
+      minLoadingTime: false
     });
   }, []);
 

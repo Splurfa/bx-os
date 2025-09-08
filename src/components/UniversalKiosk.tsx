@@ -149,8 +149,8 @@ const UniversalKiosk: React.FC<UniversalKioskProps> = ({
     );
   }
 
-  // Priority 3: Session loading state - simplified to prevent flickering
-  if (deviceSession.isLoading) {
+  // Priority 3: Session loading state - with debouncing to prevent flickering
+  if (deviceSession.isLoading || deviceSession.minLoadingTime) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Card className="w-full max-w-md mx-4">

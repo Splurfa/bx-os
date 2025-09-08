@@ -65,6 +65,7 @@ const KioskThree = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activationError, setActivationError] = useState<string | null>(null);
   const [currentStudentName, setCurrentStudentName] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState(10);
   
   const firstWaitingStudent = getFirstWaitingStudentForKiosk(KIOSK_ID);
   const hasTeacherFeedback = firstWaitingStudent?.reflection?.teacher_feedback;
@@ -135,20 +136,29 @@ const KioskThree = () => {
     }
   }, [kioskState]);
 
-  // Auto-reset after completion - go directly to welcome to avoid setup flash
+  // Auto-reset after completion with countdown
   useEffect(() => {
     if (kioskState === 'completed') {
-      const resetTimer = setTimeout(() => {
-        // Go directly to welcome state to avoid triggering setup check
-        setKioskState('welcome');
-        setPasswordInput('');
-        setPasswordError('');
-        setCurrentQuestion(0);
-        setAnswers({});
-        setTimeElapsed(0);
-        setCurrentStudentName(null);
-      }, 10000); // 10 seconds
-      return () => clearTimeout(resetTimer);
+      setCountdown(10); // Reset countdown
+      const countdownInterval = setInterval(() => {
+        setCountdown(prev => {
+          if (prev <= 1) {
+            // Reset kiosk when countdown reaches 0
+            setKioskState('welcome');
+            setPasswordInput('');
+            setPasswordError('');
+            setCurrentQuestion(0);
+            setAnswers({});
+            setTimeElapsed(0);
+            setCurrentStudentName(null);
+            clearInterval(countdownInterval);
+            return 10;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      
+      return () => clearInterval(countdownInterval);
     }
   }, [kioskState]);
 
@@ -478,7 +488,7 @@ const KioskThree = () => {
                   Returning to main screen in
                 </p>
                 <div className="text-2xl font-bold text-primary">
-                  10
+                  {countdown}
                 </div>
               </div>
             </div>
