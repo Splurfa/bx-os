@@ -233,16 +233,16 @@ const QueueDisplay = React.memo(({
             </div>
 
             {/* Row 1, Col 2: Status/Review + Clear (tight spacing) */}
-            <div className="col-[2] row-[1] flex items-center justify-self-end gap-0.5">
+            <div className={`col-[2] row-[1] flex justify-self-end gap-0.5 ${layout === 'teacher' ? 'items-center' : 'items-center'}`}>
               <div className="flex items-center gap-1">
                 {showReviewButtons && item.status === 'review' ? (
                   <Button
-                    size="sm"
+                    size={layout === 'teacher' ? 'sm' : 'sm'}
                     variant="default"
                     onClick={() => onSelectReflection(item)}
-                    className="text-xs whitespace-nowrap"
+                    className={layout === 'teacher' ? 'text-xs whitespace-nowrap px-2 py-1 h-7' : 'text-xs whitespace-nowrap'}
                   >
-                    <CheckCircle className="h-3 w-3 mr-1" />
+                    {layout !== 'teacher' && <CheckCircle className="h-3 w-3 mr-1" />}
                     Review
                   </Button>
                 ) : (
@@ -313,7 +313,7 @@ const QueueDisplay = React.memo(({
                 const lastName = teacherData.full_name.trim().split(/\s+/).slice(-1)[0];
                 
                 return lastName ? (
-                  <div className="col-[2] row-[2] flex justify-end">
+                  <div className={`col-[2] row-[2] flex justify-end ${layout === 'teacher' ? 'items-center' : ''}`}>
                     <Badge variant="outline" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
                       {lastName}
                     </Badge>
