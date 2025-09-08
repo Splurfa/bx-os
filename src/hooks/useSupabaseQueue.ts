@@ -547,21 +547,42 @@ export const useSupabaseQueue = () => {
     return waiting || null;
   };
 
-  // Update student kiosk status
+  // Update student kiosk status with improved atomic logic
   const updateStudentKioskStatus = async (
     kioskId: number,
     studentId?: string,
     behaviorRequestId?: string
   ) => {
     try {
-      await supabase.rpc('update_student_kiosk_status', {
+      const { data, error } = await supabase.rpc('update_student_kiosk_status_atomic', {
         p_kiosk_id: kioskId,
-        p_student_id: studentId,
-        p_behavior_request_id: behaviorRequestId
+        p_student_id: studentId || null,
+        p_behavior_request_id: behaviorRequestId || null
       });
+
+      if (error) throw error;
+      
+      // Check if the assignment was successful
+      if (data?.[0] && !data[0].success) {
+        console.warn('Kiosk assignment warning:', data[0].message);
+        // Don't throw error for warnings, just log them
+        if (data[0].message.includes('already has student assigned') || 
+            data[0].message.includes('already has an active assignment')) {
+          // These are expected race condition cases, handle gracefully
+          return;
+        }
+      }
+
+      // Trigger reassignment only if we cleared a kiosk
+      if (data?.[0] && data[0].success && !data[0].kiosk_assigned) {
+        // Only reassign if we're clearing, not assigning
+        await supabase.rpc('reassign_waiting_students');
+      }
+      
       await fetchQueue();
     } catch (error) {
       console.error('Error updating kiosk status:', error);
+      throw error;
     }
   };
 

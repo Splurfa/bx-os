@@ -101,21 +101,26 @@ const KioskThree = () => {
 
   // Reset state when student changes or completes
   useEffect(() => {
-    if (!firstWaitingStudent && kioskState !== 'setup') {
-      setKioskState('welcome');
-      setPasswordInput('');
-      setPasswordError('');
-      setCurrentQuestion(0);
-      setAnswers({});
-      setTimeElapsed(0);
-      setCurrentStudentName(null);
-      
-      // Clear kiosk assignment
-      updateKioskStudent(KIOSK_ID, undefined, undefined);
-    } else if (firstWaitingStudent && kioskState === 'welcome') {
-      // Assign student to kiosk 3
-      updateKioskStudent(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
-    }
+    // Add debouncing to prevent rapid calls
+    const timeoutId = setTimeout(() => {
+      if (!firstWaitingStudent && kioskState !== 'setup') {
+        setKioskState('welcome');
+        setPasswordInput('');
+        setPasswordError('');
+        setCurrentQuestion(0);
+        setAnswers({});
+        setTimeElapsed(0);
+        setCurrentStudentName(null);
+        
+        // Clear kiosk assignment
+        updateKioskStudent(KIOSK_ID, undefined, undefined);
+      } else if (firstWaitingStudent && kioskState === 'welcome') {
+        // Assign student to kiosk 3
+        updateKioskStudent(KIOSK_ID, firstWaitingStudent.student_id, firstWaitingStudent.id);
+      }
+    }, 100); // 100ms debounce
+
+    return () => clearTimeout(timeoutId);
   }, [firstWaitingStudent?.id, kioskState, updateKioskStudent]);
 
   // Timer for reflection process

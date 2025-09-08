@@ -1088,6 +1088,16 @@ export type Database = {
         Args: { p_kiosk_id: number }
         Returns: boolean
       }
+      check_queue_integrity: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          behavior_request_id: string
+          details: string
+          issue_type: string
+          kiosk_id: number
+          student_id: string
+        }[]
+      }
       cleanup_expired_device_sessions: {
         Args: Record<PropertyKey, never>
         Returns: number
@@ -1167,6 +1177,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      repair_queue_integrity: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       update_device_session_fingerprint: {
         Args: { p_new_fingerprint: string; p_session_id: string }
         Returns: boolean
@@ -1182,6 +1196,18 @@ export type Database = {
           p_student_id?: string
         }
         Returns: undefined
+      }
+      update_student_kiosk_status_atomic: {
+        Args: {
+          p_behavior_request_id?: string
+          p_kiosk_id: number
+          p_student_id?: string
+        }
+        Returns: {
+          kiosk_assigned: boolean
+          message: string
+          success: boolean
+        }[]
       }
       validate_device_session: {
         Args: { p_device_fingerprint: string; p_session_id: string }
