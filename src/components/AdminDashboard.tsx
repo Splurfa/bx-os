@@ -17,6 +17,7 @@ import { Monitor, PowerOff, Link as LinkIcon, Copy, Clock, Shield, ExternalLink 
 import AppHeader from './AppHeader';
 import QueueDisplay from './QueueDisplay';
 import UserManagement from './UserManagement';
+import { QueueIntegrityMonitor } from './QueueIntegrityMonitor';
 
 
 import { SessionMonitor } from './SessionMonitor';
@@ -377,7 +378,9 @@ const AdminDashboard = () => {
 
           {/* User Management Tab with Session Monitor */}
           <TabsContent value="users" className={isMobile ? "space-y-3" : "space-y-6"}>
-            <UserManagement />
+          <QueueIntegrityMonitor />
+          <QueueIntegrityMonitor />
+          <UserManagement />
             
             {/* Session Monitor Section */}
             <div className={isMobile ? "mt-4" : "mt-8"}>

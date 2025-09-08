@@ -1149,6 +1149,15 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_queue_repair_suggestions: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          behavior_request_id: string
+          kiosk_id: number
+          repair_type: string
+          suggested_action: string
+        }[]
+      }
       import_complete_hillel_csv_data: {
         Args: Record<PropertyKey, never>
         Returns: string
