@@ -242,7 +242,7 @@ const QueueDisplay = React.memo(({
                     onClick={() => onSelectReflection(item)}
                     className="text-xs whitespace-nowrap h-7 px-2"
                   >
-                    <CheckCircle className="h-3 w-3 mr-1" />
+                    <CheckCircle className="h-3 w-3 mr-0.5" />
                     Review
                   </Button>
                 ) : (
