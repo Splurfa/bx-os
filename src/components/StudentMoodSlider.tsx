@@ -33,9 +33,9 @@ const StudentMoodSlider = ({ value, onChange, label = "How are you feeling?" }: 
 
   const moods = [
     { id: 'very-sad', label: 'Very Sad', icon: '😢', value: 1 },
-    { id: 'sad', label: 'Sad', icon: '😔', value: 2 },
+    { id: 'sad', label: 'Sad', icon: '😟', value: 2 },
     { id: 'neutral', label: 'Okay', icon: '😐', value: 3 },
-    { id: 'happy', label: 'Happy', icon: '😊', value: 4 },
+    { id: 'happy', label: 'Happy', icon: '🙂', value: 4 },
     { id: 'very-happy', label: 'Very Happy', icon: '😄', value: 5 }
   ];
 

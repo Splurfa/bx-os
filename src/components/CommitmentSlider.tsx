@@ -32,11 +32,11 @@ const CommitmentSlider = ({ value, onChange, label = "How committed are you to c
   };
 
   const levels = [
-    { id: 'not-at-all', label: 'Not at All', icon: '😞', value: 1 },
-    { id: 'little', label: 'A Little', icon: '🤔', value: 2 },
-    { id: 'somewhat', label: 'Somewhat', icon: '😐', value: 3 },
-    { id: 'very', label: 'Very', icon: '😊', value: 4 },
-    { id: 'extremely', label: 'Extremely', icon: '🎯', value: 5 }
+    { id: 'not-at-all', label: 'Not ready', icon: '◯', value: 1 },
+    { id: 'little', label: 'A little ready', icon: '◔', value: 2 },
+    { id: 'somewhat', label: 'Half ready', icon: '◑', value: 3 },
+    { id: 'very', label: 'Almost ready', icon: '◕', value: 4 },
+    { id: 'extremely', label: 'Fully ready', icon: '●', value: 5 }
   ];
 
   return (
