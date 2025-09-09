@@ -16,27 +16,24 @@ const MoodSlider = ({ value, onChange }: MoodSliderProps) => {
   };
 
   const getMoodState = () => {
-    if (currentValue === 1) return 'very-low';
-    if (currentValue === 2) return 'low';
-    if (currentValue === 3) return 'neutral';
-    if (currentValue === 4) return 'high';
-    return 'very-high';
+    if (currentValue <= 25) return 'calm';
+    if (currentValue <= 60) return 'steady';
+    if (currentValue <= 85) return 'anxious';
+    return 'frazzled';
   };
 
   const getMoodColor = () => {
-    if (currentValue === 1) return 'hsl(var(--destructive))';
-    if (currentValue === 2) return 'hsl(var(--warning))';
-    if (currentValue === 3) return 'hsl(var(--muted-foreground))';
-    if (currentValue === 4) return 'hsl(var(--success))';
-    return 'hsl(var(--primary))';
+    if (currentValue <= 25) return '#3b82f6';
+    if (currentValue <= 60) return '#10b981';
+    if (currentValue <= 85) return '#f59e0b';
+    return '#ef4444';
   };
 
   const moods = [
-    { id: 'very-low', label: 'Very Low', icon: '😔', value: 1 },
-    { id: 'low', label: 'Low', icon: '😐', value: 2 },
-    { id: 'neutral', label: 'Neutral', icon: '😌', value: 3 },
-    { id: 'high', label: 'High', icon: '😊', value: 4 },
-    { id: 'very-high', label: 'Very High', icon: '😄', value: 5 }
+    { id: 'calm', label: 'Calm', icon: '🧘‍♀️' },
+    { id: 'steady', label: 'Steady', icon: '😌' },
+    { id: 'anxious', label: 'Anxious', icon: '😰' },
+    { id: 'frazzled', label: 'Frazzled', icon: '🤯' }
   ];
 
   return (
@@ -56,14 +53,14 @@ const MoodSlider = ({ value, onChange }: MoodSliderProps) => {
         {/* Track Cover */}
         <div 
           className="absolute top-1/2 right-0 transform -translate-y-1/2 h-1 bg-background rounded-r-full transition-all duration-200"
-          style={{ width: `${100 - ((currentValue - 1) / 4) * 100}%` }}
+          style={{ width: `${100 - currentValue}%` }}
         />
         
         {/* Slider Input */}
         <input
           type="range"
-          min="1"
-          max="5"
+          min="0"
+          max="100"
           value={currentValue}
           onChange={handleChange}
           className="absolute inset-0 w-full h-6 bg-transparent appearance-none cursor-pointer z-10"
@@ -76,7 +73,7 @@ const MoodSlider = ({ value, onChange }: MoodSliderProps) => {
         <div 
           className="absolute top-1/2 transform -translate-y-1/2 -translate-x-1/2 w-4 h-4 bg-background border-2 rounded-full shadow-sm transition-all duration-200 pointer-events-none z-20"
           style={{ 
-            left: `${((currentValue - 1) / 4) * 100}%`,
+            left: `${currentValue}%`,
             borderColor: getMoodColor()
           }}
         />

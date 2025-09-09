@@ -76,13 +76,8 @@ const ReviewScreen = ({
   onSubmit,
   isSubmitting = false
 }: ReviewScreenProps) => {
-  // Convert teacherMood (1-5) to percentage (0-100) for MoodSlider
-  const moodToPercentage = (mood: number) => ((mood - 1) / 4) * 100;
-  const percentageToMood = (percentage: number) => Math.round((percentage / 100) * 4) + 1;
-
   const handleMoodChange = (percentage: number) => {
-    const moodValue = percentageToMood(percentage);
-    onTeacherMoodChange(moodValue);
+    onTeacherMoodChange(percentage);
   };
 
   return (
@@ -129,7 +124,7 @@ const ReviewScreen = ({
           <h4 className="text-center text-base font-semibold text-foreground">Current Mood</h4>
           <div className="px-2">
             <MoodSlider
-              value={moodToPercentage(teacherMood)}
+              value={teacherMood}
               onChange={handleMoodChange}
             />
           </div>
