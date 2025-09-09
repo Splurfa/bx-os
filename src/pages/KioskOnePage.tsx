@@ -1,7 +1,7 @@
-import KioskOne from "@/components/KioskOne";
+import EnhancedKioskOne from "@/components/EnhancedKioskOne";
 
 const KioskOnePage = () => {
-  return <KioskOne />;
+  return <EnhancedKioskOne />;
 };
 
 export default KioskOnePage;

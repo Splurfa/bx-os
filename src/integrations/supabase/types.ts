@@ -886,11 +886,18 @@ export type Database = {
       }
       reflections: {
         Row: {
+          accountability_step2: number | null
+          accountability_step3: number | null
+          accountability_step4: number | null
           ai_analysis: Json | null
           behavior_request_id: string
+          commitment_step4: number | null
           created_at: string
           id: string
           mood_rating: number | null
+          mood_step1: number | null
+          mood_step3: number | null
+          mood_step4: number | null
           question_1_response: string | null
           question_2_response: string | null
           question_3_response: string | null
@@ -904,11 +911,18 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          accountability_step2?: number | null
+          accountability_step3?: number | null
+          accountability_step4?: number | null
           ai_analysis?: Json | null
           behavior_request_id: string
+          commitment_step4?: number | null
           created_at?: string
           id?: string
           mood_rating?: number | null
+          mood_step1?: number | null
+          mood_step3?: number | null
+          mood_step4?: number | null
           question_1_response?: string | null
           question_2_response?: string | null
           question_3_response?: string | null
@@ -922,11 +936,18 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          accountability_step2?: number | null
+          accountability_step3?: number | null
+          accountability_step4?: number | null
           ai_analysis?: Json | null
           behavior_request_id?: string
+          commitment_step4?: number | null
           created_at?: string
           id?: string
           mood_rating?: number | null
+          mood_step1?: number | null
+          mood_step3?: number | null
+          mood_step4?: number | null
           question_1_response?: string | null
           question_2_response?: string | null
           question_3_response?: string | null
