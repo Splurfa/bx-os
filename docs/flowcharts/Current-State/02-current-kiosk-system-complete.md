@@ -8,23 +8,23 @@
 
 ```mermaid
 flowchart TD
-    A[159 Middle School Students] --> B[3 Dedicated iPads]
+    A[159 Middle School<br/>Students] --> B[3 Dedicated iPads]
     
-    B --> C[✅ iPad 1: /kiosk1 WORKING]
-    B --> D[✅ iPad 2: /kiosk2 WORKING]  
-    B --> E[✅ iPad 3: /kiosk3 WORKING]
+    B --> C[✅ iPad 1: /kiosk1<br/>Working]
+    B --> D[✅ iPad 2: /kiosk2<br/>Working]  
+    B --> E[✅ iPad 3: /kiosk3<br/>Working]
     
-    C --> F[✅ Static URL Assignment FUNCTIONAL]
-    D --> G[✅ Static URL Assignment FUNCTIONAL]
-    E --> H[✅ Static URL Assignment FUNCTIONAL]
+    C --> F[✅ Static URL<br/>Assignment Functional]
+    D --> G[✅ Static URL<br/>Assignment Functional]
+    E --> H[✅ Static URL<br/>Assignment Functional]
     
-    F --> I[✅ Queue-Based Student Assignment IMPLEMENTED]
-    G --> J[✅ Queue-Based Student Assignment IMPLEMENTED]
-    H --> K[✅ Queue-Based Student Assignment IMPLEMENTED]
+    F --> I[✅ Queue-Based Student<br/>Assignment Implemented]
+    G --> J[✅ Queue-Based Student<br/>Assignment Implemented]
+    H --> K[✅ Queue-Based Student<br/>Assignment Implemented]
     
-    I --> L[✅ Auto-Progress to Next Student WORKING]
-    J --> M[✅ Auto-Progress to Next Student WORKING]
-    K --> N[✅ Auto-Progress to Next Student WORKING]
+    I --> L[✅ Auto-Progress to<br/>Next Student Working]
+    J --> M[✅ Auto-Progress to<br/>Next Student Working]
+    K --> N[✅ Auto-Progress to<br/>Next Student Working]
     
     classDef working fill:#d4edda,stroke:#155724,color:#155724
     classDef functional fill:#cce5ff,stroke:#0066cc,color:#0066cc
@@ -36,22 +36,22 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A[Student Accesses iPad] --> B[Navigate to assigned URL]
-    B --> C[✅ kiosk1, kiosk2, or kiosk3 ACCESSIBLE]
-    C --> D[✅ No Authentication Required WORKING]
+    A[Student Accesses iPad] --> B[Navigate to<br/>assigned URL]
+    B --> C[✅ kiosk1, kiosk2,<br/>or kiosk3 Accessible]
+    C --> D[✅ No Authentication<br/>Required Working]
     
-    D --> E[✅ Load Kiosk Component FUNCTIONAL]
-    E --> F[✅ Fetch Assigned Student IMPLEMENTED]
+    D --> E[✅ Load Kiosk<br/>Component Functional]
+    E --> F[✅ Fetch Assigned<br/>Student Implemented]
     F --> G{Student Available?}
     
-    G -->|Yes| H[✅ Load Student BSR WORKFLOW WORKING]
-    G -->|No| I[Display No Students Assigned]
+    G -->|Yes| H[✅ Load Student BSR<br/>Workflow Working]
+    G -->|No| I[Display No Students<br/>Assigned]
     
-    H --> J[✅ Student Completes Reflection FUNCTIONAL]
-    J --> K[✅ Submit for Teacher Review WORKING]
-    K --> L[✅ Auto-Progress to Next Student IMPLEMENTED]
+    H --> J[✅ Student Completes<br/>Reflection Functional]
+    J --> K[✅ Submit for<br/>Teacher Review Working]
+    K --> L[✅ Auto-Progress to<br/>Next Student Implemented]
     
-    I --> M[Wait for Queue Assignment]
+    I --> M[Wait for Queue<br/>Assignment]
     
     classDef working fill:#d4edda,stroke:#155724,color:#155724
     classDef ready fill:#fff3cd,stroke:#856404,color:#856404

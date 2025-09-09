@@ -6,26 +6,26 @@
 
 ```mermaid
 flowchart TD
-    A[BX-OS System] --> B[SIS Integration Layer]
-    B --> C[Student Data Sync]
-    B --> D[Grade Book Integration]
-    B --> E[Attendance Correlation]
+    A[BX-OS System] --> B[SIS Integration<br/>Layer]
+    B --> C[Student Data<br/>Sync]
+    B --> D[Grade Book<br/>Integration]
+    B --> E[Attendance<br/>Correlation]
     
-    C --> F[Auto-Import Student Records]
-    C --> G[Real-time Enrollment Updates]
-    C --> H[Demographic Data Sync]
+    C --> F[Auto-Import<br/>Student Records]
+    C --> G[Real-time<br/>Enrollment Updates]
+    C --> H[Demographic<br/>Data Sync]
     
-    D --> I[Behavioral Impact on Grades]
-    D --> J[Academic Correlation Analysis]
-    D --> K[Teacher Grade Book Notes]
+    D --> I[Behavioral Impact<br/>on Grades]
+    D --> J[Academic Correlation<br/>Analysis]
+    D --> K[Teacher Grade<br/>Book Notes]
     
-    E --> L[Attendance Pattern Analysis]
-    E --> M[Behavioral/Attendance Correlation]
-    E --> N[Truancy Risk Assessment]
+    E --> L[Attendance Pattern<br/>Analysis]
+    E --> M[Behavioral/Attendance<br/>Correlation]
+    E --> N[Truancy Risk<br/>Assessment]
     
-    F --> O[Automated Student Management]
-    I --> P[Academic Intervention Alerts]
-    L --> Q[Holistic Student Support]
+    F --> O[Automated Student<br/>Management]
+    I --> P[Academic Intervention<br/>Alerts]
+    L --> Q[Holistic Student<br/>Support]
     
     style B fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px

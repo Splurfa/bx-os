@@ -6,26 +6,26 @@
 
 ```mermaid
 flowchart TD
-    A[Student BSR Data] --> B[AI Analysis Engine]
-    B --> C[Natural Language Processing]
+    A[Student BSR Data] --> B[AI Analysis<br/>Engine]
+    B --> C[Natural Language<br/>Processing]
     B --> D[Pattern Recognition]
     B --> E[Sentiment Analysis]
     
-    C --> F[Extract Key Themes]
-    D --> G[Identify Behavioral Patterns]
-    E --> H[Assess Student Emotional State]
+    C --> F[Extract Key<br/>Themes]
+    D --> G[Identify Behavioral<br/>Patterns]
+    E --> H[Assess Student<br/>Emotional State]
     
-    F --> I[Common Triggers Identification]
-    G --> J[Behavioral Trend Mapping]
-    H --> K[Emotional Support Recommendations]
+    F --> I[Common Triggers<br/>Identification]
+    G --> J[Behavioral Trend<br/>Mapping]
+    H --> K[Emotional Support<br/>Recommendations]
     
-    I --> L[Proactive Intervention Suggestions]
-    J --> M[Individual Student Profiles]
-    K --> N[Mental Health Alert System]
+    I --> L[Proactive Intervention<br/>Suggestions]
+    J --> M[Individual Student<br/>Profiles]
+    K --> N[Mental Health<br/>Alert System]
     
-    L --> O[Teacher Action Recommendations]
-    M --> P[Personalized Support Plans]
-    N --> Q[Counselor Notifications]
+    L --> O[Teacher Action<br/>Recommendations]
+    M --> P[Personalized<br/>Support Plans]
+    N --> Q[Counselor<br/>Notifications]
     
     style B fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style I fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px

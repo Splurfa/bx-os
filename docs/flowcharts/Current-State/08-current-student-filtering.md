@@ -8,21 +8,21 @@
 
 ```mermaid
 flowchart TD
-    A[✅ All Students in Database TABLE POPULATED] --> B[✅ Grade Level Filter IMPLEMENTED]
+    A[✅ All Students in Database<br/>Table Populated] --> B[✅ Grade Level Filter<br/>Implemented]
     B --> C{Grade Level Check}
     
-    C -->|grade_level = '6'| D[✅ 6th Grade Students WORKING]
-    C -->|grade_level = '7'| E[✅ 7th Grade Students WORKING]
-    C -->|grade_level = '8'| F[✅ 8th Grade Students WORKING]
+    C -->|grade_level = '6'| D[✅ 6th Grade<br/>Students Working]
+    C -->|grade_level = '7'| E[✅ 7th Grade<br/>Students Working]
+    C -->|grade_level = '8'| F[✅ 8th Grade<br/>Students Working]
     C -->|grade_level != 6,7,8| G[Exclude from System]
     
-    D --> H[✅ Middle School Pool IMPLEMENTED]
+    D --> H[✅ Middle School<br/>Pool Implemented]
     E --> H
     F --> H
     
-    H --> I[✅ 159 Total Students POPULATED]
-    I --> J[✅ Available for BSR Creation WORKING]
-    J --> K[✅ Eligible for Queue Assignment WORKING]
+    H --> I[✅ 159 Total<br/>Students Populated]
+    I --> J[✅ Available for<br/>BSR Creation Working]
+    J --> K[✅ Eligible for Queue<br/>Assignment Working]
     
     classDef working fill:#d4edda,stroke:#155724,color:#155724
     

@@ -8,16 +8,16 @@
 
 ```mermaid
 flowchart TD
-    A[User Login Request] --> B[✅ Google OAuth Working]
-    B --> C[✅ Supabase Auth Session Created]
-    C --> D[✅ Profile Record Exists]
-    D --> E[✅ Role Assignment Functional]
+    A[User Login Request] --> B[✅ Google OAuth<br/>Working]
+    B --> C[✅ Supabase Auth<br/>Session Created]
+    C --> D[✅ Profile Record<br/>Exists]
+    D --> E[✅ Role Assignment<br/>Functional]
     
-    E --> F[✅ AdminRoute Access Control]
-    E --> G[✅ TeacherRoute Access Control]
+    E --> F[✅ AdminRoute<br/>Access Control]
+    E --> G[✅ TeacherRoute<br/>Access Control]
     
-    F --> H[✅ Admin Dashboard Access]
-    G --> I[✅ Teacher Dashboard Access]
+    F --> H[✅ Admin Dashboard<br/>Access]
+    G --> I[✅ Teacher Dashboard<br/>Access]
     
     classDef functional fill:#d4edda,stroke:#155724,color:#155724
     

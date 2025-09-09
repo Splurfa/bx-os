@@ -9,16 +9,16 @@
 ```mermaid
 erDiagram
     auth_users {
-        uuid id PK "✅ FUNCTIONAL"
+        uuid id PK "✅ Functional"
         string email "✅ Working OAuth"
         timestamp created_at "✅ Auto-generated"
         timestamp updated_at "✅ Auto-managed"
     }
     
     profiles {
-        uuid id PK "✅ FUNCTIONAL"
+        uuid id PK "✅ Functional"
         uuid user_id FK "✅ Links to auth.users"
-        string role "✅ Admin/Teacher roles working" 
+        string role "✅ Admin/Teacher<br/>roles working" 
         string display_name "✅ From OAuth data"
         string avatar_url "✅ Optional field"
         timestamp created_at "✅ Auto-generated"
@@ -26,13 +26,13 @@ erDiagram
     }
     
     students {
-        uuid id PK "✅ FUNCTIONAL"
+        uuid id PK "✅ Functional"
         uuid family_id FK "✅ Links to families"
         string first_name "✅ Working"
         string last_name "✅ Working"
         string name "✅ Working (optional)"
-        string grade "✅ Working (6th, 7th, 8th)"
-        string class_name "✅ Working (current: same as grade)"
+        string grade "✅ Working<br/>(6th, 7th, 8th)"
+        string class_name "✅ Working<br/>(current: same as grade)"
         date date_of_birth "✅ Working"
         string student_id_external "✅ Working (optional)"
         timestamp created_at "✅ Auto-generated"

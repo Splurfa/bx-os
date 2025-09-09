@@ -9,22 +9,22 @@
 ```mermaid
 flowchart TD
     A[User Access] --> B{Route Type?}
-    B -->|Kiosk Routes| C[✅ Anonymous Access Working]
+    B -->|Kiosk Routes| C[✅ Anonymous Access<br/>Working]
     B -->|Dashboard Routes| D{Is Authenticated?}
     
-    C --> E[✅ kiosk1 Direct Access]
-    C --> F[✅ kiosk2 Direct Access]
-    C --> G[✅ kiosk3 Direct Access]
+    C --> E[✅ kiosk1<br/>Direct Access]
+    C --> F[✅ kiosk2<br/>Direct Access]
+    C --> G[✅ kiosk3<br/>Direct Access]
     
     D -->|No| H[Redirect to /auth]
     D -->|Yes| I{User Role?}
     
-    I -->|admin/super_admin| J[✅ AdminRoute Component WORKING]
-    I -->|teacher/admin/super_admin| K[✅ TeacherRoute Component WORKING]
+    I -->|admin/super_admin| J[✅ AdminRoute Component<br/>Working]
+    I -->|teacher/admin/super_admin| K[✅ TeacherRoute Component<br/>Working]
     I -->|other| L[Access Denied]
     
-    J --> M[✅ Admin Dashboard FUNCTIONAL]
-    K --> N[✅ Teacher Dashboard FUNCTIONAL]
+    J --> M[✅ Admin Dashboard<br/>Functional]
+    K --> N[✅ Teacher Dashboard<br/>Functional]
     
     classDef working fill:#d4edda,stroke:#155724,color:#155724
     classDef functional fill:#cce5ff,stroke:#0066cc,color:#0066cc
@@ -38,21 +38,21 @@ flowchart TD
 ```mermaid
 flowchart TD
     A[Route Access] --> B{Route Component}
-    B --> C[✅ AdminRoute EXISTS]
-    B --> D[✅ TeacherRoute EXISTS]
+    B --> C[✅ AdminRoute<br/>Exists]
+    B --> D[✅ TeacherRoute<br/>Exists]
     
     C --> E{User Role Check}
-    E -->|admin/super_admin| F[✅ Allow Access WORKING]
+    E -->|admin/super_admin| F[✅ Allow Access<br/>Working]
     E -->|other| G[Redirect to /teacher]
     
     D --> H{User Role Check}
-    H -->|teacher| I[✅ Allow Access WORKING]
-    H -->|admin/super_admin| J[✅ Allow Access WORKING]
+    H -->|teacher| I[✅ Allow Access<br/>Working]
+    H -->|admin/super_admin| J[✅ Allow Access<br/>Working]
     H -->|other| K[Redirect to /auth]
     
-    F --> L[✅ Admin Dashboard Functions OPERATIONAL]
-    I --> M[✅ Teacher Dashboard Functions OPERATIONAL]
-    J --> N[✅ Teacher Dashboard Admin View OPERATIONAL]
+    F --> L[✅ Admin Dashboard<br/>Functions Operational]
+    I --> M[✅ Teacher Dashboard<br/>Functions Operational]
+    J --> N[✅ Teacher Dashboard<br/>Admin View Operational]
     
     classDef working fill:#d4edda,stroke:#155724,color:#155724
     
@@ -63,22 +63,22 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A[Component Render] --> B[✅ usePermissions Hook EXISTS]
+    A[Component Render] --> B[✅ usePermissions<br/>Hook Exists]
     B --> C{Check User Role}
-    C --> D[✅ Permission check functions WORKING]
+    C --> D[✅ Permission Check<br/>Functions Working]
     
     D --> E{UI Element Type}
-    E -->|User Management| F{✅ Check admin permission WORKING}
-    E -->|BSR Creation| G{✅ Check teacher permission WORKING}
-    E -->|Queue Viewing| H{✅ Check teacher/admin permission WORKING}
+    E -->|User Management| F{✅ Check Admin<br/>Permission Working}
+    E -->|BSR Creation| G{✅ Check Teacher<br/>Permission Working}
+    E -->|Queue Viewing| H{✅ Check Teacher/Admin<br/>Permission Working}
     
-    F -->|true| I[✅ Show User Management]
+    F -->|true| I[✅ Show User<br/>Management]
     F -->|false| J[Hide Component]
     
-    G -->|true| K[✅ Show BSR Creation]
+    G -->|true| K[✅ Show BSR<br/>Creation]
     G -->|false| L[Hide Component]
     
-    H -->|true| M[✅ Show Queue Display]
+    H -->|true| M[✅ Show Queue<br/>Display]
     H -->|false| N[Hide Component]
     
     classDef working fill:#d4edda,stroke:#155724,color:#155724

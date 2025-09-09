@@ -6,23 +6,23 @@
 
 ```mermaid
 flowchart TD
-    A[School Administration] --> B[Dynamic Kiosk Management]
-    B --> C[Add/Remove Kiosk Stations]
-    C --> D[Auto-Discovery System]
+    A[School Administration] --> B[Dynamic Kiosk<br/>Management]
+    B --> C[Add/Remove<br/>Kiosk Stations]
+    C --> D[Auto-Discovery<br/>System]
     
     D --> E[Device Registration]
     E --> F[QR Code Assignment]
-    F --> G[Automatic URL Generation]
+    F --> G[Automatic URL<br/>Generation]
     
-    G --> H[kiosk device-id-xyz]
-    G --> I[kiosk device-id-abc]
-    G --> J[kiosk device-id-def]
+    G --> H[kiosk<br/>device-id-xyz]
+    G --> I[kiosk<br/>device-id-abc]
+    G --> J[kiosk<br/>device-id-def]
     
-    H --> K[Dynamic Queue Assignment]
-    I --> L[Dynamic Queue Assignment]
-    J --> M[Dynamic Queue Assignment]
+    H --> K[Dynamic Queue<br/>Assignment]
+    I --> L[Dynamic Queue<br/>Assignment]
+    J --> M[Dynamic Queue<br/>Assignment]
     
-    K --> N[Load Balancing Across Kiosks]
+    K --> N[Load Balancing<br/>Across Kiosks]
     L --> N
     M --> N
     
