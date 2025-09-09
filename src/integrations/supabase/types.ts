@@ -14,59 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      ai_insights: {
-        Row: {
-          confidence_score: number | null
-          created_at: string
-          description: string
-          generated_at: string
-          id: string
-          insight_data: Json | null
-          insight_type: string
-          priority_level: string | null
-          reviewed_at: string | null
-          status: string | null
-          student_id: string
-          title: string
-        }
-        Insert: {
-          confidence_score?: number | null
-          created_at?: string
-          description: string
-          generated_at?: string
-          id?: string
-          insight_data?: Json | null
-          insight_type: string
-          priority_level?: string | null
-          reviewed_at?: string | null
-          status?: string | null
-          student_id: string
-          title: string
-        }
-        Update: {
-          confidence_score?: number | null
-          created_at?: string
-          description?: string
-          generated_at?: string
-          id?: string
-          insight_data?: Json | null
-          insight_type?: string
-          priority_level?: string | null
-          reviewed_at?: string | null
-          status?: string | null
-          student_id?: string
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ai_insights_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "students"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       antecedent_contexts: {
         Row: {
           created_at: string | null
@@ -148,65 +95,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "behavior_history_behavior_request_id_fkey"
-            columns: ["behavior_request_id"]
-            isOneToOne: false
-            referencedRelation: "behavior_requests"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "behavior_history_reflection_id_fkey"
-            columns: ["reflection_id"]
-            isOneToOne: false
-            referencedRelation: "reflections"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "behavior_history_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "students"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      behavior_patterns: {
-        Row: {
-          ai_insights: Json | null
-          confidence_score: number | null
-          created_at: string
-          detected_at: string
-          id: string
-          intervention_suggestions: Json | null
-          pattern_data: Json | null
-          pattern_type: string
-          student_id: string
-        }
-        Insert: {
-          ai_insights?: Json | null
-          confidence_score?: number | null
-          created_at?: string
-          detected_at?: string
-          id?: string
-          intervention_suggestions?: Json | null
-          pattern_data?: Json | null
-          pattern_type: string
-          student_id: string
-        }
-        Update: {
-          ai_insights?: Json | null
-          confidence_score?: number | null
-          created_at?: string
-          detected_at?: string
-          id?: string
-          intervention_suggestions?: Json | null
-          pattern_data?: Json | null
-          pattern_type?: string
-          student_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "behavior_patterns_student_id_fkey"
             columns: ["student_id"]
             isOneToOne: false
             referencedRelation: "students"
@@ -289,247 +178,6 @@ export type Database = {
           },
         ]
       }
-      communication_logs: {
-        Row: {
-          created_at: string
-          delivered_at: string | null
-          engagement_data: Json | null
-          error_message: string | null
-          guardian_id: string
-          id: string
-          message_body: string
-          method: string
-          opened_at: string | null
-          recipient: string
-          sent_at: string | null
-          status: string
-          student_id: string
-          subject: string | null
-          template_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          delivered_at?: string | null
-          engagement_data?: Json | null
-          error_message?: string | null
-          guardian_id: string
-          id?: string
-          message_body: string
-          method: string
-          opened_at?: string | null
-          recipient: string
-          sent_at?: string | null
-          status?: string
-          student_id: string
-          subject?: string | null
-          template_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          delivered_at?: string | null
-          engagement_data?: Json | null
-          error_message?: string | null
-          guardian_id?: string
-          id?: string
-          message_body?: string
-          method?: string
-          opened_at?: string | null
-          recipient?: string
-          sent_at?: string | null
-          status?: string
-          student_id?: string
-          subject?: string | null
-          template_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "communication_logs_guardian_id_fkey"
-            columns: ["guardian_id"]
-            isOneToOne: false
-            referencedRelation: "guardians"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "communication_logs_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "students"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "communication_logs_template_id_fkey"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "communication_templates"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      communication_templates: {
-        Row: {
-          body_template: string
-          created_at: string
-          created_by: string | null
-          id: string
-          is_active: boolean | null
-          name: string
-          subject_template: string | null
-          template_type: string
-          updated_at: string
-          variables: Json | null
-        }
-        Insert: {
-          body_template: string
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          is_active?: boolean | null
-          name: string
-          subject_template?: string | null
-          template_type: string
-          updated_at?: string
-          variables?: Json | null
-        }
-        Update: {
-          body_template?: string
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          is_active?: boolean | null
-          name?: string
-          subject_template?: string | null
-          template_type?: string
-          updated_at?: string
-          variables?: Json | null
-        }
-        Relationships: []
-      }
-      csv_import_raw: {
-        Row: {
-          address_parse_mode: string | null
-          address_raw: string | null
-          city: string | null
-          class_raw: string | null
-          created_at: string | null
-          dob: string | null
-          family_header: string | null
-          household_emails: string | null
-          id: number
-          page_number: string | null
-          parent1_cell_1: string | null
-          parent1_cell_2: string | null
-          parent1_name: string | null
-          parent1_work_1: string | null
-          parent1_work_2: string | null
-          parent2_cell_1: string | null
-          parent2_cell_2: string | null
-          parent2_name: string | null
-          parent2_work_1: string | null
-          parent2_work_2: string | null
-          source_excerpt: string | null
-          state: string | null
-          street: string | null
-          street_normalized: string | null
-          student_first_name: string | null
-          student_full_name: string | null
-          student_last_name: string | null
-          zipc: string | null
-        }
-        Insert: {
-          address_parse_mode?: string | null
-          address_raw?: string | null
-          city?: string | null
-          class_raw?: string | null
-          created_at?: string | null
-          dob?: string | null
-          family_header?: string | null
-          household_emails?: string | null
-          id?: number
-          page_number?: string | null
-          parent1_cell_1?: string | null
-          parent1_cell_2?: string | null
-          parent1_name?: string | null
-          parent1_work_1?: string | null
-          parent1_work_2?: string | null
-          parent2_cell_1?: string | null
-          parent2_cell_2?: string | null
-          parent2_name?: string | null
-          parent2_work_1?: string | null
-          parent2_work_2?: string | null
-          source_excerpt?: string | null
-          state?: string | null
-          street?: string | null
-          street_normalized?: string | null
-          student_first_name?: string | null
-          student_full_name?: string | null
-          student_last_name?: string | null
-          zipc?: string | null
-        }
-        Update: {
-          address_parse_mode?: string | null
-          address_raw?: string | null
-          city?: string | null
-          class_raw?: string | null
-          created_at?: string | null
-          dob?: string | null
-          family_header?: string | null
-          household_emails?: string | null
-          id?: number
-          page_number?: string | null
-          parent1_cell_1?: string | null
-          parent1_cell_2?: string | null
-          parent1_name?: string | null
-          parent1_work_1?: string | null
-          parent1_work_2?: string | null
-          parent2_cell_1?: string | null
-          parent2_cell_2?: string | null
-          parent2_name?: string | null
-          parent2_work_1?: string | null
-          parent2_work_2?: string | null
-          source_excerpt?: string | null
-          state?: string | null
-          street?: string | null
-          street_normalized?: string | null
-          student_first_name?: string | null
-          student_full_name?: string | null
-          student_last_name?: string | null
-          zipc?: string | null
-        }
-        Relationships: []
-      }
-      data_sources: {
-        Row: {
-          connection_info: Json | null
-          created_at: string
-          id: string
-          is_active: boolean | null
-          last_sync: string | null
-          name: string
-          sync_frequency: unknown | null
-          type: string
-        }
-        Insert: {
-          connection_info?: Json | null
-          created_at?: string
-          id?: string
-          is_active?: boolean | null
-          last_sync?: string | null
-          name: string
-          sync_frequency?: unknown | null
-          type: string
-        }
-        Update: {
-          connection_info?: Json | null
-          created_at?: string
-          id?: string
-          is_active?: boolean | null
-          last_sync?: string | null
-          name?: string
-          sync_frequency?: unknown | null
-          type?: string
-        }
-        Relationships: []
-      }
       device_sessions: {
         Row: {
           created_at: string
@@ -576,53 +224,6 @@ export type Database = {
             columns: ["kiosk_id"]
             isOneToOne: false
             referencedRelation: "kiosks"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      external_data: {
-        Row: {
-          academic_data: Json | null
-          attendance_data: Json | null
-          correlation_confidence: number | null
-          created_at: string
-          data_source_id: string
-          disciplinary_data: Json | null
-          external_student_id: string | null
-          id: string
-          last_sync: string | null
-          student_id: string
-        }
-        Insert: {
-          academic_data?: Json | null
-          attendance_data?: Json | null
-          correlation_confidence?: number | null
-          created_at?: string
-          data_source_id: string
-          disciplinary_data?: Json | null
-          external_student_id?: string | null
-          id?: string
-          last_sync?: string | null
-          student_id: string
-        }
-        Update: {
-          academic_data?: Json | null
-          attendance_data?: Json | null
-          correlation_confidence?: number | null
-          created_at?: string
-          data_source_id?: string
-          disciplinary_data?: Json | null
-          external_student_id?: string | null
-          id?: string
-          last_sync?: string | null
-          student_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "external_data_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "students"
             referencedColumns: ["id"]
           },
         ]
@@ -1113,6 +714,15 @@ export type Database = {
         Args: { p_kiosk_id: number }
         Returns: boolean
       }
+      check_queue_health: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          metric_name: string
+          metric_value: number
+          recommendation: string
+          status: string
+        }[]
+      }
       check_queue_integrity: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -1124,6 +734,10 @@ export type Database = {
         }[]
       }
       cleanup_expired_device_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      cleanup_old_behavior_history: {
         Args: Record<PropertyKey, never>
         Returns: number
       }
