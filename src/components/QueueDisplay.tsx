@@ -187,7 +187,7 @@ const QueueDisplay = React.memo(({
         return (
           <div
             key={item.id}
-            className={`grid grid-cols-[minmax(0,1fr)_auto] grid-rows-2 gap-x-2 ${itemPadding} border-b border-border last:border-b-0 ${
+            className={`grid grid-cols-[minmax(0,1fr)_auto_auto] grid-rows-2 gap-x-2 ${itemPadding} border-b border-border last:border-b-0 ${
               getUrgencyBackgroundClass((item as any).urgency_level)
             } ${(item as any).urgent ? 'border-l-4 border-l-queue-urgent' : ''} ${isActive ? 'bg-primary/5' : ''}`}
           >
@@ -219,6 +219,49 @@ const QueueDisplay = React.memo(({
               </div>
             </div>
 
+            {/* Row 1, Col 2: Status */}
+            <div className="col-[2] row-[1] flex items-center justify-end">
+              {showReviewButtons && item.status === 'review' ? (
+                <Button
+                  size="sm"
+                  variant="default"
+                  onClick={() => onSelectReflection(item)}
+                  className="text-xs whitespace-nowrap h-7 px-2"
+                >
+                  <CheckCircle className="h-3 w-3" />
+                  Review
+                </Button>
+              ) : (
+                <>
+                  {item.status === 'review' && !showReviewButtons ? (
+                    <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200 text-xs px-1.5 py-0.5 whitespace-nowrap">
+                      Pending Review
+                    </Badge>
+                  ) : (
+                    <>
+                      {('kiosk_status' in item) && item.kiosk_status === 'in_progress' ? (
+                        <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs px-1.5 py-0.5 whitespace-nowrap">
+                          In Progress
+                        </Badge>
+                      ) : ('kiosk_status' in item) && item.kiosk_status === 'ready' ? (
+                        <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 text-xs px-1.5 py-0.5 whitespace-nowrap">
+                          At Kiosk
+                        </Badge>
+                      ) : item.assigned_kiosk_id ? (
+                        <Badge variant="outline" className="text-orange-600 border-orange-200 text-xs px-1.5 py-0.5 whitespace-nowrap">
+                          Assigned
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-muted-foreground text-xs px-1.5 py-0.5 whitespace-nowrap">
+                          Waiting
+                        </Badge>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+
             {/* Row 2, Col 1: Timer + Kiosk (K1, K2, K3) */}
             <div className="col-[1] row-[2] flex items-center gap-2 text-xs text-muted-foreground min-w-0">
               <span className="whitespace-nowrap">
@@ -232,70 +275,28 @@ const QueueDisplay = React.memo(({
               )}
             </div>
 
-            {/* Right column: Status/Review + Clear (spans both rows for vertical centering) */}
-            <div className="col-[2] row-span-2 flex flex-col items-end justify-center gap-0.5">
-              {/* Top part: Status and teacher name chip */}
-              <div className="flex items-center gap-1">
-                {showReviewButtons && item.status === 'review' ? (
-                  <Button
-                    size="sm"
-                    variant="default"
-                    onClick={() => onSelectReflection(item)}
-                    className="text-xs whitespace-nowrap h-7 px-2"
-                  >
-                    <CheckCircle className="h-3 w-3" />
-                    Review
-                  </Button>
-                ) : (
-                  <>
-                    {item.status === 'review' && !showReviewButtons ? (
-                      <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200 text-xs px-1.5 py-0.5 whitespace-nowrap">
-                        Pending Review
-                      </Badge>
-                    ) : (
-                      <>
-                        {('kiosk_status' in item) && item.kiosk_status === 'in_progress' ? (
-                          <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 text-xs px-1.5 py-0.5 whitespace-nowrap">
-                            In Progress
-                          </Badge>
-                        ) : ('kiosk_status' in item) && item.kiosk_status === 'ready' ? (
-                          <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 text-xs px-1.5 py-0.5 whitespace-nowrap">
-                            At Kiosk
-                          </Badge>
-                        ) : item.assigned_kiosk_id ? (
-                          <Badge variant="outline" className="text-orange-600 border-orange-200 text-xs px-1.5 py-0.5 whitespace-nowrap">
-                            Assigned
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline" className="text-muted-foreground text-xs px-1.5 py-0.5 whitespace-nowrap">
-                            Waiting
-                          </Badge>
-                        )}
-                      </>
-                    )}
-                  </>
-                )}
-
-                {/* Teacher last name chip inline with status */}
-                {showTeacherLastNameChip && (() => {
-                  const teacherData = (item as any).teacher_profile;
+            {/* Row 2, Col 2: Teacher last name chip */}
+            <div className="col-[2] row-[2] flex items-center justify-end">
+              {showTeacherLastNameChip && (() => {
+                const teacherData = (item as any).teacher_profile;
+                
+                if (teacherData?.full_name) {
+                  const lastName = teacherData.full_name.trim().split(/\s+/).slice(-1)[0];
                   
-                  if (teacherData?.full_name) {
-                    const lastName = teacherData.full_name.trim().split(/\s+/).slice(-1)[0];
-                    
-                    return lastName ? (
-                      <Badge variant="outline" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
-                        {lastName}
-                      </Badge>
-                    ) : null;
-                  }
-                  
-                  return null;
-                })()}
-              </div>
+                  return lastName ? (
+                    <Badge variant="outline" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
+                      {lastName}
+                    </Badge>
+                  ) : null;
+                }
+                
+                return null;
+              })()}
+            </div>
 
-              {/* Bottom part: Clear button */}
-              {onClearItem && (
+            {/* Col 3: Clear button (spans both rows, centered) */}
+            {onClearItem && (
+              <div className="col-[3] row-span-2 flex items-center justify-center">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
@@ -321,8 +322,8 @@ const QueueDisplay = React.memo(({
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         );
         })}
