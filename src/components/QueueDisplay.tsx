@@ -233,7 +233,8 @@ const QueueDisplay = React.memo(({
             </div>
 
             {/* Right column: Status/Review + Clear (spans both rows for vertical centering) */}
-            <div className="col-[2] row-span-2 flex items-center justify-self-end gap-0.5">
+            <div className="col-[2] row-span-2 flex flex-col items-end justify-center gap-0.5">
+              {/* Top part: Status and teacher name chip */}
               <div className="flex items-center gap-1">
                 {showReviewButtons && item.status === 'review' ? (
                   <Button
@@ -274,8 +275,26 @@ const QueueDisplay = React.memo(({
                     )}
                   </>
                 )}
+
+                {/* Teacher last name chip inline with status */}
+                {showTeacherLastNameChip && (() => {
+                  const teacherData = (item as any).teacher_profile;
+                  
+                  if (teacherData?.full_name) {
+                    const lastName = teacherData.full_name.trim().split(/\s+/).slice(-1)[0];
+                    
+                    return lastName ? (
+                      <Badge variant="outline" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
+                        {lastName}
+                      </Badge>
+                    ) : null;
+                  }
+                  
+                  return null;
+                })()}
               </div>
 
+              {/* Bottom part: Clear button */}
               {onClearItem && (
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
@@ -304,25 +323,6 @@ const QueueDisplay = React.memo(({
                 </AlertDialog>
               )}
             </div>
-
-            {/* Row 2, Col 2: Teacher last name chip (admin dashboard only) */}
-            {showTeacherLastNameChip && (() => {
-              const teacherData = (item as any).teacher_profile;
-              
-              if (teacherData?.full_name) {
-                const lastName = teacherData.full_name.trim().split(/\s+/).slice(-1)[0];
-                
-                return lastName ? (
-                  <div className={`col-[2] row-[2] flex justify-end ${layout === 'teacher' ? 'items-center' : ''}`}>
-                    <Badge variant="outline" className="text-xs px-1.5 py-0.5 whitespace-nowrap">
-                      {lastName}
-                    </Badge>
-                  </div>
-                ) : null;
-              }
-              
-              return null;
-            })()}
           </div>
         );
         })}
