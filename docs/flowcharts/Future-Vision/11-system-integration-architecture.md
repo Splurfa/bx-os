@@ -6,26 +6,26 @@
 
 ```mermaid
 flowchart TD
-    A[BX-OS System] --> B[SIS Integration<br/>Layer]
-    B --> C[Student Data<br/>Sync]
-    B --> D[Grade Book<br/>Integration]
-    B --> E[Attendance<br/>Correlation]
+    A[🎯 BX-OS] --> B[🔗 SIS]
+    B --> C[👤 StudSync]
+    B --> D[📚 Grade]
+    B --> E[📅 Attend]
     
-    C --> F[Auto-Import<br/>Student Records]
-    C --> G[Real-time<br/>Enrollment Updates]
-    C --> H[Demographic<br/>Data Sync]
+    C --> F[📥 AutoImp]
+    C --> G[⚡ Enroll]
+    C --> H[📊 Demo]
     
-    D --> I[Behavioral Impact<br/>on Grades]
-    D --> J[Academic Correlation<br/>Analysis]
-    D --> K[Teacher Grade<br/>Book Notes]
+    D --> I[📉 BehGrad]
+    D --> J[📊 AcadCorr]
+    D --> K[📝 TeachNot]
     
-    E --> L[Attendance Pattern<br/>Analysis]
-    E --> M[Behavioral/Attendance<br/>Correlation]
-    E --> N[Truancy Risk<br/>Assessment]
+    E --> L[📈 AttPat]
+    E --> M[🔄 BehAtt]
+    E --> N[⚠️ Truancy]
     
-    F --> O[Automated Student<br/>Management]
-    I --> P[Academic Intervention<br/>Alerts]
-    L --> Q[Holistic Student<br/>Support]
+    F --> O[🤖 AutoMgmt]
+    I --> P[🚨 AcadInt]
+    L --> Q[🎯 HolSup]
     
     style B fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
@@ -33,31 +33,50 @@ flowchart TD
     style Q fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
 ```
 
+**Legend:**
+- 🎯 BX-OS = BX-OS System
+- 🔗 SIS = SIS Integration Layer
+- 👤 StudSync = Student Data Sync
+- 📚 Grade = Grade Book Integration
+- 📅 Attend = Attendance Correlation
+- 📥 AutoImp = Auto-Import Student Records
+- ⚡ Enroll = Real-time Enrollment Updates
+- 📊 Demo = Demographic Data Sync
+- 📉 BehGrad = Behavioral Impact on Grades
+- 📊 AcadCorr = Academic Correlation Analysis
+- 📝 TeachNot = Teacher Grade Book Notes
+- 📈 AttPat = Attendance Pattern Analysis
+- 🔄 BehAtt = Behavioral/Attendance Correlation
+- ⚠️ Truancy = Truancy Risk Assessment
+- 🤖 AutoMgmt = Automated Student Management
+- 🚨 AcadInt = Academic Intervention Alerts
+- 🎯 HolSup = Holistic Student Support
+
 ## Communication Platform Integration
 
 ```mermaid
 flowchart TD
-    A[BX-OS Notifications] --> B[Multi-Channel Communication]
-    B --> C[Email Integration]
-    B --> D[SMS/Text Messaging]
-    B --> E[Parent Portal Integration]
-    B --> F[School App Notifications]
+    A[🔔 Notif] --> B[📡 Multi]
+    B --> C[📧 Email]
+    B --> D[📱 SMS]
+    B --> E[👨‍👩‍👧‍👦 Parent]
+    B --> F[🏫 SchApp]
     
-    C --> G[Teacher Email Alerts]
-    C --> H[Parent Email Summaries]
-    C --> I[Admin Report Distribution]
+    C --> G[👨‍🏫 TeachEm]
+    C --> H[👨‍👩‍👧‍👦 ParEm]
+    C --> I[📊 AdminRep]
     
-    D --> J[Emergency Behavior Alerts]
-    D --> K[Parent Quick Updates]
-    D --> L[Staff Coordination Messages]
+    D --> J[🚨 EmergBeh]
+    D --> K[⚡ ParQuick]
+    D --> L[👥 StaffMsg]
     
-    E --> M[Family Dashboard Access]
-    E --> N[BSR Review & Response]
-    E --> O[Home Strategy Coordination]
+    E --> M[👨‍👩‍👧‍👦 FamDash]
+    E --> N[📝 BSRRev]
+    E --> O[🏠 HomeStr]
     
-    F --> P[Mobile Push Notifications]
-    F --> Q[Calendar Integration]
-    F --> R[Document Sharing]
+    F --> P[📱 MobPush]
+    F --> Q[📅 CalInt]
+    F --> R[📄 DocShare]
     
     style B fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style J fill:#ffebee,stroke:#d32f2f,stroke-width:2px
@@ -65,30 +84,50 @@ flowchart TD
     style P fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
 ```
 
+**Legend:**
+- 🔔 Notif = BX-OS Notifications
+- 📡 Multi = Multi-Channel Communication
+- 📧 Email = Email Integration
+- 📱 SMS = SMS/Text Messaging
+- 👨‍👩‍👧‍👦 Parent = Parent Portal Integration
+- 🏫 SchApp = School App Notifications
+- 👨‍🏫 TeachEm = Teacher Email Alerts
+- 👨‍👩‍👧‍👦 ParEm = Parent Email Summaries
+- 📊 AdminRep = Admin Report Distribution
+- 🚨 EmergBeh = Emergency Behavior Alerts
+- ⚡ ParQuick = Parent Quick Updates
+- 👥 StaffMsg = Staff Coordination Messages
+- 👨‍👩‍👧‍👦 FamDash = Family Dashboard Access
+- 📝 BSRRev = BSR Review & Response
+- 🏠 HomeStr = Home Strategy Coordination
+- 📱 MobPush = Mobile Push Notifications
+- 📅 CalInt = Calendar Integration
+- 📄 DocShare = Document Sharing
+
 ## District-Wide Analytics Integration
 
 ```mermaid
 flowchart TD
-    A[School-Level BX-OS] --> B[District Analytics Hub]
-    B --> C[Multi-School Comparison]
-    B --> D[District Trend Analysis]
-    B --> E[Resource Allocation Insights]
+    A[🏫 SchBX] --> B[📊 DistHub]
+    B --> C[⚖️ MultiSch]
+    B --> D[📈 DistTren]
+    B --> E[💰 ResAll]
     
-    C --> F[School Performance Benchmarking]
-    C --> G[Best Practice Identification]
-    C --> H[Intervention Effectiveness Comparison]
+    C --> F[📊 SchPerf]
+    C --> G[⭐ BestPrac]
+    C --> H[🔍 IntEff]
     
-    D --> I[District-Wide Behavioral Trends]
-    D --> J[Seasonal Pattern Analysis]
-    D --> K[Demographic Correlation Studies]
+    D --> I[🌐 DistBeh]
+    D --> J[🌱 Season]
+    D --> K[👥 DemoCorr]
     
-    E --> L[Staff Allocation Optimization]
-    E --> M[Program Funding Decisions]
-    E --> N[Professional Development Priorities]
+    E --> L[👥 StaffOpt]
+    E --> M[💰 FundDec]
+    E --> N[📚 PDPrior]
     
-    F --> O[School Improvement Plans]
-    I --> P[District Policy Development]
-    L --> Q[Strategic Resource Planning]
+    F --> O[📋 SchImp]
+    I --> P[📜 DistPol]
+    L --> Q[🎯 StratRes]
     
     style B fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
@@ -96,30 +135,49 @@ flowchart TD
     style Q fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
 ```
 
+**Legend:**
+- 🏫 SchBX = School-Level BX-OS
+- 📊 DistHub = District Analytics Hub
+- ⚖️ MultiSch = Multi-School Comparison
+- 📈 DistTren = District Trend Analysis
+- 💰 ResAll = Resource Allocation Insights
+- 📊 SchPerf = School Performance Benchmarking
+- ⭐ BestPrac = Best Practice Identification
+- 🔍 IntEff = Intervention Effectiveness Comparison
+- 🌐 DistBeh = District-Wide Behavioral Trends
+- 🌱 Season = Seasonal Pattern Analysis
+- 👥 DemoCorr = Demographic Correlation Studies
+- 👥 StaffOpt = Staff Allocation Optimization
+- 💰 FundDec = Program Funding Decisions
+- 📚 PDPrior = Professional Development Priorities
+- 📋 SchImp = School Improvement Plans
+- 📜 DistPol = District Policy Development
+- 🎯 StratRes = Strategic Resource Planning
+
 ## Mental Health & Counseling Integration
 
 ```mermaid
 flowchart TD
-    A[BX-OS Risk Detection] --> B[Mental Health Alert System]
-    B --> C[School Counselor Dashboard]
-    B --> D[External Therapist Portal]
-    B --> E[Crisis Intervention Protocol]
+    A[⚠️ BXRisk] --> B[🧠 MHAlert]
+    B --> C[👨‍⚕️ CounDash]
+    B --> D[🏥 TherPort]
+    B --> E[🚨 Crisis]
     
-    C --> F[Student Risk Assessment]
-    C --> G[Counseling Session Scheduling]
-    C --> H[Progress Tracking]
+    C --> F[📊 StudRisk]
+    C --> G[📅 CounSess]
+    C --> H[📈 ProgTrk]
     
-    D --> I[Secure Therapist Communication]
-    D --> J[Treatment Plan Coordination]
-    D --> K[Progress Sharing with consent]
+    D --> I[🔒 SecComm]
+    D --> J[📋 TreatPlan]
+    D --> K[📊 ProgShar]
     
-    E --> L[Emergency Response Team Alert]
-    E --> M[Parent/Guardian Immediate Contact]
-    E --> N[Crisis Resource Activation]
+    E --> L[🚑 EmergTeam]
+    E --> M[📞 ParCont]
+    E --> N[🆘 CrisRes]
     
-    F --> O[Intervention Priority Scoring]
-    I --> P[Collaborative Care Planning]
-    L --> Q[Safety Plan Implementation]
+    F --> O[🎯 IntPrior]
+    I --> P[🤝 CollPlan]
+    L --> Q[🛡️ SafePlan]
     
     style B fill:#ffebee,stroke:#d32f2f,stroke-width:2px
     style E fill:#ffebee,stroke:#d32f2f,stroke-width:2px
@@ -128,36 +186,74 @@ flowchart TD
     style Q fill:#ffebee,stroke:#d32f2f,stroke-width:2px
 ```
 
+**Legend:**
+- ⚠️ BXRisk = BX-OS Risk Detection
+- 🧠 MHAlert = Mental Health Alert System
+- 👨‍⚕️ CounDash = School Counselor Dashboard
+- 🏥 TherPort = External Therapist Portal
+- 🚨 Crisis = Crisis Intervention Protocol
+- 📊 StudRisk = Student Risk Assessment
+- 📅 CounSess = Counseling Session Scheduling
+- 📈 ProgTrk = Progress Tracking
+- 🔒 SecComm = Secure Therapist Communication
+- 📋 TreatPlan = Treatment Plan Coordination
+- 📊 ProgShar = Progress Sharing with consent
+- 🚑 EmergTeam = Emergency Response Team Alert
+- 📞 ParCont = Parent/Guardian Immediate Contact
+- 🆘 CrisRes = Crisis Resource Activation
+- 🎯 IntPrior = Intervention Priority Scoring
+- 🤝 CollPlan = Collaborative Care Planning
+- 🛡️ SafePlan = Safety Plan Implementation
+
 ## Professional Development Integration
 
 ```mermaid
 flowchart TD
-    A[Teacher Performance Data] --> B[PD Recommendation Engine]
-    B --> C[Skill Gap Analysis]
-    B --> D[Training Module Suggestions]
-    B --> E[Peer Mentoring Matching]
+    A[👨‍🏫 TeachPer] --> B[🎓 PDEngine]
+    B --> C[📊 SkillGap]
+    B --> D[📚 TrainMod]
+    B --> E[🤝 PeerMent]
     
-    C --> F[Classroom Management Skills]
-    C --> G[De-escalation Techniques]
-    C --> H[Cultural Competency]
+    C --> F[📋 ClassMgm]
+    C --> G[🕊️ DeEscal]
+    C --> H[🌍 CultComp]
     
-    D --> I[Micro-Learning Modules]
-    D --> J[Video-Based Training]
-    D --> K[Interactive Simulations]
+    D --> I[🔬 MicroLrn]
+    D --> J[📹 VideoTrn]
+    D --> K[🎮 IntSim]
     
-    E --> L[Experienced Teacher Matching]
-    E --> M[Cross-School Collaboration]
-    E --> N[Subject-Specific Mentoring]
+    E --> L[⭐ ExpMatch]
+    E --> M[🏫 CrossSch]
+    E --> N[📚 SubjMent]
     
-    F --> O[Targeted Skill Development]
-    I --> P[Just-in-Time Learning]
-    L --> Q[Peer Support Networks]
+    F --> O[🎯 TargSkill]
+    I --> P[⚡ JITLrn]
+    L --> Q[👥 PeerNet]
     
     style B fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style P fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style Q fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
 ```
+
+**Legend:**
+- 👨‍🏫 TeachPer = Teacher Performance Data
+- 🎓 PDEngine = PD Recommendation Engine
+- 📊 SkillGap = Skill Gap Analysis
+- 📚 TrainMod = Training Module Suggestions
+- 🤝 PeerMent = Peer Mentoring Matching
+- 📋 ClassMgm = Classroom Management Skills
+- 🕊️ DeEscal = De-escalation Techniques
+- 🌍 CultComp = Cultural Competency
+- 🔬 MicroLrn = Micro-Learning Modules
+- 📹 VideoTrn = Video-Based Training
+- 🎮 IntSim = Interactive Simulations
+- ⭐ ExpMatch = Experienced Teacher Matching
+- 🏫 CrossSch = Cross-School Collaboration
+- 📚 SubjMent = Subject-Specific Mentoring
+- 🎯 TargSkill = Targeted Skill Development
+- ⚡ JITLrn = Just-in-Time Learning
+- 👥 PeerNet = Peer Support Networks
 
 ## State Reporting & Compliance Integration
 

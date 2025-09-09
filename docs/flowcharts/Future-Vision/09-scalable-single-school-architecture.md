@@ -6,23 +6,23 @@
 
 ```mermaid
 flowchart TD
-    A[School Administration] --> B[Dynamic Kiosk<br/>Management]
-    B --> C[Add/Remove<br/>Kiosk Stations]
-    C --> D[Auto-Discovery<br/>System]
+    A[🏫 Admin] --> B[🔧 DynK]
+    B --> C[➕ Add/Rm]
+    C --> D[📡 Auto]
     
-    D --> E[Device Registration]
-    E --> F[QR Code Assignment]
-    F --> G[Automatic URL<br/>Generation]
+    D --> E[📋 Reg]
+    E --> F[📱 QR]
+    F --> G[🔗 URL]
     
-    G --> H[kiosk<br/>device-id-xyz]
-    G --> I[kiosk<br/>device-id-abc]
-    G --> J[kiosk<br/>device-id-def]
+    G --> H[K1-xyz]
+    G --> I[K2-abc]
+    G --> J[K3-def]
     
-    H --> K[Dynamic Queue<br/>Assignment]
-    I --> L[Dynamic Queue<br/>Assignment]
-    J --> M[Dynamic Queue<br/>Assignment]
+    H --> K[⚡ Queue]
+    I --> L[⚡ Queue]
+    J --> M[⚡ Queue]
     
-    K --> N[Load Balancing<br/>Across Kiosks]
+    K --> N[⚖️ Balance]
     L --> N
     M --> N
     
@@ -32,30 +32,44 @@ flowchart TD
     style N fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
 ```
 
+**Legend:**
+- 🏫 Admin = School Administration
+- 🔧 DynK = Dynamic Kiosk Management
+- ➕ Add/Rm = Add/Remove Kiosk Stations
+- 📡 Auto = Auto-Discovery System
+- 📋 Reg = Device Registration
+- 📱 QR = QR Code Assignment
+- 🔗 URL = Automatic URL Generation
+- K1-xyz = Kiosk device-id-xyz
+- K2-abc = Kiosk device-id-abc
+- K3-def = Kiosk device-id-def
+- ⚡ Queue = Dynamic Queue Assignment
+- ⚖️ Balance = Load Balancing Across Kiosks
+
 ## Advanced Queue Intelligence
 
 ```mermaid
 flowchart TD
-    A[Intelligent Queue System] --> B[Priority-Based Assignment]
-    B --> C[Student Priority Levels]
+    A[🧠 IQ] --> B[🎯 Prior]
+    B --> C[📊 Levels]
     
-    C --> D[High Priority: Emergency BSRs]
-    C --> E[Medium Priority: Standard BSRs]
-    C --> F[Low Priority: Follow-up Reflections]
+    C --> D[🔴 High]
+    C --> E[🟡 Med]
+    C --> F[🟢 Low]
     
-    D --> G[Immediate Assignment]
-    E --> H[Standard Queue Processing]
-    F --> I[Background Processing]
+    D --> G[⚡ Immed]
+    E --> H[📋 Std]
+    F --> I[⏳ BG]
     
-    G --> J[Interrupt Current Assignment if Needed]
-    H --> K[First-Come-First-Served]
-    I --> L[Fill Available Slots]
+    G --> J[🚨 Intr]
+    H --> K[📝 FCFS]
+    I --> L[🔄 Fill]
     
-    J --> M[Advanced Conflict Resolution]
+    J --> M[🔧 Resolve]
     K --> M
     L --> M
     
-    M --> N[Optimal Kiosk Distribution]
+    M --> N[⚖️ Opt]
     
     style A fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style B fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
@@ -63,30 +77,46 @@ flowchart TD
     style N fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
 ```
 
+**Legend:**
+- 🧠 IQ = Intelligent Queue System
+- 🎯 Prior = Priority-Based Assignment
+- 📊 Levels = Student Priority Levels
+- 🔴 High = High Priority Emergency BSRs
+- 🟡 Med = Medium Priority Standard BSRs
+- 🟢 Low = Low Priority Follow-up Reflections
+- ⚡ Immed = Immediate Assignment
+- 📋 Std = Standard Queue Processing
+- ⏳ BG = Background Processing
+- 🚨 Intr = Interrupt Current Assignment if Needed
+- 📝 FCFS = First-Come-First-Served
+- 🔄 Fill = Fill Available Slots
+- 🔧 Resolve = Advanced Conflict Resolution
+- ⚖️ Opt = Optimal Kiosk Distribution
+
 ## Enhanced Analytics & Reporting
 
 ```mermaid
 flowchart TD
-    A[Advanced Analytics Engine] --> B[Real-time Dashboards]
-    B --> C[Kiosk Utilization Metrics]
-    B --> D[Student Behavior Patterns]
-    B --> E[Teacher Efficiency Reports]
+    A[📊 AAE] --> B[⚡ Dash]
+    B --> C[🖥️ KUtil]
+    B --> D[👤 Behav]
+    B --> E[👨‍🏫 TEff]
     
-    C --> F[Peak Usage Times]
-    C --> G[Kiosk Performance Stats]
-    C --> H[Queue Wait Time Analysis]
+    C --> F[📈 Peak]
+    C --> G[⚡ Perf]
+    C --> H[⏱️ Wait]
     
-    D --> I[Behavioral Trend Identification]
-    D --> J[Intervention Success Rates]
-    D --> K[Student Progress Tracking]
+    D --> I[📉 Trend]
+    D --> J[✅ Succs]
+    D --> K[📊 Prog]
     
-    E --> L[BSR Processing Speed]
-    E --> M[Teacher Response Time]
-    E --> N[Review Quality Metrics]
+    E --> L[⚡ Speed]
+    E --> M[⏰ Resp]
+    E --> N[⭐ Qual]
     
-    F --> O[Predictive Kiosk Deployment]
-    I --> P[Proactive Intervention Recommendations]
-    L --> Q[Professional Development Insights]
+    F --> O[🔮 Pred]
+    I --> P[💡 Proact]
+    L --> Q[📚 PD]
     
     style A fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style B fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
@@ -95,36 +125,72 @@ flowchart TD
     style Q fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
 ```
 
+**Legend:**
+- 📊 AAE = Advanced Analytics Engine
+- ⚡ Dash = Real-time Dashboards
+- 🖥️ KUtil = Kiosk Utilization Metrics
+- 👤 Behav = Student Behavior Patterns
+- 👨‍🏫 TEff = Teacher Efficiency Reports
+- 📈 Peak = Peak Usage Times
+- ⚡ Perf = Kiosk Performance Stats
+- ⏱️ Wait = Queue Wait Time Analysis
+- 📉 Trend = Behavioral Trend Identification
+- ✅ Succs = Intervention Success Rates
+- 📊 Prog = Student Progress Tracking
+- ⚡ Speed = BSR Processing Speed
+- ⏰ Resp = Teacher Response Time
+- ⭐ Qual = Review Quality Metrics
+- 🔮 Pred = Predictive Kiosk Deployment
+- 💡 Proact = Proactive Intervention Recommendations
+- 📚 PD = Professional Development Insights
+
 ## Mobile Teacher Interface
 
 ```mermaid
 flowchart TD
-    A[Mobile Teacher App] --> B[Quick BSR Creation]
-    B --> C[Voice-to-Text Input]
-    C --> D[Auto-Student Recognition]
+    A[📱 MTA] --> B[⚡ Quick]
+    B --> C[🎤 Voice]
+    C --> D[🔍 Auto]
     
-    D --> E[Photo-Based Student ID]
-    D --> F[Classroom Roster Integration]
+    D --> E[📸 Photo]
+    D --> F[📋 Roster]
     
-    E --> G[Instant BSR Generation]
+    E --> G[⚡ Gen]
     F --> G
     
-    G --> H[Push to Queue]
-    H --> I[Real-time Status Updates]
+    G --> H[📤 Push]
+    H --> I[⚡ Status]
     
-    I --> J[Student Assigned Notification]
-    J --> K[Completion Alerts]
-    K --> L[Review Ready Notifications]
+    I --> J[🔔 Assign]
+    J --> K[✅ Done]
+    K --> L[📝 Review]
     
-    B --> M[Template Library]
-    M --> N[Common Behavior Patterns]
-    N --> O[One-Tap BSR Creation]
+    B --> M[📚 Templ]
+    M --> N[🔄 Common]
+    N --> O[👆 OneTap]
     
     style A fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style C fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style E fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
 ```
+
+**Legend:**
+- 📱 MTA = Mobile Teacher App
+- ⚡ Quick = Quick BSR Creation
+- 🎤 Voice = Voice-to-Text Input
+- 🔍 Auto = Auto-Student Recognition
+- 📸 Photo = Photo-Based Student ID
+- 📋 Roster = Classroom Roster Integration
+- ⚡ Gen = Instant BSR Generation
+- 📤 Push = Push to Queue
+- ⚡ Status = Real-time Status Updates
+- 🔔 Assign = Student Assigned Notification
+- ✅ Done = Completion Alerts
+- 📝 Review = Review Ready Notifications
+- 📚 Templ = Template Library
+- 🔄 Common = Common Behavior Patterns
+- 👆 OneTap = One-Tap BSR Creation
 
 ## Foundation Dependencies
 

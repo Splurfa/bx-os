@@ -6,25 +6,25 @@
 
 ```mermaid
 flowchart TD
-    A[Review System<br/>Dashboard] --> B[Monitor Queue<br/>Status]
-    B --> C[Check Kiosk<br/>Availability]
-    C --> D[Review Overnight<br/>Activity]
-    D --> E[Audit BSR<br/>Completion Rates]
-    E --> F[Review Teacher<br/>Response Times]
-    F --> G[Monitor Student<br/>Outcomes]
-    G --> H[Identify System<br/>Bottlenecks]
-    H --> I[Manage Teacher<br/>Accounts]
-    I --> J[Review User<br/>Permissions]
-    J --> K[Handle Access<br/>Issues]
-    K --> L[Import New<br/>Student Data]
-    L --> M[Generate Weekly<br/>Reports]
-    M --> N[Analyze Behavioral<br/>Trends]
-    N --> O[Create Compliance<br/>Reports]
-    O --> P[Share Insights<br/>with Leadership]
-    P --> Q[Review Feedback<br/>from Users]
-    Q --> R[Plan System<br/>Enhancements]
-    R --> S[Coordinate Professional<br/>Development]
-    S --> T[Optimize System<br/>Performance]
+    A[📊 SysDash] --> B[👀 Queue]
+    B --> C[🖥️ Kiosk]
+    C --> D[🌙 Night]
+    D --> E[📊 BSRAud]
+    E --> F[⏰ TeachResp]
+    F --> G[👤 StudOut]
+    G --> H[🔍 Bottle]
+    H --> I[👨‍🏫 ManTeach]
+    I --> J[🔐 UserPerm]
+    J --> K[🔧 Access]
+    K --> L[📥 StudData]
+    L --> M[📋 WeekRep]
+    M --> N[📈 BehTrend]
+    N --> O[📄 Comply]
+    O --> P[💼 Leader]
+    P --> Q[💭 Feedback]
+    Q --> R[🔧 SysEnh]
+    R --> S[📚 PD]
+    S --> T[⚡ Optimize]
     
     style A fill:#e3f2fd,stroke:#2196f3
     style M fill:#e8f5e8,stroke:#4caf50
@@ -32,41 +32,87 @@ flowchart TD
     style T fill:#f3e5f5,stroke:#9c27b0
 ```
 
+**Legend:**
+- 📊 SysDash = Review System Dashboard
+- 👀 Queue = Monitor Queue Status
+- 🖥️ Kiosk = Check Kiosk Availability
+- 🌙 Night = Review Overnight Activity
+- 📊 BSRAud = Audit BSR Completion Rates
+- ⏰ TeachResp = Review Teacher Response Times
+- 👤 StudOut = Monitor Student Outcomes
+- 🔍 Bottle = Identify System Bottlenecks
+- 👨‍🏫 ManTeach = Manage Teacher Accounts
+- 🔐 UserPerm = Review User Permissions
+- 🔧 Access = Handle Access Issues
+- 📥 StudData = Import New Student Data
+- 📋 WeekRep = Generate Weekly Reports
+- 📈 BehTrend = Analyze Behavioral Trends
+- 📄 Comply = Create Compliance Reports
+- 💼 Leader = Share Insights with Leadership
+- 💭 Feedback = Review Feedback from Users
+- 🔧 SysEnh = Plan System Enhancements
+- 📚 PD = Coordinate Professional Development
+- ⚡ Optimize = Optimize System Performance
+
 ## Administrative Dashboard Overview
 
 ```mermaid
 flowchart TD
-    A[Admin Login] --> B[Administrative<br/>Dashboard]
-    B --> C[System Status<br/>Overview]
-    B --> D[User Management<br/>Panel]
-    B --> E[Analytics &<br/>Reports]
-    B --> F[Configuration<br/>Settings]
+    A[🔐 Login] --> B[📊 AdminDash]
+    B --> C[📈 SysStatus]
+    B --> D[👥 UserMgmt]
+    B --> E[📊 Analytics]
+    B --> F[⚙️ Config]
     
-    C --> G[Active Sessions<br/>Monitor]
-    C --> H[Queue Status<br/>Display]
-    C --> I[Kiosk<br/>Availability]
-    C --> J[System Health<br/>Metrics]
+    C --> G[🔄 Sessions]
+    C --> H[📋 QueueStat]
+    C --> I[🖥️ KioskAvail]
+    C --> J[❤️ Health]
     
-    D --> K[Teacher Account<br/>Management]
-    D --> L[Student Data<br/>Management]
-    D --> M[Role & Permission<br/>Control]
-    D --> N[User Activity<br/>Logs]
+    D --> K[👨‍🏫 TeachAcc]
+    D --> L[👤 StudData]
+    D --> M[🔐 RolePerm]
+    D --> N[📜 ActLog]
     
-    E --> O[Behavioral Trend<br/>Analysis]
-    E --> P[Usage<br/>Statistics]
-    E --> Q[Outcome<br/>Reporting]
-    E --> R[Compliance<br/>Documentation]
+    E --> O[📈 BehTrend]
+    E --> P[📊 Usage]
+    E --> Q[📄 Outcome]
+    E --> R[📋 Comply]
     
-    F --> S[System<br/>Configuration]
-    F --> T[Notification<br/>Settings]
-    F --> U[Integration<br/>Management]
-    F --> V[Security<br/>Settings]
+    F --> S[⚙️ SysConf]
+    F --> T[🔔 NotifSet]
+    F --> U[🔗 IntMgmt]
+    F --> V[🔒 Security]
     
     style B fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style G fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style S fill:#fff3e0,stroke:#ff9800,stroke-width:2px
 ```
+
+**Legend:**
+- 🔐 Login = Admin Login
+- 📊 AdminDash = Administrative Dashboard
+- 📈 SysStatus = System Status Overview
+- 👥 UserMgmt = User Management Panel
+- 📊 Analytics = Analytics & Reports
+- ⚙️ Config = Configuration Settings
+- 🔄 Sessions = Active Sessions Monitor
+- 📋 QueueStat = Queue Status Display
+- 🖥️ KioskAvail = Kiosk Availability
+- ❤️ Health = System Health Metrics
+- 👨‍🏫 TeachAcc = Teacher Account Management
+- 👤 StudData = Student Data Management
+- 🔐 RolePerm = Role & Permission Control
+- 📜 ActLog = User Activity Logs
+- 📈 BehTrend = Behavioral Trend Analysis
+- 📊 Usage = Usage Statistics
+- 📄 Outcome = Outcome Reporting
+- 📋 Comply = Compliance Documentation
+- ⚙️ SysConf = System Configuration
+- 🔔 NotifSet = Notification Settings
+- 🔗 IntMgmt = Integration Management
+- 🔒 Security = Security Settings
 
 ## Real-time System Monitoring
 

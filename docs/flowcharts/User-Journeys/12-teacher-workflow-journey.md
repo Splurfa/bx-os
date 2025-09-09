@@ -6,25 +6,25 @@
 
 ```mermaid
 flowchart TD
-    A[Observe Student<br/>Behavior] --> B[Assess Intervention<br/>Need]
-    B --> C[Decide on<br/>BSR Creation]
-    C --> D[Access BSR<br/>Creation Form]
-    D --> E[Select Student<br/>from List]
-    E --> F[Describe Behavior<br/>Incident]
-    F --> G[Set Priority<br/>Level]
-    G --> H[Submit BSR<br/>to Queue]
-    H --> I[Monitor Queue<br/>Status]
-    I --> J[Receive Assignment<br/>Notification]
-    J --> K[Track Student<br/>Progress]
-    K --> L[Receive Completion<br/>Alert]
-    L --> M[Read Student<br/>Reflection]
-    M --> N[Evaluate Response<br/>Quality]
-    N --> O[Provide Constructive<br/>Feedback]
-    O --> P[Approve or Request<br/>Revision]
-    P --> Q[Create Growth<br/>Plan]
-    Q --> R[Monitor<br/>Implementation]
-    R --> S[Document<br/>Progress]
-    S --> T[Communicate<br/>with Family]
+    A[👁️ Observe] --> B[🤔 Assess]
+    B --> C[✅ Decide]
+    C --> D[📱 Access]
+    D --> E[👤 Select]
+    E --> F[📝 Describe]
+    F --> G[🎯 Priority]
+    G --> H[📤 Submit]
+    H --> I[👀 Monitor]
+    I --> J[🔔 Receive]
+    J --> K[📊 Track]
+    K --> L[✅ Alert]
+    L --> M[📖 Read]
+    M --> N[⭐ Evaluate]
+    N --> O[💭 Feedback]
+    O --> P[✅ Approve]
+    P --> Q[📋 Growth]
+    Q --> R[👀 Monitor]
+    R --> S[📄 Document]
+    S --> T[👨‍👩‍👧‍👦 Family]
     
     style A fill:#ffebee,stroke:#d32f2f
     style H fill:#e3f2fd,stroke:#2196f3
@@ -33,46 +33,68 @@ flowchart TD
     style T fill:#f3e5f5,stroke:#9c27b0
 ```
 
+**Legend:**
+- 👁️ Observe = Observe Student Behavior
+- 🤔 Assess = Assess Intervention Need
+- ✅ Decide = Decide on BSR Creation
+- 📱 Access = Access BSR Creation Form
+- 👤 Select = Select Student from List
+- 📝 Describe = Describe Behavior Incident
+- 🎯 Priority = Set Priority Level
+- 📤 Submit = Submit BSR to Queue
+- 👀 Monitor = Monitor Queue Status
+- 🔔 Receive = Receive Assignment Notification
+- 📊 Track = Track Student Progress
+- ✅ Alert = Receive Completion Alert
+- 📖 Read = Read Student Reflection
+- ⭐ Evaluate = Evaluate Response Quality
+- 💭 Feedback = Provide Constructive Feedback
+- ✅ Approve = Approve or Request Revision
+- 📋 Growth = Create Growth Plan
+- 👀 Monitor = Monitor Implementation
+- 📄 Document = Document Progress
+- 👨‍👩‍👧‍👦 Family = Communicate with Family
+
 ## Detailed Teacher Workflow
 
 ```mermaid
 flowchart TD
-    A[Behavior Incident Observed] --> B[Immediate Response]
-    B --> C{Needs BSR?}
-    C -->|Minor| D[Handle in Classroom]
-    C -->|Significant| E[Create BSR]
+    A[👁️ Incident] --> B[⚡ Response]
+    B --> C{❓ BSR}
+    C -->|🔵| D[🏫 Handle]
+    C -->|🔴| E[📝 Create]
     
-    E --> F[Access Teacher Dashboard]
-    F --> G[Click Create New BSR]
-    G --> H[Student Selection Interface]
+    E --> F[📊 Dash]
+    F --> G[➕ NewBSR]
+    G --> H[👤 StudSel]
     
-    H --> I[Search Student by Name]
-    I --> J[Select Correct Student]
-    J --> K[BSR Form Interface]
+    H --> I[🔍 Search]
+    I --> J[✅ Select]
+    J --> K[📋 Form]
     
-    K --> L[Describe Behavior Incident]
-    L --> M[Set Priority Level]
-    M --> N[Add Context/Notes]
-    N --> O[Submit to Queue]
+    K --> L[📝 Describe]
+    L --> M[🎯 Priority]
+    M --> N[📄 Notes]
+    N --> O[📤 Submit]
     
-    O --> P[Student Added to Queue]
-    P --> Q[Monitor Queue Status]
-    Q --> R[Student Assigned to Kiosk]
+    O --> P[➕ Added]
+    P --> Q[👀 Monitor]
+    Q --> R[🖥️ Assigned]
     
-    R --> S[Receive Completion Notification]
-    S --> T[Access Student Response]
-    T --> U[Review Reflection Quality]
+    R --> S[🔔 Done]
+    S --> T[📖 Access]
+    T --> U[⭐ Review]
     
-    U --> V{Response Adequate?}
-    V -->|No| W[Request Additional Reflection]
-    V -->|Yes| X[Provide Positive Feedback]
+    U --> V{✅ OK}
+    V -->|❌| W[📝 More]
+    V -->|✅| X[👍 Pos]
     
-    W --> Y[Send Back to Student]
+    W --> Y[↩️ Back]
     Y --> R
     
-    X --> Z[Create Growth/Action Plan]
-    Z --> AA[Document in System]
-    AA --> BB[Communicate with Family]
+    X --> Z[📋 Plan]
+    Z --> AA[📄 Doc]
+    AA --> BB[👨‍👩‍👧‍👦 Fam]
     
     style F fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style H fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
@@ -82,41 +104,98 @@ flowchart TD
     style Z fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
 ```
 
+**Legend:**
+- 👁️ Incident = Behavior Incident Observed
+- ⚡ Response = Immediate Response
+- ❓ BSR = Needs BSR Decision
+- 🔵 = Minor Issue
+- 🔴 = Significant Issue
+- 🏫 Handle = Handle in Classroom
+- 📝 Create = Create BSR
+- 📊 Dash = Access Teacher Dashboard
+- ➕ NewBSR = Click Create New BSR
+- 👤 StudSel = Student Selection Interface
+- 🔍 Search = Search Student by Name
+- ✅ Select = Select Correct Student
+- 📋 Form = BSR Form Interface
+- 📝 Describe = Describe Behavior Incident
+- 🎯 Priority = Set Priority Level
+- 📄 Notes = Add Context/Notes
+- 📤 Submit = Submit to Queue
+- ➕ Added = Student Added to Queue
+- 👀 Monitor = Monitor Queue Status
+- 🖥️ Assigned = Student Assigned to Kiosk
+- 🔔 Done = Receive Completion Notification
+- 📖 Access = Access Student Response
+- ⭐ Review = Review Reflection Quality
+- ✅ OK = Response Adequate Decision
+- ❌ = No
+- ✅ = Yes
+- 📝 More = Request Additional Reflection
+- 👍 Pos = Provide Positive Feedback
+- ↩️ Back = Send Back to Student
+- 📋 Plan = Create Growth/Action Plan
+- 📄 Doc = Document in System
+- 👨‍👩‍👧‍👦 Fam = Communicate with Family
+
 ## Teacher Dashboard Experience
 
 ```mermaid
 flowchart TD
-    A[Teacher Logs In] --> B[Teacher Dashboard]
-    B --> C[Active BSRs<br/>Overview]
-    B --> D[Queue Status<br/>Display]
-    B --> E[Recent<br/>Notifications]
-    B --> F[Quick Actions<br/>Panel]
+    A[🔐 Login] --> B[📊 Dash]
+    B --> C[⚡ Active]
+    B --> D[📋 Queue]
+    B --> E[🔔 Recent]
+    B --> F[⚡ Quick]
     
-    C --> G[In Progress<br/>BSRs]
-    C --> H[Pending Review<br/>BSRs]
-    C --> I[Completed<br/>BSRs]
+    C --> G[🔄 InProg]
+    C --> H[📝 Pending]
+    C --> I[✅ Done]
     
-    D --> J[Students<br/>in Queue]
-    D --> K[Available<br/>Kiosks]
-    D --> L[Wait Time<br/>Estimates]
+    D --> J[👤 Students]
+    D --> K[🖥️ Kiosks]
+    D --> L[⏱️ Wait]
     
-    E --> M[Student<br/>Completions]
-    E --> N[System Alerts]
-    E --> O[Admin Messages]
+    E --> M[✅ Complete]
+    E --> N[🚨 Alerts]
+    E --> O[📧 Admin]
     
-    F --> P[Create New<br/>BSR]
-    F --> Q[Student Search]
-    F --> R[Reports Access]
+    F --> P[➕ New]
+    F --> Q[🔍 Search]
+    F --> R[📊 Reports]
     
-    G --> S[Monitor Progress]
-    H --> T[Review & Respond]
-    I --> U[View History]
+    G --> S[👀 Monitor]
+    H --> T[📝 Review]
+    I --> U[📜 History]
     
     style B fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style P fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style T fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style S fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
 ```
+
+**Legend:**
+- 🔐 Login = Teacher Logs In
+- 📊 Dash = Teacher Dashboard
+- ⚡ Active = Active BSRs Overview
+- 📋 Queue = Queue Status Display
+- 🔔 Recent = Recent Notifications
+- ⚡ Quick = Quick Actions Panel
+- 🔄 InProg = In Progress BSRs
+- 📝 Pending = Pending Review BSRs
+- ✅ Done = Completed BSRs
+- 👤 Students = Students in Queue
+- 🖥️ Kiosks = Available Kiosks
+- ⏱️ Wait = Wait Time Estimates
+- ✅ Complete = Student Completions
+- 🚨 Alerts = System Alerts
+- 📧 Admin = Admin Messages
+- ➕ New = Create New BSR
+- 🔍 Search = Student Search
+- 📊 Reports = Reports Access
+- 👀 Monitor = Monitor Progress
+- 📝 Review = Review & Respond
+- 📜 History = View History
 
 ## BSR Creation Process
 
@@ -152,46 +231,73 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-    A[Student Completes Reflection] --> B[Teacher Notification]
-    B --> C[Access Student Response]
-    C --> D[Read Student Answers]
+    A[✅ Complete] --> B[🔔 Notif]
+    B --> C[📖 Access]
+    C --> D[📝 Read]
     
-    D --> E{Evaluate Response Quality}
-    E -->|Poor Quality| F[Identify Issues]
-    E -->|Good Quality| G[Acknowledge Effort]
+    D --> E{⭐ Eval}
+    E -->|❌| F[🔍 Issues]
+    E -->|✅| G[👍 Effort]
     
-    F --> H[Lacks Detail]
-    F --> I[Avoids Responsibility]
-    F --> J[Shows No Understanding]
+    F --> H[📄 Detail]
+    F --> I[🙈 Avoid]
+    F --> J[❓ NoUnder]
     
-    G --> K[Shows Understanding]
-    G --> L[Takes Responsibility]
-    G --> M[Identifies Solutions]
+    G --> K[💡 Under]
+    G --> L[✋ Resp]
+    G --> M[🔧 Solutions]
     
-    H --> N[Request More Detail]
-    I --> O[Encourage Ownership]
-    J --> P[Guide Understanding]
+    H --> N[📝 More]
+    I --> O[💪 Own]
+    J --> P[🎯 Guide]
     
-    K --> Q[Provide Positive Feedback]
-    L --> R[Acknowledge Growth]
-    M --> S[Support Solution Implementation]
+    K --> Q[👍 PosFeed]
+    L --> R[⭐ Growth]
+    M --> S[🛠️ Support]
     
-    N --> T[Send Back for Revision]
+    N --> T[↩️ Back]
     O --> T
     P --> T
     
-    Q --> U[Approve BSR]
+    Q --> U[✅ Approve]
     R --> U
     S --> U
     
-    T --> V[Student Returns to Kiosk]
-    U --> W[Create Growth Plan]
+    T --> V[🖥️ Return]
+    U --> W[📋 Plan]
     
     style G fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style Q fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style U fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
     style W fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
 ```
+
+**Legend:**
+- ✅ Complete = Student Completes Reflection
+- 🔔 Notif = Teacher Notification
+- 📖 Access = Access Student Response
+- 📝 Read = Read Student Answers
+- ⭐ Eval = Evaluate Response Quality
+- ❌ = Poor Quality
+- ✅ = Good Quality
+- 🔍 Issues = Identify Issues
+- 👍 Effort = Acknowledge Effort
+- 📄 Detail = Lacks Detail
+- 🙈 Avoid = Avoids Responsibility
+- ❓ NoUnder = Shows No Understanding
+- 💡 Under = Shows Understanding
+- ✋ Resp = Takes Responsibility
+- 🔧 Solutions = Identifies Solutions
+- 📝 More = Request More Detail
+- 💪 Own = Encourage Ownership
+- 🎯 Guide = Guide Understanding
+- 👍 PosFeed = Provide Positive Feedback
+- ⭐ Growth = Acknowledge Growth
+- 🛠️ Support = Support Solution Implementation
+- ↩️ Back = Send Back for Revision
+- ✅ Approve = Approve BSR
+- 🖥️ Return = Student Returns to Kiosk
+- 📋 Plan = Create Growth Plan
 
 ## Teacher Experience Phases
 

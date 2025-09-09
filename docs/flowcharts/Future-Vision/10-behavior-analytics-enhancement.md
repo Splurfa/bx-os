@@ -6,26 +6,26 @@
 
 ```mermaid
 flowchart TD
-    A[Student BSR Data] --> B[AI Analysis<br/>Engine]
-    B --> C[Natural Language<br/>Processing]
-    B --> D[Pattern Recognition]
-    B --> E[Sentiment Analysis]
+    A[📊 BSR] --> B[🤖 AI]
+    B --> C[📝 NLP]
+    B --> D[🔍 Pattern]
+    B --> E[😊 Sent]
     
-    C --> F[Extract Key<br/>Themes]
-    D --> G[Identify Behavioral<br/>Patterns]
-    E --> H[Assess Student<br/>Emotional State]
+    C --> F[🔑 Themes]
+    D --> G[📈 BehPat]
+    E --> H[❤️ EmoSt]
     
-    F --> I[Common Triggers<br/>Identification]
-    G --> J[Behavioral Trend<br/>Mapping]
-    H --> K[Emotional Support<br/>Recommendations]
+    F --> I[⚡ Triggers]
+    G --> J[📊 TrendMap]
+    H --> K[🩺 EmoSup]
     
-    I --> L[Proactive Intervention<br/>Suggestions]
-    J --> M[Individual Student<br/>Profiles]
-    K --> N[Mental Health<br/>Alert System]
+    I --> L[💡 ProInt]
+    J --> M[👤 IndProf]
+    K --> N[🚨 MHAlert]
     
-    L --> O[Teacher Action<br/>Recommendations]
-    M --> P[Personalized<br/>Support Plans]
-    N --> Q[Counselor<br/>Notifications]
+    L --> O[👨‍🏫 TeachAct]
+    M --> P[🎯 PersPlan]
+    N --> Q[👨‍⚕️ CounNot]
     
     style B fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style I fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
@@ -34,33 +34,52 @@ flowchart TD
     style P fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
 ```
 
+**Legend:**
+- 📊 BSR = Student BSR Data
+- 🤖 AI = AI Analysis Engine
+- 📝 NLP = Natural Language Processing
+- 🔍 Pattern = Pattern Recognition
+- 😊 Sent = Sentiment Analysis
+- 🔑 Themes = Extract Key Themes
+- 📈 BehPat = Identify Behavioral Patterns
+- ❤️ EmoSt = Assess Student Emotional State
+- ⚡ Triggers = Common Triggers Identification
+- 📊 TrendMap = Behavioral Trend Mapping
+- 🩺 EmoSup = Emotional Support Recommendations
+- 💡 ProInt = Proactive Intervention Suggestions
+- 👤 IndProf = Individual Student Profiles
+- 🚨 MHAlert = Mental Health Alert System
+- 👨‍🏫 TeachAct = Teacher Action Recommendations
+- 🎯 PersPlan = Personalized Support Plans
+- 👨‍⚕️ CounNot = Counselor Notifications
+
 ## Predictive Intervention System
 
 ```mermaid
 flowchart TD
-    A[Historical BSR Data] --> B[Machine Learning Model]
-    B --> C[Risk Assessment Algorithm]
-    C --> D[Student Risk Scoring]
+    A[📈 Hist] --> B[🤖 ML]
+    B --> C[⚠️ Risk]
+    C --> D[📊 Score]
     
-    D --> E{Risk Level}
-    E -->|High Risk| F[Immediate Intervention Alert]
-    E -->|Medium Risk| G[Proactive Support Recommendation]
-    E -->|Low Risk| H[Monitoring and Prevention]
+    D --> E{🎯 Level}
+    E -->|🔴| F[🚨 Immed]
+    E -->|🟡| G[💡 Proact]
+    E -->|🟢| H[👀 Monitor]
     
-    F --> I[Emergency Response Protocol]
-    G --> J[Targeted Support Strategies]
-    H --> K[Preventive Measures]
+    F --> I[🚑 Emerg]
+    G --> J[🎯 Target]
+    H --> K[🛡️ Prev]
     
-    I --> L[Counselor Immediate Contact]
-    I --> M[Parent Notification]
-    I --> N[Admin Alert]
+    I --> L[👨‍⚕️ Coun]
+    I --> M[📞 Parent]
+    I --> N[⚡ Admin]
     
-    J --> O[Teacher Coaching Recommendations]
-    J --> P[Peer Support Programs]
-    J --> Q[Environmental Modifications]
+    J --> O[👨‍🏫 Coach]
+    J --> P[👥 Peer]
+    J --> Q[🏠 Env]
     
-    K --> R[Positive Reinforcement Strategies]
-    K --> S[Skill Building Opportunities]
+    K --> R[⭐ Pos]
+    K --> S[🛠️ Skill]
     
     style B fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style C fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
@@ -70,38 +89,62 @@ flowchart TD
     style K fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
 ```
 
+**Legend:**
+- 📈 Hist = Historical BSR Data
+- 🤖 ML = Machine Learning Model
+- ⚠️ Risk = Risk Assessment Algorithm
+- 📊 Score = Student Risk Scoring
+- 🎯 Level = Risk Level Assessment
+- 🔴 = High Risk
+- 🟡 = Medium Risk
+- 🟢 = Low Risk
+- 🚨 Immed = Immediate Intervention Alert
+- 💡 Proact = Proactive Support Recommendation
+- 👀 Monitor = Monitoring and Prevention
+- 🚑 Emerg = Emergency Response Protocol
+- 🎯 Target = Targeted Support Strategies
+- 🛡️ Prev = Preventive Measures
+- 👨‍⚕️ Coun = Counselor Immediate Contact
+- 📞 Parent = Parent Notification
+- ⚡ Admin = Admin Alert
+- 👨‍🏫 Coach = Teacher Coaching Recommendations
+- 👥 Peer = Peer Support Programs
+- 🏠 Env = Environmental Modifications
+- ⭐ Pos = Positive Reinforcement Strategies
+- 🛠️ Skill = Skill Building Opportunities
+
 ## Behavioral Trend Dashboard
 
 ```mermaid
 flowchart TD
-    A[Analytics Dashboard] --> B[School-Wide Trends]
-    B --> C[Grade-Level Analysis]
-    B --> D[Time-Based Patterns]
-    B --> E[Location-Based Incidents]
+    A[📊 Dash] --> B[🏫 Trends]
+    B --> C[📚 Grade]
+    B --> D[⏰ Time]
+    B --> E[📍 Loc]
     
-    C --> F[6th Grade Behavioral Patterns]
-    C --> G[7th Grade Behavioral Patterns]
-    C --> H[8th Grade Behavioral Patterns]
+    C --> F[6️⃣ G6]
+    C --> G[7️⃣ G7]
+    C --> H[8️⃣ G8]
     
-    D --> I[Daily Incident Patterns]
-    D --> J[Weekly Trend Analysis]
-    D --> K[Seasonal Behavior Changes]
+    D --> I[📅 Daily]
+    D --> J[📊 Weekly]
+    D --> K[🌱 Season]
     
-    E --> L[Classroom Hotspots]
-    E --> M[Common Area Issues]
-    E --> N[Transition Time Problems]
+    E --> L[🔥 Hot]
+    E --> M[🏛️ Common]
+    E --> N[🚶 Trans]
     
-    F --> O[Grade-Specific Interventions]
+    F --> O[🎯 GradInt]
     G --> O
     H --> O
     
-    I --> P[Schedule Optimization]
-    J --> Q[Weekly Planning Insights]
-    K --> R[Seasonal Preparation]
+    I --> P[⏰ SchedOpt]
+    J --> Q[📋 WeekPlan]
+    K --> R[🌿 SeasonPr]
     
-    L --> S[Environmental Modifications]
-    M --> T[Supervision Adjustments]
-    N --> U[Transition Improvements]
+    L --> S[🏠 EnvMod]
+    M --> T[👁️ SupAdj]
+    N --> U[🔄 TransImp]
     
     style A fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style O fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
@@ -109,38 +152,61 @@ flowchart TD
     style S fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
 ```
 
+**Legend:**
+- 📊 Dash = Analytics Dashboard
+- 🏫 Trends = School-Wide Trends
+- 📚 Grade = Grade-Level Analysis
+- ⏰ Time = Time-Based Patterns
+- 📍 Loc = Location-Based Incidents
+- 6️⃣ G6 = 6th Grade Behavioral Patterns
+- 7️⃣ G7 = 7th Grade Behavioral Patterns
+- 8️⃣ G8 = 8th Grade Behavioral Patterns
+- 📅 Daily = Daily Incident Patterns
+- 📊 Weekly = Weekly Trend Analysis
+- 🌱 Season = Seasonal Behavior Changes
+- 🔥 Hot = Classroom Hotspots
+- 🏛️ Common = Common Area Issues
+- 🚶 Trans = Transition Time Problems
+- 🎯 GradInt = Grade-Specific Interventions
+- ⏰ SchedOpt = Schedule Optimization
+- 📋 WeekPlan = Weekly Planning Insights
+- 🌿 SeasonPr = Seasonal Preparation
+- 🏠 EnvMod = Environmental Modifications
+- 👁️ SupAdj = Supervision Adjustments
+- 🔄 TransImp = Transition Improvements
+
 ## Individual Student Analytics
 
 ```mermaid
 flowchart TD
-    A[Individual Student Profile] --> B[Behavioral History Analysis]
-    B --> C[Trigger Pattern Identification]
-    C --> D[Success Strategy Recognition]
+    A[👤 Profile] --> B[📊 BehHist]
+    B --> C[⚡ TrigPat]
+    C --> D[✅ SuccStrat]
     
-    D --> E[Personalized Intervention Plan]
-    E --> F[Recommended Strategies]
-    E --> G[Environmental Supports]
-    E --> H[Skill Development Goals]
+    D --> E[🎯 PersPlan]
+    E --> F[💡 RecStrat]
+    E --> G[🏠 EnvSup]
+    E --> H[🛠️ SkillDev]
     
-    F --> I[Communication Techniques]
-    F --> J[De-escalation Methods]
-    F --> K[Motivation Strategies]
+    F --> I[💬 CommTech]
+    F --> J[🕊️ DeEscal]
+    F --> K[🎯 MotivStr]
     
-    G --> L[Seating Arrangements]
-    G --> M[Classroom Modifications]
-    G --> N[Schedule Adjustments]
+    G --> L[💺 Seating]
+    G --> M[🏫 ClassMod]
+    G --> N[⏰ SchedAdj]
     
-    H --> O[Social Skills Training]
-    H --> P[Self-Regulation Techniques]
-    H --> Q[Academic Support Needs]
+    H --> O[🤝 SocSkill]
+    H --> P[🧘 SelfReg]
+    H --> Q[📚 AcadSup]
     
-    I --> R[Teacher Implementation Guide]
+    I --> R[👨‍🏫 TeachGu]
     J --> R
     K --> R
-    L --> S[Environment Team Actions]
+    L --> S[🏠 EnvTeam]
     M --> S
     N --> S
-    O --> T[Student Growth Plan]
+    O --> T[📈 GrowPlan]
     P --> T
     Q --> T
     
@@ -149,6 +215,28 @@ flowchart TD
     style S fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     style T fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
 ```
+
+**Legend:**
+- 👤 Profile = Individual Student Profile
+- 📊 BehHist = Behavioral History Analysis
+- ⚡ TrigPat = Trigger Pattern Identification
+- ✅ SuccStrat = Success Strategy Recognition
+- 🎯 PersPlan = Personalized Intervention Plan
+- 💡 RecStrat = Recommended Strategies
+- 🏠 EnvSup = Environmental Supports
+- 🛠️ SkillDev = Skill Development Goals
+- 💬 CommTech = Communication Techniques
+- 🕊️ DeEscal = De-escalation Methods
+- 🎯 MotivStr = Motivation Strategies
+- 💺 Seating = Seating Arrangements
+- 🏫 ClassMod = Classroom Modifications
+- ⏰ SchedAdj = Schedule Adjustments
+- 🤝 SocSkill = Social Skills Training
+- 🧘 SelfReg = Self-Regulation Techniques
+- 📚 AcadSup = Academic Support Needs
+- 👨‍🏫 TeachGu = Teacher Implementation Guide
+- 🏠 EnvTeam = Environment Team Actions
+- 📈 GrowPlan = Student Growth Plan
 
 ## AI-Generated Insights
 
