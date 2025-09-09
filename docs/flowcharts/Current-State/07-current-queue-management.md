@@ -8,21 +8,21 @@
 
 ```mermaid
 flowchart TD
-    A[Teacher Creates BSR] --> B[✅ Student Added<br/>to Queue Working]
-    B --> C[✅ Queue Position<br/>Calculated Implemented]
-    C --> D[✅ Real-time Queue<br/>Update Functional]
+    A["`Teacher Creates BSR`"] --> B["`✅ Student Added to Queue Working`"]
+    B --> C["`✅ Queue Position Calculated Implemented`"]
+    C --> D["`✅ Real-time Queue Update Functional`"]
     
-    D --> E{Kiosk Available?}
-    E -->|Yes| F[✅ Auto-assign to<br/>Available Kiosk Implemented]
-    E -->|No| G[✅ Student Waits<br/>in Queue Working]
+    D --> E{"`Kiosk Available?`"}
+    E -->|Yes| F["`✅ Auto-assign to Available Kiosk Implemented`"]
+    E -->|No| G["`✅ Student Waits in Queue Working`"]
     
-    F --> H[✅ Student Status:<br/>assigned Working]
-    G --> I[✅ Student Status:<br/>pending Working]
+    F --> H["`✅ Student Status: assigned Working`"]
+    G --> I["`✅ Student Status: pending Working`"]
     
-    H --> J[✅ Student Completes<br/>BSR Working]
-    J --> K[✅ Student Status:<br/>completed Working]
-    K --> L[✅ Remove from<br/>Queue Implemented]
-    L --> M[✅ Auto-assign<br/>Next Student Implemented]
+    H --> J["`✅ Student Completes BSR Working`"]
+    J --> K["`✅ Student Status: completed Working`"]
+    K --> L["`✅ Remove from Queue Implemented`"]
+    L --> M["`✅ Auto-assign Next Student Implemented`"]
     
     classDef working fill:#d4edda,stroke:#155724,color:#155724
     

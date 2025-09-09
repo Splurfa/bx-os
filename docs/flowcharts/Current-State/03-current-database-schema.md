@@ -120,17 +120,17 @@ SELECT COUNT(*) FROM auth.users; -- Returns: 4 users
 
 ```mermaid
 flowchart TD
-    A[Google OAuth Login] --> B[✅ auth.users Record Created]
-    B --> C[✅ profiles Record Auto-Created]
-    C --> D[✅ Role Assignment Working]
+    A["`Google OAuth Login`"] --> B["`✅ auth.users Record Created`"]
+    B --> C["`✅ profiles Record Auto-Created`"]
+    C --> D["`✅ Role Assignment Working`"]
     
-    D --> E[Teacher Dashboard Access]
-    E --> F[✅ Student Selection Available]
-    F --> G[⚠️ Grade Filtering Needed]
+    D --> E["`Teacher Dashboard Access`"]
+    E --> F["`✅ Student Selection Available`"]
+    F --> G["`⚠️ Grade Filtering Needed`"]
     
-    G --> H[BSR Creation]
-    H --> I[✅ Queue Item Created]
-    I --> J[✅ Real-time Updates Working]
+    G --> H["`BSR Creation`"]
+    H --> I["`✅ Queue Item Created`"]
+    I --> J["`✅ Real-time Updates Working`"]
     
     classDef functional fill:#d4edda,stroke:#155724,color:#155724
     classDef needs_work fill:#fff3cd,stroke:#856404,color:#856404
@@ -143,16 +143,16 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A[Database Tables] --> B[✅ RLS Enabled]
-    B --> C[✅ Profile Access Control]
-    B --> D[✅ Student Data Protection]
-    B --> E[✅ BSR Security Policies]
-    B --> F[✅ Queue Access Control]
+    A["`Database Tables`"] --> B["`✅ RLS Enabled`"]
+    B --> C["`✅ Profile Access Control`"]
+    B --> D["`✅ Student Data Protection`"]
+    B --> E["`✅ BSR Security Policies`"]
+    B --> F["`✅ Queue Access Control`"]
     
-    C --> G[Users see own data only]
-    D --> H[Grade-appropriate filtering]
-    E --> I[Teacher/Admin access only]
-    F --> J[Real-time secure updates]
+    C --> G["`Users see own data only`"]
+    D --> H["`Grade-appropriate filtering`"]
+    E --> I["`Teacher/Admin access only`"]
+    F --> J["`Real-time secure updates`"]
     
     classDef functional fill:#d4edda,stroke:#155724,color:#155724
     

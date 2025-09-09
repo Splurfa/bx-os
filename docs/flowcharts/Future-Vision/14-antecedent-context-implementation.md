@@ -7,22 +7,22 @@ This flowchart documents the implementation of the antecedent (context) feature 
 
 ```mermaid
 flowchart TD
-    A[Teacher starts BSR creation] --> B[Step 1: Student Selection]
-    B --> C{Student selected?}
+    A["`Teacher starts BSR creation`"] --> B["`Step 1: Student Selection`"]
+    B --> C{"`Student selected?`"}
     C -->|No| B
-    C -->|Yes| D[Step 2: Context Selection]
+    C -->|Yes| D["`Step 2: Context Selection`"]
     
-    D --> E[Display 6 context options]
-    E --> F{Context selected?}
+    D --> E["`Display 6 context options`"]
+    E --> F{"`Context selected?`"}
     F -->|No| E
-    F -->|Yes| G[Step 3: Behavior Selection]
+    F -->|Yes| G["`Step 3: Behavior Selection`"]
     
-    G --> H[Display behavior categories]
-    H --> I{Behaviors selected?}
+    G --> H["`Display behavior categories`"]
+    H --> I{"`Behaviors selected?`"}
     I -->|No| H
-    I -->|Yes| J[Step 4: Review & Submit]
+    I -->|Yes| J["`Step 4: Review & Submit`"]
     
-    J --> K[Display summary with chips]
+    J --> K["`Display summary with chips`"]
     J --> L[Teacher mood slider]
     J --> M[Urgency level selector]
     J --> N[Optional notes field]

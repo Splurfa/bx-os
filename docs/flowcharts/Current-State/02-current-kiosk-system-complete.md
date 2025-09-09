@@ -8,23 +8,23 @@
 
 ```mermaid
 flowchart TD
-    A[159 Middle School<br/>Students] --> B[3 Dedicated iPads]
+    A["`159 Middle School Students`"] --> B["`3 Dedicated iPads`"]
     
-    B --> C[✅ iPad 1: /kiosk1<br/>Working]
-    B --> D[✅ iPad 2: /kiosk2<br/>Working]  
-    B --> E[✅ iPad 3: /kiosk3<br/>Working]
+    B --> C["`✅ iPad 1: /kiosk1 Working`"]
+    B --> D["`✅ iPad 2: /kiosk2 Working`"]  
+    B --> E["`✅ iPad 3: /kiosk3 Working`"]
     
-    C --> F[✅ Static URL<br/>Assignment Functional]
-    D --> G[✅ Static URL<br/>Assignment Functional]
-    E --> H[✅ Static URL<br/>Assignment Functional]
+    C --> F["`✅ Static URL Assignment Functional`"]
+    D --> G["`✅ Static URL Assignment Functional`"]
+    E --> H["`✅ Static URL Assignment Functional`"]
     
-    F --> I[✅ Queue-Based Student<br/>Assignment Implemented]
-    G --> J[✅ Queue-Based Student<br/>Assignment Implemented]
-    H --> K[✅ Queue-Based Student<br/>Assignment Implemented]
+    F --> I["`✅ Queue-Based Student Assignment Implemented`"]
+    G --> J["`✅ Queue-Based Student Assignment Implemented`"]
+    H --> K["`✅ Queue-Based Student Assignment Implemented`"]
     
-    I --> L[✅ Auto-Progress to<br/>Next Student Working]
-    J --> M[✅ Auto-Progress to<br/>Next Student Working]
-    K --> N[✅ Auto-Progress to<br/>Next Student Working]
+    I --> L["`✅ Auto-Progress to Next Student Working`"]
+    J --> M["`✅ Auto-Progress to Next Student Working`"]
+    K --> N["`✅ Auto-Progress to Next Student Working`"]
     
     classDef working fill:#d4edda,stroke:#155724,color:#155724
     classDef functional fill:#cce5ff,stroke:#0066cc,color:#0066cc
@@ -36,18 +36,18 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A[Student Accesses iPad] --> B[Navigate to<br/>assigned URL]
-    B --> C[✅ kiosk1, kiosk2,<br/>or kiosk3 Accessible]
-    C --> D[✅ No Authentication<br/>Required Working]
+    A["`Student Accesses iPad`"] --> B["`Navigate to assigned URL`"]
+    B --> C["`✅ kiosk1, kiosk2, or kiosk3 Accessible`"]
+    C --> D["`✅ No Authentication Required Working`"]
     
-    D --> E[✅ Load Kiosk<br/>Component Functional]
-    E --> F[✅ Fetch Assigned<br/>Student Implemented]
-    F --> G{Student Available?}
+    D --> E["`✅ Load Kiosk Component Functional`"]
+    E --> F["`✅ Fetch Assigned Student Implemented`"]
+    F --> G{"`Student Available?`"}
     
-    G -->|Yes| H[✅ Load Student BSR<br/>Workflow Working]
-    G -->|No| I[Display No Students<br/>Assigned]
+    G -->|Yes| H["`✅ Load Student BSR Workflow Working`"]
+    G -->|No| I["`Display No Students Assigned`"]
     
-    H --> J[✅ Student Completes<br/>Reflection Functional]
+    H --> J["`✅ Student Completes Reflection Functional`"]
     J --> K[✅ Submit for<br/>Teacher Review Working]
     K --> L[✅ Auto-Progress to<br/>Next Student Implemented]
     
@@ -64,26 +64,26 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A[Teacher Creates BSR] --> B[✅ Student Added to Queue WORKING]
-    B --> C[✅ Queue Position Assigned IMPLEMENTED]
-    C --> D{Available Kiosk?}
+    A["`Teacher Creates BSR`"] --> B["`✅ Student Added to Queue WORKING`"]
+    B --> C["`✅ Queue Position Assigned IMPLEMENTED`"]
+    C --> D{"`Available Kiosk?`"}
     
-    D -->|Kiosk 1 Free| E[✅ Auto-assign to /kiosk1 WORKING]
-    D -->|Kiosk 2 Free| F[✅ Auto-assign to /kiosk2 WORKING]
-    D -->|Kiosk 3 Free| G[✅ Auto-assign to /kiosk3 WORKING]
-    D -->|All Busy| H[✅ Wait in Queue IMPLEMENTED]
+    D -->|Kiosk 1 Free| E["`✅ Auto-assign to /kiosk1 WORKING`"]
+    D -->|Kiosk 2 Free| F["`✅ Auto-assign to /kiosk2 WORKING`"]
+    D -->|Kiosk 3 Free| G["`✅ Auto-assign to /kiosk3 WORKING`"]
+    D -->|All Busy| H["`✅ Wait in Queue IMPLEMENTED`"]
     
-    E --> I[✅ Student Completes BSR on iPad 1 WORKING]
-    F --> J[✅ Student Completes BSR on iPad 2 WORKING]
-    G --> K[✅ Student Completes BSR on iPad 3 WORKING]
+    E --> I["`✅ Student Completes BSR on iPad 1 WORKING`"]
+    F --> J["`✅ Student Completes BSR on iPad 2 WORKING`"]
+    G --> K["`✅ Student Completes BSR on iPad 3 WORKING`"]
     
-    I --> L[✅ Auto-Progress to Next in Queue IMPLEMENTED]
-    J --> M[✅ Auto-Progress to Next in Queue IMPLEMENTED]
-    K --> N[✅ Auto-Progress to Next in Queue IMPLEMENTED]
+    I --> L["`✅ Auto-Progress to Next in Queue IMPLEMENTED`"]
+    J --> M["`✅ Auto-Progress to Next in Queue IMPLEMENTED`"]
+    K --> N["`✅ Auto-Progress to Next in Queue IMPLEMENTED`"]
     
-    L --> O[iPad 1 Ready for Next Student]
-    M --> P[iPad 2 Ready for Next Student]
-    N --> Q[iPad 3 Ready for Next Student]
+    L --> O["`iPad 1 Ready for Next Student`"]
+    M --> P["`iPad 2 Ready for Next Student`"]
+    N --> Q["`iPad 3 Ready for Next Student`"]
     
     classDef working fill:#d4edda,stroke:#155724,color:#155724
     
@@ -135,19 +135,19 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-    A[All Students in Database] --> B[✅ Grade Level Filter IMPLEMENTED]
-    B --> C{Grade Level}
-    C -->|6th Grade| D[✅ Include in Queue WORKING]
-    C -->|7th Grade| E[✅ Include in Queue WORKING]
-    C -->|8th Grade| F[✅ Include in Queue WORKING]
-    C -->|Other Grades| G[Exclude from Queue]
+    A["`All Students in Database`"] --> B["`✅ Grade Level Filter IMPLEMENTED`"]
+    B --> C{"`Grade Level`"}
+    C -->|6th Grade| D["`✅ Include in Queue WORKING`"]
+    C -->|7th Grade| E["`✅ Include in Queue WORKING`"]
+    C -->|8th Grade| F["`✅ Include in Queue WORKING`"]
+    C -->|Other Grades| G["`Exclude from Queue`"]
     
-    D --> H[✅ Middle School Student Pool IMPLEMENTED]
+    D --> H["`✅ Middle School Student Pool IMPLEMENTED`"]
     E --> H
     F --> H
     
-    H --> I[✅ Available for Kiosk Assignment WORKING]
-    I --> J[✅ 159 Total Students POPULATED]
+    H --> I["`✅ Available for Kiosk Assignment WORKING`"]
+    I --> J["`✅ 159 Total Students POPULATED`"]
     
     classDef working fill:#d4edda,stroke:#155724,color:#155724
     

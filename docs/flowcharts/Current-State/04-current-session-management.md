@@ -8,16 +8,16 @@
 
 ```mermaid
 flowchart TD
-    A[User Login Request] --> B[✅ Google OAuth<br/>Working]
-    B --> C[✅ Supabase Auth<br/>Session Created]
-    C --> D[✅ Profile Record<br/>Exists]
-    D --> E[✅ Role Assignment<br/>Functional]
+    A["`User Login Request`"] --> B["`✅ Google OAuth Working`"]
+    B --> C["`✅ Supabase Auth Session Created`"]
+    C --> D["`✅ Profile Record Exists`"]
+    D --> E["`✅ Role Assignment Functional`"]
     
-    E --> F[✅ AdminRoute<br/>Access Control]
-    E --> G[✅ TeacherRoute<br/>Access Control]
+    E --> F["`✅ AdminRoute Access Control`"]
+    E --> G["`✅ TeacherRoute Access Control`"]
     
-    F --> H[✅ Admin Dashboard<br/>Access]
-    G --> I[✅ Teacher Dashboard<br/>Access]
+    F --> H["`✅ Admin Dashboard Access`"]
+    G --> I["`✅ Teacher Dashboard Access`"]
     
     classDef functional fill:#d4edda,stroke:#155724,color:#155724
     
@@ -49,19 +49,19 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-    A[Database User State] --> B[✅ 4 Authenticated Users]
+    A["`Database User State`"] --> B["`✅ 4 Authenticated Users`"]
     
-    B --> C[✅ 2 Super Admin Users]
-    B --> D[✅ 1 Admin User] 
-    B --> E[✅ 1 Teacher User]
+    B --> C["`✅ 2 Super Admin Users`"]
+    B --> D["`✅ 1 Admin User`"] 
+    B --> E["`✅ 1 Teacher User`"]
     
-    C --> F[Full System Access]
-    D --> G[Administrative Functions]
-    E --> H[Teaching Functions]
+    C --> F["`Full System Access`"]
+    D --> G["`Administrative Functions`"]
+    E --> H["`Teaching Functions`"]
     
-    F --> I[✅ User Management Working]
-    G --> J[✅ Queue Management Working]  
-    H --> K[✅ BSR Creation Working]
+    F --> I["`✅ User Management Working`"]
+    G --> J["`✅ Queue Management Working`"]  
+    H --> K["`✅ BSR Creation Working`"]
     
     classDef functional fill:#d4edda,stroke:#155724,color:#155724
     
@@ -72,20 +72,20 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A[User Session] --> B{Profile Role Check}
+    A["`User Session`"] --> B{"`Profile Role Check`"}
     
-    B -->|super_admin| C[✅ AdminRoute Access]
-    B -->|admin| D[✅ AdminRoute Access]
-    B -->|teacher| E[✅ TeacherRoute Access]
-    B -->|other/null| F[❌ Access Denied]
+    B -->|super_admin| C["`✅ AdminRoute Access`"]
+    B -->|admin| D["`✅ AdminRoute Access`"]
+    B -->|teacher| E["`✅ TeacherRoute Access`"]
+    B -->|other/null| F["`❌ Access Denied`"]
     
-    C --> G[✅ All Admin Functions]
-    D --> H[✅ All Admin Functions]
-    E --> I[✅ Teacher Functions + Limited Admin View]
+    C --> G["`✅ All Admin Functions`"]
+    D --> H["`✅ All Admin Functions`"]
+    E --> I["`✅ Teacher Functions + Limited Admin View`"]
     
-    G --> J[User Management, Queue Control, System Config]
-    H --> K[User Management, Queue Control, System Config] 
-    I --> L[BSR Creation, Queue Monitoring, Student Management]
+    G --> J["`User Management, Queue Control, System Config`"]
+    H --> K["`User Management, Queue Control, System Config`"] 
+    I --> L["`BSR Creation, Queue Monitoring, Student Management`"]
     
     classDef functional fill:#d4edda,stroke:#155724,color:#155724
     classDef restricted fill:#f8d7da,stroke:#721c24,color:#721c24
