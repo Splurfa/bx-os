@@ -733,11 +733,19 @@ export type Database = {
           student_id: string
         }[]
       }
+      cleanup_device_sessions_enhanced: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       cleanup_expired_device_sessions: {
         Args: Record<PropertyKey, never>
         Returns: number
       }
       cleanup_old_behavior_history: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      cleanup_old_user_sessions: {
         Args: Record<PropertyKey, never>
         Returns: number
       }
@@ -784,6 +792,16 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_cleanup_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          cleanup_eligible: number
+          last_cleanup: string
+          retention_policy: string
+          table_name: string
+          total_records: number
+        }[]
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -828,6 +846,10 @@ export type Database = {
       repair_queue_integrity: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      run_nightly_cleanup: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
       update_device_session_fingerprint: {
         Args: { p_new_fingerprint: string; p_session_id: string }
