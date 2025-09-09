@@ -34,3 +34,11 @@ Complete stakeholder experience flows
 - Color Coding: Red (problems), Green (targets), Purple (future), Blue (journeys)
 - Cross-Referencing: All flowcharts reference implementation status
 - Validation Integration: Claims backed by functional testing evidence
+
+## Known Issues
+### ⚠️ UNRESOLVED: Mermaid Text Cutoff in GitHub Renderer
+**Status**: Shelved for future resolution  
+**Issue**: GitHub's Mermaid renderer cuts off text in flowchart nodes despite multiple attempted fixes  
+**Attempts**: Tried text wrapping syntax, ultra-short labels, symbols, and various formatting approaches  
+**Impact**: Flowcharts may display with truncated text in GitHub preview  
+**Next Steps**: Revisit when GitHub updates Mermaid renderer or alternative solution identified
