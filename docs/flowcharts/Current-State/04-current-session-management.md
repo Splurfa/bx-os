@@ -8,21 +8,27 @@
 
 ```mermaid
 flowchart TD
-    A["`User Login Request`"] --> B["`✅ Google OAuth Working`"]
-    B --> C["`✅ Supabase Auth Session Created`"]
-    C --> D["`✅ Profile Record Exists`"]
-    D --> E["`✅ Role Assignment Functional`"]
+    A[Login Request] --> B[✅ Google OAuth]
+    B --> C[✅ Supabase Auth]
+    C --> D[✅ Profile Exists]
+    D --> E[✅ Role Assigned]
     
-    E --> F["`✅ AdminRoute Access Control`"]
-    E --> G["`✅ TeacherRoute Access Control`"]
+    E --> F[✅ AdminRoute]
+    E --> G[✅ TeacherRoute]
     
-    F --> H["`✅ Admin Dashboard Access`"]
-    G --> I["`✅ Teacher Dashboard Access`"]
-    
-    classDef functional fill:#d4edda,stroke:#155724,color:#155724
-    
-    class B,C,D,E,F,G,H,I functional
+    F --> H[✅ Admin Dash]
+    G --> I[✅ Teacher Dash]
 ```
+
+**Legend:**
+- **Google OAuth**: Google OAuth working
+- **Supabase Auth**: Supabase Auth session created
+- **Profile Exists**: Profile record exists
+- **Role Assigned**: Role assignment functional
+- **AdminRoute**: AdminRoute access control
+- **TeacherRoute**: TeacherRoute access control
+- **Admin/Teacher Dash**: Dashboard access
+- **✅**: Fully functional
 
 ## Validated User Profile Integration
 
@@ -49,50 +55,66 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-    A["`Database User State`"] --> B["`✅ 4 Authenticated Users`"]
+    A[DB User State] --> B[✅ 4 Auth Users]
     
-    B --> C["`✅ 2 Super Admin Users`"]
-    B --> D["`✅ 1 Admin User`"] 
-    B --> E["`✅ 1 Teacher User`"]
+    B --> C[✅ 2 Super Admin]
+    B --> D[✅ 1 Admin] 
+    B --> E[✅ 1 Teacher]
     
-    C --> F["`Full System Access`"]
-    D --> G["`Administrative Functions`"]
-    E --> H["`Teaching Functions`"]
+    C --> F[Full Access]
+    D --> G[Admin Functions]
+    E --> H[Teaching Fn]
     
-    F --> I["`✅ User Management Working`"]
-    G --> J["`✅ Queue Management Working`"]  
-    H --> K["`✅ BSR Creation Working`"]
-    
-    classDef functional fill:#d4edda,stroke:#155724,color:#155724
-    
-    class B,C,D,E,F,G,H,I,J,K functional
+    F --> I[✅ User Mgmt]
+    G --> J[✅ Queue Mgmt]  
+    H --> K[✅ BSR Create]
 ```
+
+**Legend:**
+- **DB User State**: Database user state
+- **4 Auth Users**: 4 authenticated users
+- **Super Admin**: Super administrator users
+- **Full Access**: Full system access
+- **Admin Functions**: Administrative functions
+- **Teaching Fn**: Teaching functions
+- **User Mgmt**: User management working
+- **Queue Mgmt**: Queue management working
+- **BSR Create**: BSR creation working
+- **✅**: Fully functional
 
 ## Role-Based Access Validation
 
 ```mermaid
 flowchart TD
-    A["`User Session`"] --> B{"`Profile Role Check`"}
+    A[User Session] --> B{Role Check}
     
-    B -->|super_admin| C["`✅ AdminRoute Access`"]
-    B -->|admin| D["`✅ AdminRoute Access`"]
-    B -->|teacher| E["`✅ TeacherRoute Access`"]
-    B -->|other/null| F["`❌ Access Denied`"]
+    B -->|super_admin| C[✅ AdminRoute]
+    B -->|admin| D[✅ AdminRoute]
+    B -->|teacher| E[✅ TeacherRoute]
+    B -->|other/null| F[❌ Denied]
     
-    C --> G["`✅ All Admin Functions`"]
-    D --> H["`✅ All Admin Functions`"]
-    E --> I["`✅ Teacher Functions + Limited Admin View`"]
+    C --> G[✅ All Admin Fn]
+    D --> H[✅ All Admin Fn]
+    E --> I[✅ Teacher+Lmt]
     
-    G --> J["`User Management, Queue Control, System Config`"]
-    H --> K["`User Management, Queue Control, System Config`"] 
-    I --> L["`BSR Creation, Queue Monitoring, Student Management`"]
-    
-    classDef functional fill:#d4edda,stroke:#155724,color:#155724
-    classDef restricted fill:#f8d7da,stroke:#721c24,color:#721c24
-    
-    class C,D,E,G,H,I,J,K,L functional
-    class F restricted
+    G --> J[UserMgmt,Queue,Config]
+    H --> K[UserMgmt,Queue,Config] 
+    I --> L[BSR,QueueMon,Student]
 ```
+
+**Legend:**
+- **Role Check**: Profile role check
+- **AdminRoute**: AdminRoute access
+- **TeacherRoute**: TeacherRoute access
+- **All Admin Fn**: All admin functions
+- **Teacher+Lmt**: Teacher functions + limited admin view
+- **UserMgmt**: User Management
+- **Queue**: Queue Control
+- **Config**: System Config
+- **QueueMon**: Queue Monitoring
+- **Student**: Student Management
+- **✅**: Access granted
+- **❌**: Access denied
 
 ## Session Management: Current vs Needed
 

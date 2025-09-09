@@ -6,113 +6,160 @@
 
 ```mermaid
 flowchart TD
-    A["`Behavior Incident Happens`"] --> B["`Teacher Observes Behavior`"]
-    B --> C["`Teacher Creates BSR`"]
-    C --> D["`Student Added to Queue`"]
-    D --> E["`Student Assigned to Kiosk`"]
-    E --> F["`Student Receives Reflection Prompt`"]
-    F --> G["`Student Accesses Kiosk Station`"]
-    G --> H["`System Loads BSR Questions`"]
-    H --> I["`Student Reads Behavior Description`"]
-    I --> J["`Student Reflects on Actions`"]
-    J --> K["`Student Completes Reflection Questions`"]
-    K --> L["`Student Submits for Review`"]
-    L --> M["`Teacher Reviews Submission`"]
-    M --> N["`Teacher Provides Feedback`"]
-    N --> O["`Student Receives Feedback`"]
-    O --> P["`Resolution Plan Created`"]
-    P --> Q["`Student Implements Strategies`"]
-    Q --> R["`Teacher Monitors Progress`"]
-    R --> S[Family Receives<br/>Communication]
-    S --> T[Growth Documented<br/>in System]
-    
-    style A fill:#ffebee,stroke:#d32f2f
-    style C fill:#e3f2fd,stroke:#2196f3
-    style I fill:#e8f5e8,stroke:#4caf50
-    style N fill:#fff3e0,stroke:#ff9800
-    style T fill:#f3e5f5,stroke:#9c27b0
+    A[Incident] --> B[Teacher Obs]
+    B --> C[Create BSR]
+    C --> D[Add Queue]
+    D --> E[Assign Kiosk]
+    E --> F[Refl Prompt]
+    F --> G[Access Kiosk]
+    G --> H[Load BSR Q]
+    H --> I[Read Behavior]
+    I --> J[Reflect]
+    J --> K[Complete Q]
+    K --> L[Submit]
+    L --> M[Teacher Rev]
+    M --> N[Feedback]
+    N --> O[Receive FB]
+    O --> P[Resolution]
+    P --> Q[Implement]
+    Q --> R[Monitor]
+    R --> S[Family Comm]
+    S --> T[Document]
 ```
+
+**Legend:**
+- **Incident**: Behavior incident happens
+- **Teacher Obs**: Teacher observes behavior
+- **Create BSR**: Teacher creates BSR
+- **Add Queue**: Student added to queue
+- **Assign Kiosk**: Student assigned to kiosk
+- **Refl Prompt**: Student receives reflection prompt
+- **Access Kiosk**: Student accesses kiosk station
+- **Load BSR Q**: System loads BSR questions
+- **Read Behavior**: Student reads behavior description
+- **Reflect**: Student reflects on actions
+- **Complete Q**: Student completes reflection questions
+- **Submit**: Student submits for review
+- **Teacher Rev**: Teacher reviews submission
+- **Feedback**: Teacher provides feedback
+- **Receive FB**: Student receives feedback
+- **Resolution**: Resolution plan created
+- **Implement**: Student implements strategies
+- **Monitor**: Teacher monitors progress
+- **Family Comm**: Family receives communication
+- **Document**: Growth documented in system
 
 ## Detailed Student Experience Flow
 
 ```mermaid
 flowchart TD
-    A[Behavior Incident] --> B[Student Awareness]
-    B --> C[Wait for Assignment]
-    C --> D[Kiosk Assignment Notification]
+    A[Incident] --> B[Aware]
+    B --> C[Wait]
+    C --> D[Kiosk Notice]
     
-    D --> E[Approach Assigned Kiosk]
-    E --> F[View BSR on Screen]
-    F --> G[Read Teacher's Description]
+    D --> E[Approach]
+    E --> F[View BSR]
+    F --> G[Read Desc]
     
-    G --> H[Self-Reflection Questions]
-    H --> I[Question 1: What Happened?]
-    H --> J[Question 2: How Did Others Feel?]
-    H --> K[Question 3: What Could You Do Differently?]
-    H --> L[Question 4: How Will You Make It Right?]
+    G --> H[Refl Q]
+    H --> I[Q1:What?]
+    H --> J[Q2:Feel?]
+    H --> K[Q3:Different?]
+    H --> L[Q4:Right?]
     
-    I --> M[Student Types Response]
+    I --> M[Type Resp]
     J --> M
     K --> M
     L --> M
     
-    M --> N[Review All Answers]
-    N --> O{Satisfied with Responses?}
-    O -->|No| P[Edit Responses]
-    O -->|Yes| Q[Submit for Teacher Review]
+    M --> N[Review]
+    N --> O{Satisfied?}
+    O -->|No| P[Edit]
+    O -->|Yes| Q[Submit]
     
     P --> N
-    Q --> R[Wait for Teacher Feedback]
+    Q --> R[Wait FB]
     
-    R --> S[Receive Teacher Response]
-    S --> T{Response Type}
-    T -->|Approved| U[BSR Complete - Growth Plan]
-    T -->|Needs Revision| V[Additional Reflection Required]
+    R --> S[Receive Resp]
+    S --> T{Type?}
+    T -->|OK| U[Complete]
+    T -->|Revise| V[More Refl]
     
-    V --> W[Return to Kiosk for Revision]
+    V --> W[Return]
     W --> H
     
-    U --> X[Follow Growth Plan Strategies]
-    X --> Y[Monitor Personal Progress]
-    
-    style E fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-    style G fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-    style M fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-    style Q fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-    style U fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
+    U --> X[Growth Plan]
+    X --> Y[Monitor]
 ```
+
+**Legend:**
+- **Incident**: Behavior incident
+- **Aware**: Student awareness
+- **Wait**: Wait for assignment
+- **Kiosk Notice**: Kiosk assignment notification
+- **Approach**: Approach assigned kiosk
+- **View BSR**: View BSR on screen
+- **Read Desc**: Read teacher's description
+- **Refl Q**: Self-reflection questions
+- **Q1-Q4**: Questions 1-4 (What happened, How others felt, What differently, Make it right)
+- **Type Resp**: Student types response
+- **Review**: Review all answers
+- **Satisfied**: Satisfied with responses
+- **Edit**: Edit responses
+- **Submit**: Submit for teacher review
+- **Wait FB**: Wait for teacher feedback
+- **Receive Resp**: Receive teacher response
+- **Type**: Response type
+- **OK**: Approved
+- **Revise**: Needs revision
+- **Complete**: BSR complete
+- **More Refl**: Additional reflection required
+- **Return**: Return to kiosk for revision
+- **Growth Plan**: Follow growth plan strategies
+- **Monitor**: Monitor personal progress
 
 ## Student Emotional Journey
 
 ```mermaid
 flowchart TD
-    A[Initial Reaction] --> B{Emotional State}
-    B -->|Defensive| C[Resistance to Process]
-    B -->|Confused| D[Uncertainty About Expectations]
-    B -->|Remorseful| E[Ready for Reflection]
+    A[Initial React] --> B{Emotion}
+    B -->|Defensive| C[Resist]
+    B -->|Confused| D[Uncertain]
+    B -->|Remorseful| E[Ready]
     
-    C --> F[Kiosk Experience]
+    C --> F[Kiosk Exp]
     D --> F
     E --> F
     
-    F --> G[Guided Reflection Questions]
-    G --> H[Self-Discovery Process]
-    H --> I[Understanding Impact]
+    F --> G[Guided Q]
+    G --> H[Self-Disc]
+    H --> I[Understand]
     
-    I --> J[Ownership of Actions]
-    J --> K[Problem-Solving Mindset]
-    K --> L[Commitment to Change]
+    I --> J[Ownership]
+    J --> K[Problem-Solve]
+    K --> L[Commit]
     
-    L --> M[Positive Growth Experience]
-    M --> N[Increased Self-Awareness]
-    N --> O[Better Future Choices]
-    
-    style F fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
-    style H fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
-    style J fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-    style M fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-    style O fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
+    L --> M[Growth]
+    M --> N[Self-Aware]
+    N --> O[Better Choice]
 ```
+
+**Legend:**
+- **Initial React**: Initial reaction
+- **Emotion**: Emotional state
+- **Resist**: Resistance to process
+- **Uncertain**: Uncertainty about expectations
+- **Ready**: Ready for reflection
+- **Kiosk Exp**: Kiosk experience
+- **Guided Q**: Guided reflection questions
+- **Self-Disc**: Self-discovery process
+- **Understand**: Understanding impact
+- **Ownership**: Ownership of actions
+- **Problem-Solve**: Problem-solving mindset
+- **Commit**: Commitment to change
+- **Growth**: Positive growth experience
+- **Self-Aware**: Increased self-awareness
+- **Better Choice**: Better future choices
 
 ## Kiosk Interaction Experience
 

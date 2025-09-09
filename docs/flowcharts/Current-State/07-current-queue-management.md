@@ -8,26 +8,36 @@
 
 ```mermaid
 flowchart TD
-    A["`Teacher Creates BSR`"] --> B["`✅ Student Added to Queue Working`"]
-    B --> C["`✅ Queue Position Calculated Implemented`"]
-    C --> D["`✅ Real-time Queue Update Functional`"]
+    A[Teacher BSR] --> B[✅ Add Queue]
+    B --> C[✅ Calc Position]
+    C --> D[✅ Real-time Up]
     
-    D --> E{"`Kiosk Available?`"}
-    E -->|Yes| F["`✅ Auto-assign to Available Kiosk Implemented`"]
-    E -->|No| G["`✅ Student Waits in Queue Working`"]
+    D --> E{Kiosk Free?}
+    E -->|Yes| F[✅ Auto-assign]
+    E -->|No| G[✅ Wait Queue]
     
-    F --> H["`✅ Student Status: assigned Working`"]
-    G --> I["`✅ Student Status: pending Working`"]
+    F --> H[✅ Status:assign]
+    G --> I[✅ Status:pend]
     
-    H --> J["`✅ Student Completes BSR Working`"]
-    J --> K["`✅ Student Status: completed Working`"]
-    K --> L["`✅ Remove from Queue Implemented`"]
-    L --> M["`✅ Auto-assign Next Student Implemented`"]
-    
-    classDef working fill:#d4edda,stroke:#155724,color:#155724
-    
-    class B,C,D,F,G,H,I,J,K,L,M working
+    H --> J[✅ Complete BSR]
+    J --> K[✅ Status:done]
+    K --> L[✅ Remove Queue]
+    L --> M[✅ Next Student]
 ```
+
+**Legend:**
+- **Teacher BSR**: Teacher creates BSR
+- **Add Queue**: Student added to queue
+- **Calc Position**: Queue position calculated
+- **Real-time Up**: Real-time queue update
+- **Kiosk Free**: Check kiosk availability
+- **Auto-assign**: Auto-assign to available kiosk
+- **Wait Queue**: Student waits in queue
+- **Status:assign/pend/done**: Student status (assigned/pending/completed)
+- **Complete BSR**: Student completes BSR
+- **Remove Queue**: Remove from queue
+- **Next Student**: Auto-assign next student
+- **✅**: Fully implemented
 
 ## Implemented Student Data Display (FULLY FUNCTIONAL)
 

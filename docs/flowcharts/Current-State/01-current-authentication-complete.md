@@ -8,83 +8,94 @@
 
 ```mermaid
 flowchart TD
-    A["`User Access`"] --> B{"`Route Type?`"}
-    B -->|Kiosk Routes| C["`✅ Anonymous Access Working`"]
-    B -->|Dashboard Routes| D{"`Is Authenticated?`"}
+    A[User Access] --> B{Route Type?}
+    B -->|Kiosk| C[✅ Anon Access]
+    B -->|Dashboard| D{Auth?}
     
-    C --> E["`✅ kiosk1 Direct Access`"]
-    C --> F["`✅ kiosk2 Direct Access`"]
-    C --> G["`✅ kiosk3 Direct Access`"]
+    C --> E[✅ K1 Direct]
+    C --> F[✅ K2 Direct]
+    C --> G[✅ K3 Direct]
     
-    D -->|No| H["`Redirect to /auth`"]
-    D -->|Yes| I{"`User Role?`"}
+    D -->|No| H[→ /auth]
+    D -->|Yes| I{Role?}
     
-    I -->|admin/super_admin| J["`✅ AdminRoute Component Working`"]
-    I -->|teacher/admin/super_admin| K["`✅ TeacherRoute Component Working`"]
-    I -->|other| L["`Access Denied`"]
+    I -->|admin| J[✅ AdminRoute]
+    I -->|teacher| K[✅ TeacherRoute]
+    I -->|other| L[❌ Denied]
     
-    J --> M["`✅ Admin Dashboard Functional`"]
-    K --> N["`✅ Teacher Dashboard Functional`"]
-    
-    classDef working fill:#d4edda,stroke:#155724,color:#155724
-    classDef functional fill:#cce5ff,stroke:#0066cc,color:#0066cc
-    
-    class E,F,G,J,K,M,N working
-    class C,D,I functional
+    J --> M[✅ Admin Dash]
+    K --> N[✅ Teacher Dash]
 ```
+
+**Legend:**
+- **K1/K2/K3**: Kiosk 1, 2, 3 routes
+- **Anon Access**: Anonymous access working
+- **Auth**: Authentication check
+- **✅**: Fully functional
+- **❌**: Access denied
+- **→**: Redirects to
 
 ## Verified Role-Based Route Protection System (IMPLEMENTED)
 
 ```mermaid
 flowchart TD
-    A["`Route Access`"] --> B{"`Route Component`"}
-    B --> C["`✅ AdminRoute Exists`"]
-    B --> D["`✅ TeacherRoute Exists`"]
+    A[Route Access] --> B{Component}
+    B --> C[✅ AdminRoute]
+    B --> D[✅ TeacherRoute]
     
-    C --> E{"`User Role Check`"}
-    E -->|admin/super_admin| F["`✅ Allow Access Working`"]
-    E -->|other| G["`Redirect to /teacher`"]
+    C --> E{Role Check}
+    E -->|admin| F[✅ Allow]
+    E -->|other| G[→ /teacher]
     
-    D --> H{"`User Role Check`"}
-    H -->|teacher| I["`✅ Allow Access Working`"]
-    H -->|admin/super_admin| J["`✅ Allow Access Working`"]
-    H -->|other| K["`Redirect to /auth`"]
+    D --> H{Role Check}
+    H -->|teacher| I[✅ Allow]
+    H -->|admin| J[✅ Allow]
+    H -->|other| K[→ /auth]
     
-    F --> L["`✅ Admin Dashboard Functions Operational`"]
-    I --> M["`✅ Teacher Dashboard Functions Operational`"]
-    J --> N["`✅ Teacher Dashboard Admin View Operational`"]
-    
-    classDef working fill:#d4edda,stroke:#155724,color:#155724
-    
-    class C,D,F,I,J,L,M,N working
+    F --> L[✅ Admin Dash]
+    I --> M[✅ Teacher Dash]
+    J --> N[✅ Teacher+Admin]
 ```
+
+**Legend:**
+- **Role Check**: User role validation
+- **✅ Allow**: Access granted
+- **→**: Redirects to route
+- **Admin Dash**: Admin Dashboard functions
+- **Teacher Dash**: Teacher Dashboard functions
+- **Teacher+Admin**: Teacher dashboard with admin view
 
 ## Verified Component-Level Permission System (IMPLEMENTED)
 
 ```mermaid
 flowchart TD
-    A["`Component Render`"] --> B["`✅ usePermissions Hook Exists`"]
-    B --> C{"`Check User Role`"}
-    C --> D["`✅ Permission Check Functions Working`"]
+    A[Component] --> B[✅ usePermissions]
+    B --> C{Role Check}
+    C --> D[✅ Permission Fn]
     
-    D --> E{"`UI Element Type`"}
-    E -->|User Management| F{"`✅ Check Admin Permission Working`"}
-    E -->|BSR Creation| G{"`✅ Check Teacher Permission Working`"}
-    E -->|Queue Viewing| H{"`✅ Check Teacher/Admin Permission Working`"}
+    D --> E{UI Element}
+    E -->|UserMgmt| F{✅ Admin?}
+    E -->|BSR| G{✅ Teacher?}
+    E -->|Queue| H{✅ T/Admin?}
     
-    F -->|true| I["`✅ Show User Management`"]
-    F -->|false| J["`Hide Component`"]
+    F -->|true| I[✅ Show UserMgmt]
+    F -->|false| J[Hide]
     
-    G -->|true| K["`✅ Show BSR Creation`"]
-    G -->|false| L["`Hide Component`"]
+    G -->|true| K[✅ Show BSR]
+    G -->|false| L[Hide]
     
-    H -->|true| M["`✅ Show Queue Display`"]
-    H -->|false| N["`Hide Component`"]
-    
-    classDef working fill:#d4edda,stroke:#155724,color:#155724
-    
-    class B,D,F,G,H,I,K,M working
+    H -->|true| M[✅ Show Queue]
+    H -->|false| N[Hide]
 ```
+
+**Legend:**
+- **usePermissions**: Permissions hook
+- **Role Check**: User role validation
+- **Permission Fn**: Permission check functions
+- **UserMgmt**: User Management component
+- **BSR**: BSR Creation component
+- **T/Admin**: Teacher or Admin permission
+- **✅**: Functional components
 
 ## Verified Google OAuth Profile Creation (WORKING)
 

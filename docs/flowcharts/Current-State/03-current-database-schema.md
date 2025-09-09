@@ -9,88 +9,108 @@
 ```mermaid
 erDiagram
     auth_users {
-        uuid id PK "✅ Functional"
-        string email "✅ Working OAuth"
-        timestamp created_at "✅ Auto-generated"
-        timestamp updated_at "✅ Auto-managed"
+        uuid id PK
+        string email
+        timestamp created_at
+        timestamp updated_at
     }
     
     profiles {
-        uuid id PK "✅ Functional"
-        uuid user_id FK "✅ Links to auth.users"
-        string role "✅ Admin/Teacher<br/>roles working" 
-        string display_name "✅ From OAuth data"
-        string avatar_url "✅ Optional field"
-        timestamp created_at "✅ Auto-generated"
-        timestamp updated_at "✅ Auto-managed"
+        uuid id PK
+        uuid user_id FK
+        string role
+        string display_name
+        string avatar_url
+        timestamp created_at
+        timestamp updated_at
     }
     
     students {
-        uuid id PK "✅ Functional"
-        uuid family_id FK "✅ Links to families"
-        string first_name "✅ Working"
-        string last_name "✅ Working"
-        string name "✅ Working (optional)"
-        string grade "✅ Working<br/>(6th, 7th, 8th)"
-        string class_name "✅ Working<br/>(current: same as grade)"
-        date date_of_birth "✅ Working"
-        string student_id_external "✅ Working (optional)"
-        timestamp created_at "✅ Auto-generated"
-        timestamp updated_at "✅ Auto-managed"
+        uuid id PK
+        uuid family_id FK
+        string first_name
+        string last_name
+        string name
+        string grade
+        string class_name
+        date date_of_birth
+        string student_id_ext
+        timestamp created_at
+        timestamp updated_at
     }
     
     behavior_requests {
-        uuid id PK "✅ FUNCTIONAL"
-        uuid student_id FK "✅ Links to students"
-        uuid teacher_id FK "✅ Links to profiles"
-        string teacher_name "✅ Working"
-        string behavior_type "✅ Working"
-        text description "✅ Working"
-        string location "✅ Working (optional)"
-        timestamp time_of_incident "✅ Working"
-        uuid antecedent_context_id FK "✅ Links to contexts"
-        string status "✅ Working (waiting/active/completed)"
-        integer assigned_kiosk "✅ Working (1,2,3)"
-        timestamp created_at "✅ Auto-generated"
-        timestamp updated_at "✅ Auto-managed"
+        uuid id PK
+        uuid student_id FK
+        uuid teacher_id FK
+        string teacher_name
+        string behavior_type
+        text description
+        string location
+        timestamp time_incident
+        uuid context_id FK
+        string status
+        integer kiosk_assigned
+        timestamp created_at
+        timestamp updated_at
     }
     
     kiosks {
-        integer id PK "✅ FUNCTIONAL"
-        string name "✅ Working (Kiosk 1, 2, 3)"
-        string location "✅ Working (optional)"
-        boolean is_active "✅ Working"
-        uuid current_student_id FK "✅ Links to students"
-        uuid current_behavior_request_id FK "✅ Links to requests"
-        string device_session_id "✅ Working"
-        timestamp session_expires_at "✅ Working"
-        timestamp created_at "✅ Auto-generated"
-        timestamp updated_at "✅ Auto-managed"
+        integer id PK
+        string name
+        string location
+        boolean is_active
+        uuid current_student FK
+        uuid current_bsr FK
+        string device_session
+        timestamp session_exp
+        timestamp created_at
+        timestamp updated_at
     }
     
     reflections {
-        uuid id PK "✅ FUNCTIONAL"
-        uuid behavior_request_id FK "✅ Links to behavior_requests"
-        uuid student_id FK "✅ Links to students"
-        integer mood_rating "✅ Working (1-5)"
-        text question_1_response "✅ Working"
-        text question_2_response "✅ Working"
-        text question_3_response "✅ Working"
-        text question_4_response "✅ Working"
-        text teacher_feedback "✅ Working"
-        boolean teacher_approved "✅ Working"
-        timestamp submitted_at "✅ Working"
-        timestamp created_at "✅ Auto-generated"
+        uuid id PK
+        uuid bsr_id FK
+        uuid student_id FK
+        integer mood_rating
+        text q1_response
+        text q2_response
+        text q3_response
+        text q4_response
+        text teacher_feedback
+        boolean approved
+        timestamp submitted_at
+        timestamp created_at
     }
 
-    auth_users ||--|| profiles : "has profile"
-    profiles ||--o{ behavior_requests : "creates BSRs"
-    students ||--o{ behavior_requests : "subject of BSR"
-    students ||--o{ kiosks : "assigned to kiosks"
-    behavior_requests ||--o| kiosks : "assigned to kiosk"
-    behavior_requests ||--|| reflections : "generates reflection"
-    students ||--o{ reflections : "submits reflections"
+    auth_users ||--|| profiles : "profile"
+    profiles ||--o{ behavior_requests : "creates"
+    students ||--o{ behavior_requests : "subject"
+    students ||--o{ kiosks : "assigned"
+    behavior_requests ||--o| kiosks : "kiosk"
+    behavior_requests ||--|| reflections : "reflection"
+    students ||--o{ reflections : "submits"
 ```
+
+**Table Status:**
+- **auth_users**: ✅ Functional, OAuth working
+- **profiles**: ✅ Functional, role assignment working
+- **students**: ✅ Functional, 159 MS students populated
+- **behavior_requests**: ✅ Functional, BSR creation working
+- **kiosks**: ✅ Functional, 3 kiosks operational
+- **reflections**: ✅ Functional, student submissions working
+
+**Field Abbreviations:**
+- **student_id_ext**: student_id_external
+- **time_incident**: time_of_incident
+- **context_id**: antecedent_context_id
+- **kiosk_assigned**: assigned_kiosk
+- **current_student**: current_student_id
+- **current_bsr**: current_behavior_request_id
+- **device_session**: device_session_id
+- **session_exp**: session_expires_at
+- **bsr_id**: behavior_request_id
+- **q1-q4_response**: question_1-4_response
 
 ## Validated Database State
 
