@@ -2,90 +2,109 @@
 
 ## Overview
 
-The Student Reflection Flow is a structured workflow for students completing behavior reflections on kiosks. It follows a systematic approach using consistent interaction patterns with slider components to guide students through reflection, ownership, and planning.
+The Student Reflection Flow is an 8-step structured workflow for students completing behavior reflections on kiosks. It separates slider interactions from narrative prompts to simplify the interface and maintain focus. Each step has a single purpose: either text input OR slider interaction, never both combined.
 
 ## Design Principles
 
-- **Consistent interaction**: Same slider design across all steps (5 icons or circles)
+- **Separate slider steps**: Mood, accountability, and commitment sliders appear in dedicated steps, not combined with narrative prompts
+- **Distinct mood components**: Self-reflection mood slider and "others' feelings" mood slider are treated as separate elements with different purposes
 - **Headings frame purpose**: Short labels explain what each slider represents
 - **Real-time captions**: Two- to three-word captions appear above sliders as they move
 - **Repetition for learning**: Students master one interaction pattern and reuse it throughout
 
 ## Components Used
 
-### MoodSlider (Not currently used in flow)
+### StudentMoodSlider - Self-Reflection
 - Row of 5 faces (😢😟😐🙂😄)
-- Students tap to select mood
-- Used for initial mood assessment
+- Students tap to indicate how they were feeling at the time of or just before the incident
+- Used in Steps 2 and 7 for personal emotional state
+
+### StudentMoodSlider - Others' Perception
+- Row of 5 faces (😢😟😐🙂😄)
+- Students tap to indicate how they believe others felt about their behavior
+- Used in Step 5 followup for empathy assessment
 
 ### AccountabilitySlider
 - 5 circles (◯◔◑◕●) with progression visualization
-- Captions: "Not mine" → "A little mine" → "Half mine" → "Mostly mine" → "All mine"
-- Used in Steps 1-3 for ownership assessment
+- Captions: "None" → "A little" → "Some" → "Most" → "All"
+- Heading: **"How much responsibility do you take for this incident?"**
+- Used in Step 3 for ownership assessment
 
 ### CommitmentSlider
 - Same 5-circle design as accountability
 - Captions: "Not ready" → "A little ready" → "Half ready" → "Almost ready" → "Fully ready"
-- Used in Step 4 for commitment to change
+- Used in Step 8 for commitment to change
 
-## Student Journey
+## Student Journey (8 Steps)
 
-| Step | Question | UI Components | Slider Used |
-|------|----------|---------------|-------------|
-| **1. Incident** | "What did you do that led to being sent out of class?" | Textarea + AccountabilitySlider | "Not mine" → "All mine" |
-| **2. Intent** | "What were you hoping would happen when you acted that way?" | Textarea + AccountabilitySlider | "Not mine" → "All mine" |
-| **3. Impact** | "Who else was impacted by your behavior, and in what way?" | Textarea + AccountabilitySlider | "Not mine" → "All mine" |
-| **4. Plan** | "Write two sentences that show you understand what's expected of you when you go back to class." | Textarea + CommitmentSlider | "Not ready" → "Fully ready" |
+| Step | Heading/Label | UI Components | Purpose |
+|------|---------------|---------------|---------|
+| **1. Incident** | "What did you do that led to being sent out of class?" | Narrative text input only | Describe the behavior |
+| **2. Mood Before** | "How were you feeling just before or during the incident?" | StudentMoodSlider (Self-Reflection) | Emotional state at incident |
+| **3. Accountability** | "How much responsibility do you take for this incident?" | AccountabilitySlider | Ownership assessment |
+| **4. Intent** | "What were you hoping would happen when you acted that way?" | Narrative text input only | Understanding motivation |
+| **5. Impact** | "Who else was affected by your behaviour, and how do you think they felt?" | Narrative text input only | Identifying affected parties |
+| **5b. Others' Mood** | (Follows Step 5 immediately) | StudentMoodSlider (Others' Perception) | Empathy for others' feelings |
+| **6. Plan** | "What will you do differently next time?" | Narrative text input only | Future behavior planning |
+| **7. Mood Now** | "How do you feel now?" | StudentMoodSlider (Self-Reflection) | Current emotional state |
+| **8. Commitment** | "How ready are you to follow through?" | CommitmentSlider | Commitment to change |
 
 ## Implementation Details
 
 ### Database Schema
-The reflection data includes both text responses and slider values:
+The reflection data includes text responses and slider values for the 8-step workflow:
 ```sql
 reflections table:
-- question_1_response (text)
-- question_2_response (text) 
-- question_3_response (text)
-- question_4_response (text)
-- accountability_step1 (integer 1-5)
-- accountability_step2 (integer 1-5)
-- accountability_step3 (integer 1-5)
-- commitment_step4 (integer 1-5)
+- step1_incident_response (text) - What did you do that led to being sent out of class?
+- step2_mood_before (integer 1-5) - How were you feeling just before or during the incident?
+- step3_accountability (integer 1-5) - How much responsibility do you take for this incident?
+- step4_intent_response (text) - What were you hoping would happen when you acted that way?
+- step5_impact_response (text) - Who else was affected by your behaviour, and how do you think they felt?
+- step5_others_mood (integer 1-5) - Others' mood perception
+- step6_plan_response (text) - What will you do differently next time?
+- step7_mood_after (integer 1-5) - How do you feel now?
+- step8_commitment (integer 1-5) - How ready are you to follow through?
 ```
 
 ### Component Integration
-- KioskTwo component renders both textarea and appropriate slider for each step
-- Slider values are captured and stored alongside text responses
-- Real-time captions update as students interact with sliders
-- Navigation between steps preserves both text and slider values
+- KioskTwo component completely refactored for 8-step separated workflow
+- Each step is either text input OR slider interaction, never both combined
+- StudentMoodSlider used for Steps 2, 5b (others), and 7
+- AccountabilitySlider used for Step 3 with updated labels ("None" → "All")
+- CommitmentSlider used for Step 8
+- Real-time progress tracking and step navigation
+- Data persistence for all 8 steps of reflection data
 
 ### Exit Flow
-- Student completes Step 4 and submits
+- Student completes Step 8 (commitment slider) and submits
 - Returns to existing completion screen in KioskTwo
 - No additional summary or new exit sequence
 - Flow ends with final submission to database
 
 ## File Locations
 
-- Main Component: `src/components/KioskTwo.tsx`
+- Main Component: `src/components/KioskTwo.tsx` (completely refactored)
 - Slider Components: 
-  - `src/components/AccountabilitySlider.tsx`
+  - `src/components/AccountabilitySlider.tsx` (updated labels)
   - `src/components/CommitmentSlider.tsx`
   - `src/components/StudentMoodSlider.tsx`
+- Database Hook: `src/hooks/useSupabaseQueue.ts` (updated submitReflection function)
 
 ## Status
 
-✅ **Implemented**: Enhanced KioskTwo with 4-step reflection workflow
-✅ **Implemented**: AccountabilitySlider integrated into Steps 1-3
-✅ **Implemented**: CommitmentSlider integrated into Step 4
-✅ **Implemented**: Database schema updated with slider value columns
-✅ **Implemented**: Component alignment with specified labels and icons
-✅ **Implemented**: Data persistence for both text and slider values
+✅ **Implemented**: Complete 8-step reflection workflow with separated steps
+✅ **Implemented**: Database schema migration for new 8-step structure  
+✅ **Implemented**: StudentMoodSlider for Steps 2, 5b, and 7
+✅ **Implemented**: AccountabilitySlider for Step 3 with updated labels
+✅ **Implemented**: CommitmentSlider for Step 8
+✅ **Implemented**: Step-by-step navigation with progress tracking
+✅ **Implemented**: Data validation and persistence for all 8 steps
+✅ **Implemented**: Updated submitReflection function for new data structure
 
 ## Future Enhancements
 
 - Voice input option for text responses  
-- Analytics on accountability/commitment trends
+- Analytics on mood patterns and accountability/commitment trends
 - Adaptive questioning based on slider responses
-- Integration with teacher feedback system
+- Integration with teacher feedback system for 8-step format
 - Real-time caption updates above sliders during interaction

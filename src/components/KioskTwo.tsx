@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { TouchOptimizedButton } from "@/components/TouchOptimizedButton";
 import AccountabilitySlider from "@/components/AccountabilitySlider";
 import CommitmentSlider from "@/components/CommitmentSlider";
+import StudentMoodSlider from "@/components/StudentMoodSlider";
 import { useSupabaseQueue } from "../hooks/useSupabaseQueue";
 import { useKiosks } from "@/contexts/KioskContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -18,26 +19,68 @@ import { formatBirthdateForPassword } from "@/lib/dateUtils";
 
 const KIOSK_ID = 2;
 
-const questions = [
+// 8-step workflow configuration
+const steps = [
   {
-    id: 'question1',
-    text: 'What did you do that led to being sent out of class?',
-    helper: 'Describe your actions and behavior.'
+    id: 'step1',
+    type: 'text',
+    heading: 'What did you do that led to being sent out of class?',
+    helper: 'Describe your actions and behavior.',
+    minLength: 10
   },
   {
-    id: 'question2', 
-    text: 'What were you hoping would happen when you acted that way?',
-    helper: 'What was your goal or reason for your behavior?'
+    id: 'step2',
+    type: 'mood',
+    heading: 'How were you feeling just before or during the incident?',
+    helper: 'Tap the face that shows how you felt.',
+    component: 'self'
   },
   {
-    id: 'question3',
-    text: 'Who else was impacted by your behavior, and in what way?',
-    helper: 'Think about classmates, your teacher, or others.'
+    id: 'step3',
+    type: 'accountability',
+    heading: 'How much responsibility do you take for this incident?',
+    helper: 'Move the slider to show your level of responsibility.'
   },
   {
-    id: 'question4',
-    text: 'Write two sentences that show you understand what\'s expected of you when you go back to class.',
-    helper: 'Be specific about what you\'ll do differently.'
+    id: 'step4',
+    type: 'text',
+    heading: 'What were you hoping would happen when you acted that way?',
+    helper: 'What was your goal or reason for your behavior?',
+    minLength: 10
+  },
+  {
+    id: 'step5',
+    type: 'text',
+    heading: 'Who else was affected by your behaviour, and how do you think they felt?',
+    helper: 'Think about classmates, your teacher, or others.',
+    minLength: 10
+  },
+  {
+    id: 'step5b',
+    type: 'mood',
+    heading: 'How do you think others felt about your behavior?',
+    helper: 'Tap the face that shows how others might have felt.',
+    component: 'others'
+  },
+  {
+    id: 'step6',
+    type: 'text',
+    heading: 'What will you do differently next time?',
+    helper: 'Be specific about what you\'ll do differently.',
+    minLength: 10
+  },
+  {
+    id: 'step7',
+    type: 'mood',
+    heading: 'How do you feel now?',
+    helper: 'Tap the face that shows how you feel right now.',
+    component: 'self'
+  },
+  {
+    id: 'step8',
+    type: 'commitment',
+    heading: 'How ready are you to follow through?',
+    helper: 'Move the slider to show your commitment level.'
   }
 ];
 
@@ -55,14 +98,8 @@ const KioskTwo = () => {
   const [passwordInput, setPasswordInput] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [sliderValues, setSliderValues] = useState<Record<string, number>>({
-    accountability_step1: 3,
-    accountability_step2: 3,
-    accountability_step3: 3,
-    commitment_step4: 3
-  });
+  const [currentStep, setCurrentStep] = useState(0);
+  const [reflectionData, setReflectionData] = useState<Record<string, string | number>>({});
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activationError, setActivationError] = useState<string | null>(null);
@@ -99,21 +136,9 @@ const KioskTwo = () => {
 
   // Reset state when student changes or completes
   useEffect(() => {
-    // Add debouncing to prevent rapid calls
-    // Don't reset if we're in completed state - let the completion screen auto-reset handle it
     if (!firstWaitingStudent && kioskState !== 'setup' && kioskState !== 'completed') {
       setKioskState('welcome');
-      setPasswordInput('');
-      setPasswordError('');
-      setCurrentQuestion(0);
-      setAnswers({});
-      setSliderValues({
-        accountability_step1: 3,
-        accountability_step2: 3,
-        accountability_step3: 3,
-        commitment_step4: 3
-      });
-      setTimeElapsed(0);
+      resetReflectionState();
       
       // Clear kiosk assignment using atomic function
       updateKioskStudent(KIOSK_ID, undefined, undefined).catch(error => {
@@ -140,7 +165,7 @@ const KioskTwo = () => {
   // Auto-reset after completion and manage countdown
   useEffect(() => {
     if (kioskState === 'completed') {
-      setCountdown(10); // Reset countdown to 10 when entering completed state
+      setCountdown(10);
       
       const countdownTimer = setInterval(() => {
         setCountdown(prev => prev - 1);
@@ -148,18 +173,8 @@ const KioskTwo = () => {
       
       const resetTimer = setTimeout(() => {
         setKioskState('welcome');
-        setPasswordInput('');
-        setPasswordError('');
-        setCurrentQuestion(0);
-        setAnswers({});
-        setSliderValues({
-          accountability_step1: 3,
-          accountability_step2: 3,
-          accountability_step3: 3,
-          commitment_step4: 3
-        });
-        setTimeElapsed(0);
-      }, 10000); // 10 seconds
+        resetReflectionState();
+      }, 10000);
       
       return () => {
         clearInterval(countdownTimer);
@@ -167,6 +182,14 @@ const KioskTwo = () => {
       };
     }
   }, [kioskState]);
+
+  const resetReflectionState = () => {
+    setPasswordInput('');
+    setPasswordError('');
+    setCurrentStep(0);
+    setReflectionData({});
+    setTimeElapsed(0);
+  };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -228,14 +251,6 @@ const KioskTwo = () => {
         }, 100);
       }
       
-      setCurrentQuestion(0);
-      setAnswers({});
-      setSliderValues({
-        accountability_step1: 3,
-        accountability_step2: 3,
-        accountability_step3: 3,
-        commitment_step4: 3
-      });
       setKioskState('reflection');
       setTimeElapsed(0);
       setPasswordError('');
@@ -245,28 +260,30 @@ const KioskTwo = () => {
     }
   };
 
-  const handleAnswerChange = (questionId: string, value: string) => {
-    setAnswers(prev => ({ ...prev, [questionId]: value }));
-  };
-
-  const handleSliderChange = (stepId: string, value: number) => {
-    setSliderValues(prev => ({ ...prev, [stepId]: value }));
+  const handleInputChange = (stepId: string, value: string | number) => {
+    setReflectionData(prev => ({ ...prev, [stepId]: value }));
   };
 
   const canProceedToNext = () => {
-    const currentQuestionId = questions[currentQuestion].id;
-    return answers[currentQuestionId]?.trim().length > 10;
+    const currentStepConfig = steps[currentStep];
+    const currentValue = reflectionData[currentStepConfig.id];
+    
+    if (currentStepConfig.type === 'text') {
+      return typeof currentValue === 'string' && currentValue.trim().length >= (currentStepConfig.minLength || 0);
+    }
+    
+    return currentValue !== undefined;
   };
 
   const handleNext = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(prev => prev + 1);
     }
   };
 
   const handlePrevious = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(prev => prev - 1);
+    if (currentStep > 0) {
+      setCurrentStep(prev => prev - 1);
     }
   };
 
@@ -277,14 +294,15 @@ const KioskTwo = () => {
     
     try {
       const reflection = {
-        question1: answers.question1 || '',
-        question2: answers.question2 || '',
-        question3: answers.question3 || '',
-        question4: answers.question4 || '',
-        accountability_step1: sliderValues.accountability_step1,
-        accountability_step2: sliderValues.accountability_step2,
-        accountability_step3: sliderValues.accountability_step3,
-        commitment_step4: sliderValues.commitment_step4
+        step1_incident_response: reflectionData.step1 as string || '',
+        step2_mood_before: reflectionData.step2 as number || 3,
+        step3_accountability: reflectionData.step3 as number || 3,
+        step4_intent_response: reflectionData.step4 as string || '',
+        step5_impact_response: reflectionData.step5 as string || '',
+        step5_others_mood: reflectionData.step5b as number || 3,
+        step6_plan_response: reflectionData.step6 as string || '',
+        step7_mood_after: reflectionData.step7 as number || 3,
+        step8_commitment: reflectionData.step8 as number || 3
       };
       
       await submitReflection(firstWaitingStudent.id, reflection);
@@ -294,6 +312,111 @@ const KioskTwo = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const renderStepContent = () => {
+    const currentStepConfig = steps[currentStep];
+    const currentValue = reflectionData[currentStepConfig.id];
+
+    if (currentStepConfig.type === 'text') {
+      return (
+        <div className="space-y-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-foreground mb-3">
+              {currentStepConfig.heading}
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              {currentStepConfig.helper}
+            </p>
+          </div>
+          
+          <div className="space-y-4">
+            <Textarea
+              placeholder="Type your response here..."
+              value={(currentValue as string) || ''}
+              onChange={(e) => handleInputChange(currentStepConfig.id, e.target.value)}
+              className="min-h-32 text-lg leading-relaxed resize-none"
+            />
+            
+            <div className="text-right">
+              <span className="text-sm text-muted-foreground">
+                {((currentValue as string) || '').length} characters
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (currentStepConfig.type === 'mood') {
+      return (
+        <div className="space-y-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-foreground mb-3">
+              {currentStepConfig.heading}
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              {currentStepConfig.helper}
+            </p>
+          </div>
+          
+          <div className="flex justify-center">
+            <StudentMoodSlider
+              value={(currentValue as number) || 3}
+              onChange={(value) => handleInputChange(currentStepConfig.id, value)}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (currentStepConfig.type === 'accountability') {
+      return (
+        <div className="space-y-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-foreground mb-3">
+              {currentStepConfig.heading}
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              {currentStepConfig.helper}
+            </p>
+          </div>
+          
+          <div className="flex justify-center">
+            <AccountabilitySlider
+              value={(currentValue as number) || 3}
+              onChange={(value) => handleInputChange(currentStepConfig.id, value)}
+              label=""
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (currentStepConfig.type === 'commitment') {
+      return (
+        <div className="space-y-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-foreground mb-3">
+              {currentStepConfig.heading}
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              {currentStepConfig.helper}
+            </p>
+          </div>
+          
+          <div className="flex justify-center">
+            <CommitmentSlider
+              value={(currentValue as number) || 3}
+              onChange={(value) => handleInputChange(currentStepConfig.id, value)}
+              label=""
+            />
+          </div>
+        </div>
+      );
+    }
+
+    return null;
   };
 
   // Show loading state during kiosk setup (no auth required)
@@ -462,16 +585,103 @@ const KioskTwo = () => {
                     className="w-full py-6 text-xl"
                     disabled={passwordInput.length !== 4}
                   >
-                    Continue
+                    Start Reflection
                   </TouchOptimizedButton>
-                  
-                  <TouchOptimizedButton 
-                    variant="outline"
-                    onClick={() => setKioskState('welcome')}
-                    className="w-full py-4"
-                  >
-                    Back
-                  </TouchOptimizedButton>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Reflection screen with 8-step workflow
+  if (kioskState === 'reflection') {
+    const currentStepConfig = steps[currentStep];
+    const progress = ((currentStep + 1) / steps.length) * 100;
+    
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        {/* Header with progress */}
+        <div className="p-4 bg-primary/5 border-b">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                <Monitor className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground">
+                  {firstWaitingStudent?.student?.first_name}'s Reflection
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Step {currentStep + 1} of {steps.length} • {formatTime(timeElapsed)}
+                </p>
+              </div>
+            </div>
+            
+            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
+              {Math.round(progress)}% Complete
+            </Badge>
+          </div>
+          
+          {/* Progress bar */}
+          <div className="mt-3 w-full bg-muted rounded-full h-2">
+            <div 
+              className="bg-gradient-primary h-2 rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+        
+        <div className="flex-1 flex items-center justify-center p-4">
+          <div className="w-full max-w-2xl">
+            <Card className="p-8 bg-gradient-card shadow-elevated w-full">
+              {renderStepContent()}
+              
+              {/* Navigation */}
+              <div className="flex justify-between items-center mt-8 pt-6 border-t border-border">
+                <div>
+                  {currentStep > 0 && (
+                    <TouchOptimizedButton
+                      onClick={handlePrevious}
+                      variant="outline"
+                      className="px-6 py-3"
+                    >
+                      Previous
+                    </TouchOptimizedButton>
+                  )}
+                </div>
+                
+                <div>
+                  {currentStep < steps.length - 1 ? (
+                    <TouchOptimizedButton
+                      onClick={handleNext}
+                      disabled={!canProceedToNext()}
+                      className="px-6 py-3 bg-gradient-primary text-white"
+                    >
+                      Next
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </TouchOptimizedButton>
+                  ) : (
+                    <TouchOptimizedButton
+                      onClick={handleSubmit}
+                      disabled={!canProceedToNext() || isSubmitting}
+                      className="px-8 py-3 bg-gradient-primary text-white"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Submitting...
+                        </>
+                      ) : (
+                        <>
+                          Complete Reflection
+                          <CheckCircle className="ml-2 h-4 w-4" />
+                        </>
+                      )}
+                    </TouchOptimizedButton>
+                  )}
                 </div>
               </div>
             </Card>
@@ -486,29 +696,26 @@ const KioskTwo = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="w-full max-w-md">
-          <Card className="p-8 text-center bg-gradient-card shadow-elevated">
+          <Card className="p-8 text-center bg-gradient-card shadow-elevated w-full">
             <div className="space-y-6">
               <div className="mx-auto w-20 h-20 bg-success/10 rounded-full flex items-center justify-center">
-                <CheckCircle className="h-12 w-12 text-success" />
+                <CheckCircle className="h-10 w-10 text-success" />
               </div>
               
-              <div className="space-y-2">
-                <h2 className="text-2xl font-bold text-primary">Reflection Complete!</h2>
-                <p className="text-muted-foreground">
-                  Thank you for completing your reflection.
+              <div>
+                <h2 className="text-2xl font-bold text-success mb-3">Reflection Complete!</h2>
+                <p className="text-muted-foreground mb-4">
+                  Thank you for taking the time to reflect on your behavior.
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Your teacher will review your responses and provide feedback.
+                  Your teacher will review your reflection and provide feedback.
                 </p>
               </div>
               
-              <div className="p-4 bg-muted/30 rounded-lg">
-                <p className="text-sm text-muted-foreground mb-2">
-                  Returning to main screen in
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground">
+                  Returning to main screen in {countdown} seconds...
                 </p>
-                <div className="text-2xl font-bold text-primary">
-                  {countdown}
-                </div>
               </div>
             </div>
           </Card>
@@ -517,153 +724,7 @@ const KioskTwo = () => {
     );
   }
 
-  // Reflection questions
-  const currentQuestionData = questions[currentQuestion];
-  const allQuestionsAnswered = questions.every(q => answers[q.id]?.trim().length > 10);
-
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <div className="p-4 bg-primary/5 border-b sticky top-0 z-10">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-primary">Kiosk Two</h1>
-          <div className="flex items-center gap-2">
-            <Badge variant="outline">
-              {firstWaitingStudent ? firstWaitingStudent.student.first_name : 'Available'}
-            </Badge>
-            <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
-          </div>
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">
-              Question {currentQuestion + 1} of {questions.length}
-            </span>
-            <div className="flex gap-1">
-              {questions.map((_, index) => (
-                <div
-                  key={index}
-                  className={`w-2 h-2 rounded-full ${
-                    index === currentQuestion
-                      ? 'bg-primary'
-                      : answers[questions[index].id]?.trim().length > 10
-                      ? 'bg-success'
-                      : 'bg-muted'
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="text-sm text-muted-foreground">
-            Time: {formatTime(timeElapsed)}
-          </div>
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div className="flex-1 p-6">
-        <div className="max-w-4xl mx-auto">
-          <Card className="p-8 bg-gradient-card shadow-elevated">
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <h2 className="text-xl font-semibold text-foreground">
-                  {currentQuestionData.text}
-                </h2>
-                <p className="text-muted-foreground">
-                  {currentQuestionData.helper}
-                </p>
-              </div>
-              
-              <div className="space-y-4">
-                <Label htmlFor="answer" className="text-sm font-medium">
-                  Your answer (minimum 10 characters)
-                </Label>
-                <Textarea
-                  id="answer"
-                  placeholder="Take your time to think about your response..."
-                  value={answers[currentQuestionData.id] || ''}
-                  onChange={(e) => handleAnswerChange(currentQuestionData.id, e.target.value)}
-                  className="min-h-[200px] text-base leading-relaxed"
-                  autoFocus
-                />
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>
-                    {answers[currentQuestionData.id]?.length || 0} characters
-                  </span>
-                  <span className={answers[currentQuestionData.id]?.trim().length >= 10 ? 'text-success' : ''}>
-                    {answers[currentQuestionData.id]?.trim().length >= 10 ? '✓ Minimum reached' : 'Keep writing...'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Slider section based on current question */}
-              <div className="space-y-4 pt-4 border-t">
-                {currentQuestion < 3 ? (
-                  <AccountabilitySlider
-                    value={sliderValues[`accountability_step${currentQuestion + 1}`]}
-                    onChange={(value) => handleSliderChange(`accountability_step${currentQuestion + 1}`, value)}
-                    label="How much do you take responsibility?"
-                  />
-                ) : (
-                  <CommitmentSlider
-                    value={sliderValues.commitment_step4}
-                    onChange={(value) => handleSliderChange('commitment_step4', value)}
-                    label="How committed are you to change?"
-                  />
-                )}
-              </div>
-            </div>
-          </Card>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <div className="p-6 bg-muted/20 border-t">
-        <div className="max-w-4xl mx-auto flex justify-between">
-          <TouchOptimizedButton
-            variant="outline"
-            onClick={handlePrevious}
-            disabled={currentQuestion === 0}
-            className="px-8"
-          >
-            Previous
-          </TouchOptimizedButton>
-          
-          <div className="flex gap-3">
-            {currentQuestion === questions.length - 1 ? (
-              <TouchOptimizedButton
-                onClick={handleSubmit}
-                disabled={!allQuestionsAnswered || isSubmitting}
-                className="px-8 bg-gradient-primary text-white"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  <>
-                    Submit Reflection
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </>
-                )}
-              </TouchOptimizedButton>
-            ) : (
-              <TouchOptimizedButton
-                onClick={handleNext}
-                disabled={!canProceedToNext()}
-                className="px-8"
-              >
-                Next
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </TouchOptimizedButton>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return null;
 };
 
 export default KioskTwo;

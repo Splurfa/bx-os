@@ -272,14 +272,19 @@ export const useSupabaseQueue = () => {
     }
   };
 
-  // Submit reflection
+  // Submit reflection - Updated for 8-step workflow
   const submitReflection = async (
-    behaviorRequestId: string,
+    behaviorRequestId: string, 
     reflectionData: {
-      question1: string;
-      question2: string;
-      question3: string;
-      question4: string;
+      step1_incident_response: string;
+      step2_mood_before: number;
+      step3_accountability: number;
+      step4_intent_response: string;
+      step5_impact_response: string;
+      step5_others_mood: number;
+      step6_plan_response: string;
+      step7_mood_after: number;
+      step8_commitment: number;
     }
   ) => {
     try {
@@ -292,16 +297,21 @@ export const useSupabaseQueue = () => {
 
       if (!request) throw new Error('Behavior request not found');
 
-      // Insert reflection
+      // Insert reflection with new 8-step structure
       const { error: reflectionError } = await supabase
         .from('reflections')
         .insert([{
           behavior_request_id: behaviorRequestId,
           student_id: request.student_id,
-          question_1_response: reflectionData.question1,
-          question_2_response: reflectionData.question2,
-          question_3_response: reflectionData.question3,
-          question_4_response: reflectionData.question4,
+          step1_incident_response: reflectionData.step1_incident_response,
+          step2_mood_before: reflectionData.step2_mood_before,
+          step3_accountability: reflectionData.step3_accountability,
+          step4_intent_response: reflectionData.step4_intent_response,
+          step5_impact_response: reflectionData.step5_impact_response,
+          step5_others_mood: reflectionData.step5_others_mood,
+          step6_plan_response: reflectionData.step6_plan_response,
+          step7_mood_after: reflectionData.step7_mood_after,
+          step8_commitment: reflectionData.step8_commitment,
           teacher_approved: false,
           revision_requested: false,
           submitted_at: new Date().toISOString()

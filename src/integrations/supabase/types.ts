@@ -506,6 +506,15 @@ export type Database = {
           question_4_response: string | null
           reviewed_at: string | null
           revision_requested: boolean | null
+          step1_incident_response: string | null
+          step2_mood_before: number | null
+          step3_accountability: number | null
+          step4_intent_response: string | null
+          step5_impact_response: string | null
+          step5_others_mood: number | null
+          step6_plan_response: string | null
+          step7_mood_after: number | null
+          step8_commitment: number | null
           student_id: string
           submitted_at: string | null
           teacher_approved: boolean | null
@@ -532,6 +541,15 @@ export type Database = {
           question_4_response?: string | null
           reviewed_at?: string | null
           revision_requested?: boolean | null
+          step1_incident_response?: string | null
+          step2_mood_before?: number | null
+          step3_accountability?: number | null
+          step4_intent_response?: string | null
+          step5_impact_response?: string | null
+          step5_others_mood?: number | null
+          step6_plan_response?: string | null
+          step7_mood_after?: number | null
+          step8_commitment?: number | null
           student_id: string
           submitted_at?: string | null
           teacher_approved?: boolean | null
@@ -558,6 +576,15 @@ export type Database = {
           question_4_response?: string | null
           reviewed_at?: string | null
           revision_requested?: boolean | null
+          step1_incident_response?: string | null
+          step2_mood_before?: number | null
+          step3_accountability?: number | null
+          step4_intent_response?: string | null
+          step5_impact_response?: string | null
+          step5_others_mood?: number | null
+          step6_plan_response?: string | null
+          step7_mood_after?: number | null
+          step8_commitment?: number | null
           student_id?: string
           submitted_at?: string | null
           teacher_approved?: boolean | null

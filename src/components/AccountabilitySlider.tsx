@@ -32,11 +32,11 @@ const AccountabilitySlider = ({ value, onChange, label = "How much do you take r
   };
 
   const levels = [
-    { id: 'none', label: 'Not mine', icon: '◯', value: 1 },
-    { id: 'little', label: 'A little mine', icon: '◔', value: 2 },
-    { id: 'some', label: 'Half mine', icon: '◑', value: 3 },
-    { id: 'most', label: 'Mostly mine', icon: '◕', value: 4 },
-    { id: 'full', label: 'All mine', icon: '●', value: 5 }
+    { id: 'none', label: 'None', icon: '◯', value: 1 },
+    { id: 'little', label: 'A little', icon: '◔', value: 2 },
+    { id: 'some', label: 'Some', icon: '◑', value: 3 },
+    { id: 'most', label: 'Most', icon: '◕', value: 4 },
+    { id: 'full', label: 'All', icon: '●', value: 5 }
   ];
 
   return (
