@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { TouchOptimizedButton } from "@/components/TouchOptimizedButton";
+import AccountabilitySlider from "@/components/AccountabilitySlider";
+import CommitmentSlider from "@/components/CommitmentSlider";
 import { useSupabaseQueue } from "../hooks/useSupabaseQueue";
 import { useKiosks } from "@/contexts/KioskContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -55,6 +57,12 @@ const KioskTwo = () => {
   const [passwordError, setPasswordError] = useState('');
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [sliderValues, setSliderValues] = useState<Record<string, number>>({
+    accountability_step1: 3,
+    accountability_step2: 3,
+    accountability_step3: 3,
+    commitment_step4: 3
+  });
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activationError, setActivationError] = useState<string | null>(null);
@@ -99,6 +107,12 @@ const KioskTwo = () => {
       setPasswordError('');
       setCurrentQuestion(0);
       setAnswers({});
+      setSliderValues({
+        accountability_step1: 3,
+        accountability_step2: 3,
+        accountability_step3: 3,
+        commitment_step4: 3
+      });
       setTimeElapsed(0);
       
       // Clear kiosk assignment using atomic function
@@ -138,6 +152,12 @@ const KioskTwo = () => {
         setPasswordError('');
         setCurrentQuestion(0);
         setAnswers({});
+        setSliderValues({
+          accountability_step1: 3,
+          accountability_step2: 3,
+          accountability_step3: 3,
+          commitment_step4: 3
+        });
         setTimeElapsed(0);
       }, 10000); // 10 seconds
       
@@ -210,6 +230,12 @@ const KioskTwo = () => {
       
       setCurrentQuestion(0);
       setAnswers({});
+      setSliderValues({
+        accountability_step1: 3,
+        accountability_step2: 3,
+        accountability_step3: 3,
+        commitment_step4: 3
+      });
       setKioskState('reflection');
       setTimeElapsed(0);
       setPasswordError('');
@@ -221,6 +247,10 @@ const KioskTwo = () => {
 
   const handleAnswerChange = (questionId: string, value: string) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
+  };
+
+  const handleSliderChange = (stepId: string, value: number) => {
+    setSliderValues(prev => ({ ...prev, [stepId]: value }));
   };
 
   const canProceedToNext = () => {
@@ -250,7 +280,11 @@ const KioskTwo = () => {
         question1: answers.question1 || '',
         question2: answers.question2 || '',
         question3: answers.question3 || '',
-        question4: answers.question4 || ''
+        question4: answers.question4 || '',
+        accountability_step1: sliderValues.accountability_step1,
+        accountability_step2: sliderValues.accountability_step2,
+        accountability_step3: sliderValues.accountability_step3,
+        commitment_step4: sliderValues.commitment_step4
       };
       
       await submitReflection(firstWaitingStudent.id, reflection);
@@ -561,6 +595,23 @@ const KioskTwo = () => {
                     {answers[currentQuestionData.id]?.trim().length >= 10 ? '✓ Minimum reached' : 'Keep writing...'}
                   </span>
                 </div>
+              </div>
+
+              {/* Slider section based on current question */}
+              <div className="space-y-4 pt-4 border-t">
+                {currentQuestion < 3 ? (
+                  <AccountabilitySlider
+                    value={sliderValues[`accountability_step${currentQuestion + 1}`]}
+                    onChange={(value) => handleSliderChange(`accountability_step${currentQuestion + 1}`, value)}
+                    label="How much do you take responsibility?"
+                  />
+                ) : (
+                  <CommitmentSlider
+                    value={sliderValues.commitment_step4}
+                    onChange={(value) => handleSliderChange('commitment_step4', value)}
+                    label="How committed are you to change?"
+                  />
+                )}
               </div>
             </div>
           </Card>

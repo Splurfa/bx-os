@@ -487,6 +487,7 @@ export type Database = {
       }
       reflections: {
         Row: {
+          accountability_step1: number | null
           accountability_step2: number | null
           accountability_step3: number | null
           accountability_step4: number | null
@@ -512,6 +513,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          accountability_step1?: number | null
           accountability_step2?: number | null
           accountability_step3?: number | null
           accountability_step4?: number | null
@@ -537,6 +539,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          accountability_step1?: number | null
           accountability_step2?: number | null
           accountability_step3?: number | null
           accountability_step4?: number | null
