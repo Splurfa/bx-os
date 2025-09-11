@@ -91,13 +91,6 @@ const AdminReportsRefactored = () => {
             Data from {academicYearStart.toLocaleDateString()} onwards • Current: {currentDate.toLocaleDateString()}
           </p>
         </div>
-        <Button 
-          onClick={autoInitializeData} 
-          disabled={loading}
-          variant="secondary"
-        >
-          {loading ? "Initializing..." : "Initialize Data"}
-        </Button>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
