@@ -1,7 +1,9 @@
-# Admin Reporting Feature Specification
+# Admin Reporting Feature Specification (Enhanced)
+
+*Last Updated: January 11, 2025*
 
 ## Overview
-Comprehensive specification for BX-OS admin reporting functionality, providing behavioral incident analytics across current and historical academic data with focus on student outcomes and system effectiveness.
+Enhanced specification for BX-OS admin reporting functionality with historical data support tables, automatic bootstrapping, and teacher/student relationship resolution for comprehensive behavioral analytics.
 
 ## Feature Architecture
 
@@ -13,10 +15,13 @@ System-wide behavioral analytics and trend analysis
 #### Tab 2: Student Profile
 Individual student behavioral history and academic correlation
 
-### Access Control
+### Enhanced Access Control & Data Architecture
 - **Admin/Super Admin Only**: Reporting interface restricted to administrative roles
 - **Teacher Protection**: Teachers cannot access student data outside their own BSRs
 - **Student Privacy**: No personally identifiable information in overview metrics
+- **Historical Data Integration**: Segmented tables resolve teacher/student identity mapping
+- **Automatic Bootstrap**: System auto-generates test data on first admin access
+- **Academic Year Awareness**: Date filtering respects school calendar boundaries
 
 ## Tab 1: Overview Dashboard
 

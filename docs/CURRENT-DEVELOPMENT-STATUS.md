@@ -42,18 +42,21 @@ BX-OS is currently in active development with three major features in various st
 - Implement proper form validation
 - Complete UI polish and accessibility improvements
 
-### 3. Admin Reporting Feature
-**Status: 📋 PLANNED (0% Complete)**
-- ❌ Database schema design pending
-- ❌ Historical data integration not started
+### 3. Admin Reporting Feature (Enhanced Architecture)
+**Status: 📋 ARCHITECTURE DEFINED (15% Complete)**
+- ✅ Enhanced database schema with historical support tables designed
+- ✅ Teacher/student identity resolution strategy established
+- ✅ Automatic bootstrap architecture planned
+- ❌ Database implementation not started
 - ❌ Reporting interface not implemented
-- ❌ Analytics queries not developed
+- ❌ Test data generation not implemented
 
-**Planning Status:**
-- ✅ Feature specification completed
-- ✅ Student identity strategy defined
-- ✅ Data normalization approach established
-- ✅ Implementation roadmap created
+**Enhanced Planning Status:**
+- ✅ Feature specification with historical data support completed
+- ✅ Segmented data architecture defined (`historical_staff`, `historical_students`)
+- ✅ Academic year configuration system designed
+- ✅ Automatic bootstrap system architecture established
+- ✅ Implementation checklist created for execution tracking
 
 ## Critical Dependencies
 
@@ -73,12 +76,13 @@ BX-OS is currently in active development with three major features in various st
 - Admin interface: Core functionality working
 - **Kiosk interface: Requires significant UI fixes before full deployment**
 
-## Immediate Priorities
+## Updated Immediate Priorities
 
 1. **Fix Student Reflection Flow UI Issues** (Blocking for production use)
-2. **Complete Reporting Feature Database Schema** (Foundation for feature 3)
-3. **Implement Historical Data Import** (Enables reporting functionality)
-4. **Resolve Kiosk Touch Interface Problems** (Critical for student experience)
+2. **Implement Enhanced Reporting Database Schema** (Historical support tables foundation)
+3. **Create Segmented Historical Data Import** (Teacher/student relationship resolution)
+4. **Build Automatic Bootstrap System** (Eliminate manual data seeding)
+5. **Generate Realistic Test Dataset** (10-20 incidents per school day since Aug 15)
 
 ## Success Metrics
 
@@ -94,11 +98,13 @@ BX-OS is currently in active development with three major features in various st
 - ❌ Historical data reporting capabilities
 - ❌ Cross-year student analytics
 
-## Next Development Cycle
+## Next Development Cycle (Enhanced)
 
 **Phase 1 (Immediate)**: Fix reflection flow UI issues and complete kiosk interface
-**Phase 2 (Next)**: Implement reporting database schema and historical data import
-**Phase 3 (Future)**: Build admin reporting interface and analytics capabilities
+**Phase 2 (Next)**: Implement enhanced reporting foundation with historical support tables
+**Phase 3 (Following)**: Build UI layout fixes and student selection component integration  
+**Phase 4 (Future)**: Complete reporting interface with comprehensive student profiles
+**Phase 5 (Final)**: Automatic bootstrapping and performance optimization
 
 ---
 

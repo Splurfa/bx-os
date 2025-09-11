@@ -52,24 +52,26 @@ Resolve blocking UI/UX issues in Student Reflection Flow to enable full producti
 - **Consistent 15-20 minute** reflection completion time
 - **Zero critical UI bugs** in production testing
 
-## Phase 2: Reporting Foundation (Next - 2-3 weeks)
+## Phase 2: Enhanced Reporting Foundation (Next - 2-3 weeks)
 
 ### Objective
-Implement database schema and data import capabilities for admin reporting feature
+Implement segmented historical data architecture and automatic bootstrapping system
 
 ### Scope
-- **Database Schema Design**: Create reporting tables and analytics views
-- **Historical Data Import**: Process 1,237 incidents from 2024-2025 CSV
-- **Student Identity Matching**: Link current roster to historical data
-- **Academic Data Simulation**: Generate correlation analysis data
+- **Historical Data Support Tables**: Create `historical_staff`, `historical_students`, `academic_years`
+- **Teacher/Student Identity Resolution**: Proper relationship mapping via support tables
+- **Automatic Bootstrap System**: Generate realistic test data (10-20 incidents/day)
+- **Enhanced Import Functions**: Segmented import with batch tracking
+- **Academic Year Configuration**: System-aware date handling
 
-### Acceptance Criteria
-- [ ] Reporting database schema deployed successfully
-- [ ] Historical CSV data imported with >95% success rate
-- [ ] Student matching achieves >90% high-confidence matches
-- [ ] Academic data simulation covers all 151 current students
-- [ ] Analytics views perform within <5 second query limits
-- [ ] Data quality validation reports available
+### Enhanced Acceptance Criteria
+- [ ] Historical support tables (`historical_staff`, `historical_students`, `academic_years`) deployed
+- [ ] Teacher identity mapping resolves via `historical_staff` relationships
+- [ ] Student identity mapping via `historical_students` with grade progression
+- [ ] Academic year configuration enables school calendar-aware filtering
+- [ ] Automatic bootstrap generates 10-20 incidents per school day since Aug 15, 2024
+- [ ] Materialized views provide <300ms overview dashboard performance
+- [ ] System eliminates all manual "Seed Data" buttons via auto-bootstrap
 
 ### Dependencies
 - **Phase 1 completion**: UI fixes must be resolved first to focus on backend
@@ -83,13 +85,13 @@ Implement database schema and data import capabilities for admin reporting featu
 - ✅ **Analytics query optimization**
 - ✅ **Data quality assessment reports**
 
-### Technical Implementation Sequence
-1. **Create reporting tables**: `historical_incidents`, `student_historical_links`, `academic_periods`
-2. **Import historical data**: CSV processing with quality scoring
-3. **Match students**: Name-based linking with confidence scoring
-4. **Simulate academic data**: GPA and attendance data generation
-5. **Create analytics views**: Pre-computed reporting queries
-6. **Optimize performance**: Indexes and materialized views
+### Enhanced Technical Implementation Sequence
+1. **Create historical support tables**: `historical_staff`, `historical_students`, `academic_years`, `system_config`
+2. **Enhance existing tables**: Add foreign keys to `historical_incidents` for proper relationships
+3. **Implement segmented import functions**: Staff roster, student roster, incident import with relationships
+4. **Create realistic data generation**: `seed_realistic_behavior_data()` for 10-20 daily incidents
+5. **Build automatic bootstrap**: `ensure_test_bootstrap()` triggered on first admin access
+6. **Optimize with materialized views**: `mv_overview_metrics` with <300ms performance target
 
 ### Success Metrics
 - **≥95% historical data import** success rate
