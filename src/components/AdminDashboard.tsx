@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import AdminReports from '@/components/AdminReports';
 import { Switch } from '@/components/ui/switch';
 import { Monitor, PowerOff, Link as LinkIcon, Copy, Clock, Shield, ExternalLink } from 'lucide-react';
 import AppHeader from './AppHeader';
@@ -241,9 +242,10 @@ const AdminDashboard = () => {
       {/* Widen the content area slightly on larger screens without affecting global layout */}
       <div className="container-page spacing-section max-w-[1600px] mx-auto">
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className={`grid w-full grid-cols-2 ${isMobile ? 'text-xs' : 'text-xs sm:text-sm'}`}>
+          <TabsList className={`grid w-full grid-cols-3 ${isMobile ? 'text-xs' : 'text-xs sm:text-sm'}`}>
             <TabsTrigger value="overview">System Overview</TabsTrigger>
             <TabsTrigger value="users">Users & Sessions</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
           </TabsList>
 
           {/* System Overview Tab */}
@@ -379,13 +381,17 @@ const AdminDashboard = () => {
           {/* User Management Tab with Session Monitor */}
           <TabsContent value="users" className={isMobile ? "space-y-3" : "space-y-6"}>
           <QueueIntegrityMonitor />
-          <QueueIntegrityMonitor />
           <UserManagement />
             
             {/* Session Monitor Section */}
             <div className={isMobile ? "mt-4" : "mt-8"}>
               <SessionMonitor />
             </div>
+          </TabsContent>
+
+          {/* Reports Tab */}
+          <TabsContent value="reports" className={isMobile ? "space-y-3" : "space-y-6"}>
+            <AdminReports />
           </TabsContent>
         </Tabs>
       </div>
