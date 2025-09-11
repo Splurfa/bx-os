@@ -25,7 +25,7 @@ interface DateProviderProps {
 
 export const DateProvider: React.FC<DateProviderProps> = ({ children }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [academicYearStart, setAcademicYearStart] = useState(new Date('2024-09-01'));
+  const [academicYearStart, setAcademicYearStart] = useState(new Date('2025-09-01'));
   const [isInitialized, setIsInitialized] = useState(false);
 
   const initializeData = async () => {

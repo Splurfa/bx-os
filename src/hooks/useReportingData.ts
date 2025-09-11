@@ -55,8 +55,8 @@ export const useReportingData = () => {
         } else {
           console.log('Current year behavior data generated:', currentYearData);
           toast({
-            title: "Test Data Generated",
-            description: `Generated ${currentYearData || 0} current year incidents`,
+            title: "Test Data Generated", 
+            description: `Successfully created ${currentYearData || 0} total incidents for current year`,
           });
         }
       } catch (error) {
@@ -111,7 +111,16 @@ export const useReportingData = () => {
 
   const fetchOverviewMetrics = async () => {
     try {
-      // Current year incidents and reflections - use academicYearStart and currentDate
+      // Current year incidents - simple count without joins to avoid filtering issues
+      const { count: incidentCount, error: incidentError } = await supabase
+        .from('behavior_requests')
+        .select('*', { count: 'exact', head: true })
+        .gte('time_of_incident', academicYearStart.toISOString())
+        .lte('time_of_incident', new Date().toISOString());
+
+      if (incidentError) throw incidentError;
+
+      // Get detailed data for other metrics
       const { data: currentData, error: currentError } = await supabase
         .from('behavior_requests')
         .select(`
@@ -156,7 +165,7 @@ export const useReportingData = () => {
       }, {} as Record<string, number>);
 
       setOverviewMetrics({
-        currentYearIncidents: currentData?.length || 0,
+        currentYearIncidents: incidentCount || 0,
         currentYearReflections: currentData?.filter(d => d.reflections.length > 0).length || 0,
         gradeBreakdown: Object.entries(gradeStats || {}).map(([grade, stats]) => ({
           grade,
