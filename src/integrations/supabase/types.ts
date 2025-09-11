@@ -425,38 +425,83 @@ export type Database = {
         Row: {
           academic_year: string | null
           behavior_type: string | null
+          bsr_submission_id: string | null
           created_at: string | null
           data_quality_score: number | null
           grade_at_time: string | null
           id: string
+          immediate_support: boolean | null
           incident_date: string | null
+          incident_time: string | null
           reflection_completed: boolean | null
+          reflection_question_1: string | null
+          reflection_question_2: string | null
+          reflection_question_3: string | null
+          reflection_question_4: string | null
+          srf_status: string | null
+          staff_email: string | null
+          staff_first_name: string | null
+          staff_last_name: string | null
+          staff_member: string | null
+          student_first_name: string | null
+          student_last_name: string | null
           student_name: string
           subject_context: string | null
+          teacher_notes: string | null
         }
         Insert: {
           academic_year?: string | null
           behavior_type?: string | null
+          bsr_submission_id?: string | null
           created_at?: string | null
           data_quality_score?: number | null
           grade_at_time?: string | null
           id?: string
+          immediate_support?: boolean | null
           incident_date?: string | null
+          incident_time?: string | null
           reflection_completed?: boolean | null
+          reflection_question_1?: string | null
+          reflection_question_2?: string | null
+          reflection_question_3?: string | null
+          reflection_question_4?: string | null
+          srf_status?: string | null
+          staff_email?: string | null
+          staff_first_name?: string | null
+          staff_last_name?: string | null
+          staff_member?: string | null
+          student_first_name?: string | null
+          student_last_name?: string | null
           student_name: string
           subject_context?: string | null
+          teacher_notes?: string | null
         }
         Update: {
           academic_year?: string | null
           behavior_type?: string | null
+          bsr_submission_id?: string | null
           created_at?: string | null
           data_quality_score?: number | null
           grade_at_time?: string | null
           id?: string
+          immediate_support?: boolean | null
           incident_date?: string | null
+          incident_time?: string | null
           reflection_completed?: boolean | null
+          reflection_question_1?: string | null
+          reflection_question_2?: string | null
+          reflection_question_3?: string | null
+          reflection_question_4?: string | null
+          srf_status?: string | null
+          staff_email?: string | null
+          staff_first_name?: string | null
+          staff_last_name?: string | null
+          staff_member?: string | null
+          student_first_name?: string | null
+          student_last_name?: string | null
           student_name?: string
           subject_context?: string | null
+          teacher_notes?: string | null
         }
         Relationships: []
       }
