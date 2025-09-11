@@ -220,12 +220,7 @@ export const useReportingData = () => {
   useEffect(() => {
     fetchOverviewMetrics();
     fetchStudentProfiles();
-    
-    // Auto-initialize data on first admin access
-    if (!isInitialized) {
-      autoInitializeData();
-    }
-  }, [isInitialized]);
+  }, []);
 
   return {
     overviewMetrics,

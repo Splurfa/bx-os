@@ -213,25 +213,29 @@ f131da3b-2f20-45bf-bbb9-e4ed07ed7e9f,11/14/2024,1:09 PM,Mali,Claire Braunstein,J
     // Insert historical staff data with proper conflict handling
     const staffArray = Array.from(staffMembers).map(staff => JSON.parse(staff));
     if (staffArray.length > 0) {
-      const { error: staffError } = await supabase
-        .from('historical_staff')
-        .upsert(
-          staffArray.map(staff => ({
-            first_name: staff.firstName,
-            last_name: staff.lastName,
-            email: staff.email,
-            department: staff.department,
-            academic_year: '2024-2025'
-          })),
-          { onConflict: 'email,academic_year', ignoreDuplicates: true }
-        );
-
-      if (staffError) {
-        console.error('Error inserting historical staff:', staffError);
-        // Don't throw error for staff insertion, just log it
-      } else {
-        console.log(`Inserted ${staffArray.length} historical staff records`);
+      // Insert staff one by one to handle conflicts gracefully
+      let staffInserted = 0;
+      for (const staff of staffArray) {
+        try {
+          const { error: staffError } = await supabase
+            .from('historical_staff')
+            .insert({
+              first_name: staff.firstName,
+              last_name: staff.lastName,
+              email: staff.email,
+              department: staff.department,
+              academic_year: '2024-2025'
+            });
+          
+          if (!staffError) {
+            staffInserted++;
+          }
+        } catch (error) {
+          // Skip duplicates, continue processing
+          continue;
+        }
       }
+      console.log(`Successfully inserted ${staffInserted} staff members (${staffArray.length - staffInserted} duplicates skipped)`);
     }
 
     // Insert historical incidents in batches
