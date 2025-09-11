@@ -35,62 +35,56 @@ export const useReportingData = () => {
   const autoInitializeData = async () => {
     setLoading(true);
     try {
-      // Step 1: Import historical CSV data (2024-2025)
+      // Step 1: Import historical CSV data (2024-2025) - silently handle errors
       try {
         const { data: csvImportData, error: csvError } = await supabase.functions.invoke('import-historical-csv');
         if (csvError) {
-          console.error('Error importing historical CSV:', csvError);
-          toast({
-            title: "Historical Import Warning",
-            description: "Historical CSV import failed. Continuing with other initialization steps.",
-            variant: "destructive",
-          });
+          console.log('Historical CSV already imported or error occurred:', csvError);
         } else {
           console.log('Historical CSV import completed:', csvImportData);
-          toast({
-            title: "Historical Data Imported",
-            description: `Imported ${csvImportData?.stats?.insertedIncidents || 0} historical incidents`,
-          });
         }
       } catch (importError) {
-        console.error('Historical CSV import failed:', importError);
-        toast({
-          title: "Historical Import Failed",
-          description: "Could not import historical data. Check if CSV file exists.",
-          variant: "destructive",
-        });
+        console.log('Historical CSV import skipped:', importError);
       }
 
-      // Step 2: Seed academic records for current students
-      const { data: academicResult, error: academicError } = await supabase
-        .rpc('seed_academic_records');
-      
-      if (academicError) {
-        console.error('Error seeding academic records:', academicError);
-      } else {
-        console.log('Academic records seeded:', academicResult);
+      // Step 2: Generate current year test data (2025-2026) first
+      try {
+        const { data: currentYearData, error: currentYearError } = await supabase.rpc('seed_current_year_behavior_data');
+        if (currentYearError) {
+          console.error('Error generating current year data:', currentYearError);
+        } else {
+          console.log('Current year behavior data generated:', currentYearData);
+          toast({
+            title: "Test Data Generated",
+            description: `Generated ${currentYearData || 0} current year incidents`,
+          });
+        }
+      } catch (error) {
+        console.log('Current year data generation skipped:', error);
       }
 
-      // Step 3: Generate current year test data (2025-2026)
-      const { data: currentYearData, error: currentYearError } = await supabase.rpc('seed_current_year_behavior_data');
-      if (currentYearError) {
-        console.error('Error generating current year data:', currentYearError);
-      } else {
-        console.log('Current year behavior data generated:', currentYearData);
-        toast({
-          title: "Test Data Generated",
-          description: `Generated ${currentYearData || 0} current year incidents`,
-        });
+      // Step 3: Seed academic records for current students
+      try {
+        const { data: academicResult, error: academicError } = await supabase.rpc('seed_academic_records');
+        if (academicError) {
+          console.error('Error seeding academic records:', academicError);
+        } else {
+          console.log('Academic records seeded:', academicResult);
+        }
+      } catch (error) {
+        console.log('Academic records seeding skipped:', error);
       }
 
       // Step 4: Match students to historical data
-      const { data: matchResult, error: matchError } = await supabase
-        .rpc('match_students_to_historical_data');
-
-      if (matchError) {
-        console.error('Error matching students to historical data:', matchError);
-      } else {
-        console.log('Students matched to historical data:', matchResult);
+      try {
+        const { data: matchResult, error: matchError } = await supabase.rpc('match_students_to_historical_data');
+        if (matchError) {
+          console.error('Error matching students to historical data:', matchError);
+        } else {
+          console.log('Students matched to historical data:', matchResult);
+        }
+      } catch (error) {
+        console.log('Student matching skipped:', error);
       }
 
       await initializeData();
