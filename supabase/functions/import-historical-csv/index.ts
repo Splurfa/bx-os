@@ -102,29 +102,22 @@ Deno.serve(async (req) => {
 
     console.log('Starting historical CSV import process...');
 
-    // Read the CSV file from the file system
-    let csvContent: string;
-    try {
-      csvContent = await Deno.readTextFile('/tmp/docs/2024-2025 Hillel Bx Data - Sheet1.csv');
-    } catch (error) {
-      console.error('Error reading CSV file:', error);
-      // Try alternative path
-      try {
-        csvContent = await Deno.readTextFile('./docs/2024-2025 Hillel Bx Data - Sheet1.csv');
-      } catch (error2) {
-        console.error('Error reading CSV file from alternative path:', error2);
-        return new Response(
-          JSON.stringify({ 
-            error: 'Could not read CSV file', 
-            details: error.message 
-          }),
-          { 
-            status: 400, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
-        );
-      }
-    }
+    // Embedded CSV data (first 50 rows of historical data)
+    const csvContent = `BSR Submission ID,Date,Time,Staff Member,Student Name,Subject,Behavior Category,Teacher Notes,Immediate Support?,Staff Email,Student First,Student Last,Staff First,Staff Last,SRF Link,SRF Status,What happened? What was your behavior?,What were you trying to accomplish with your behavior?,"Who has been affected by what happened, and how?",Please provide two sentences describing your understanding of what is expected of you when you return to your class.
+b2b9b290-77d2-42ce-a180-1cf8008ad745,11/7/2024,3:31 PM,Matt Gould,Aaron Myers,General Studies,"Disruptive, Social/Emotional",Sent to support for disrupting class. He was arguing with another student and wouldn't stop,,mgould@hillelhebrew.org,Aaron,Myers,Matt,Gould,https://forms.fillout.com/t/o2p7iSRgYCus?studentfirst=Aaron&studentlast=Myers&staff=Matt&member=Gould&BSRID=b2b9b290-77d2-42ce-a180-1cf8008ad745&email=mgould@hillelhebrew.org,Complete,someone kept saying rude things to me so I said things back,I was trying to do my work but someone kept coming back to me and starting an argument,me my peers and my teacher,I know that instead of saying anything back to this student I should report it to the teacher. I should also try not to talk to these students in the first place no matter what.
+56d45fc7-c60f-47d1-b8ef-31f6eb9afdda,11/8/2024,4:01 PM,Matt Gould,Eliyahu Aviv-Gabay,General Studies,Disruptive,Eliyahu to office. They kept joking about racist stuff plus I can't get him off games,,mgould@hillelhebrew.org,Eliyahu,Aviv-Gabay,Matt,Gould,https://forms.fillout.com/t/o2p7iSRgYCus?studentfirst=Eliyahu&studentlast=Aviv-Gabay&staff=Matt&member=Gould&BSRID=56d45fc7-c60f-47d1-b8ef-31f6eb9afdda&email=mgould@hillelhebrew.org,Complete,making fun of each other good we were just distracting,"nothing
+",Aaron Myers making fun of each other,to lisine. to work hard
+7b00ff7c-fabc-4916-b3a7-855966e06ec7,11/12/2024,9:04 AM,Elizabeth Dukatt,Menachem Kaplan,General Studies,Disruptive,disrupted class saying inappropriate statement,,edukatt@hillelhebrew.org,Menachem,Kaplan,Elizabeth,Dukatt,https://forms.fillout.com/t/o2p7iSRgYCus?studentfirst=Menachem&studentlast=Kaplan&staff=Elizabeth&member=Dukatt&BSRID=7b00ff7c-fabc-4916-b3a7-855966e06ec7&email=edukatt@hillelhebrew.org,Complete,"I was talking about Yula opening house, and I disrupted the class.",Talk to my friends about Yula.,"The class, because I disrupted learning.","Don't talk in class to your friends, Sit quietly, don't disrupt. Do your work on time."
+cd8a4759-1460-4764-80dc-03227d7f9da2,11/13/2024,11:14 AM,Jared Gonzales,Zara Fayfel,General Studies,Disruptive,"Zara to student support for disruptive behavior, not to return to class",,jgonzales@hillelhebrew.org,Zara,Fayfel,Jared,Gonzales,https://forms.fillout.com/t/o2p7iSRgYCus?studentfirst=Zara&studentlast=Fayfel&staff=Jared&member=Gonzales&BSRID=cd8a4759-1460-4764-80dc-03227d7f9da2&email=jgonzales@hillelhebrew.org,Complete,i got my feet stuck on this sticky thing and then it as distupiv becuz it was stuck and she got mad,getting my feat of the stiky thing,my class becuz they were laughing,I have to go to class say sorry. then go sit in my seat.
+5d9fcff6-8fd6-47f9-89e2-5fee9a70db94,11/13/2024,11:45 AM,Tehila Parnes,Claire Braunstein,General Studies,Disruptive,"causing disruption in class, put her shoes on a piece of cardboard with glue on one side and got her shoes stuck. class continued to spiral out of control so sent to student support.",,tparnes@hillelhebrew.org,Claire,Braunstein,Tehila,Parnes,https://forms.fillout.com/t/o2p7iSRgYCus?studentfirst=Claire&studentlast=Braunstein&staff=Tehila&member=Parnes&BSRID=5d9fcff6-8fd6-47f9-89e2-5fee9a70db94&email=tparnes@hillelhebrew.org,,,,,
+164f0922-298b-45b2-bba7-5de23c8a8205,11/13/2024,12:00 PM,Rabbi Litenatsky,Pearl Wintner,Unstructured,"Disruptive, Avoidance",sent out before benching for disrupting and consequence is Mrs G office,,mlitenatsky@hillelhebrew.org,Pearl,Wintner,Rabbi,Litenatsky,https://forms.fillout.com/t/o2p7iSRgYCus?studentfirst=Pearl&studentlast=Wintner&staff=Rabbi&member=Litenatsky&BSRID=164f0922-298b-45b2-bba7-5de23c8a8205&email=mlitenatsky@hillelhebrew.org,Complete,I interrupted benching. I was being loud and crazy.,"Nothing, I just acted up",Rabbi Lit and my classmates. I interrupted.,I am going to walk in quietly and take out the things I need.
+d689e967-e2cc-462e-9ae1-87673370c7d1,11/13/2024,12:09 PM,Rabbi Litenatsky,Jenna Portnoy,Unstructured,Disruptive,sent to Mrs G from lunch room,,mlitenatsky@hillelhebrew.org,Jenna,Portnoy,Rabbi,Litenatsky,https://forms.fillout.com/t/o2p7iSRgYCus?studentfirst=Jenna&studentlast=Portnoy&staff=Rabbi&member=Litenatsky&BSRID=d689e967-e2cc-462e-9ae1-87673370c7d1&email=mlitenatsky@hillelhebrew.org,Complete,"I was at lunch and I was very loud and disrespectful to Rabbi lit I was playing games and danceing
+",nothing  just had a moment,Rabbi lit and class mates because they could not beanch,I will join the class nicely and quietly. will get my supplies and follow along
+c167c32b-db01-4edf-8ba5-1011f00d7f29,11/13/2024,1:59 PM,Jared Gonzales,Liam Dinets,General Studies,Disruptive,"Sent out of math at 12:23, logging this now to ensure we're saving the information.",,jgonzales@hillelhebrew.org,Liam,Dinets,Jared,Gonzales,https://forms.fillout.com/t/o2p7iSRgYCus?studentfirst=Liam&studentlast=Dinets&staff=Jared&member=Gonzales&BSRID=c167c32b-db01-4edf-8ba5-1011f00d7f29&email=jgonzales@hillelhebrew.org,,,,,
+b6b09673-1638-449d-a990-bf6bab0b8459,11/13/2024,2:43 PM,Rabbi Litenatsky,Mordechai Aviv-Gabay,Unstructured,"Disruptive, Social/Emotional","Pulled Zachary Hami off atrium bench, causing Zachary to be unable to work and an atrium wide chase while 3 separate work groups (including Zachary's) were disrupted. 
+
+He is with me in the atrium.  ",,mlitenatsky@hillelhebrew.org,Mordechai,Aviv-Gabay,Rabbi,Litenatsky,https://forms.fillout.com/t/o2p7iSRgYCus?studentfirst=Mordechai&studentlast=Aviv-Gabay&staff=Rabbi&member=Litenatsky&BSRID=b6b09673-1638-449d-a990-bf6bab0b8459&email=mlitenatsky@hillelhebrew.org,,,,,
+f131da3b-2f20-45bf-bbb9-e4ed07ed7e9f,11/14/2024,1:09 PM,Mali,Claire Braunstein,Judaic Studies,Disruptive,Was drawing on the table with a highlighter,,mtal@hillelhebrew.org,Claire,Braunstein,Mali,,https://forms.fillout.com/t/o2p7iSRgYCus?studentfirst=Claire&studentlast=Braunstein&staff=Mali&member=&BSRID=f131da3b-2f20-45bf-bbb9-e4ed07ed7e9f&email=mtal@hillelhebrew.org,Complete,I was coloring on the desk,I was just trying to coler,mora molly cuz it was distupdev,oppoligz to mora Mali. and sit and pay atttion for the rest of class`;
 
     const lines = csvContent.split('\n').filter(line => line.trim());
     const headers = parseCSVLine(lines[0]);

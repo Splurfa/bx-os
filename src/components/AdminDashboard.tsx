@@ -20,8 +20,6 @@ import QueueDisplay from './QueueDisplay';
 import UserManagement from './UserManagement';
 import { QueueIntegrityMonitor } from './QueueIntegrityMonitor';
 import { SessionMonitor } from './SessionMonitor';
-import { DataInitializationButton } from './DataInitializationButton';
-import { CSVImportTest } from './CSVImportTest';
 import StickyFooter from './StickyFooter';
 import { useToast } from '@/hooks/use-toast';
 import { useProfile } from '@/hooks/useProfile';
@@ -383,10 +381,10 @@ const AdminDashboard = () => {
             </TabsContent>
 
             <TabsContent value="data" className={isMobile ? "space-y-3" : "space-y-6"}>
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                <DataInitializationButton />
-                <CSVImportTest />
-              </div>
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold mb-2">Data Status</h3>
+                <p className="text-muted-foreground">Historical data is automatically loaded. Current year test data is generated as needed.</p>
+              </Card>
             </TabsContent>
           </Tabs>
         )}
