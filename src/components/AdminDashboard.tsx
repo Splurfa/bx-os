@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import AdminReportsRefactored from '@/components/AdminReportsRefactored';
 import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Monitor, PowerOff, Copy, Shield, ExternalLink, Home, BarChart } from 'lucide-react';
 import AppHeader from './AppHeader';
 import QueueDisplay from './QueueDisplay';
@@ -238,13 +239,15 @@ const AdminDashboard = () => {
       <AppHeader />
       
       <div className="container-page spacing-section max-w-[1600px] mx-auto pb-20">
-        {/* Home View */}
+        {/* Home View with Tabs */}
         {currentView === 'home' && (
-          <div className={isMobile ? "space-y-3" : "space-y-6"}>
-            {/* System Overview */}
-            <div>
-              <h2 className="text-h2 mb-4">System Overview</h2>
-              
+          <Tabs defaultValue="overview" className="space-y-4">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="overview">System Overview</TabsTrigger>
+              <TabsTrigger value="sessions">User Sessions</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="overview" className={isMobile ? "space-y-3" : "space-y-6"}>
               {/* Simplified Kiosk Management */}
               <Card>
                 <CardHeader>
@@ -368,18 +371,14 @@ const AdminDashboard = () => {
                   />
                 </CardContent>
               </Card>
-            </div>
+            </TabsContent>
 
-            {/* User Sessions */}
-            <div>
-              <h2 className="text-h2 mb-4">User Sessions</h2>
-              <div className={isMobile ? "space-y-3" : "space-y-6"}>
-                <QueueIntegrityMonitor />
-                <UserManagement />
-                <SessionMonitor />
-              </div>
-            </div>
-          </div>
+            <TabsContent value="sessions" className={isMobile ? "space-y-3" : "space-y-6"}>
+              <QueueIntegrityMonitor />
+              <UserManagement />
+              <SessionMonitor />
+            </TabsContent>
+          </Tabs>
         )}
 
         {/* Reports View */}
@@ -391,14 +390,14 @@ const AdminDashboard = () => {
       {/* Sticky Footer Navigation */}
       <StickyFooter
         primaryAction={{
-          label: currentView === 'home' ? 'Switch to Reports' : 'Switch to Home',
+          label: currentView === 'home' ? 'Reports' : 'Home',
           onClick: () => setCurrentView(currentView === 'home' ? 'reports' : 'home'),
-          variant: 'default'
+          variant: currentView === 'home' ? 'outline' : 'default'
         }}
         secondaryAction={{
           label: currentView === 'home' ? 'Home' : 'Reports',
-          onClick: () => {},
-          variant: 'outline'
+          onClick: () => setCurrentView(currentView === 'home' ? 'reports' : 'home'),
+          variant: currentView === 'home' ? 'default' : 'outline'
         }}
         className="flex items-center justify-center"
       />

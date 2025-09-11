@@ -1,14 +1,15 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import StudentSelection from '@/components/StudentSelection';
+import StudentProfileView from '@/components/StudentProfileView';
 import { useReportingData } from '@/hooks/useReportingData';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { Search, TrendingUp, Users, FileText, Calendar, User } from 'lucide-react';
+import { TrendingUp, Users, FileText } from 'lucide-react';
 import { useDateContext } from '@/contexts/DateContext';
-import { debounce } from 'lodash';
+import type { Student } from '@/hooks/useStudents';
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--muted))'];
 
@@ -26,44 +27,39 @@ interface StudentProfile {
 }
 
 const AdminReportsRefactored = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedStudent, setSelectedStudent] = useState<StudentProfile | null>(null);
-  const [isSearching, setIsSearching] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const { currentDate, academicYearStart } = useDateContext();
   const {
     overviewMetrics,
     studentProfiles,
-    loading,
-    searchStudents
+    loading
   } = useReportingData();
 
-  // Debounced search function
-  const debouncedSearch = useCallback(
-    debounce(async (term: string) => {
-      if (term.trim().length >= 2) {
-        setIsSearching(true);
-        await searchStudents(term);
-        setIsSearching(false);
-      }
-    }, 300),
-    [searchStudents]
-  );
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    setSelectedStudent(null);
-    debouncedSearch(value);
-  };
-
-  const handleStudentSelect = (student: StudentProfile) => {
+  const handleStudentSelect = (student: Student) => {
     setSelectedStudent(student);
-    setSearchTerm(`${student.first_name} ${student.last_name}`);
   };
 
-  const clearSelection = () => {
+  const handleStudentDeselect = () => {
     setSelectedStudent(null);
-    setSearchTerm('');
+  };
+
+  // Convert Student to StudentProfile format for the profile view
+  const getStudentProfileData = (student: Student): StudentProfile | null => {
+    if (!student) return null;
+    
+    const profile = studentProfiles.find(p => p.student_id === student.id);
+    return {
+      student_id: student.id,
+      first_name: student.first_name,
+      last_name: student.last_name,
+      current_grade: student.grade || 'Unknown',
+      current_incidents: profile?.current_incidents || 0,
+      current_reflections: profile?.current_reflections || 0,
+      historical_incidents: profile?.historical_incidents || 0,
+      historical_grade: profile?.historical_grade,
+      gpa: profile?.gpa,
+      attendance_rate: profile?.attendance_rate,
+    };
   };
 
   const MetricCard = ({ title, value, description, icon: Icon }: {
@@ -84,93 +80,6 @@ const AdminReportsRefactored = () => {
     </Card>
   );
 
-  const StudentCard = ({ student, isSelected, onClick }: {
-    student: StudentProfile;
-    isSelected: boolean;
-    onClick: () => void;
-  }) => (
-    <Card 
-      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
-        isSelected ? 'ring-2 ring-primary shadow-md' : ''
-      }`}
-      onClick={onClick}
-    >
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <div className="font-medium">{student.first_name} {student.last_name}</div>
-          <Badge variant="outline">{student.current_grade} Grade</Badge>
-        </div>
-        <div className="text-sm text-muted-foreground">
-          {student.current_incidents} current incidents • {student.historical_incidents} historical
-        </div>
-      </CardContent>
-    </Card>
-  );
-
-  const DetailedStudentProfile = ({ student }: { student: StudentProfile }) => (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-lg">
-              {student.first_name} {student.last_name}
-            </CardTitle>
-            <CardDescription>{student.current_grade} Grade Student Profile</CardDescription>
-          </div>
-          <Button variant="outline" size="sm" onClick={clearSelection}>
-            Clear Selection
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <p className="text-sm font-medium">Current Year</p>
-            <p className="text-2xl font-bold">{student.current_incidents}</p>
-            <p className="text-xs text-muted-foreground">Incidents</p>
-          </div>
-          <div>
-            <p className="text-sm font-medium">Historical</p>
-            <p className="text-2xl font-bold">{student.historical_incidents}</p>
-            <p className="text-xs text-muted-foreground">
-              {student.historical_grade ? `${student.historical_grade} Grade` : 'No data'}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm font-medium">GPA</p>
-            <p className="text-2xl font-bold">
-              {student.gpa ? student.gpa.toFixed(2) : 'N/A'}
-            </p>
-            <p className="text-xs text-muted-foreground">Academic Performance</p>
-          </div>
-          <div>
-            <p className="text-sm font-medium">Attendance</p>
-            <p className="text-2xl font-bold">
-              {student.attendance_rate ? `${student.attendance_rate.toFixed(0)}%` : 'N/A'}
-            </p>
-            <p className="text-xs text-muted-foreground">Attendance Rate</p>
-          </div>
-        </div>
-        
-        {student.current_incidents > 0 && student.historical_incidents > 0 && (
-          <div className="mt-4 p-3 bg-muted rounded-lg">
-            <p className="text-sm">
-              <strong>Year-over-Year Trend:</strong>{' '}
-              {student.current_incidents > student.historical_incidents ? (
-                <span className="text-destructive">Increase</span>
-              ) : student.current_incidents < student.historical_incidents ? (
-                <span className="text-green-600">Decrease</span>
-              ) : (
-                <span className="text-muted-foreground">No Change</span>
-              )}{' '}
-              ({student.current_incidents - student.historical_incidents > 0 ? '+' : ''}
-              {student.current_incidents - student.historical_incidents} incidents)
-            </p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
 
   return (
     <div className="space-y-6">
@@ -270,71 +179,25 @@ const AdminReportsRefactored = () => {
         </TabsContent>
 
         <TabsContent value="students" className="space-y-4">
-          {/* Search */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Student Search</CardTitle>
-              <CardDescription>Search and select a student to view detailed profile</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Type student name (minimum 2 characters)..."
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  className="pl-10"
-                />
-                {isSearching && (
-                  <div className="absolute right-3 top-3">
-                    <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Selected Student Details */}
-          {selectedStudent && (
-            <DetailedStudentProfile student={selectedStudent} />
-          )}
-
-          {/* Search Results */}
-          {searchTerm.length >= 2 && !selectedStudent && (
+          {/* Show Student Profile View when student is selected */}
+          {selectedStudent ? (
+            <StudentProfileView 
+              student={getStudentProfileData(selectedStudent)!}
+              onClearSelection={handleStudentDeselect}
+            />
+          ) : (
+            /* Show Student Selection Component */
             <Card>
               <CardHeader>
-                <CardTitle>Search Results</CardTitle>
-                <CardDescription>Click on a student to view detailed profile</CardDescription>
+                <CardTitle>Student Search & Selection</CardTitle>
+                <CardDescription>Search for a student to view their comprehensive profile</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {studentProfiles.map((student) => (
-                    <StudentCard
-                      key={student.student_id}
-                      student={student}
-                      isSelected={false}
-                      onClick={() => handleStudentSelect(student)}
-                    />
-                  ))}
-                  {studentProfiles.length === 0 && !loading && (
-                    <div className="text-center py-8">
-                      <User className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                      <p className="text-lg font-medium">No students found</p>
-                      <p className="text-muted-foreground">Try adjusting your search criteria</p>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Initial State */}
-          {searchTerm.length < 2 && !selectedStudent && (
-            <Card>
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <Search className="h-12 w-12 text-muted-foreground mb-4" />
-                <p className="text-lg font-medium">Start typing to search</p>
-                <p className="text-muted-foreground">Enter at least 2 characters to find students</p>
+                <StudentSelection
+                  onStudentSelect={handleStudentSelect}
+                  onStudentDeselect={handleStudentDeselect}
+                  selectedStudentId={selectedStudent?.id}
+                />
               </CardContent>
             </Card>
           )}
