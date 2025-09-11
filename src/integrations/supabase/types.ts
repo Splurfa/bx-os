@@ -460,6 +460,39 @@ export type Database = {
         }
         Relationships: []
       }
+      historical_staff: {
+        Row: {
+          academic_year: string
+          created_at: string
+          department: string | null
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          position: string | null
+        }
+        Insert: {
+          academic_year?: string
+          created_at?: string
+          department?: string | null
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          position?: string | null
+        }
+        Update: {
+          academic_year?: string
+          created_at?: string
+          department?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          position?: string | null
+        }
+        Relationships: []
+      }
       import_exceptions: {
         Row: {
           created_at: string | null
