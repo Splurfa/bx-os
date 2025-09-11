@@ -20,6 +20,8 @@ import QueueDisplay from './QueueDisplay';
 import UserManagement from './UserManagement';
 import { QueueIntegrityMonitor } from './QueueIntegrityMonitor';
 import { SessionMonitor } from './SessionMonitor';
+import { DataInitializationButton } from './DataInitializationButton';
+import { CSVImportTest } from './CSVImportTest';
 import StickyFooter from './StickyFooter';
 import { useToast } from '@/hooks/use-toast';
 import { useProfile } from '@/hooks/useProfile';
@@ -242,9 +244,10 @@ const AdminDashboard = () => {
         {/* Home View with Tabs */}
         {currentView === 'home' && (
           <Tabs defaultValue="overview" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="overview">System Overview</TabsTrigger>
               <TabsTrigger value="sessions">User Sessions</TabsTrigger>
+              <TabsTrigger value="data">Data Management</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className={isMobile ? "space-y-3" : "space-y-6"}>
@@ -377,6 +380,13 @@ const AdminDashboard = () => {
               <QueueIntegrityMonitor />
               <UserManagement />
               <SessionMonitor />
+            </TabsContent>
+
+            <TabsContent value="data" className={isMobile ? "space-y-3" : "space-y-6"}>
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <DataInitializationButton />
+                <CSVImportTest />
+              </div>
             </TabsContent>
           </Tabs>
         )}

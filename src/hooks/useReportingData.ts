@@ -36,19 +36,28 @@ export const useReportingData = () => {
     setLoading(true);
     try {
       // Step 1: Import historical CSV data (2024-2025)
-      const { data: csvImportData, error: csvError } = await supabase.functions.invoke('import-historical-csv');
-      if (csvError) {
-        console.error('Error importing historical CSV:', csvError);
+      try {
+        const { data: csvImportData, error: csvError } = await supabase.functions.invoke('import-historical-csv');
+        if (csvError) {
+          console.error('Error importing historical CSV:', csvError);
+          toast({
+            title: "Historical Import Warning",
+            description: "Historical CSV import failed. Continuing with other initialization steps.",
+            variant: "destructive",
+          });
+        } else {
+          console.log('Historical CSV import completed:', csvImportData);
+          toast({
+            title: "Historical Data Imported",
+            description: `Imported ${csvImportData?.stats?.insertedIncidents || 0} historical incidents`,
+          });
+        }
+      } catch (importError) {
+        console.error('Historical CSV import failed:', importError);
         toast({
-          title: "Historical Import Warning",
-          description: "Historical CSV import failed. Continuing with other initialization steps.",
+          title: "Historical Import Failed",
+          description: "Could not import historical data. Check if CSV file exists.",
           variant: "destructive",
-        });
-      } else {
-        console.log('Historical CSV import completed:', csvImportData);
-        toast({
-          title: "Historical Data Imported",
-          description: `Imported ${csvImportData?.stats?.insertedIncidents || 0} historical incidents`,
         });
       }
 

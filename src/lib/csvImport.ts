@@ -1,41 +1,41 @@
 import { supabase } from '@/integrations/supabase/client';
 
-// Import historical data from 2024-2025 school year
-export const importHistoricalCSVData = async () => {
+// Import historical CSV data from 2024-2025
+export const importHistoricalData = async () => {
   try {
-    console.log('Starting historical CSV import...');
+    console.log('Starting historical data import...');
     
     const { data, error } = await supabase.functions.invoke('import-historical-csv');
     
     if (error) {
-      console.error('Historical CSV import error:', error);
-      throw new Error('Failed to import historical CSV data: ' + error.message);
+      console.error('Historical import error:', error);
+      throw new Error('Failed to import historical data: ' + error.message);
     }
     
-    console.log('Historical CSV import completed:', data);
+    console.log('Historical import completed:', data);
     return data;
   } catch (error) {
-    console.error('Historical CSV import failed:', error);
+    console.error('Historical import failed:', error);
     throw error;
   }
 };
 
-// Complete CSV import function that processes all 691+ students (current year)
-export const importCSVData = async () => {
+// Generate current year test data (2025-2026)
+export const generateCurrentYearData = async () => {
   try {
-    console.log('Starting complete CSV import...');
+    console.log('Generating current year test data...');
     
-    const { data, error } = await supabase.functions.invoke('import-csv');
+    const { data, error } = await supabase.rpc('seed_current_year_behavior_data');
     
     if (error) {
-      console.error('CSV import error:', error);
-      throw new Error('Failed to import CSV data: ' + error.message);
+      console.error('Current year data generation error:', error);
+      throw new Error('Failed to generate current year data: ' + error.message);
     }
     
-    console.log('CSV import completed:', data);
+    console.log('Generated incidents:', data);
     return data;
   } catch (error) {
-    console.error('CSV import failed:', error);
+    console.error('Current year data generation failed:', error);
     throw error;
   }
 };
