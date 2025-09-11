@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useKiosks } from '@/contexts/KioskContext';
 import { useSupabaseQueue } from '@/hooks/useSupabaseQueue';
@@ -9,28 +9,26 @@ import { deviceSessionManager } from '@/lib/deviceSessionManager';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import AdminReports from '@/components/AdminReports';
+import AdminReportsRefactored from '@/components/AdminReportsRefactored';
 import { Switch } from '@/components/ui/switch';
-import { Monitor, PowerOff, Link as LinkIcon, Copy, Clock, Shield, ExternalLink } from 'lucide-react';
+import { Monitor, PowerOff, Copy, Shield, ExternalLink, Home, BarChart } from 'lucide-react';
 import AppHeader from './AppHeader';
 import QueueDisplay from './QueueDisplay';
 import UserManagement from './UserManagement';
 import { QueueIntegrityMonitor } from './QueueIntegrityMonitor';
-
-
 import { SessionMonitor } from './SessionMonitor';
+import StickyFooter from './StickyFooter';
 import { useToast } from '@/hooks/use-toast';
 import { useProfile } from '@/hooks/useProfile';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
   const { profile } = useProfile();
   const navigate = useNavigate();
+  const [currentView, setCurrentView] = useState<'home' | 'reports'>('home');
   const { kiosks, activateKiosk, deactivateKiosk, deactivateAllKiosks, refreshKiosks, loading: kioskLoading } = useKiosks();
 
   // Defensive role checking - ensure admin is on correct dashboard
@@ -239,162 +237,171 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <AppHeader />
       
-      {/* Widen the content area slightly on larger screens without affecting global layout */}
-      <div className="container-page spacing-section max-w-[1600px] mx-auto">
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className={`grid w-full grid-cols-3 ${isMobile ? 'text-xs' : 'text-xs sm:text-sm'}`}>
-            <TabsTrigger value="overview">System Overview</TabsTrigger>
-            <TabsTrigger value="users">Users & Sessions</TabsTrigger>
-            <TabsTrigger value="reports">Reports</TabsTrigger>
-          </TabsList>
-
-          {/* System Overview Tab */}
-          <TabsContent value="overview" className={isMobile ? "space-y-3" : "space-y-6"}>
-            
-            {/* Simplified Kiosk Management */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Monitor className="icon-h2 text-primary" />
-                    <CardTitle className="text-h3">iPad Kiosk Setup</CardTitle>
+      <div className="container-page spacing-section max-w-[1600px] mx-auto pb-20">
+        {/* Home View */}
+        {currentView === 'home' && (
+          <div className={isMobile ? "space-y-3" : "space-y-6"}>
+            {/* System Overview */}
+            <div>
+              <h2 className="text-h2 mb-4">System Overview</h2>
+              
+              {/* Simplified Kiosk Management */}
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Monitor className="icon-h2 text-primary" />
+                      <CardTitle className="text-h3">iPad Kiosk Setup</CardTitle>
+                    </div>
+                    {!isMobile && (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={handleDeactivateAll}
+                        disabled={kioskLoading || activeKioskCount === 0}
+                      >
+                        <PowerOff className="icon-inline mr-2" />
+                        Deactivate All
+                      </Button>
+                    )}
                   </div>
-                  {!isMobile && (
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={handleDeactivateAll}
-                      disabled={kioskLoading || activeKioskCount === 0}
-                    >
-                      <PowerOff className="icon-inline mr-2" />
-                      Deactivate All
-                    </Button>
-                  )}
-                </div>
-                <CardDescription className="text-body-small">
-                  Static URLs for 3 dedicated iPads - no session management needed
-                </CardDescription>
-              </CardHeader>
-              <CardContent className={`space-y-4 ${isMobile ? 'p-3 pt-0' : ''}`}>
-                <div className={`grid grid-cols-1 ${isMobile ? 'gap-2' : 'sm:grid-cols-2 lg:grid-cols-3 gap-4'}`}>
-                  {kiosks.map((kiosk) => {
-                    // Simplified: Use static URLs instead of dynamic sessions
-                    const staticUrl = `/kiosk${kiosk.id}`;
-                    const fullUrl = `${window.location.origin}${staticUrl}`;
-                    
-                    return (
-                      <Card key={kiosk.id} className="relative">
-                        <CardContent className={isMobile ? "p-3" : "p-4"}>
-                          <div className={`flex items-center justify-between ${isMobile ? 'mb-2' : 'mb-3'}`}>
-                            <div className="flex items-center space-x-2">
-                              <Monitor className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
-                              <span className={`font-medium ${isMobile ? 'text-sm' : ''}`}>{kiosk.name}</span>
+                  <CardDescription className="text-body-small">
+                    Static URLs for 3 dedicated iPads - no session management needed
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className={`space-y-4 ${isMobile ? 'p-3 pt-0' : ''}`}>
+                  <div className={`grid grid-cols-1 ${isMobile ? 'gap-2' : 'sm:grid-cols-2 lg:grid-cols-3 gap-4'}`}>
+                    {kiosks.map((kiosk) => {
+                      const staticUrl = `/kiosk${kiosk.id}`;
+                      
+                      return (
+                        <Card key={kiosk.id} className="relative">
+                          <CardContent className={isMobile ? "p-3" : "p-4"}>
+                            <div className={`flex items-center justify-between ${isMobile ? 'mb-2' : 'mb-3'}`}>
+                              <div className="flex items-center space-x-2">
+                                <Monitor className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
+                                <span className={`font-medium ${isMobile ? 'text-sm' : ''}`}>{kiosk.name}</span>
+                                {kiosk.isActive && (
+                                  <Badge variant="secondary" className="text-xs">
+                                    <Shield className="w-3 h-3 mr-1" />
+                                    Ready
+                                  </Badge>
+                                )}
+                              </div>
+                              <Switch
+                                checked={kiosk.isActive}
+                                onCheckedChange={(checked) => handleKioskToggle(kiosk.id, kiosk.isActive)}
+                                disabled={kioskLoading}
+                              />
+                            </div>
+                            
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <span className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>Status</span>
+                                <span className={`${isMobile ? 'text-xs' : 'text-sm'}`}>
+                                  {kiosk.isActive ? 'Active' : 'Inactive'}
+                                </span>
+                              </div>
+
+                              {/* Static URL Info */}
                               {kiosk.isActive && (
-                                <Badge variant="secondary" className="text-xs">
-                                  <Shield className="w-3 h-3 mr-1" />
-                                  Ready
-                                </Badge>
+                                <div className="space-y-2 p-2 bg-muted/50 rounded-lg">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-xs text-muted-foreground">Static URL</span>
+                                    <code className="text-xs font-mono">{staticUrl}</code>
+                                  </div>
+                                  <div className="flex gap-1 pt-1">
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="text-xs h-6 px-2"
+                                      onClick={() => handleCopyUrl(staticUrl, kiosk.id)}
+                                    >
+                                      <Copy className="w-3 h-3 mr-1" />
+                                      Copy URL
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="text-xs h-6 px-2"
+                                      onClick={() => handleOpenKiosk(staticUrl)}
+                                    >
+                                      <ExternalLink className="w-3 h-3 mr-1" />
+                                      Open
+                                    </Button>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Inactive Notice */}
+                              {!kiosk.isActive && (
+                                <Alert className="p-2">
+                                  <AlertDescription className="text-xs">
+                                    Activate kiosk to enable student access at {staticUrl}
+                                  </AlertDescription>
+                                </Alert>
                               )}
                             </div>
-                            <Switch
-                              checked={kiosk.isActive}
-                              onCheckedChange={(checked) => handleKioskToggle(kiosk.id, kiosk.isActive)}
-                              disabled={kioskLoading}
-                            />
-                          </div>
-                          
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <span className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>Status</span>
-                              <span className={`${isMobile ? 'text-xs' : 'text-sm'}`}>
-                                {kiosk.isActive ? 'Active' : 'Inactive'}
-                              </span>
-                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
 
-                            {/* Static URL Info */}
-                            {kiosk.isActive && (
-                              <div className="space-y-2 p-2 bg-muted/50 rounded-lg">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs text-muted-foreground">Static URL</span>
-                                  <code className="text-xs font-mono">{staticUrl}</code>
-                                </div>
-                                <div className="flex gap-1 pt-1">
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="text-xs h-6 px-2"
-                                    onClick={() => handleCopyUrl(staticUrl, kiosk.id)}
-                                  >
-                                    <Copy className="w-3 h-3 mr-1" />
-                                    Copy URL
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="text-xs h-6 px-2"
-                                    onClick={() => handleOpenKiosk(staticUrl)}
-                                  >
-                                    <ExternalLink className="w-3 h-3 mr-1" />
-                                    Open
-                                  </Button>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Inactive Notice */}
-                            {!kiosk.isActive && (
-                              <Alert className="p-2">
-                                <AlertDescription className="text-xs">
-                                  Activate kiosk to enable student access at {staticUrl}
-                                </AlertDescription>
-                              </Alert>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Queue Display */}
-            <Card>
-              <CardContent className={isMobile ? "p-2" : "px-3 py-2 md:px-4 md:py-3"}>
-                <QueueDisplay
-                  items={items}
-                  onSelectReflection={() => {}}
-                  formatTimeElapsed={formatTimeElapsed}
-                  onClearQueue={handleClearQueue}
-                  clearQueueLoading={clearQueueLoading}
-                  queueLoading={queueLoading}
-                  showClearButton={true}
-                  showReviewButtons={false}
-                  onClearItem={handleClearItem}
-                  showTeacherLastNameChip={true}
-                  layout="admin"
-                />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* User Management Tab with Session Monitor */}
-          <TabsContent value="users" className={isMobile ? "space-y-3" : "space-y-6"}>
-          <QueueIntegrityMonitor />
-          <UserManagement />
-            
-            {/* Session Monitor Section */}
-            <div className={isMobile ? "mt-4" : "mt-8"}>
-              <SessionMonitor />
+              {/* Queue Display */}
+              <Card className="mt-6">
+                <CardContent className={isMobile ? "p-2" : "px-3 py-2 md:px-4 md:py-3"}>
+                  <QueueDisplay
+                    items={items}
+                    onSelectReflection={() => {}}
+                    formatTimeElapsed={formatTimeElapsed}
+                    onClearQueue={handleClearQueue}
+                    clearQueueLoading={clearQueueLoading}
+                    queueLoading={queueLoading}
+                    showClearButton={true}
+                    showReviewButtons={false}
+                    onClearItem={handleClearItem}
+                    showTeacherLastNameChip={true}
+                    layout="admin"
+                  />
+                </CardContent>
+              </Card>
             </div>
-          </TabsContent>
 
-          {/* Reports Tab */}
-          <TabsContent value="reports" className={isMobile ? "space-y-3" : "space-y-6"}>
-            <AdminReports />
-          </TabsContent>
-        </Tabs>
+            {/* User Sessions */}
+            <div>
+              <h2 className="text-h2 mb-4">User Sessions</h2>
+              <div className={isMobile ? "space-y-3" : "space-y-6"}>
+                <QueueIntegrityMonitor />
+                <UserManagement />
+                <SessionMonitor />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Reports View */}
+        {currentView === 'reports' && (
+          <AdminReportsRefactored />
+        )}
       </div>
+
+      {/* Sticky Footer Navigation */}
+      <StickyFooter
+        primaryAction={{
+          label: currentView === 'home' ? 'Switch to Reports' : 'Switch to Home',
+          onClick: () => setCurrentView(currentView === 'home' ? 'reports' : 'home'),
+          variant: 'default'
+        }}
+        secondaryAction={{
+          label: currentView === 'home' ? 'Home' : 'Reports',
+          onClick: () => {},
+          variant: 'outline'
+        }}
+        className="flex items-center justify-center"
+      />
     </div>
   );
 };

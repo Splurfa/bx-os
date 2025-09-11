@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { KioskProvider } from "./contexts/KioskContext";
+import { DateProvider } from "./contexts/DateContext";
 import AdminRoute from "./components/AdminRoute";
 import TeacherRoute from "./components/TeacherRoute";
 import Index from "./pages/Index";
@@ -22,9 +23,10 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <KioskProvider>
-        <TooltipProvider>
+    <DateProvider>
+      <AuthProvider>
+        <KioskProvider>
+          <TooltipProvider>
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<RoleBasedRedirect />} />
@@ -61,6 +63,7 @@ const App = () => (
         </TooltipProvider>
       </KioskProvider>
     </AuthProvider>
+  </DateProvider>
   </QueryClientProvider>
 );
 

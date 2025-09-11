@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useDateContext } from '@/contexts/DateContext';
 
 interface OverviewMetrics {
   currentYearIncidents: number;
@@ -28,10 +29,10 @@ export const useReportingData = () => {
   const [overviewMetrics, setOverviewMetrics] = useState<OverviewMetrics | null>(null);
   const [studentProfiles, setStudentProfiles] = useState<StudentProfile[]>([]);
   const [loading, setLoading] = useState(false);
-  const [isSeeded, setIsSeeded] = useState(false);
   const { toast } = useToast();
+  const { academicYearStart, initializeData, isInitialized } = useDateContext();
 
-  const seedReportingData = async () => {
+  const autoInitializeData = async () => {
     setLoading(true);
     try {
       // Seed academic records
@@ -82,9 +83,9 @@ export const useReportingData = () => {
 
       if (matchError) throw matchError;
 
-      setIsSeeded(true);
+      await initializeData();
       toast({
-        title: "Data Seeded Successfully",
+        title: "Data Initialized Successfully",
         description: `Academic records: ${academicResult}, Historical matches: ${matchResult}`,
       });
 
@@ -209,14 +210,18 @@ export const useReportingData = () => {
   useEffect(() => {
     fetchOverviewMetrics();
     fetchStudentProfiles();
-  }, []);
+    
+    // Auto-initialize data on first admin access
+    if (!isInitialized) {
+      autoInitializeData();
+    }
+  }, [isInitialized]);
 
   return {
     overviewMetrics,
     studentProfiles,
     loading,
-    isSeeded,
-    seedReportingData,
+    autoInitializeData,
     fetchOverviewMetrics,
     fetchStudentProfiles,
     searchStudents
