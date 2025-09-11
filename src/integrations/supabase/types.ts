@@ -1197,6 +1197,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      seed_current_year_behavior_data: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       update_device_session_fingerprint: {
         Args: { p_new_fingerprint: string; p_session_id: string }
         Returns: boolean

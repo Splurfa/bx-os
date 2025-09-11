@@ -35,69 +35,70 @@ export const useReportingData = () => {
   const autoInitializeData = async () => {
     setLoading(true);
     try {
-      // Seed academic records
+      // Step 1: Import historical CSV data (2024-2025)
+      const { data: csvImportData, error: csvError } = await supabase.functions.invoke('import-historical-csv');
+      if (csvError) {
+        console.error('Error importing historical CSV:', csvError);
+        toast({
+          title: "Historical Import Warning",
+          description: "Historical CSV import failed. Continuing with other initialization steps.",
+          variant: "destructive",
+        });
+      } else {
+        console.log('Historical CSV import completed:', csvImportData);
+        toast({
+          title: "Historical Data Imported",
+          description: `Imported ${csvImportData?.stats?.insertedIncidents || 0} historical incidents`,
+        });
+      }
+
+      // Step 2: Seed academic records for current students
       const { data: academicResult, error: academicError } = await supabase
         .rpc('seed_academic_records');
       
-      if (academicError) throw academicError;
+      if (academicError) {
+        console.error('Error seeding academic records:', academicError);
+      } else {
+        console.log('Academic records seeded:', academicResult);
+      }
 
-      // Generate sample historical incidents
-      const { data: historicalResult, error: historicalError } = await supabase
-        .from('historical_incidents')
-        .insert([
-          // Sample historical data for demonstration
-          {
-            student_name: 'Asher Abramson',
-            grade_at_time: '6th',
-            incident_date: '2024-03-15',
-            behavior_type: 'Disruptive Behavior',
-            subject_context: 'Math',
-            reflection_completed: true,
-            data_quality_score: 1.0
-          },
-          {
-            student_name: 'Ella Amona',
-            grade_at_time: '6th',
-            incident_date: '2024-02-10',
-            behavior_type: 'Off-Task Behavior',
-            subject_context: 'English',
-            reflection_completed: false,
-            data_quality_score: 0.9
-          },
-          {
-            student_name: 'Ellia Alyesh',
-            grade_at_time: '7th',
-            incident_date: '2024-01-20',
-            behavior_type: 'Inappropriate Language',
-            subject_context: 'Science',
-            reflection_completed: true,
-            data_quality_score: 1.0
-          }
-        ]);
+      // Step 3: Generate current year test data (2025-2026)
+      const { data: currentYearData, error: currentYearError } = await supabase.rpc('seed_current_year_behavior_data');
+      if (currentYearError) {
+        console.error('Error generating current year data:', currentYearError);
+      } else {
+        console.log('Current year behavior data generated:', currentYearData);
+        toast({
+          title: "Test Data Generated",
+          description: `Generated ${currentYearData || 0} current year incidents`,
+        });
+      }
 
-      if (historicalError) throw historicalError;
-
-      // Match students to historical data
+      // Step 4: Match students to historical data
       const { data: matchResult, error: matchError } = await supabase
         .rpc('match_students_to_historical_data');
 
-      if (matchError) throw matchError;
+      if (matchError) {
+        console.error('Error matching students to historical data:', matchError);
+      } else {
+        console.log('Students matched to historical data:', matchResult);
+      }
 
       await initializeData();
       toast({
-        title: "Data Initialized Successfully",
-        description: `Academic records: ${academicResult}, Historical matches: ${matchResult}`,
+        title: "Data Initialization Complete",
+        description: "All reporting data has been initialized successfully",
       });
 
-      // Refresh data
+      // Step 5: Refresh the reporting data
       await fetchOverviewMetrics();
       await fetchStudentProfiles();
 
     } catch (error) {
-      console.error('Error seeding data:', error);
+      console.error('Error during initialization:', error);
       toast({
-        title: "Seeding Failed",
-        description: "Failed to seed reporting data. Please check console for details.",
+        title: "Initialization Failed",
+        description: "Failed to initialize reporting data. Please check console for details.",
         variant: "destructive",
       });
     } finally {
@@ -118,7 +119,7 @@ export const useReportingData = () => {
           students!inner(grade),
           reflections(id)
         `)
-        .gte('created_at', '2024-09-01');
+        .gte('created_at', '2025-08-25'); // 2025-2026 school year start
 
       if (currentError) throw currentError;
 
