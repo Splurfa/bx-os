@@ -111,18 +111,19 @@ export const useReportingData = () => {
 
   const fetchOverviewMetrics = async () => {
     try {
-      // Current year incidents and reflections
+      // Current year incidents and reflections - use academicYearStart and currentDate
       const { data: currentData, error: currentError } = await supabase
         .from('behavior_requests')
         .select(`
           id,
-          created_at,
+          time_of_incident,
           behavior_type,
           student_id,
           students!inner(grade),
           reflections(id)
         `)
-        .gte('created_at', '2025-08-25'); // 2025-2026 school year start
+        .gte('time_of_incident', academicYearStart.toISOString())
+        .lte('time_of_incident', new Date().toISOString());
 
       if (currentError) throw currentError;
 
@@ -212,9 +213,13 @@ export const useReportingData = () => {
   };
 
   useEffect(() => {
-    fetchOverviewMetrics();
-    fetchStudentProfiles();
-  }, []);
+    if (!isInitialized) {
+      autoInitializeData();
+    } else {
+      fetchOverviewMetrics();
+      fetchStudentProfiles();
+    }
+  }, [isInitialized]);
 
   return {
     overviewMetrics,
