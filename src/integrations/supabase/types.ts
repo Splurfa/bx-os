@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      academic_records: {
+        Row: {
+          academic_year: string
+          attendance_rate: number | null
+          created_at: string | null
+          english_grade: string | null
+          gpa: number | null
+          hebrew_grade: string | null
+          id: string
+          math_grade: string | null
+          science_grade: string | null
+          social_studies_grade: string | null
+          student_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          academic_year?: string
+          attendance_rate?: number | null
+          created_at?: string | null
+          english_grade?: string | null
+          gpa?: number | null
+          hebrew_grade?: string | null
+          id?: string
+          math_grade?: string | null
+          science_grade?: string | null
+          social_studies_grade?: string | null
+          student_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          academic_year?: string
+          attendance_rate?: number | null
+          created_at?: string | null
+          english_grade?: string | null
+          gpa?: number | null
+          hebrew_grade?: string | null
+          id?: string
+          math_grade?: string | null
+          science_grade?: string | null
+          social_studies_grade?: string | null
+          student_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academic_records_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "student_profile_complete"
+            referencedColumns: ["student_id"]
+          },
+          {
+            foreignKeyName: "academic_records_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       antecedent_contexts: {
         Row: {
           created_at: string | null
@@ -98,6 +158,13 @@ export type Database = {
             foreignKeyName: "behavior_history_student_id_fkey"
             columns: ["student_id"]
             isOneToOne: false
+            referencedRelation: "student_profile_complete"
+            referencedColumns: ["student_id"]
+          },
+          {
+            foreignKeyName: "behavior_history_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
             referencedRelation: "students"
             referencedColumns: ["id"]
           },
@@ -168,6 +235,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "antecedent_contexts"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "behavior_requests_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "student_profile_complete"
+            referencedColumns: ["student_id"]
           },
           {
             foreignKeyName: "behavior_requests_student_id_fkey"
@@ -347,6 +421,78 @@ export type Database = {
           },
         ]
       }
+      historical_incidents: {
+        Row: {
+          academic_year: string | null
+          behavior_type: string | null
+          created_at: string | null
+          data_quality_score: number | null
+          grade_at_time: string | null
+          id: string
+          incident_date: string | null
+          reflection_completed: boolean | null
+          student_name: string
+          subject_context: string | null
+        }
+        Insert: {
+          academic_year?: string | null
+          behavior_type?: string | null
+          created_at?: string | null
+          data_quality_score?: number | null
+          grade_at_time?: string | null
+          id?: string
+          incident_date?: string | null
+          reflection_completed?: boolean | null
+          student_name: string
+          subject_context?: string | null
+        }
+        Update: {
+          academic_year?: string | null
+          behavior_type?: string | null
+          created_at?: string | null
+          data_quality_score?: number | null
+          grade_at_time?: string | null
+          id?: string
+          incident_date?: string | null
+          reflection_completed?: boolean | null
+          student_name?: string
+          subject_context?: string | null
+        }
+        Relationships: []
+      }
+      import_exceptions: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          exception_type: string
+          id: string
+          import_batch_id: string
+          raw_data: Json | null
+          resolved: boolean | null
+          student_name: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          exception_type: string
+          id?: string
+          import_batch_id: string
+          raw_data?: Json | null
+          resolved?: boolean | null
+          student_name?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          exception_type?: string
+          id?: string
+          import_batch_id?: string
+          raw_data?: Json | null
+          resolved?: boolean | null
+          student_name?: string | null
+        }
+        Relationships: []
+      }
       kiosks: {
         Row: {
           access_url: string | null
@@ -415,6 +561,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "behavior_requests"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kiosks_current_student_id_fkey"
+            columns: ["current_student_id"]
+            isOneToOne: false
+            referencedRelation: "student_profile_complete"
+            referencedColumns: ["student_id"]
           },
           {
             foreignKeyName: "kiosks_current_student_id_fkey"
@@ -603,6 +756,61 @@ export type Database = {
             foreignKeyName: "reflections_student_id_fkey"
             columns: ["student_id"]
             isOneToOne: false
+            referencedRelation: "student_profile_complete"
+            referencedColumns: ["student_id"]
+          },
+          {
+            foreignKeyName: "reflections_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_historical_links: {
+        Row: {
+          academic_year: string
+          confidence_score: number | null
+          current_student_id: string
+          historical_grade: string | null
+          historical_student_name: string
+          id: string
+          matched_at: string | null
+          total_historical_incidents: number | null
+        }
+        Insert: {
+          academic_year: string
+          confidence_score?: number | null
+          current_student_id: string
+          historical_grade?: string | null
+          historical_student_name: string
+          id?: string
+          matched_at?: string | null
+          total_historical_incidents?: number | null
+        }
+        Update: {
+          academic_year?: string
+          confidence_score?: number | null
+          current_student_id?: string
+          historical_grade?: string | null
+          historical_student_name?: string
+          id?: string
+          matched_at?: string | null
+          total_historical_incidents?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_historical_links_current_student_id_fkey"
+            columns: ["current_student_id"]
+            isOneToOne: false
+            referencedRelation: "student_profile_complete"
+            referencedColumns: ["student_id"]
+          },
+          {
+            foreignKeyName: "student_historical_links_current_student_id_fkey"
+            columns: ["current_student_id"]
+            isOneToOne: false
             referencedRelation: "students"
             referencedColumns: ["id"]
           },
@@ -720,7 +928,22 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      student_profile_complete: {
+        Row: {
+          attendance_rate: number | null
+          current_grade: string | null
+          current_incidents: number | null
+          current_reflections: number | null
+          first_name: string | null
+          gpa: number | null
+          historical_grade: string | null
+          historical_incidents: number | null
+          historical_match_confidence: number | null
+          last_name: string | null
+          student_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       admin_clear_all_queues: {
@@ -853,6 +1076,13 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      import_historical_csv_data: {
+        Args: { csv_data: string }
+        Returns: {
+          imported_incidents: number
+          quality_issues: number
+        }[]
+      }
       log_kiosk_auth_attempt: {
         Args: { p_kiosk_id: number; p_student_id?: string; p_success?: boolean }
         Returns: undefined
@@ -864,6 +1094,10 @@ export type Database = {
           user_context?: string
         }
         Returns: undefined
+      }
+      match_students_to_historical_data: {
+        Args: Record<PropertyKey, never>
+        Returns: number
       }
       process_csv_to_families_and_students: {
         Args: Record<PropertyKey, never>
@@ -880,6 +1114,10 @@ export type Database = {
       run_nightly_cleanup: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      seed_academic_records: {
+        Args: Record<PropertyKey, never>
+        Returns: number
       }
       update_device_session_fingerprint: {
         Args: { p_new_fingerprint: string; p_session_id: string }
