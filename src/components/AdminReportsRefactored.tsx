@@ -7,7 +7,7 @@ import StudentSelection from '@/components/StudentSelection';
 import StudentProfileView from '@/components/StudentProfileView';
 import { useReportingData } from '@/hooks/useReportingData';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { TrendingUp, Users, FileText } from 'lucide-react';
+import { TrendingUp, Users, FileText, RefreshCw } from 'lucide-react';
 import { useDateContext } from '@/contexts/DateContext';
 import type { Student } from '@/hooks/useStudents';
 
@@ -33,7 +33,8 @@ const AdminReportsRefactored = () => {
     overviewMetrics,
     studentProfiles,
     loading,
-    autoInitializeData
+    autoInitializeData,
+    refreshData
   } = useReportingData();
 
   const handleStudentSelect = (student: Student) => {
@@ -83,7 +84,7 @@ const AdminReportsRefactored = () => {
 
 
   return (
-    <div className="space-y-6">
+      <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-h2">Behavioral Analytics</h1>
@@ -91,6 +92,15 @@ const AdminReportsRefactored = () => {
             Data from {academicYearStart.toLocaleDateString()} onwards • Current: {currentDate.toLocaleDateString()}
           </p>
         </div>
+        <Button 
+          onClick={autoInitializeData} 
+          disabled={loading}
+          variant="outline"
+          size="sm"
+        >
+          <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          Reinitialize Data
+        </Button>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
