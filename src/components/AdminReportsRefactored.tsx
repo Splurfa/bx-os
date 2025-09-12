@@ -9,6 +9,7 @@ import { useReportingData } from '@/hooks/useReportingData';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { TrendingUp, Users, FileText, RefreshCw } from 'lucide-react';
 import { useDateContext } from '@/contexts/DateContext';
+import { useToast } from '@/hooks/use-toast';
 import type { Student } from '@/hooks/useStudents';
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--muted))'];
@@ -28,14 +29,35 @@ interface StudentProfile {
 
 const AdminReportsRefactored = () => {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [initializingData, setInitializingData] = useState(false);
   const { currentDate, academicYearStart } = useDateContext();
+  const { toast } = useToast();
   const {
     overviewMetrics,
     studentProfiles,
     loading,
-    autoInitializeData,
-    refreshData
+    autoInitializeData
   } = useReportingData();
+
+  const handleReinitializeData = async () => {
+    setInitializingData(true);
+    try {
+      await autoInitializeData();
+      toast({
+        title: "Data Reinitialized",
+        description: "Reporting data has been refreshed successfully",
+      });
+    } catch (error) {
+      console.error('Error reinitializing data:', error);
+      toast({
+        title: "Reinitialization Failed",
+        description: "Failed to refresh reporting data. Check console for details.",
+        variant: "destructive",
+      });
+    } finally {
+      setInitializingData(false);
+    }
+  };
 
   const handleStudentSelect = (student: Student) => {
     setSelectedStudent(student);
@@ -82,9 +104,8 @@ const AdminReportsRefactored = () => {
     </Card>
   );
 
-
   return (
-      <div className="space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-h2">Behavioral Analytics</h1>
@@ -93,13 +114,12 @@ const AdminReportsRefactored = () => {
           </p>
         </div>
         <Button 
-          onClick={autoInitializeData} 
-          disabled={loading}
+          onClick={handleReinitializeData}
+          disabled={initializingData || loading}
           variant="outline"
-          size="sm"
         >
-          <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-          Reinitialize Data
+          <RefreshCw className={`w-4 h-4 mr-2 ${initializingData ? 'animate-spin' : ''}`} />
+          {initializingData ? 'Reinitializing...' : 'Reinitialize Data'}
         </Button>
       </div>
 

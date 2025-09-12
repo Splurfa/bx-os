@@ -30,32 +30,12 @@ export const useReportingData = () => {
   const [studentProfiles, setStudentProfiles] = useState<StudentProfile[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const { academicYearStart, initializeData, isInitialized } = useDateContext();
+  const { academicYearStart, currentDate, initializeData, isInitialized } = useDateContext();
 
   const autoInitializeData = async () => {
     setLoading(true);
     try {
-      console.log('🚀 Starting data initialization process...');
-      
-      // Step 1: Generate current year test data (most critical for dashboard)
-      try {
-        const { data: currentYearData, error: currentYearError } = await supabase.rpc('seed_current_year_behavior_data');
-        if (currentYearError) {
-          console.error('Error generating current year data:', currentYearError);
-          throw currentYearError;
-        } else {
-          console.log('✅ Current year behavior data generated:', currentYearData);
-          toast({
-            title: "Test Data Generated", 
-            description: `Successfully created ${currentYearData || 0} total incidents for current year`,
-          });
-        }
-      } catch (error) {
-        console.error('❌ Critical error during current year data generation:', error);
-        throw error;
-      }
-
-      // Step 2: Import historical CSV data (2024-2025) - silently handle errors
+      // Step 1: Import historical CSV data (2024-2025) - silently handle errors
       try {
         const { data: csvImportData, error: csvError } = await supabase.functions.invoke('import-historical-csv');
         if (csvError) {
@@ -65,6 +45,22 @@ export const useReportingData = () => {
         }
       } catch (importError) {
         console.log('Historical CSV import skipped:', importError);
+      }
+
+      // Step 2: Generate current year test data (2025-2026) first
+      try {
+        const { data: currentYearData, error: currentYearError } = await supabase.rpc('seed_current_year_behavior_data');
+        if (currentYearError) {
+          console.error('Error generating current year data:', currentYearError);
+        } else {
+          console.log('Current year behavior data generated:', currentYearData);
+          toast({
+            title: "Test Data Generated", 
+            description: `Successfully created ${currentYearData || 0} total incidents for current year`,
+          });
+        }
+      } catch (error) {
+        console.log('Current year data generation skipped:', error);
       }
 
       // Step 3: Seed academic records for current students
@@ -97,17 +93,15 @@ export const useReportingData = () => {
         description: "All reporting data has been initialized successfully",
       });
 
-      // Step 5: Immediately refresh the reporting data
-      console.log('🔄 Refreshing overview metrics...');
+      // Step 5: Refresh the reporting data immediately after seeding
       await fetchOverviewMetrics();
       await fetchStudentProfiles();
-      console.log('✅ Data refresh complete');
 
     } catch (error) {
-      console.error('💥 Error during initialization:', error);
+      console.error('Error during initialization:', error);
       toast({
         title: "Initialization Failed",
-        description: `Failed to initialize reporting data: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        description: "Failed to initialize reporting data. Please check console for details.",
         variant: "destructive",
       });
     } finally {
@@ -117,12 +111,12 @@ export const useReportingData = () => {
 
   const fetchOverviewMetrics = async () => {
     try {
-      // Current year incidents - use currentDate from DateContext for filtering
+      // Current year incidents - simple count without joins to avoid filtering issues
       const { count: incidentCount, error: incidentError } = await supabase
         .from('behavior_requests')
         .select('*', { count: 'exact', head: true })
         .gte('time_of_incident', academicYearStart.toISOString())
-        .lte('time_of_incident', new Date().toISOString());
+        .lte('time_of_incident', currentDate.toISOString());
 
       if (incidentError) throw incidentError;
 
@@ -138,7 +132,7 @@ export const useReportingData = () => {
           reflections(id)
         `)
         .gte('time_of_incident', academicYearStart.toISOString())
-        .lte('time_of_incident', new Date().toISOString());
+        .lte('time_of_incident', currentDate.toISOString());
 
       if (currentError) throw currentError;
 
@@ -234,7 +228,7 @@ export const useReportingData = () => {
       fetchOverviewMetrics();
       fetchStudentProfiles();
     }
-  }, [isInitialized]);
+  }, [isInitialized, academicYearStart, currentDate]);
 
   return {
     overviewMetrics,
@@ -243,11 +237,6 @@ export const useReportingData = () => {
     autoInitializeData,
     fetchOverviewMetrics,
     fetchStudentProfiles,
-    searchStudents,
-    // Expose refresh function for manual triggers
-    refreshData: async () => {
-      await fetchOverviewMetrics();
-      await fetchStudentProfiles();
-    }
+    searchStudents
   };
 };
