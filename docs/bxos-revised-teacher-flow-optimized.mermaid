@@ -1,0 +1,81 @@
+flowchart TD
+    subgraph LEGEND [" LEGEND "]
+        L1[Orange = Checkpoint]
+        L2[Blue = Key Decision]
+        L3[Green = Reset Path]
+        L4[Purple = Reflection Path]
+        L5[Yellow = Urgent 1]
+        L6[Red = Urgent 2]
+        L7[Dotted Line = Support Staff]
+        
+        style L1 stroke:#ff9800,stroke-width:3px
+        style L2 stroke:#2196f3,stroke-width:4px
+        style L3 stroke:#4caf50,stroke-width:3px
+        style L4 stroke:#9c27b0,stroke-width:3px
+        style L5 stroke:#ffc107,stroke-width:3px
+        style L6 stroke:#f44336,stroke-width:3px
+        style L7 stroke:#666,stroke-width:1px,stroke-dasharray: 5 5
+    end
+    
+    START([Teacher Observes Incident]) --> STEP1[1. Press Plus Button]
+    STEP1 --> STEP2[2. Pre-Flight Checklist]
+    STEP2 --> STEP3[3. Select Student]
+    STEP3 --> STEP4[4. Select Context]
+    STEP4 --> STEP5[5. Select Behavior]
+    STEP5 --> STEP6[6. Review Screen]
+    
+    STEP6 --> OPT1[Add Notes - Optional]
+    STEP6 --> OPT2[Mark Urgent - Optional]
+    
+    OPT1 --> DECISION
+    OPT2 --> U1[Urgent 1: Reintegration Support]
+    OPT2 --> U2[Urgent 2: Emergency Response]
+    U1 --> DECISION
+    U2 --> DECISION
+    
+    DECISION{7. Choose Submission Path}
+    
+    DECISION -->|RESET| R1[Reset: Verbal]
+    DECISION -->|RESET| R2[Reset: Self-Guided]
+    DECISION -->|REFLECTION| M1[Send to Kiosk]
+    
+    R1 --> R3[Teacher-Student Conversation]
+    R2 --> R4[Student Self-Reflects Outside Door]
+    
+    R3 --> R5[Document in System]
+    R4 --> R5
+    
+    R5 --> RCHECK{Issue Resolved?}
+    RCHECK -->|Yes| REND([Student Returns to Class])
+    RCHECK -->|No - Escalate| M1
+    
+    M1 --> M2[Student Completes 4-Question Reflection]
+    M2 --> M3[Teacher Receives Notification]
+    M3 --> M4[Teacher Reviews Response]
+    M4 --> MCHECK{Approve Readmission?}
+    MCHECK -->|Request Retry| M2
+    MCHECK -->|Approve| MEND([Student Returns to Class])
+    
+    U1 -.->|Triggers Support| SUPPORT
+    U2 -.->|Triggers Support| SUPPORT
+    SUPPORT[Support Staff Responds]
+    SUPPORT -.-> REND
+    SUPPORT -.-> MEND
+    
+    style STEP2 stroke:#ff9800,stroke-width:3px
+    style DECISION stroke:#2196f3,stroke-width:4px
+    style R1 stroke:#4caf50,stroke-width:3px
+    style R2 stroke:#4caf50,stroke-width:3px
+    style R3 stroke:#4caf50,stroke-width:2px
+    style R4 stroke:#4caf50,stroke-width:2px
+    style R5 stroke:#4caf50,stroke-width:2px
+    style RCHECK stroke:#4caf50,stroke-width:2px
+    style REND stroke:#4caf50,stroke-width:4px
+    style M1 stroke:#9c27b0,stroke-width:3px
+    style M2 stroke:#9c27b0,stroke-width:2px
+    style M3 stroke:#9c27b0,stroke-width:2px
+    style M4 stroke:#9c27b0,stroke-width:2px
+    style MCHECK stroke:#9c27b0,stroke-width:2px
+    style MEND stroke:#9c27b0,stroke-width:4px
+    style U1 stroke:#ffc107,stroke-width:3px
+    style U2 stroke:#f44336,stroke-width:3px
